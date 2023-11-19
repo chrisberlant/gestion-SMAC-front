@@ -1,43 +1,50 @@
-import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import '@mantine/core/styles.css';
 import './App.css';
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { MantineProvider } from '@mantine/core';
+import { createContext, useContext, useState } from 'react';
+import { UserInterface } from './@types/types';
+import Login from './components/Login/Login';
+
+const queryClient = new QueryClient();
+const UserContext = createContext<UserInterface>(undefined);
+
+function AppRoutes() {
+	const [user, setUser] = useState<UserInterface>(undefined);
+	return (
+		<QueryClientProvider client={queryClient}>
+			<MantineProvider>
+				<UserContext.Provider value={user}>
+					<div className='app'>
+						<Routes>
+							{/* Homepage route, component not created yet */}
+							<Route element={<Login />} path='/' />
+							{/* Authentication route */}
+							<Route element={<Login />} path='/login' />
+							{/* Login creation route */}
+							{/* <Route element={<Register />} path="/register" />
+          {/* Protected routes, can only be accessed by authenticated user */}
+							{/* <Route element={<PrivateRoutes />}> */}
+							{/* See and edit account informations */}
+							{/* <Route element={<Account />} path="/account" /> */}
+						</Routes>
+					</div>
+				</UserContext.Provider>
+			</MantineProvider>
+		</QueryClientProvider>
+	);
+}
 
 function App() {
-	const [count, setCount] = useState(0);
-
-	useEffect(() => {
-		console.log(count);
-	}, []);
-
 	return (
-		<>
-			<div>
-				<a href='https://vitejs.dev' target='_blank'>
-					<img src={viteLogo} className='logo' alt='Vite logo' />
-				</a>
-				<a href='https://react.dev' target='_blank'>
-					<img
-						src={reactLogo}
-						className='logo react'
-						alt='React logo'
-					/>
-				</a>
-			</div>
-			<h1>Vite + React</h1>
-			<div className='card'>
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className='read-the-docs'>
-				Click on the Vite and React logos to learn more
-			</p>
-		</>
+		<Router>
+			<AppRoutes />
+		</Router>
 	);
 }
 
