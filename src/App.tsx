@@ -7,7 +7,7 @@ import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 import ActiveLines from './components/ActiveLines/ActiveLines';
-import Admin from './components/Admin/Admin';
+import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 
 function AppRoutes() {
@@ -19,7 +19,7 @@ function AppRoutes() {
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
 				<Route element={<ActiveLines />} path='/active-lines' />
-				<Route element={<Admin />} path='/admin' />
+				<Route element={<AdminDashboard />} path='/admin-dashboard' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
 		</Routes>

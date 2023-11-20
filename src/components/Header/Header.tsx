@@ -31,7 +31,7 @@ const tabs = {
 	Prêts: 'lent',
 	Appareils: 'devices',
 	Statistiques: 'stats',
-	Administration: 'admin',
+	Administration: 'admin-dashboard',
 };
 
 const items = Object.entries(tabs).map(([title, path]) => (
