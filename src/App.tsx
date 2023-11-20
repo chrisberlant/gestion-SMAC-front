@@ -1,50 +1,43 @@
 import '@mantine/core/styles.css';
 import './App.css';
-import {
-	QueryClient,
-	QueryClientProvider,
-	useQuery,
-} from '@tanstack/react-query';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { MantineProvider } from '@mantine/core';
-import { createContext, useContext, useState } from 'react';
-import { UserInterface } from './@types/types';
+import { createContext, useState } from 'react';
+import { UserInterface } from './@types/types.ts';
 import Login from './components/Login/Login';
-
-const queryClient = new QueryClient();
-const UserContext = createContext<UserInterface>(undefined);
+import Header from './components/Header/Header';
+import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
+import ActiveLines from './components/ActiveLines/ActiveLines';
+import Admin from './components/Admin/Admin';
+import PageNotFound from './components/PageNotFound/PageNotFound';
 
 function AppRoutes() {
-	const [user, setUser] = useState<UserInterface>(undefined);
 	return (
-		<QueryClientProvider client={queryClient}>
-			<MantineProvider>
-				<UserContext.Provider value={user}>
-					<div className='app'>
-						<Routes>
-							{/* Homepage route, component not created yet */}
-							<Route element={<Login />} path='/' />
-							{/* Authentication route */}
-							<Route element={<Login />} path='/login' />
-							{/* Login creation route */}
-							{/* <Route element={<Register />} path="/register" />
-          {/* Protected routes, can only be accessed by authenticated user */}
-							{/* <Route element={<PrivateRoutes />}> */}
-							{/* See and edit account informations */}
-							{/* <Route element={<Account />} path="/account" /> */}
-						</Routes>
-					</div>
-				</UserContext.Provider>
-			</MantineProvider>
-		</QueryClientProvider>
+		<Routes>
+			<Route element={<Login />} path='/' />
+			<Route element={<Login />} path='/login' />
+			<Route element={<Header />} path='/header' />
+			{/* Protected routes, can only be accessed by authenticated user */}
+			<Route element={<PrivateRoutes />}>
+				<Route element={<ActiveLines />} path='/active-lines' />
+				<Route element={<Admin />} path='/admin' />
+			</Route>
+			<Route element={<PageNotFound />} path='*' />
+		</Routes>
 	);
 }
 
+const UserContext = createContext<UserInterface>(undefined);
+
 function App() {
+	const [user, setUser] = useState<UserInterface>(undefined);
 	return (
-		<Router>
-			<AppRoutes />
-		</Router>
+		<UserContext.Provider value={user}>
+			<Router>
+				<div className='app'>
+					<AppRoutes />
+				</div>
+			</Router>
+		</UserContext.Provider>
 	);
 }
 
