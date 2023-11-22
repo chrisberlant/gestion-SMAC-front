@@ -8,7 +8,7 @@ import {
 	Anchor,
 	rem,
 } from '@mantine/core';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import './usersTable.css';
 
 interface UsersTableProps {
@@ -36,7 +36,7 @@ function UsersTable({ users }: UsersTableProps) {
 					{user.email}
 				</Anchor>
 			</Table.Td>
-			<Table.Td>
+			<Table.Td width={80}>
 				<Group gap={0} justify='flex-end'>
 					<ActionIcon variant='subtle' color='gray'>
 						<IconPencil
@@ -57,7 +57,8 @@ function UsersTable({ users }: UsersTableProps) {
 
 	return (
 		<div className='users-table'>
-			<h2>Utilisateurs de l'application</h2>
+			<h2>Gérer les utilisateurs</h2>
+			<IconPlus cursor='pointer' aria-label='Ajouter un utilisateur' />
 			<Table.ScrollContainer minWidth={500}>
 				<Table verticalSpacing='sm' striped highlightOnHover>
 					<Table.Thead>
@@ -65,7 +66,6 @@ function UsersTable({ users }: UsersTableProps) {
 							<Table.Th>Utilisateur</Table.Th>
 							<Table.Th>Rôle</Table.Th>
 							<Table.Th>Email</Table.Th>
-							<Table.Th />
 						</Table.Tr>
 					</Table.Thead>
 					<Table.Tbody>{rows}</Table.Tbody>
