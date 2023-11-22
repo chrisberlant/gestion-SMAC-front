@@ -2,7 +2,6 @@ import cx from 'clsx';
 import { useState } from 'react';
 import {
 	Container,
-	Avatar,
 	UnstyledButton,
 	Group,
 	Text,
@@ -16,38 +15,38 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import fetchApi from '../../utils/fetchApi';
 
 const user = {
 	name: 'Jane Spoonfighter',
 	email: 'janspoon@fighter.dev',
-	image: 'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
 };
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
-	'Lignes actives': 'active-lines',
-	'Lignes résiliées': 'terminated-lines',
-	Prêts: 'lent',
-	Appareils: 'devices',
-	Statistiques: 'stats',
-	Administration: 'admin-dashboard',
+	'Lignes actives': '/active-lines',
+	'Lignes résiliées': '/terminated-lines',
+	Prêts: '/lent',
+	Appareils: '/devices',
+	Statistiques: '/stats',
+	Administration: '/admin-dashboard',
 };
 
 const items = Object.entries(tabs).map(([title, path]) => (
-	<Link to={`/${path}`} key={title}>
+	<Link to={path} key={title}>
 		<Tabs.Tab value={title}>{title}</Tabs.Tab>
 	</Link>
 ));
 
 export function Header() {
 	// const theme = useMantineTheme();
+	const location = useLocation();
+	const activeTab = Object.entries(tabs).find(
+		([, path]) => path === location.pathname
+	)?.[0];
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-
-	const logout = () => {
-		console.log('Déconnexion'); // TODO envoyer requête logout au serveur
-	};
 
 	return (
 		<header className={classes.header}>
@@ -76,12 +75,6 @@ export function Header() {
 								})}
 							>
 								<Group gap={7}>
-									<Avatar
-										src={user.image}
-										alt={user.name}
-										radius='xl'
-										size={20}
-									/>
 									<Text fw={500} size='sm' lh={1} mr={3}>
 										{user.name}
 									</Text>
@@ -112,7 +105,9 @@ export function Header() {
 								</Menu.Item>
 							</Link>
 							<Menu.Item
-								onClick={logout}
+								onClick={async () => {
+									await fetchApi('/logout');
+								}}
 								leftSection={
 									<IconLogout
 										style={{
@@ -132,7 +127,7 @@ export function Header() {
 
 			<Container size='md'>
 				<Tabs
-					defaultValue='Lignes actives'
+					defaultValue={activeTab}
 					variant='outline'
 					visibleFrom='sm'
 					classNames={{
