@@ -9,6 +9,7 @@ import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 import ActiveLines from './components/ActiveLines/ActiveLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
+import { Toaster } from 'sonner';
 
 function AppRoutes() {
 	return (
@@ -35,6 +36,7 @@ function App() {
 			<Router>
 				<div className='app'>
 					<AppRoutes />
+					<Toaster richColors closeButton expand={true} />
 				</div>
 			</Router>
 		</UserContext.Provider>
