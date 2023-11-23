@@ -7,16 +7,31 @@ import {
 	ActionIcon,
 	Anchor,
 	rem,
+	Loader,
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
+import { useGetAllUsers } from '../../../utils/queries';
+import { toast } from 'sonner';
 import './usersTable.css';
 
-interface UsersTableProps {
-	users: UserType[];
-}
+function UsersTable() {
+	const { data: users, isLoading, isError, error } = useGetAllUsers();
 
-function UsersTable({ users }: UsersTableProps) {
-	const rows = users.map((user: UserType) => (
+	if (isLoading)
+		return (
+			<div className='loader-box'>
+				<Loader size='xl' />
+			</div>
+		);
+
+	if (isError) {
+		toast.error(
+			'Impossible de récupérer les utilisateurs depuis le serveur'
+		);
+		return <div className='error'>{error!.message}</div>;
+	}
+
+	const rows = users!.map((user: UserType) => (
 		<Table.Tr key={user.email}>
 			<Table.Td>
 				<Group gap='sm'>

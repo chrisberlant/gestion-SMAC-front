@@ -9,6 +9,7 @@ import classes from './login.module.css';
 // import { SubmitHandler, useForm } from 'react-hook-form';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
+import fetchApi from '../../utils/fetchApi';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
 const userLoginSchema = z.object({
@@ -16,10 +17,11 @@ const userLoginSchema = z.object({
 		.string({
 			required_error: "L'adresse mail doit être renseignée",
 		})
+		.min(1, "L'adresse mail doit être renseignée") // TODO message not triggering
 		.email({ message: "Le format de l'adresse mail est incorrect" }),
 	password: z
 		.string({
-			required_error: 'Le mot de passe doit être renseignée',
+			required_error: 'Le mot de passe doit être renseigné',
 			invalid_type_error:
 				'Le mot de passe doit être une chaîne de caractères',
 		})
@@ -35,8 +37,13 @@ function Login() {
 		},
 	});
 
-	const onSubmit = () => {
-		console.log(form.values);
+	const onSubmit = async () => {
+		try {
+			console.log(form.values);
+			await fetchApi('/login', 'POST', form.values);
+		} catch (error) {
+			console.log(JSON.stringify(error));
+		}
 	};
 
 	return (
@@ -45,7 +52,6 @@ function Login() {
 				<Container size={420} my={40}>
 					<Paper withBorder shadow='md' p={30} mt={30} radius='md'>
 						<TextInput
-							// type='email'
 							label='Email'
 							placeholder='Votre adresse mail'
 							withAsterisk

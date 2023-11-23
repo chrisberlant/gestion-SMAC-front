@@ -1,3 +1,5 @@
+import { toast } from 'sonner';
+
 const baseUrl = 'http://localhost:3000';
 
 async function fetchApi(
@@ -22,7 +24,7 @@ async function fetchApi(
 		if (data.toLowerCase().includes('token')) {
 			// window.location.href = '/login';
 		}
-		console.log(data);
+		toast.error(data);
 		throw new Error(data);
 	}
 

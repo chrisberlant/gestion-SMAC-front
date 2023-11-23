@@ -1,16 +1,29 @@
 import { ModelType } from '../../../@types/types';
-import { Table, Group, Text, ActionIcon, rem } from '@mantine/core';
+import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
+import { useGetAllModels } from '../../../utils/queries';
+import { toast } from 'sonner';
 import './modelsTables.css';
 
-import { IconPlus } from '@tabler/icons-react';
+function ModelsTable() {
+	const { data: models, isLoading, isError, error } = useGetAllModels();
 
-interface ModelsTableProps {
-	models: ModelType[];
-}
+	if (isLoading)
+		return (
+			<div className='loader-box'>
+				<Loader size='xl' />
+			</div>
+		);
 
-function ModelsTable({ models }: ModelsTableProps) {
-	const rows = models.map((model: ModelType) => (
+	if (isError) {
+		toast.error(
+			'Impossible de récupérer les utilisateurs depuis le serveur'
+		);
+		return <div className='error'>{error!.message}</div>;
+	}
+
+	const rows = models!.map((model: ModelType) => (
 		<Table.Tr key={model.id}>
 			<Table.Td>
 				<Group gap='sm'>
