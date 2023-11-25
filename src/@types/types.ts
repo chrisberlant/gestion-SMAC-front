@@ -2,6 +2,7 @@ export type LoggedUser = {
 	email: string;
 	firstName: string;
 	lastName: string;
+	isAdmin: boolean;
 };
 
 export type UserInterface = LoggedUser | undefined;
@@ -24,10 +25,4 @@ export interface ModelType {
 	brand: string;
 	reference: string;
 	storage?: string;
-}
-
-export interface AdminDashboardDataType {
-	users: UserType[];
-	services: ServiceType[];
-	models: ModelType[];
 }

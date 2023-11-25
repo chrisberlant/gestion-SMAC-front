@@ -5,11 +5,14 @@ import {
 	Container,
 	Button,
 } from '@mantine/core';
-import classes from './login.module.css';
+// import classes from './login.module.css';
 // import { SubmitHandler, useForm } from 'react-hook-form';
 import { useForm, zodResolver } from '@mantine/form';
 import { z } from 'zod';
 import fetchApi from '../../utils/fetchApi';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { useGetCurrentUser } from '../../utils/queries';
 // import { zodResolver } from '@hookform/resolvers/zod';
 
 const userLoginSchema = z.object({
@@ -29,6 +32,11 @@ const userLoginSchema = z.object({
 });
 
 function Login() {
+	const navigate = useNavigate();
+	// Rediriger vers l'app si utilisateur déjà connecté
+	const { data } = useGetCurrentUser();
+	if (data) navigate('/active-lines');
+
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -39,10 +47,11 @@ function Login() {
 
 	const onSubmit = async () => {
 		try {
-			console.log(form.values);
 			await fetchApi('/login', 'POST', form.values);
+			toast.success('Connexion réussie');
+			navigate('/active-lines');
 		} catch (error) {
-			console.log(JSON.stringify(error));
+			console.log(error);
 		}
 	};
 
@@ -52,17 +61,16 @@ function Login() {
 				<Container size={420} my={40}>
 					<Paper withBorder shadow='md' p={30} mt={30} radius='md'>
 						<TextInput
+							autoComplete='on'
 							label='Email'
 							placeholder='Votre adresse mail'
-							withAsterisk
 							mt='sm'
 							{...form.getInputProps('email')}
 						/>
-
 						<PasswordInput
+							autoComplete='on'
 							label='Mot de passe'
 							placeholder='Votre mot de passe'
-							withAsterisk
 							mt='sm'
 							{...form.getInputProps('password')}
 						/>

@@ -1,21 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import {
-	AdminDashboardDataType,
 	ModelType,
 	ServiceType,
+	UserInterface,
 	UserType,
 } from '../@types/types';
 import fetchApi from './fetchApi';
 
-export const useGetAdminDashboard = () => {
+export const useGetCurrentUser = () => {
 	return useQuery({
-		queryKey: ['adminDashboard'],
+		queryKey: ['currentUser'],
 		queryFn: async () => {
-			const data: AdminDashboardDataType = await fetchApi(
-				'/getAdminDashboard'
-			);
+			const data: UserInterface = await fetchApi('/getCurrentUser');
 			return data;
 		},
+		staleTime: Infinity,
+		gcTime: Infinity,
 	});
 };
 
@@ -26,6 +26,7 @@ export const useGetAllUsers = () => {
 			const data: UserType[] = await fetchApi('/getAllUsers');
 			return data;
 		},
+		retry: false,
 	});
 };
 
@@ -36,6 +37,7 @@ export const useGetAllServices = () => {
 			const data: ServiceType[] = await fetchApi('/getAllServices');
 			return data;
 		},
+		retry: false,
 	});
 };
 
@@ -46,5 +48,6 @@ export const useGetAllModels = () => {
 			const data: ModelType[] = await fetchApi('/getAllModels');
 			return data;
 		},
+		retry: false,
 	});
 };

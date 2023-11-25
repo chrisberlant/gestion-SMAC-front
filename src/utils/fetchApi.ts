@@ -9,7 +9,10 @@ async function fetchApi(
 ) {
 	const options: RequestInit = {
 		method,
-		credentials: 'include', // Include the jwt cookie
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		credentials: 'include',
 	};
 	if (method && method !== 'GET') {
 		options.body = JSON.stringify(infos); // Add a body if method is provided and it is not equal to GET
@@ -22,7 +25,7 @@ async function fetchApi(
 	if (!response.ok) {
 		// If the API replies with invalid token or non existent token
 		if (data.toLowerCase().includes('token')) {
-			// window.location.href = '/login';
+			window.location.href = '/login';
 		}
 		toast.error(data);
 		throw new Error(data);

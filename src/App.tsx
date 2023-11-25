@@ -1,8 +1,6 @@
 import '@mantine/core/styles.css';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { createContext, useState } from 'react';
-import { UserInterface } from './@types/types.ts';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
@@ -27,19 +25,14 @@ function AppRoutes() {
 	);
 }
 
-const UserContext = createContext<UserInterface>(undefined);
-
 function App() {
-	const [user, setUser] = useState<UserInterface>(undefined);
 	return (
-		<UserContext.Provider value={user}>
-			<Router>
-				<div className='app'>
-					<AppRoutes />
-					<Toaster richColors closeButton expand={true} />
-				</div>
-			</Router>
-		</UserContext.Provider>
+		<Router>
+			<div className='app'>
+				<AppRoutes />
+				<Toaster richColors closeButton expand={true} />
+			</div>
+		</Router>
 	);
 }
 
