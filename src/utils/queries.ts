@@ -14,6 +14,7 @@ export const useGetCurrentUser = () => {
 			const data: UserInterface = await fetchApi('/getCurrentUser');
 			return data;
 		},
+		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});

@@ -34,8 +34,11 @@ const userLoginSchema = z.object({
 function Login() {
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data } = useGetCurrentUser();
-	if (data) navigate('/active-lines');
+	const { data, isError } = useGetCurrentUser();
+	if (isError) {
+		console.log(isError);
+	}
+	// if (data) navigate('/active-lines');
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),

@@ -1,19 +1,41 @@
-import { Link } from 'react-router-dom';
-import './PageNotFound.css';
-import { useGetCurrentUser } from '../../utils/queries';
+import { Container, Title, Text, Button, Group } from '@mantine/core';
+import Illustration from './Illustration/Illustration';
+import classes from './PageNotFound.module.css';
+import { useNavigate } from 'react-router-dom';
 
 function PageNotFound() {
-	let redirectionPage = '/';
-	const { data } = useGetCurrentUser();
-	if (data) redirectionPage = '/active-lines';
+	const navigate = useNavigate();
 	return (
-		<div className='page-not-found'>
-			<h1>404 - Page non trouvée</h1>
-			<p>La page que vous recherchez n&apos;existe pas.</p>
-			<Link to={redirectionPage} className='return-home'>
-				Retour à la page d&apos;accueil
-			</Link>
-		</div>
+		<Container className={classes.root}>
+			<div className={classes.inner}>
+				<Illustration className={classes.image} />
+				<div className={classes.content}>
+					<Title className={classes.title}>Page non trouvée</Title>
+					<Text
+						c='dimmed'
+						size='lg'
+						ta='center'
+						className={classes.description}
+					>
+						La page que vous recherchez n&apos;existe pas.
+					</Text>
+					<Group justify='center'>
+						{window.history.length > 2 ? (
+							<Button size='md' onClick={() => navigate(-1)}>
+								Retour à la page précédente
+							</Button>
+						) : (
+							<Button
+								size='md'
+								onClick={() => navigate('/active-lines')}
+							>
+								Retour à la page d'accueil
+							</Button>
+						)}
+					</Group>
+				</div>
+			</div>
+		</Container>
 	);
 }
 

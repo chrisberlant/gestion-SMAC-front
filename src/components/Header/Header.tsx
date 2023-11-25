@@ -15,7 +15,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import fetchApi from '../../utils/fetchApi';
 import { useGetCurrentUser } from '../../utils/queries';
 import { toast } from 'sonner';
@@ -32,7 +32,6 @@ const tabs = {
 export function Header() {
 	// const theme = useMantineTheme();
 	const { data: currentUser, isLoading, isError } = useGetCurrentUser();
-	const location = useLocation();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 	const navigate = useNavigate();
@@ -53,13 +52,17 @@ export function Header() {
 			tabs.Administration = 'admin-dashboard';
 		}
 		const items = Object.entries(tabs).map(([title, path]) => (
-			<Link to={path} key={title}>
-				<Tabs.Tab value={title}>{title}</Tabs.Tab>
-			</Link>
+			<NavLink to={path} key={title}>
+				{({ isActive }) => (
+					<Tabs.Tab
+						value={title}
+						{...(isActive ? { 'data-active': 'true' } : {})}
+					>
+						{title}
+					</Tabs.Tab>
+				)}
+			</NavLink>
 		));
-		const activeTab = Object.entries(tabs).find(
-			([, path]) => path === location.pathname
-		)?.[0];
 
 		return (
 			<header className={classes.header}>
@@ -144,7 +147,6 @@ export function Header() {
 
 				<Container size='md'>
 					<Tabs
-						defaultValue={activeTab}
 						variant='outline'
 						visibleFrom='sm'
 						classNames={{
