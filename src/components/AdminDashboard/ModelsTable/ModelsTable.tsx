@@ -5,6 +5,7 @@ import { IconPlus } from '@tabler/icons-react';
 import { useGetAllModels } from '../../../utils/queries';
 import { toast } from 'sonner';
 import './modelsTables.css';
+import { modals } from '@mantine/modals';
 
 function ModelsTable() {
 	const { data: models, isLoading, isError, error } = useGetAllModels();
@@ -22,6 +23,22 @@ function ModelsTable() {
 		);
 		return <div className='error'>{error!.message}</div>;
 	}
+
+	const openDeleteModal = (refToDelete: string) => {
+		modals.openConfirmModal({
+			title: 'Supprimer un modèle',
+			centered: true,
+			children: (
+				<Text size='sm'>
+					Êtes-vous sûr de vouloir supprimer le modèle {refToDelete} ?
+				</Text>
+			),
+			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
+			confirmProps: { color: 'red' },
+			onCancel: () => console.log('Cancel'),
+			onConfirm: () => toast.success('Modèle supprimé'), // TODO fetch
+		});
+	};
 
 	const rows = models!.map((model: ModelType) => (
 		<Table.Tr key={model.id}>
@@ -56,6 +73,15 @@ function ModelsTable() {
 					</ActionIcon>
 					<ActionIcon variant='subtle' color='red'>
 						<IconTrash
+							onClick={() =>
+								openDeleteModal(
+									model.brand +
+										' ' +
+										model.reference +
+										' ' +
+										model.storage
+								)
+							}
 							style={{ width: rem(16), height: rem(16) }}
 							stroke={1.5}
 						/>

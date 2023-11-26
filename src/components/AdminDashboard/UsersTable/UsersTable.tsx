@@ -10,11 +10,13 @@ import {
 	Loader,
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
-import { useGetAllUsers } from '../../../utils/queries';
+import { useGetAllUsers, useGetCurrentUser } from '../../../utils/queries';
 import { toast } from 'sonner';
 import './usersTable.css';
 
 function UsersTable() {
+	const { data: currentUser, isError: currentUserError } =
+		useGetCurrentUser();
 	const { data: users, isLoading, isError, error } = useGetAllUsers();
 
 	if (isLoading)
@@ -24,7 +26,7 @@ function UsersTable() {
 			</div>
 		);
 
-	if (isError) {
+	if (isError || currentUserError) {
 		toast.error(
 			'Impossible de récupérer les utilisateurs depuis le serveur'
 		);
@@ -52,20 +54,22 @@ function UsersTable() {
 				</Anchor>
 			</Table.Td>
 			<Table.Td width={80}>
-				<Group gap={0} justify='flex-end'>
-					<ActionIcon variant='subtle' color='gray'>
-						<IconPencil
-							style={{ width: rem(16), height: rem(16) }}
-							stroke={1.5}
-						/>
-					</ActionIcon>
-					<ActionIcon variant='subtle' color='red'>
-						<IconTrash
-							style={{ width: rem(16), height: rem(16) }}
-							stroke={1.5}
-						/>
-					</ActionIcon>
-				</Group>
+				{currentUser!.email !== user.email && (
+					<Group gap={0} justify='flex-end'>
+						<ActionIcon variant='subtle' color='gray'>
+							<IconPencil
+								style={{ width: rem(16), height: rem(16) }}
+								stroke={1.5}
+							/>
+						</ActionIcon>
+						<ActionIcon variant='subtle' color='red'>
+							<IconTrash
+								style={{ width: rem(16), height: rem(16) }}
+								stroke={1.5}
+							/>
+						</ActionIcon>
+					</Group>
+				)}
 			</Table.Td>
 		</Table.Tr>
 	));
