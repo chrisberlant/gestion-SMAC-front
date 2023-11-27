@@ -1,12 +1,3 @@
-export type LoggedUser = {
-	email: string;
-	firstName: string;
-	lastName: string;
-	isAdmin: boolean;
-};
-
-export type UserInterface = LoggedUser | undefined;
-
 export interface UserType {
 	id: number;
 	email: string;
@@ -14,6 +5,8 @@ export interface UserType {
 	lastName: string;
 	isAdmin: boolean;
 }
+
+export type LoggedUser = Omit<UserType, 'id'> | undefined;
 
 export interface ServiceType {
 	id: number;
@@ -25,4 +18,18 @@ export interface ModelType {
 	brand: string;
 	reference: string;
 	storage?: string;
+}
+
+export interface DeviceType {
+	id: number;
+	imei: string;
+	preparationDate: Date;
+	attributionDate: Date;
+	status: string;
+	condition: string;
+	comments: string;
+	modeId: number;
+	model: ModelType;
+	agentId: number;
+	// TODO AgentType
 }

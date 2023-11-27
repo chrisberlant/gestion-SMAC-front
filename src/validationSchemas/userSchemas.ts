@@ -72,7 +72,8 @@ export const newUserCreationSchema = z.strictObject({
 	}),
 	isAdmin: z.boolean({
 		required_error: 'La valeur isAdmin doit être renseignée',
-		invalid_type_error: 'La valeur isAdmin doit être true ou false',
+		invalid_type_error:
+			'La valeur isAdmin doit être un booléen true ou false',
 	}),
 });
 
@@ -96,7 +97,8 @@ export const userModificationSchema = selectionSchema.extend({
 		.optional(),
 	isAdmin: z
 		.boolean({
-			invalid_type_error: 'La valeur isAdmin doit être true ou false',
+			invalid_type_error:
+				'La valeur isAdmin doit être un booléen true ou false',
 		})
 		.optional(),
 });

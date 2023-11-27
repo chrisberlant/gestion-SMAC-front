@@ -8,6 +8,7 @@ import ActiveLines from './components/ActiveLines/ActiveLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import { Toaster } from 'sonner';
+import Devices from './components/Devices/Devices';
 
 function AppRoutes() {
 	return (
@@ -19,6 +20,7 @@ function AppRoutes() {
 			<Route element={<PrivateRoutes />}>
 				<Route element={<ActiveLines />} path='/active-lines' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />
+				<Route element={<Devices />} path='/devices' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
 		</Routes>

@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import {
 	ModelType,
 	ServiceType,
-	UserInterface,
+	LoggedUser,
 	UserType,
+	DeviceType,
 } from '../@types/types';
 import fetchApi from './fetchApi';
 
@@ -11,7 +12,7 @@ export const useGetCurrentUser = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			const data: UserInterface = await fetchApi('/getCurrentUser');
+			const data: LoggedUser = await fetchApi('/getCurrentUser');
 			return data;
 		},
 		retry: false,
@@ -47,6 +48,28 @@ export const useGetAllModels = () => {
 		queryKey: ['models'],
 		queryFn: async () => {
 			const data: ModelType[] = await fetchApi('/getAllModels');
+			return data;
+		},
+		retry: false,
+	});
+};
+
+export const useGetAllActiveLines = () => {
+	return useQuery({
+		queryKey: ['activeLines'],
+		queryFn: async () => {
+			const data: ModelType[] = await fetchApi('/getAllLines/attributed');
+			return data;
+		},
+		retry: false,
+	});
+};
+
+export const useGetAllDevices = () => {
+	return useQuery({
+		queryKey: ['devices'],
+		queryFn: async () => {
+			const data: DeviceType[] = await fetchApi('/getAllDevices');
 			return data;
 		},
 		retry: false,
