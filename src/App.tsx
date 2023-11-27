@@ -9,6 +9,7 @@ import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import { Toaster } from 'sonner';
 import Devices from './components/Devices/Devices';
+import AuthenticationImage from './components/Login/Login';
 
 function AppRoutes() {
 	return (

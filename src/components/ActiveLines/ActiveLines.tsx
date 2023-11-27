@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { useGetAllActiveLines } from '../../utils/queries';
+import { useGetAllActiveLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
 
 function ActiveLines() {

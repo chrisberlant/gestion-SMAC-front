@@ -1,15 +1,10 @@
-import {
-	TextInput,
-	PasswordInput,
-	Paper,
-	Container,
-	Button,
-} from '@mantine/core';
+import { Paper, TextInput, PasswordInput, Button, Title } from '@mantine/core';
+import classes from './login.module.css';
 import { useForm, zodResolver } from '@mantine/form';
 import fetchApi from '../../utils/fetchApi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { useGetCurrentUser } from '../../utils/queries';
+import { useGetCurrentUser } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
 
 function Login() {
@@ -35,33 +30,45 @@ function Login() {
 			toast.success('Connexion réussie');
 			navigate('/active-lines');
 		} catch (error) {
-			console.log(error);
+			form.setFieldValue('password', '');
+			form.setErrors({ email: ' ', password: ' ' });
 		}
 	};
 
 	return (
-		<main>
-			<form onSubmit={form.onSubmit(onSubmit)}>
-				<Container size={420} my={40}>
-					<Paper withBorder shadow='md' p={30} mt={30} radius='md'>
+		<main className='login-page'>
+			<div className={classes.wrapper}>
+				<Paper className={classes.form} radius={0} p={30}>
+					<Title
+						order={2}
+						className={classes.title}
+						ta='center'
+						mt='md'
+						mb={50}
+					>
+						Gestion SMAC - BETA
+					</Title>
+					<form onSubmit={form.onSubmit(onSubmit)}>
 						<TextInput
 							label='Email'
 							placeholder='Votre adresse mail'
-							mt='sm'
+							size='md'
 							{...form.getInputProps('email')}
 						/>
 						<PasswordInput
 							label='Mot de passe'
 							placeholder='Votre mot de passe'
-							mt='sm'
+							mt='md'
+							size='md'
 							{...form.getInputProps('password')}
 						/>
-						<Button type='submit' fullWidth mt='xl'>
+
+						<Button type='submit' fullWidth mt='xl' size='md'>
 							Connexion
 						</Button>
-					</Paper>
-				</Container>
-			</form>
+					</form>
+				</Paper>
+			</div>
 		</main>
 	);
 }

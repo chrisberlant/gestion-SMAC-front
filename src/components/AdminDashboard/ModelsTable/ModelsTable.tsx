@@ -2,7 +2,7 @@ import { ModelType } from '../../../@types/types';
 import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';
-import { useGetAllModels } from '../../../utils/queries';
+import { useGetAllModels } from '../../../utils/modelQueries';
 import { toast } from 'sonner';
 import './modelsTables.css';
 import { modals } from '@mantine/modals';

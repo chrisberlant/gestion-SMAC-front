@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { useGetAllDevices } from '../../utils/queries';
+import { useGetAllDevices } from '../../utils/deviceQueries';
 import { Loader } from '@mantine/core';
 
 function Devices() {

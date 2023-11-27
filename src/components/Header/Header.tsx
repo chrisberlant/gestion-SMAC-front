@@ -15,9 +15,9 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import fetchApi from '../../utils/fetchApi';
-import { useGetCurrentUser } from '../../utils/queries';
+import { useGetCurrentUser } from '../../utils/userQueries';
 import { toast } from 'sonner';
 
 // Liste des différents onglets avec leurs titres et liens

@@ -10,7 +10,7 @@ import {
 	Loader,
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
-import { useGetAllUsers, useGetCurrentUser } from '../../../utils/queries';
+import { useGetAllUsers, useGetCurrentUser } from '../../../utils/userQueries';
 import { toast } from 'sonner';
 import './usersTable.css';
 
