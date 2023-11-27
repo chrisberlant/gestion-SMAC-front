@@ -21,14 +21,12 @@ function Login() {
 			password: '',
 		},
 	});
-	console.log(form.values);
 
 	const onSubmit = async () => {
 		try {
-			console.log(form);
 			await fetchApi('/login', 'POST', form.values);
 			toast.success('Connexion réussie');
-			navigate('/active-lines');
+			navigate('/attributed-lines');
 		} catch (error) {
 			form.setFieldValue('password', '');
 			form.setErrors({ email: ' ', password: ' ' });

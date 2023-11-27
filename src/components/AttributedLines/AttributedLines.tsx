@@ -1,9 +1,14 @@
 import { toast } from 'sonner';
-import { useGetAllActiveLines } from '../../utils/lineQueries';
+import { useGetAllAttributedLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
 
-function ActiveLines() {
-	const { data: lines, isLoading, isError, error } = useGetAllActiveLines();
+function AttributedLines() {
+	const {
+		data: lines,
+		isLoading,
+		isError,
+		error,
+	} = useGetAllAttributedLines();
 
 	if (isLoading)
 		return (
@@ -19,10 +24,10 @@ function ActiveLines() {
 
 	return (
 		<div>
-			Lignes actives ici
+			Lignes attribuées ici
 			<div>{JSON.stringify(lines)}</div>
 		</div>
 	);
 }
 
-export default ActiveLines;
+export default AttributedLines;

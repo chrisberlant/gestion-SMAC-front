@@ -19,11 +19,12 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import fetchApi from '../../utils/fetchApi';
 import { useGetCurrentUser } from '../../utils/userQueries';
 import { toast } from 'sonner';
+import ThemeToggler from '../ThemeToggler/ThemeToggler';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
-	'Lignes actives': '/active-lines',
-	'Lignes résiliées': '/terminated-lines',
+	'Lignes attribuées': '/attributed-lines',
+	'Lignes résiliées': '/resiliated-lines',
 	Prêts: '/lent',
 	Appareils: '/devices',
 	Statistiques: '/stats',
@@ -106,6 +107,7 @@ export function Header() {
 									</Group>
 								</UnstyledButton>
 							</Menu.Target>
+							<ThemeToggler />
 							<Menu.Dropdown>
 								<Link to='/account-settings'>
 									<Menu.Item
@@ -144,20 +146,21 @@ export function Header() {
 						</Menu>
 					</Group>
 				</Container>
-
-				<Container size='md'>
-					<Tabs
-						variant='outline'
-						visibleFrom='sm'
-						classNames={{
-							root: classes.tabs,
-							list: classes.tabsList,
-							tab: classes.tab,
-						}}
-					>
-						<Tabs.List>{items}</Tabs.List>
-					</Tabs>
-				</Container>
+				<nav>
+					<Container size='md'>
+						<Tabs
+							variant='outline'
+							visibleFrom='sm'
+							classNames={{
+								root: classes.tabs,
+								list: classes.tabsList,
+								tab: classes.tab,
+							}}
+						>
+							<Tabs.List>{items}</Tabs.List>
+						</Tabs>
+					</Container>
+				</nav>
 			</header>
 		);
 	}

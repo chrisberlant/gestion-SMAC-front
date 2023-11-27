@@ -4,12 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
-import ActiveLines from './components/ActiveLines/ActiveLines';
+import AttributedLines from './components/AttributedLines/AttributedLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import { Toaster } from 'sonner';
 import Devices from './components/Devices/Devices';
-import AuthenticationImage from './components/Login/Login';
 
 function AppRoutes() {
 	return (
@@ -19,7 +18,7 @@ function AppRoutes() {
 			<Route element={<Header />} path='/header' />
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
-				<Route element={<ActiveLines />} path='/active-lines' />
+				<Route element={<AttributedLines />} path='/attributed-lines' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />
 				<Route element={<Devices />} path='/devices' />
 			</Route>
