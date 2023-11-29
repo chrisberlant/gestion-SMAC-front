@@ -1,17 +1,16 @@
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
+import PageTopScroller from '../PageTopScroller/PageTopScroller';
 
 function PrivateRoutes() {
-	const authenticatedUser = true; // TODO logique vérification authentification
-	return authenticatedUser ? (
+	return (
 		<>
 			<Header />
 			<main className='app-content'>
 				<Outlet />
+				<PageTopScroller />
 			</main>
 		</>
-	) : (
-		<Navigate to='/login' />
 	);
 }
 

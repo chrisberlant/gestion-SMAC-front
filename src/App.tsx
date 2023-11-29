@@ -1,5 +1,3 @@
-import '@mantine/core/styles.css';
-import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
 import Header from './components/Header/Header';
@@ -9,6 +7,8 @@ import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import { Toaster } from 'sonner';
 import Devices from './components/Devices/Devices';
+import '@mantine/core/styles.css';
+import './App.css';
 
 function AppRoutes() {
 	return (

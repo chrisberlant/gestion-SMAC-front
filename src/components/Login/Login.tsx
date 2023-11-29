@@ -1,20 +1,24 @@
-import { Paper, TextInput, PasswordInput, Button, Title } from '@mantine/core';
+import {
+	Paper,
+	TextInput,
+	PasswordInput,
+	Button,
+	Title,
+	LoadingOverlay,
+} from '@mantine/core';
 import classes from './login.module.css';
 import { useForm, zodResolver } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
-import { useGetCurrentUser, useLogin } from '../../utils/userQueries';
+import { useCheckLoginStatus, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
 import { useEffect } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 
 function Login() {
+	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data } = useGetCurrentUser();
-
-	useEffect(() => {
-		if (data) navigate('/attributed-lines');
-	}, [data, navigate]);
-
+	const { data } = useCheckLoginStatus();
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -22,7 +26,11 @@ function Login() {
 			password: '',
 		},
 	});
-	const { mutate: submitLogin } = useLogin(form);
+	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
+
+	useEffect(() => {
+		if (data) navigate('/attributed-lines');
+	}, [data, navigate]);
 
 	return (
 		<main className='login-page'>
@@ -38,6 +46,11 @@ function Login() {
 						Gestion SMAC - BETA
 					</Title>
 					<form onSubmit={form.onSubmit(() => submitLogin())}>
+						<LoadingOverlay
+							visible={visible}
+							zIndex={1000}
+							overlayProps={{ radius: 'sm', blur: 2 }}
+						/>
 						<TextInput
 							label='Email'
 							placeholder='Votre adresse mail'

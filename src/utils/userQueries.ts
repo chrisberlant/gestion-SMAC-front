@@ -5,15 +5,18 @@ import { toast } from 'sonner';
 import { UseFormReturnType } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 
+// Connexion
 export const useLogin = (
 	form: UseFormReturnType<{
 		email: string;
 		password: string;
-	}>
+	}>,
+	toggleOverlay: () => void
 ) => {
 	const navigate = useNavigate();
 	return useMutation({
 		mutationFn: async () => {
+			toggleOverlay();
 			const user: LoggedUser = await fetchApi(
 				'/login',
 				'POST',
@@ -26,12 +29,14 @@ export const useLogin = (
 			navigate('/attributed-lines');
 		},
 		onError: () => {
+			toggleOverlay();
 			form.setFieldValue('password', '');
 			form.setErrors({ email: ' ', password: ' ' });
 		},
 	});
 };
 
+// Déconnexion
 export const useLogout = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
@@ -53,6 +58,7 @@ export const useLogout = () => {
 	});
 };
 
+// Récupérer les infos utilisateur
 export const useGetCurrentUser = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
@@ -60,15 +66,30 @@ export const useGetCurrentUser = () => {
 			const currentUser: LoggedUser = await fetchApi('/getCurrentUser');
 			return currentUser;
 		},
-		meta: {
-			loginQuery: 'true',
-		},
 		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
 };
 
+// Utilisé uniquement pour vérifier si l'utilisateur a déjà un token lorsqu'il est sur la page de connexion
+export const useCheckLoginStatus = () => {
+	return useQuery({
+		queryKey: ['loginStatus'],
+		queryFn: async () => {
+			const loggedUser: LoggedUser = await fetchApi('/getCurrentUser');
+			return loggedUser;
+		},
+		meta: {
+			loginStatusQuery: 'true',
+		},
+		retry: false,
+		staleTime: 0,
+		gcTime: 0,
+	});
+};
+
+// Récupérer tous les utilisateurs
 export const useGetAllUsers = () => {
 	return useQuery({
 		queryKey: ['users'],

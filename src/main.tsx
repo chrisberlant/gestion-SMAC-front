@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import {
+	MutationCache,
 	QueryCache,
 	QueryClient,
 	QueryClientProvider,
@@ -13,11 +14,20 @@ import { toast } from 'sonner';
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error, query) => {
-			if (!query.meta?.loginQuery) {
+			if (!query.meta?.loginStatusQuery) {
+				// Erreur générée uniquement s'il ne s'agit pas de la vérification du token
 				toast.error(error.message);
 				if (error.message.toLowerCase().includes('token')) {
 					window.location.href = '/';
 				}
+			}
+		},
+	}),
+	mutationCache: new MutationCache({
+		onError: (error) => {
+			toast.error(error.message);
+			if (error.message.toLowerCase().includes('token')) {
+				window.location.href = '/';
 			}
 		},
 	}),
