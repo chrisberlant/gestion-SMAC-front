@@ -14,7 +14,6 @@ function AppRoutes() {
 	return (
 		<Routes>
 			<Route element={<Login />} path='/' />
-			<Route element={<Login />} path='/login' />
 			<Route element={<Header />} path='/header' />
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>

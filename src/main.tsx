@@ -13,10 +13,10 @@ import { toast } from 'sonner';
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error, query) => {
-			if (!query.meta!.loginQuery) {
+			if (!query.meta?.loginQuery) {
 				toast.error(error.message);
 				if (error.message.toLowerCase().includes('token')) {
-					// window.location.href = '/login';
+					window.location.href = '/';
 				}
 			}
 		},

@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import { useGetAllAttributedLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
 

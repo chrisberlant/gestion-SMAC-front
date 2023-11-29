@@ -15,10 +15,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import fetchApi from '../../utils/fetchApi';
-import { useGetCurrentUser } from '../../utils/userQueries';
-import { toast } from 'sonner';
+import { Link, NavLink } from 'react-router-dom';
+import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 
 // Liste des différents onglets avec leurs titres et liens
@@ -32,10 +30,11 @@ const tabs = {
 
 export function Header() {
 	// const theme = useMantineTheme();
-	const { data: currentUser, isLoading, isError } = useGetCurrentUser();
+	const { data: currentUser, isLoading } = useGetCurrentUser();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-	const navigate = useNavigate();
+
+	const { mutate: logout } = useLogout();
 
 	if (isLoading)
 		return (
@@ -43,10 +42,6 @@ export function Header() {
 				<Loader size='xl' />
 			</div>
 		);
-
-	if (isError) {
-		window.location.href = '/login';
-	}
 
 	if (currentUser) {
 		if (currentUser.isAdmin) {
@@ -125,11 +120,7 @@ export function Header() {
 									</Menu.Item>
 								</Link>
 								<Menu.Item
-									onClick={async () => {
-										await fetchApi('/logout');
-										toast.success('Déconnexion réussie');
-										navigate('/login');
-									}}
+									onClick={() => logout()}
 									leftSection={
 										<IconLogout
 											style={{

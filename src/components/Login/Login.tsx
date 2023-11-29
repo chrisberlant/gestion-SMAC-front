@@ -1,18 +1,19 @@
 import { Paper, TextInput, PasswordInput, Button, Title } from '@mantine/core';
 import classes from './login.module.css';
 import { useForm, zodResolver } from '@mantine/form';
-import fetchApi from '../../utils/fetchApi';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
-import { useGetCurrentUser } from '../../utils/userQueries';
+import { useGetCurrentUser, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
+import { useEffect } from 'react';
 
 function Login() {
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	// const { data, isError } = useGetCurrentUser();
+	const { data } = useGetCurrentUser();
 
-	// if (data) navigate('/attributed-lines');
+	useEffect(() => {
+		if (data) navigate('/attributed-lines');
+	}, [data, navigate]);
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
@@ -21,17 +22,7 @@ function Login() {
 			password: '',
 		},
 	});
-
-	const onSubmit = async () => {
-		try {
-			const request = await fetchApi('/login', 'POST', form.values);
-			toast.info(`Bienvenue, ${request.firstName} !`);
-			navigate('/attributed-lines');
-		} catch (error) {
-			form.setFieldValue('password', '');
-			form.setErrors({ email: ' ', password: ' ' });
-		}
-	};
+	const { mutate: submitLogin } = useLogin(form);
 
 	return (
 		<main className='login-page'>
@@ -46,7 +37,7 @@ function Login() {
 					>
 						Gestion SMAC - BETA
 					</Title>
-					<form onSubmit={form.onSubmit(onSubmit)}>
+					<form onSubmit={form.onSubmit(() => submitLogin())}>
 						<TextInput
 							label='Email'
 							placeholder='Votre adresse mail'
