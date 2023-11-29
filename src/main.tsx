@@ -12,10 +12,12 @@ import { toast } from 'sonner';
 
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
-		onError: (error) => {
-			toast.error(error.message);
-			if (error.message.toLowerCase().includes('token')) {
-				// window.location.href = '/login';
+		onError: (error, query) => {
+			if (!query.meta!.loginQuery) {
+				toast.error(error.message);
+				if (error.message.toLowerCase().includes('token')) {
+					// window.location.href = '/login';
+				}
 			}
 		},
 	}),

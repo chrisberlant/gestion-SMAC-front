@@ -9,6 +9,9 @@ export const useGetCurrentUser = () => {
 			const data: LoggedUser = await fetchApi('/getCurrentUser');
 			return data;
 		},
+		meta: {
+			loginQuery: 'true',
+		},
 		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,

@@ -10,9 +10,9 @@ import { userLoginSchema } from '../../validationSchemas/userSchemas';
 function Login() {
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data, isError } = useGetCurrentUser();
+	// const { data, isError } = useGetCurrentUser();
 
-	if (data) navigate('/active-lines');
+	// if (data) navigate('/attributed-lines');
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
@@ -24,8 +24,8 @@ function Login() {
 
 	const onSubmit = async () => {
 		try {
-			await fetchApi('/login', 'POST', form.values);
-			toast.success('Connexion réussie');
+			const request = await fetchApi('/login', 'POST', form.values);
+			toast.info(`Bienvenue, ${request.firstName} !`);
 			navigate('/attributed-lines');
 		} catch (error) {
 			form.setFieldValue('password', '');

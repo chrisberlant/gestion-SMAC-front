@@ -1,12 +1,9 @@
-import { toast } from 'sonner';
-
-const baseUrl = 'http://localhost:3000';
-
 async function fetchApi(
 	route: string,
 	method?: string,
 	infos?: Record<string, string>
 ) {
+	const baseUrl = 'http://localhost:3000';
 	const options: RequestInit = {
 		method,
 		headers: {
