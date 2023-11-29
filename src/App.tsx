@@ -1,20 +1,18 @@
+import '@mantine/core/styles.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login/Login';
-import Header from './components/Header/Header';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 import AttributedLines from './components/AttributedLines/AttributedLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
-import { Toaster } from 'sonner';
 import Devices from './components/Devices/Devices';
-import '@mantine/core/styles.css';
+import { Toaster } from 'sonner';
 import './App.css';
 
 function AppRoutes() {
 	return (
 		<Routes>
 			<Route element={<Login />} path='/' />
-			<Route element={<Header />} path='/header' />
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
 				<Route element={<AttributedLines />} path='/attributed-lines' />

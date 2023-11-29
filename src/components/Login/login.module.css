@@ -5,10 +5,10 @@
 
 .form {
 	position: relative;
-	border-right: rem(8px) solid
-		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-7));
 	min-height: 100vh;
-	max-width: rem(450px);
+	border-right: rem(1px) solid
+		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-7));
+	max-width: rem(500px);
 	padding-top: rem(80px);
 
 	@media (max-width: $mantine-breakpoint-sm) {
