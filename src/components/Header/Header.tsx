@@ -33,7 +33,6 @@ export function Header() {
 	const { data: currentUser, isLoading } = useGetCurrentUser();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-
 	const { mutate: logout } = useLogout();
 
 	if (isLoading)

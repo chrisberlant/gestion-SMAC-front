@@ -2,8 +2,17 @@ a {
 	all: unset;
 }
 
+#root {
+	height: 100vh;
+}
+
+.app {
+	height: 100%;
+}
+
 main {
 	padding: 0 16px 16px 16px;
+	height: 100%;
 }
 
 .loader-box {

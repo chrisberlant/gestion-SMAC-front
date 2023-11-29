@@ -83,6 +83,7 @@ export const useCheckLoginStatus = () => {
 		meta: {
 			loginStatusQuery: 'true',
 		},
+		refetchOnWindowFocus: false,
 		retry: false,
 		staleTime: 0,
 		gcTime: 0,

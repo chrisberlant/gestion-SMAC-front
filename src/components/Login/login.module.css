@@ -1,14 +1,13 @@
 .wrapper {
-	min-height: 100%;
 	background-size: cover;
 	background-image: url('../../assets/login-background.jpg');
 }
 
 .form {
 	position: relative;
-	border-right: rem(1px) solid
+	border-right: rem(8px) solid
 		light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-7));
-	min-height: rem(900px);
+	min-height: 100vh;
 	max-width: rem(450px);
 	padding-top: rem(80px);
 
@@ -17,7 +16,7 @@
 	}
 }
 
-main.login-page {
+main.loginPage {
 	all: unset;
 }
 

@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error, query) => {
 			if (!query.meta?.loginStatusQuery) {
-				// Erreur générée uniquement s'il ne s'agit pas de la vérification du token
+				// Erreur générée uniquement s'il ne s'agit pas de la vérification du token sur la page de connexion
 				toast.error(error.message);
 				if (error.message.toLowerCase().includes('token')) {
 					window.location.href = '/';

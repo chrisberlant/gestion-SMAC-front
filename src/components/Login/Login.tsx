@@ -33,11 +33,11 @@ function Login() {
 	}, [data, navigate]);
 
 	return (
-		<main className='login-page'>
+		<main className={classes.loginPage}>
 			<div className={classes.wrapper}>
 				<Paper className={classes.form} radius={0} p={30}>
 					<Title
-						order={2}
+						order={1}
 						className={classes.title}
 						ta='center'
 						mt='md'
