@@ -11,13 +11,11 @@ import {
 } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useGetAllUsers, useGetCurrentUser } from '../../../utils/userQueries';
-import { toast } from 'sonner';
 import './usersTable.css';
 
 function UsersTable() {
-	const { data: currentUser, isError: currentUserError } =
-		useGetCurrentUser();
-	const { data: users, isLoading, isError, error } = useGetAllUsers();
+	const { data: currentUser } = useGetCurrentUser();
+	const { data: users, isLoading, isError } = useGetAllUsers();
 
 	if (isLoading)
 		return (
@@ -26,11 +24,12 @@ function UsersTable() {
 			</div>
 		);
 
-	if (isError || currentUserError) {
-		toast.error(
-			'Impossible de récupérer les utilisateurs depuis le serveur'
+	if (isError) {
+		return (
+			<div>
+				Impossible de récupérer les utilisateurs depuis le serveur
+			</div>
 		);
-		return <div className='error'>{error!.message}</div>;
 	}
 
 	const rows = users!.map((user: UserType) => (

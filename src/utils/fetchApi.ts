@@ -23,12 +23,6 @@ async function fetchApi(
 
 	// If request failed
 	if (!response.ok) {
-		// If the API replies with invalid token or non existent token
-		if (data.toLowerCase().includes('token')) {
-			// window.location.href = '/login';
-			throw new Error(data);
-		}
-		toast.error(data);
 		throw new Error(data);
 	}
 

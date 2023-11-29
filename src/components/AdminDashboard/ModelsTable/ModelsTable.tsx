@@ -18,10 +18,7 @@ function ModelsTable() {
 		);
 
 	if (isError) {
-		toast.error(
-			'Impossible de récupérer les utilisateurs depuis le serveur'
-		);
-		return <div className='error'>{error!.message}</div>;
+		return <div>Impossible de récupérer les modèles depuis le serveur</div>;
 	}
 
 	const openDeleteModal = (refToDelete: string) => {

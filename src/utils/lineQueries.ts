@@ -15,9 +15,9 @@ export const useGetAllAttributedLines = () => {
 
 export const useGetAllResiliatedLines = () => {
 	return useQuery({
-		queryKey: ['activeLines'],
+		queryKey: ['resiliatedLines'],
 		queryFn: async () => {
-			const data: ModelType[] = await fetchApi('/getAllLines/attributed');
+			const data: ModelType[] = await fetchApi('/getAllLines/resiliated');
 			return data;
 		},
 		retry: false,

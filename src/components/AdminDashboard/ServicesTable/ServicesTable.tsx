@@ -2,11 +2,10 @@ import { ServiceType } from '../../../@types/types';
 import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useGetAllServices } from '../../../utils/serviceQueries';
-import { toast } from 'sonner';
 import './servicesTable.css';
 
 function ServicesTable() {
-	const { data: services, isLoading, isError, error } = useGetAllServices();
+	const { data: services, isLoading, isError } = useGetAllServices();
 
 	if (isLoading)
 		return (
@@ -16,8 +15,9 @@ function ServicesTable() {
 		);
 
 	if (isError) {
-		toast.error('Impossible de récupérer les services depuis le serveur');
-		return <div className='error'>{error!.message}</div>;
+		return (
+			<div>Impossible de récupérer les services depuis le serveur</div>
+		);
 	}
 
 	const rows = services!.map((service: ServiceType) => (

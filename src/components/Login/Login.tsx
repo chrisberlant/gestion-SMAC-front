@@ -10,9 +10,9 @@ import { userLoginSchema } from '../../validationSchemas/userSchemas';
 function Login() {
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	// const { data, isError } = useGetCurrentUser();
+	const { data, isError } = useGetCurrentUser();
 
-	// if (data) navigate('/active-lines');
+	if (data) navigate('/active-lines');
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
