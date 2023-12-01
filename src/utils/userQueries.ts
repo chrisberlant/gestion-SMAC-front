@@ -4,6 +4,7 @@ import fetchApi from './fetchApi';
 import { toast } from 'sonner';
 import { UseFormReturnType } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
+import queryClient from './queryClient';
 
 // Connexion
 export const useLogin = (
@@ -25,6 +26,7 @@ export const useLogin = (
 			return user;
 		},
 		onSuccess: (user) => {
+			queryClient.setQueryData(['currentUser'], user);
 			toast.info(`Bienvenue, ${user!.firstName} !`);
 			navigate('/attributed-lines');
 		},
@@ -66,16 +68,17 @@ export const useGetCurrentUser = () => {
 			const currentUser: LoggedUser = await fetchApi('/getCurrentUser');
 			return currentUser;
 		},
+		refetchOnWindowFocus: false,
 		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
 };
 
-// Utilisé uniquement pour vérifier si l'utilisateur a déjà un token lorsqu'il est sur la page de connexion
+// Vérifier si l'utilisateur a déjà un token lorsqu'il est sur la page de connexion
 export const useCheckLoginStatus = () => {
 	return useQuery({
-		queryKey: ['loginStatus'],
+		queryKey: ['currentUser'],
 		queryFn: async () => {
 			const loggedUser: LoggedUser = await fetchApi('/getCurrentUser');
 			return loggedUser;
@@ -85,8 +88,8 @@ export const useCheckLoginStatus = () => {
 		},
 		refetchOnWindowFocus: false,
 		retry: false,
-		staleTime: 0,
-		gcTime: 0,
+		staleTime: Infinity,
+		gcTime: Infinity,
 	});
 };
 

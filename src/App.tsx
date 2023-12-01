@@ -7,6 +7,7 @@ import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import Devices from './components/Devices/Devices';
 import { Toaster } from 'sonner';
+import ResiliatedLines from './components/ResiliatedLines/ResiliatedLines';
 import './App.css';
 
 function AppRoutes() {
@@ -16,8 +17,9 @@ function AppRoutes() {
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
 				<Route element={<AttributedLines />} path='/attributed-lines' />
-				<Route element={<AdminDashboard />} path='/admin-dashboard' />
+				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
+				<Route element={<AdminDashboard />} path='/admin-dashboard' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
 		</Routes>

@@ -17,7 +17,7 @@ export const deviceCreationSchema = z.strictObject({
 		'En panne',
 		'Vol',
 	]),
-	condition: z.enum(['Neuf', 'Reconditionné']),
+	isNew: z.boolean(),
 	comments: z
 		.string({
 			invalid_type_error:
@@ -45,7 +45,7 @@ export const deviceModificationSchema = z.strictObject({
 			'Vol',
 		])
 		.optional(),
-	condition: z.enum(['Neuf', 'Reconditionné']).optional(),
+	isNew: z.boolean(),
 	comments: z
 		.string({
 			invalid_type_error:

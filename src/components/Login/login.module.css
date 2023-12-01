@@ -20,6 +20,10 @@ main.loginPage {
 	all: unset;
 }
 
+form {
+	padding: 0 30px 0 30px;
+}
+
 .title {
 	color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
 	font-family: Greycliff CF, var(--mantine-font-family);

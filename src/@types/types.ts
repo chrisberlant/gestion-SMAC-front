@@ -26,7 +26,7 @@ export interface DeviceType {
 	preparationDate: Date;
 	attributionDate: Date;
 	status: string;
-	condition: string;
+	isNew: boolean;
 	comments: string;
 	modeId: number;
 	model: ModelType;
