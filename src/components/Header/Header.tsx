@@ -18,6 +18,7 @@ import classes from './header.module.css';
 import { Link, NavLink } from 'react-router-dom';
 import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
+import AccountSettings from '../AccountSettings/AccountSettings';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
@@ -103,21 +104,7 @@ export function Header() {
 							</Menu.Target>
 							<ThemeToggler />
 							<Menu.Dropdown>
-								<Link to='/account-settings'>
-									<Menu.Item
-										leftSection={
-											<IconSettings
-												style={{
-													width: rem(16),
-													height: rem(16),
-												}}
-												stroke={1.5}
-											/>
-										}
-									>
-										Paramètres du compte
-									</Menu.Item>
-								</Link>
+								<AccountSettings />
 								<Menu.Item
 									onClick={() => logout()}
 									leftSection={
