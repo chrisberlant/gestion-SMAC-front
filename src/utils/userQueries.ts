@@ -104,3 +104,34 @@ export const useGetAllUsers = () => {
 		retry: false,
 	});
 };
+
+// Modifier les infos utilisateurs
+export const useModifyCurrentUser = (
+	form: UseFormReturnType<{
+		email: string;
+		lastName: string;
+		firstName: string;
+	}>,
+	toggleOverlay: () => void,
+	close: () => void
+) => {
+	return useMutation({
+		mutationFn: async () => {
+			toggleOverlay();
+			const data: LoggedUser = await fetchApi(
+				'/modifyCurrentUser',
+				'PATCH',
+				form.values
+			);
+			return data;
+		},
+		onSuccess: (user) => {
+			close();
+			queryClient.setQueryData(['currentUser'], user);
+			toast.success('Informations modifiées avec succès');
+		},
+		onSettled: () => {
+			toggleOverlay();
+		},
+	});
+};

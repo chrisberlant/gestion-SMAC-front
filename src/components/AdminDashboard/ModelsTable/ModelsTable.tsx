@@ -8,7 +8,7 @@ import './modelsTables.css';
 import { modals } from '@mantine/modals';
 
 function ModelsTable() {
-	const { data: models, isLoading, isError, error } = useGetAllModels();
+	const { data: models, isLoading, isError } = useGetAllModels();
 
 	if (isLoading)
 		return (

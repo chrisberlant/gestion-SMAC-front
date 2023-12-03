@@ -15,7 +15,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
 import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import AccountSettings from '../AccountSettings/AccountSettings';
@@ -33,6 +33,7 @@ export function Header() {
 	// const theme = useMantineTheme();
 	const { data: currentUser, isLoading } = useGetCurrentUser();
 	const [opened, { toggle }] = useDisclosure(false);
+	const [openedModal, { open, close }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 	const { mutate: logout } = useLogout();
 
@@ -104,7 +105,20 @@ export function Header() {
 							</Menu.Target>
 							<ThemeToggler />
 							<Menu.Dropdown>
-								<AccountSettings />
+								<Menu.Item
+									leftSection={
+										<IconSettings
+											style={{
+												width: rem(16),
+												height: rem(16),
+											}}
+											stroke={1.5}
+										/>
+									}
+									onClick={open}
+								>
+									Paramètres du compte
+								</Menu.Item>
 								<Menu.Item
 									onClick={() => logout()}
 									leftSection={
@@ -138,6 +152,7 @@ export function Header() {
 						</Tabs>
 					</Container>
 				</nav>
+				<AccountSettings opened={openedModal} close={close} />
 			</header>
 		);
 	}

@@ -18,7 +18,7 @@ function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data } = useCheckLoginStatus();
+	const { data: userHasToken } = useCheckLoginStatus();
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -29,8 +29,8 @@ function Login() {
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
-		if (data) navigate('/attributed-lines');
-	}, [data, navigate]);
+		if (userHasToken) navigate('/attributed-lines');
+	}, [userHasToken, navigate]);
 
 	return (
 		<main className={classes.loginPage}>
@@ -55,6 +55,7 @@ function Login() {
 							label='Email'
 							placeholder='Votre adresse mail'
 							size='md'
+							data-autofocus
 							{...form.getInputProps('email')}
 						/>
 						<PasswordInput
