@@ -10,11 +10,14 @@ import { toast } from 'sonner';
 import ChangePassword from './ChangePassword/ChangePassword';
 
 interface AccountSettingsProps {
-	opened: boolean;
-	close: () => void;
+	openedAccountModal: boolean;
+	closeAccountModal: () => void;
 }
 
-function AccountSettings({ opened, close }: AccountSettingsProps) {
+function AccountSettings({
+	openedAccountModal,
+	closeAccountModal,
+}: AccountSettingsProps) {
 	const { data: currentUser } = useGetCurrentUser();
 	const [
 		openedPasswordModal,
@@ -32,10 +35,10 @@ function AccountSettings({ opened, close }: AccountSettingsProps) {
 	const { mutate: modifyCurrentUser } = useModifyCurrentUser(
 		form,
 		toggleOverlay,
-		close
+		closeAccountModal
 	);
 	const closeModal = () => {
-		close();
+		closeAccountModal();
 		form.reset();
 		// Si des champs avaient été modifiés
 		if (form.isDirty())
@@ -45,7 +48,7 @@ function AccountSettings({ opened, close }: AccountSettingsProps) {
 	return (
 		<div className='account-settings'>
 			<Modal
-				opened={opened}
+				opened={openedAccountModal}
 				onClose={closeModal}
 				title='Paramètres du compte'
 				centered
@@ -92,7 +95,8 @@ function AccountSettings({ opened, close }: AccountSettingsProps) {
 			</Modal>
 			<ChangePassword
 				opened={openedPasswordModal}
-				close={closePasswordModal}
+				closePasswordModal={closePasswordModal}
+				closeAccountModal={closeAccountModal}
 			/>
 		</div>
 	);

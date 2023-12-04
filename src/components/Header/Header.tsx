@@ -33,7 +33,10 @@ export function Header() {
 	// const theme = useMantineTheme();
 	const { data: currentUser, isLoading } = useGetCurrentUser();
 	const [opened, { toggle }] = useDisclosure(false);
-	const [openedModal, { open, close }] = useDisclosure(false);
+	const [
+		openedAccountModal,
+		{ open: openAccountModal, close: closeAccountModal },
+	] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 	const { mutate: logout } = useLogout();
 
@@ -115,7 +118,7 @@ export function Header() {
 											stroke={1.5}
 										/>
 									}
-									onClick={open}
+									onClick={openAccountModal}
 								>
 									Paramètres du compte
 								</Menu.Item>
@@ -152,7 +155,10 @@ export function Header() {
 						</Tabs>
 					</Container>
 				</nav>
-				<AccountSettings opened={openedModal} close={close} />
+				<AccountSettings
+					openedAccountModal={openedAccountModal}
+					closeAccountModal={closeAccountModal}
+				/>
 			</header>
 		);
 	}

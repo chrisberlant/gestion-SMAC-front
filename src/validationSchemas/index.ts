@@ -7,7 +7,7 @@ const selectionSchema = z.strictObject({
 			invalid_type_error: "L'id doit être un nombre entier",
 		})
 		.int()
-		.min(1, { message: "L'id fourni est incorrect" }),
+		.positive("L'id fourni est incorrect"),
 });
 
 export default selectionSchema;

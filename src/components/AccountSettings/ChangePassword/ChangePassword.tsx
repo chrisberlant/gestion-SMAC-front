@@ -1,36 +1,59 @@
 import { Button, LoadingOverlay, Modal, PasswordInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
-import { passwordModificationSchema } from '../../../validationSchemas/userSchemas';
+import { currentUserPasswordModificationSchema } from '../../../validationSchemas/userSchemas';
 import { useDisclosure } from '@mantine/hooks';
+import { useModifyCurrentUserPassword } from '../../../utils/userQueries';
+import { toast } from 'sonner';
 
 interface ChangePasswordProps {
 	opened: boolean;
-	close: () => void;
+	closePasswordModal: () => void;
+	closeAccountModal: () => void;
 }
 
-function ChangePassword({ opened, close }: ChangePasswordProps) {
+function ChangePassword({
+	opened,
+	closePasswordModal,
+	closeAccountModal,
+}: ChangePasswordProps) {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
-		validate: zodResolver(passwordModificationSchema),
+		validate: zodResolver(currentUserPasswordModificationSchema),
 		initialValues: {
 			oldPassword: '',
 			newPassword: '',
 			confirmPassword: '',
 		},
 	});
-	// TODO create mutation
+	const { mutate: modifyCurrentUserPassword } = useModifyCurrentUserPassword(
+		form,
+		toggleOverlay,
+		closePasswordModal,
+		closeAccountModal
+	);
+	const closeModals = () => {
+		closePasswordModal();
+		closeAccountModal();
+		form.reset();
+		// Si des champs avaient été modifiés
+		if (form.isDirty())
+			toast.warning("Les modifications n'ont pas été enregistrées");
+	};
+
 	return (
 		<div className='change-password'>
 			<Modal
 				opened={opened}
-				onClose={close}
+				onClose={closeModals}
 				title='Changement du mot de passe'
 				centered
 				overlayProps={{
 					backgroundOpacity: 0,
 				}}
 			>
-				<form onSubmit={form.onSubmit(() => console.log(''))}>
+				<form
+					onSubmit={form.onSubmit(() => modifyCurrentUserPassword())}
+				>
 					<LoadingOverlay
 						visible={visible}
 						zIndex={10}
@@ -60,7 +83,7 @@ function ChangePassword({ opened, close }: ChangePasswordProps) {
 						fullWidth
 						mt='xl'
 						color='grey'
-						onClick={() => close()}
+						onClick={closePasswordModal}
 					>
 						Retour
 					</Button>
