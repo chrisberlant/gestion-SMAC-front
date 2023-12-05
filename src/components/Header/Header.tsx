@@ -38,7 +38,7 @@ export function Header() {
 		{ open: openAccountModal, close: closeAccountModal },
 	] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-	const { mutate: logout } = useLogout();
+	const { refetch: logout } = useLogout();
 
 	if (isLoading)
 		return (

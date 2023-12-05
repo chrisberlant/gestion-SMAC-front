@@ -40,23 +40,15 @@ export const useLogin = (
 
 // Déconnexion
 export const useLogout = () => {
-	const queryClient = useQueryClient();
-	return useMutation({
-		mutationFn: async () => {
-			await fetchApi('/logout');
+	return useQuery({
+		queryKey: ['logout'],
+		queryFn: async () => {
+			const data = await fetchApi('/logout');
+			return data;
 		},
-		onSuccess: () => {
-			toast.info(
-				'Vous avez été déconnecté, vous allez être redirigé vers la page de connexion'
-			);
-			queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-			setTimeout(() => {
-				window.location.href = '/';
-			}, 3000);
-		},
-		onError: () => {
-			toast.error('Impossible de vous déconnecter');
-		},
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
 	});
 };
 
@@ -69,7 +61,6 @@ export const useGetCurrentUser = () => {
 			return currentUser;
 		},
 		refetchOnWindowFocus: false,
-		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
@@ -87,7 +78,6 @@ export const useCheckLoginStatus = () => {
 			loginStatusQuery: 'true',
 		},
 		refetchOnWindowFocus: false,
-		retry: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
@@ -101,7 +91,6 @@ export const useGetAllUsers = () => {
 			const users: UserType[] = await fetchApi('/getAllUsers');
 			return users;
 		},
-		retry: false,
 	});
 };
 
