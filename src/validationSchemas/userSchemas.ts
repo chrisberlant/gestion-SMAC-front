@@ -72,13 +72,13 @@ export const currentUserPasswordModificationSchema = z
 				'La confirmation du nouveau mot de passe doit faire minimum 8 caractères'
 			),
 	})
-	.refine((data) => data.newPassword === data.confirmPassword, {
-		message: 'Le nouveau mot de passe et sa confirmation sont différents',
-		path: ['confirmPassword'],
-	})
 	.refine((data) => data.oldPassword !== data.newPassword, {
 		message: "L'ancien mot de passe et le nouveau sont identiques",
 		path: ['newPassword'],
+	})
+	.refine((data) => data.newPassword === data.confirmPassword, {
+		message: 'Le nouveau mot de passe et sa confirmation sont différents',
+		path: ['confirmPassword'],
 	});
 
 export const newUserCreationSchema = z.strictObject({

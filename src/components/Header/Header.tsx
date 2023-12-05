@@ -9,7 +9,6 @@ import {
 	Tabs,
 	Burger,
 	rem,
-	Loader,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
@@ -31,7 +30,7 @@ const tabs = {
 
 export function Header() {
 	// const theme = useMantineTheme();
-	const { data: currentUser, isLoading } = useGetCurrentUser();
+	const { data: currentUser } = useGetCurrentUser();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [
 		openedAccountModal,
@@ -39,13 +38,6 @@ export function Header() {
 	] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 	const { refetch: logout } = useLogout();
-
-	if (isLoading)
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
 
 	if (currentUser) {
 		if (currentUser.isAdmin) {

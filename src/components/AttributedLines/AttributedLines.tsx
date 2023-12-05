@@ -1,5 +1,6 @@
 import { useGetAllAttributedLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
+import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 function AttributedLines() {
 	const { data: lines, isLoading, isError } = useGetAllAttributedLines();
@@ -17,10 +18,10 @@ function AttributedLines() {
 	}
 
 	return (
-		<div>
+		<ZoomableComponent>
 			Lignes attribuées ici
 			<div>{JSON.stringify(lines)}</div>
-		</div>
+		</ZoomableComponent>
 	);
 }
 

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { LoggedUser, UserType } from '../@types/types';
 import fetchApi from './fetchApi';
 import { toast } from 'sonner';
