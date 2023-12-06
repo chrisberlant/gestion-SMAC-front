@@ -14,27 +14,21 @@ function ThemeToggler() {
 	});
 
 	return (
-		<div className={cx(classes.themeToggler)}>
-			<ActionIcon
-				onClick={() =>
-					setColorScheme(
-						computedColorScheme === 'light' ? 'dark' : 'light'
-					)
-				}
-				variant='subtle'
-				size='30'
-				aria-label='Changer le thème'
-			>
-				<IconSun
-					className={cx(classes.icon, classes.light)}
-					stroke={1.5}
-				/>
-				<IconMoon
-					className={cx(classes.icon, classes.dark)}
-					stroke={1.5}
-				/>
-			</ActionIcon>
-		</div>
+		<ActionIcon
+			onClick={() =>
+				setColorScheme(
+					computedColorScheme === 'light' ? 'dark' : 'light'
+				)
+			}
+			variant='subtle'
+			size='30'
+			pos='absolute'
+			right={30}
+			aria-label='Changer le thème'
+		>
+			<IconSun className={cx(classes.icon, classes.light)} stroke={1.5} />
+			<IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} />
+		</ActionIcon>
 	);
 }
 

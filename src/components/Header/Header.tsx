@@ -7,7 +7,6 @@ import {
 	Text,
 	Menu,
 	Tabs,
-	Burger,
 	rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -29,9 +28,7 @@ const tabs = {
 } as Record<string, string>;
 
 export function Header() {
-	// const theme = useMantineTheme();
 	const { data: currentUser } = useGetCurrentUser();
-	const [opened, { toggle }] = useDisclosure(false);
 	const [
 		openedAccountModal,
 		{ open: openAccountModal, close: closeAccountModal },
@@ -58,16 +55,9 @@ export function Header() {
 
 		return (
 			<header className={classes.header}>
-				<Container className={classes.mainSection} size='md'>
+				<Container className={classes.mainSection} size='lg'>
 					<Group justify='space-between'>
 						<MantineLogo size={28} />
-						<Burger
-							opened={opened}
-							onClick={toggle}
-							hiddenFrom='xs'
-							size='sm'
-						/>
-
 						<Menu
 							width={260}
 							position='bottom-end'
@@ -98,7 +88,6 @@ export function Header() {
 									</Group>
 								</UnstyledButton>
 							</Menu.Target>
-							<ThemeToggler />
 							<Menu.Dropdown>
 								<Menu.Item
 									leftSection={
@@ -130,6 +119,7 @@ export function Header() {
 								</Menu.Item>
 							</Menu.Dropdown>
 						</Menu>
+						<ThemeToggler />
 					</Group>
 				</Container>
 				<nav>

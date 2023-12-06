@@ -11,6 +11,7 @@
 
 .mainSection {
 	padding-bottom: var(--mantine-spacing-sm);
+	/* margin: 0 20px; */
 }
 
 .user {
@@ -24,10 +25,6 @@
 			var(--mantine-color-white),
 			var(--mantine-color-dark-8)
 		);
-	}
-
-	@media (max-width: $mantine-breakpoint-xs) {
-		display: none;
 	}
 }
 

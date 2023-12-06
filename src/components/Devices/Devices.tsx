@@ -1,6 +1,7 @@
 import { toast } from 'sonner';
 import { useGetAllDevices } from '../../utils/deviceQueries';
 import { Loader } from '@mantine/core';
+import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 function Devices() {
 	const { data: devices, isLoading, isError, error } = useGetAllDevices();
@@ -18,10 +19,10 @@ function Devices() {
 	}
 
 	return (
-		<div>
+		<ZoomableComponent>
 			Liste des appareils ici
 			<div>{JSON.stringify(devices)}</div>
-		</div>
+		</ZoomableComponent>
 	);
 }
 

@@ -13,12 +13,13 @@ import { useCheckLoginStatus, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
 import { useEffect } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import { toast } from 'sonner';
 
 function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data: userHasToken } = useCheckLoginStatus();
+	const { data: user } = useCheckLoginStatus();
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -29,8 +30,11 @@ function Login() {
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
-		if (userHasToken) navigate('/attributed-lines');
-	}, [userHasToken, navigate]);
+		if (user) {
+			navigate('/attributed-lines');
+			toast.info(`Bienvenue, ${user!.firstName} !`);
+		}
+	}, [user, navigate]);
 
 	return (
 		<main className={classes.loginPage}>

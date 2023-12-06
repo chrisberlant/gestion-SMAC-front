@@ -1,5 +1,6 @@
 import { useGetAllResiliatedLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
+import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 function ResiliatedLines() {
 	const { data: lines, isLoading, isError } = useGetAllResiliatedLines();
@@ -17,10 +18,10 @@ function ResiliatedLines() {
 	}
 
 	return (
-		<div>
+		<ZoomableComponent>
 			Lignes résiliées ici
 			<div>{JSON.stringify(lines)}</div>
-		</div>
+		</ZoomableComponent>
 	);
 }
 
