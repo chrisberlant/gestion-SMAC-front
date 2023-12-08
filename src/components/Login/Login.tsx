@@ -13,7 +13,6 @@ import { useCheckLoginStatus, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
 import { useEffect } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import { toast } from 'sonner';
 
 function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
@@ -30,10 +29,7 @@ function Login() {
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
-		if (user) {
-			navigate('/attributed-lines');
-			toast.info(`Bienvenue, ${user!.firstName} !`);
-		}
+		if (user) navigate('/attributed-lines');
 	}, [user, navigate]);
 
 	return (

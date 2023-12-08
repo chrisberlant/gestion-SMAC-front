@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
 		},
 		onSuccess: (_, query) => {
 			if (query.queryKey[0] === 'logout') {
-				toast.info(
+				toast.warning(
 					'Vous avez été déconnecté, vous allez être redirigé vers la page de connexion'
 				);
 				queryClient.clear();

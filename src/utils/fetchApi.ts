@@ -3,7 +3,7 @@ async function fetchApi(
 	method?: string,
 	infos?: Record<string, string>
 ) {
-	const baseUrl = 'http://localhost:3000';
+	const baseUrl = import.meta.env.VITE_API_URL;
 	const options: RequestInit = {
 		method,
 		headers: {
