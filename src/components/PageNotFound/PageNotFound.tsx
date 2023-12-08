@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function PageNotFound() {
 	const navigate = useNavigate();
+
 	return (
 		<main>
 			<Container className={classes.root}>
