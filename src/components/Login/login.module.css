@@ -46,7 +46,7 @@ main.loginPage {
 		.statusGreen {
 			color: #28a745;
 			border-radius: 20px;
-			padding: 3px 10px;
+			padding: 2px 10px 3px;
 			background-color: #e6f4ea;
 			.statusDot {
 				background-color: #28a745;

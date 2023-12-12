@@ -18,7 +18,12 @@ function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
-	const { data: user, isError, isLoading, error } = useCheckLoginStatus();
+	const {
+		data: user,
+		isError: isNotConnected,
+		isLoading,
+		error,
+	} = useCheckLoginStatus();
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -32,7 +37,7 @@ function Login() {
 		if (user) navigate('/attributed-lines');
 	}, [user, navigate]);
 
-	if (isError || isLoading) {
+	if (isNotConnected || isLoading) {
 		return (
 			<main className={classes.loginPage}>
 				<div className={classes.wrapper}>
@@ -71,25 +76,27 @@ function Login() {
 								Connexion
 							</Button>
 						</form>
+						{isNotConnected && (
+							<div className={classes.serverStatus}>
+								&Eacute;tat du serveur :{' '}
+								{error.message === 'Failed to fetch' ? (
+									<span className={classes.statusRed}>
+										<span
+											className={classes.statusDot}
+										></span>
+										Hors ligne
+									</span>
+								) : (
+									<span className={classes.statusGreen}>
+										<span
+											className={`${classes.statusDot} ${classes.statusDotAnimated}`}
+										></span>
+										En ligne
+									</span>
+								)}
+							</div>
+						)}
 					</Paper>
-					{isError && (
-						<div className={classes.serverStatus}>
-							&Eacute;tat du serveur :{' '}
-							{error.message === 'Failed to fetch' ? (
-								<span className={classes.statusRed}>
-									<span className={classes.statusDot}></span>
-									Hors ligne
-								</span>
-							) : (
-								<span className={classes.statusGreen}>
-									<span
-										className={`${classes.statusDot} ${classes.statusDotAnimated}`}
-									></span>
-									En ligne
-								</span>
-							)}
-						</div>
-					)}
 				</div>
 			</main>
 		);

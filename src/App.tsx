@@ -9,6 +9,7 @@ import Devices from './components/Devices/Devices';
 import { Toaster } from 'sonner';
 import ResiliatedLines from './components/ResiliatedLines/ResiliatedLines';
 import './App.css';
+import Stats from './components/Stats/Stats';
 
 function AppRoutes() {
 	return (
@@ -20,6 +21,7 @@ function AppRoutes() {
 				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />
+				<Route element={<Stats />} path='/stats' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
 		</Routes>

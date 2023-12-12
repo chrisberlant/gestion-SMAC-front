@@ -4,9 +4,9 @@ const selectionSchema = z.strictObject({
 	id: z
 		.number({
 			required_error: "L'id doit être renseigné",
-			invalid_type_error: "L'id doit être un nombre entier",
+			invalid_type_error: "L'id doit être un nombre",
 		})
-		.int()
+		.int("L'id doit être un nombre entier")
 		.positive("L'id fourni est incorrect"),
 });
 

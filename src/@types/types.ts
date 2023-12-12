@@ -33,3 +33,9 @@ export interface DeviceType {
 	agentId: number;
 	// TODO AgentType
 }
+
+export interface AgentsAndDevicesPerServiceType {
+	service: string;
+	agentsAmount: string;
+	devicesAmount: string;
+}
