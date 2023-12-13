@@ -4,7 +4,7 @@ import {
 	IconChevronDown,
 	IconChevronUp,
 } from '@tabler/icons-react';
-import classes from './TableHeader.module.css';
+import classes from './tableHeader.module.css';
 
 interface ThProps {
 	title: string;
