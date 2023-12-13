@@ -1,5 +1,6 @@
 import { useGetDevicesAmountPerModel } from '../../../utils/statsQueries';
 import { Loader } from '@mantine/core';
+import StatsTable from '../StatsTable/StatsTable';
 
 function DevicesAmountPerModel() {
 	const { data, isLoading, isError } = useGetDevicesAmountPerModel();
@@ -21,7 +22,14 @@ function DevicesAmountPerModel() {
 		);
 	}
 
-	return <div>Nombre d'appareils par modèle {JSON.stringify(data)}</div>;
+	const titles = ['Marque', 'Modèle', 'Stockage', "Nombre d'appareils"];
+	return (
+		<StatsTable
+			data={data!}
+			titles={titles}
+			tableTitle="Nombre d'appareils par modèle"
+		/>
+	);
 }
 
 export default DevicesAmountPerModel;

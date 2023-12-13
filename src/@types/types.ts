@@ -39,3 +39,14 @@ export interface AgentsAndDevicesPerServiceType {
 	agentsAmount: string;
 	devicesAmount: string;
 }
+
+export interface DevicesAmountPerModelType {
+	brand: string;
+	reference: string;
+	storage: string;
+	devicesAmount: string;
+}
+
+export type StatsType =
+	| AgentsAndDevicesPerServiceType
+	| DevicesAmountPerModelType;

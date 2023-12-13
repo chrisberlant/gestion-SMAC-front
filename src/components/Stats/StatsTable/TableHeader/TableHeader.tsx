@@ -22,7 +22,7 @@ function Th({ title, reversed, sorted, onSort }: ThProps) {
 	return (
 		<Table.Th className={classes.th}>
 			<UnstyledButton onClick={onSort} className={classes.control}>
-				<Group justify='space-between'>
+				<Group justify='center'>
 					<Text fw={500} fz='sm'>
 						{title}
 					</Text>

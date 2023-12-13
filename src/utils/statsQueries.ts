@@ -1,7 +1,10 @@
 import fetchApi from './fetchApi';
 import { useQuery } from '@tanstack/react-query';
+import {
+	AgentsAndDevicesPerServiceType,
+	DevicesAmountPerModelType,
+} from '../@types/types';
 import queryClient from './queryClient';
-import { AgentsAndDevicesPerServiceType } from '../@types/types';
 
 // Nombre d'agents et d'appareils par service
 export const useGetAgentsAndDevicesPerService = () => {
@@ -23,7 +26,9 @@ export const useGetDevicesAmountPerModel = () => {
 	return useQuery({
 		queryKey: ['devicesAmountPerModel'],
 		queryFn: async () => {
-			const data = await fetchApi('/getDevicesAmountPerModel');
+			const data: DevicesAmountPerModelType[] = await fetchApi(
+				'/getDevicesAmountPerModel'
+			);
 			return data;
 		},
 		staleTime: Infinity,
