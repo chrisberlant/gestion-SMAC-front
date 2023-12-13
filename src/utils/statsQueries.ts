@@ -4,7 +4,6 @@ import {
 	AgentsAndDevicesPerServiceType,
 	DevicesAmountPerModelType,
 } from '../@types/types';
-import queryClient from './queryClient';
 
 // Nombre d'agents et d'appareils par service
 export const useGetAgentsAndDevicesPerService = () => {
