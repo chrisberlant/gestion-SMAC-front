@@ -7,13 +7,22 @@ module.exports = {
 		'plugin:react-hooks/recommended',
 	],
 	ignorePatterns: ['dist', '.eslintrc.cjs'],
+	settings: {
+		'import/resolver': {
+			node: {
+				paths: ['src'],
+				extensions: ['.js', '.ts', '.d.ts', '.tsx'],
+			},
+		},
+	},
 	parser: '@typescript-eslint/parser',
-	plugins: ['react-refresh'],
+	plugins: ['react-refresh', 'import'],
 	rules: {
 		'react-refresh/only-export-components': [
 			'warn',
 			{ allowConstantExport: true },
 		],
 		'@typescript-eslint/no-unused-vars': 'warn',
+		'import/no-unresolved': 'error',
 	},
 };

@@ -69,16 +69,7 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 		);
 	};
 
-	const rows = sortedData.map((row, index) => (
-		<Table.Tr key={index}>
-			{Object.values(row).map((content, colIndex) => (
-				<Table.Td align='center' key={colIndex}>
-					{content}
-				</Table.Td>
-			))}
-		</Table.Tr>
-	));
-
+	// En-têtes du tableau
 	const headers = Object.keys(data[0]).map((header, index) => (
 		<Th
 			key={index}
@@ -89,12 +80,23 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 		/>
 	));
 
+	// Lignes du tableau
+	const rows = sortedData.map((row, index) => (
+		<Table.Tr key={index}>
+			{Object.values(row).map((content, colIndex) => (
+				<Table.Td align='center' key={colIndex}>
+					{content}
+				</Table.Td>
+			))}
+		</Table.Tr>
+	));
+
 	return (
 		<div className='stats-table'>
 			<ScrollArea>
 				<div className='horizontal-align-div'>
 					<TextInput
-						placeholder='Rechercher'
+						placeholder='Filtrer'
 						w={190}
 						mb={0}
 						leftSection={

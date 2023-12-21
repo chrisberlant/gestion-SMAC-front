@@ -55,9 +55,9 @@ export function Header() {
 
 		return (
 			<header className={classes.header}>
-				<Container className={classes.mainSection} size='lg'>
-					<Group justify='space-between'>
-						<MantineLogo size={28} />
+				<Container className={classes.mainSection} size='xl'>
+					<Group>
+						<MantineLogo size={28} className={classes.logo} />
 						<Menu
 							width={260}
 							position='bottom-end'
@@ -72,7 +72,10 @@ export function Header() {
 										[classes.userActive]: userMenuOpened,
 									})}
 								>
-									<Group gap={7}>
+									<Group
+										gap={7}
+										className={classes.userProfile}
+									>
 										<Text fw={500} size='sm' lh={1} mr={3}>
 											{currentUser.firstName +
 												' ' +

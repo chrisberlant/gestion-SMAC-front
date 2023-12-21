@@ -11,7 +11,10 @@
 
 .mainSection {
 	padding-bottom: var(--mantine-spacing-sm);
-	/* margin: 0 20px; */
+}
+
+.logo {
+	margin-left: 40px;
 }
 
 .user {
@@ -19,6 +22,7 @@
 	padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
 	border-radius: var(--mantine-radius-sm);
 	transition: background-color 100ms ease;
+	margin-left: auto;
 
 	&:hover {
 		background-color: light-dark(
