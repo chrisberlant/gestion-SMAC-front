@@ -18,7 +18,7 @@ function ResiliatedLines() {
 	}
 
 	return (
-		<ZoomableComponent>
+		<ZoomableComponent className='resiliated-lines'>
 			Lignes résiliées ici
 			<div>{JSON.stringify(lines)}</div>
 		</ZoomableComponent>

@@ -19,7 +19,7 @@ function Devices() {
 	}
 
 	return (
-		<ZoomableComponent>
+		<ZoomableComponent className='devices'>
 			Liste des appareils ici
 			<div>{JSON.stringify(devices)}</div>
 		</ZoomableComponent>

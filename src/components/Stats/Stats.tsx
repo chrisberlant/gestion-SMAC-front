@@ -4,7 +4,7 @@ import AgentsAndDevicesPerService from './AgentsAndDevicesPerService/AgentsAndDe
 
 function Stats() {
 	return (
-		<ZoomableComponent>
+		<ZoomableComponent className='stats'>
 			<DevicesAmountPerModel />
 			<AgentsAndDevicesPerService />
 		</ZoomableComponent>

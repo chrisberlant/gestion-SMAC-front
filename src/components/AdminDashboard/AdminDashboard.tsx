@@ -5,6 +5,7 @@ import ModelsTable from './ModelsTable/ModelsTable';
 import { useGetCurrentUser } from '../../utils/userQueries';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 function AdminDashboard() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -15,13 +16,13 @@ function AdminDashboard() {
 	}, [currentUser?.isAdmin, navigate]);
 
 	return (
-		<div className='admin-dashboard'>
+		<ZoomableComponent className='admin-dashboard'>
 			<UsersTable />
 			<div className='horizontal-align-div'>
 				<ServicesTable />
 				<ModelsTable />
 			</div>
-		</div>
+		</ZoomableComponent>
 	);
 }
 

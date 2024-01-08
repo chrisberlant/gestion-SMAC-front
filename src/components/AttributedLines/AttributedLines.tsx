@@ -18,7 +18,7 @@ function AttributedLines() {
 	}
 
 	return (
-		<ZoomableComponent>
+		<ZoomableComponent className='attributed-lines'>
 			Lignes attribuées ici
 			<div>{JSON.stringify(lines)}</div>
 		</ZoomableComponent>

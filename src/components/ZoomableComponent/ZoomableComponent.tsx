@@ -3,9 +3,10 @@ import { ReactNode, useState } from 'react';
 
 interface ZoomableComponentProps {
 	children: ReactNode;
+	className?: string;
 }
 
-function ZoomableComponent({ children }: ZoomableComponentProps) {
+function ZoomableComponent({ children, className }: ZoomableComponentProps) {
 	const [zoom, setZoom] = useState(100);
 	return (
 		<>
@@ -28,7 +29,12 @@ function ZoomableComponent({ children }: ZoomableComponentProps) {
 				onChange={setZoom}
 				w={100}
 			/>
-			<div style={{ transform: `scale(${zoom / 100})` }}>{children}</div>
+			<div
+				style={{ transform: `scale(${zoom / 100})` }}
+				className={className}
+			>
+				{children}
+			</div>
 		</>
 	);
 }
