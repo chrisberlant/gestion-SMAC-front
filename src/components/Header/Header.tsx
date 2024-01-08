@@ -11,7 +11,6 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
-import { MantineLogo } from '@mantine/ds';
 import classes from './header.module.css';
 import { NavLink } from 'react-router-dom';
 import { useGetCurrentUser, useLogout } from '../../utils/userQueries';

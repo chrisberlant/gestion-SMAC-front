@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import selectionSchema from '.';
 
 export const userLoginSchema = z.strictObject({
 	email: z

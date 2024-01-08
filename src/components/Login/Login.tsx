@@ -24,6 +24,7 @@ function Login() {
 		isLoading,
 		error,
 	} = useCheckLoginStatus();
+
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -31,6 +32,7 @@ function Login() {
 			password: '',
 		},
 	});
+
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
@@ -76,26 +78,31 @@ function Login() {
 								Connexion
 							</Button>
 						</form>
-						{isNotConnected && (
-							<div className={classes.serverStatus}>
-								&Eacute;tat du serveur :{' '}
-								{error.message === 'Failed to fetch' ? (
-									<span className={classes.statusRed}>
-										<span
-											className={classes.statusDot}
-										></span>
-										Hors ligne
-									</span>
-								) : (
-									<span className={classes.statusGreen}>
-										<span
-											className={`${classes.statusDot} ${classes.statusDotAnimated}`}
-										></span>
-										En ligne
-									</span>
-								)}
-							</div>
-						)}
+
+						<div className={classes.serverStatus}>
+							&Eacute;tat du serveur :{' '}
+							{isLoading ? (
+								<span>Vérification en cours...</span>
+							) : (
+								<>
+									{error?.message === 'Failed to fetch' ? (
+										<span className={classes.statusRed}>
+											<span
+												className={classes.statusDot}
+											></span>
+											Hors ligne
+										</span>
+									) : (
+										<span className={classes.statusGreen}>
+											<span
+												className={`${classes.statusDot} ${classes.statusDotAnimated}`}
+											></span>
+											En ligne
+										</span>
+									)}
+								</>
+							)}
+						</div>
 					</Paper>
 				</div>
 			</main>
