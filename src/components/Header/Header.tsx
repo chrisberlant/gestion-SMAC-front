@@ -17,6 +17,7 @@ import { NavLink } from 'react-router-dom';
 import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import AccountSettings from '../AccountSettings/AccountSettings';
+import FrenchFlag from '../../assets/french-flag.svg';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
@@ -57,7 +58,12 @@ export function Header() {
 			<header className={classes.header}>
 				<Container className={classes.mainSection} size='xl'>
 					<Group>
-						<MantineLogo size={28} className={classes.logo} />
+						<div className={classes.logo}>
+							<img src={FrenchFlag} />
+							<span className={classes.logoTitle}>
+								Gestion SMAC
+							</span>
+						</div>
 						<Menu
 							width={260}
 							position='bottom-end'

@@ -14,7 +14,16 @@
 }
 
 .logo {
+	height: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	margin-left: 40px;
+
+	.logoTitle {
+		display: inline-block;
+		font-weight: bold;
+	}
 }
 
 .user {

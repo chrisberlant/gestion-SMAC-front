@@ -53,7 +53,7 @@ function UsersTable() {
 				</Anchor>
 			</Table.Td>
 			<Table.Td width={80}>
-				{currentUser!.email !== user.email && (
+				{currentUser!.email !== user.email && user.id !== 1 && (
 					<Group gap={0} justify='flex-end'>
 						<ActionIcon variant='subtle' color='gray'>
 							<IconPencil
