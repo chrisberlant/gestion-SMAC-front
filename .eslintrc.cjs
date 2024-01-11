@@ -9,6 +9,13 @@ module.exports = {
 	ignorePatterns: ['dist', '.eslintrc.cjs'],
 	settings: {
 		'import/resolver': {
+			alias: {
+				map: [
+					['@assets', './src/assets'],
+					['@utils', './src/utils'],
+					['@validationSchemas', './src/validationSchemas'],
+				],
+			},
 			node: {
 				paths: ['src'],
 				extensions: ['.js', '.ts', '.d.ts', '.tsx'],
@@ -25,4 +32,12 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'warn',
 		'import/no-unresolved': 'error',
 	},
+	"settings": {
+		"import/parsers": {
+		"@typescript-eslint/parser": [".ts", ".tsx"]
+		},
+		"typescript": {
+			"alwaysTryTypes": true,
+		}
 };
+}
