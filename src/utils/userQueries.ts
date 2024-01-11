@@ -95,7 +95,7 @@ export const useGetAllUsers = () => {
 };
 
 // Modifier les infos utilisateur actuel
-export const useModifyCurrentUser = (
+export const useUpdateCurrentUser = (
 	form: UseFormReturnType<{
 		email: string;
 		lastName: string;
@@ -108,7 +108,7 @@ export const useModifyCurrentUser = (
 		mutationFn: async () => {
 			toggleOverlay();
 			const data: LoggedUser = await fetchApi(
-				'/modifyCurrentUser',
+				'/updateCurrentUser',
 				'PATCH',
 				form.values
 			);
@@ -126,7 +126,7 @@ export const useModifyCurrentUser = (
 };
 
 // Modifier le mot de passe utilisateur actuel
-export const useModifyCurrentUserPassword = (
+export const useUpdateCurrentUserPassword = (
 	form: UseFormReturnType<{
 		oldPassword: string;
 		newPassword: string;
@@ -140,7 +140,7 @@ export const useModifyCurrentUserPassword = (
 		mutationFn: async () => {
 			toggleOverlay();
 			const data: string = await fetchApi(
-				'/modifyCurrentUserPassword',
+				'/updateCurrentUserPassword',
 				'PATCH',
 				form.values
 			);

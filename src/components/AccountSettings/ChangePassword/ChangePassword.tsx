@@ -2,7 +2,7 @@ import { Button, LoadingOverlay, Modal, PasswordInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { currentUserPasswordModificationSchema } from '../../../validationSchemas/userSchemas';
 import { useDisclosure } from '@mantine/hooks';
-import { useModifyCurrentUserPassword } from '../../../utils/userQueries';
+import { useUpdateCurrentUserPassword } from '../../../utils/userQueries';
 import { toast } from 'sonner';
 
 interface ChangePasswordProps {
@@ -25,7 +25,7 @@ function ChangePassword({
 			confirmPassword: '',
 		},
 	});
-	const { mutate: modifyCurrentUserPassword } = useModifyCurrentUserPassword(
+	const { mutate: updateCurrentUserPassword } = useUpdateCurrentUserPassword(
 		form,
 		toggleOverlay,
 		closePasswordModal,
@@ -52,7 +52,7 @@ function ChangePassword({
 				}}
 			>
 				<form
-					onSubmit={form.onSubmit(() => modifyCurrentUserPassword())}
+					onSubmit={form.onSubmit(() => updateCurrentUserPassword())}
 				>
 					<LoadingOverlay
 						visible={visible}

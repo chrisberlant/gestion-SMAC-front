@@ -1,7 +1,7 @@
 import { TextInput, Button, LoadingOverlay, Modal } from '@mantine/core';
 import {
 	useGetCurrentUser,
-	useModifyCurrentUser,
+	useUpdateCurrentUser,
 } from '../../utils/userQueries';
 import { useForm, zodResolver } from '@mantine/form';
 import { currentUserModificationSchema } from '../../validationSchemas/userSchemas';
@@ -32,7 +32,7 @@ function AccountSettings({
 			firstName: currentUser?.firstName || '',
 		},
 	});
-	const { mutate: modifyCurrentUser } = useModifyCurrentUser(
+	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
 		form,
 		toggleOverlay,
 		closeAccountModal
@@ -56,7 +56,7 @@ function AccountSettings({
 					blur: 3,
 				}}
 			>
-				<form onSubmit={form.onSubmit(() => modifyCurrentUser())}>
+				<form onSubmit={form.onSubmit(() => updateCurrentUser())}>
 					<LoadingOverlay
 						visible={visible}
 						zIndex={10}

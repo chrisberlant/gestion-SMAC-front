@@ -19,7 +19,7 @@ import {
 	useQueryClient,
 } from '@tanstack/react-query';
 import { ServiceType } from '../../../@types/types';
-import { useGetAllServices, useModifyService } from '@utils/serviceQueries';
+import { useGetAllServices, useUpdateService } from '@utils/serviceQueries';
 
 function ServicesTable2() {
 	const [validationErrors, setValidationErrors] = useState<
@@ -37,7 +37,7 @@ function ServicesTable2() {
 	//call READ hook
 	const { data: services, isLoading, isError } = useGetAllServices();
 	//call UPDATE hook
-	const { mutateAsync: modifyService } = useModifyService();
+	const { mutateAsync: updateService } = useUpdateService();
 	//call DELETE hook
 	// const { mutateAsync: deleteUser, isLoading: isDeletingUser } =
 	// 	useDeleteUser();

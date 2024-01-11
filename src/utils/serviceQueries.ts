@@ -16,7 +16,7 @@ export const useGetAllServices = () => {
 	});
 };
 
-export const useModifyService = (
+export const useUpdateService = (
 	form: UseFormReturnType<{
 		id: string;
 		title: string;
@@ -25,7 +25,7 @@ export const useModifyService = (
 	return useMutation({
 		mutationFn: async () => {
 			const data: LoggedUser = await fetchApi(
-				'/modifyService',
+				'/updateService',
 				'PATCH',
 				form.values
 			);
