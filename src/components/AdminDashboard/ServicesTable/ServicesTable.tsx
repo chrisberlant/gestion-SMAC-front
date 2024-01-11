@@ -1,7 +1,7 @@
 import { ServiceType } from '../../../@types/types';
 import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
-import { useGetAllServices } from '../../../utils/serviceQueries';
+import { useGetAllServices } from '@utils/serviceQueries';
 import './servicesTable.css';
 
 function ServicesTable() {

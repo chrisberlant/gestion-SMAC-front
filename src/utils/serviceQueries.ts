@@ -24,7 +24,7 @@ export const useUpdateService = (
 ) => {
 	return useMutation({
 		mutationFn: async () => {
-			const data: LoggedUser = await fetchApi(
+			const data: ServiceType = await fetchApi(
 				'/updateService',
 				'PATCH',
 				form.values
@@ -32,7 +32,7 @@ export const useUpdateService = (
 			return data;
 		},
 		onSuccess: (service) => {
-			queryClient.setQueryData(['services'], service);
+			queryClient.setQueryData(['services'], service.id);
 			toast.success('Informations modifiées avec succès');
 		},
 	});

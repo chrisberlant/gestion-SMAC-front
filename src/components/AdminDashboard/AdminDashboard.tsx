@@ -1,5 +1,6 @@
 import UsersTable from './UsersTable/UsersTable';
 import ServicesTable from './ServicesTable/ServicesTable';
+import ServicesTable3 from './ServicesTable/ServicesTable3';
 import './adminDashboard.css';
 import ModelsTable from './ModelsTable/ModelsTable';
 import { useGetCurrentUser } from '../../utils/userQueries';
@@ -17,11 +18,12 @@ function AdminDashboard() {
 
 	return (
 		<ZoomableComponent className='admin-dashboard'>
-			<UsersTable />
+			{/* <UsersTable /> */}
 			<div className='horizontal-align-div'>
 				<ServicesTable />
 				<ModelsTable />
 			</div>
+			<ServicesTable3 />
 		</ZoomableComponent>
 	);
 }
