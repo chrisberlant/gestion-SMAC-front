@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
 	AgentsAndDevicesPerServiceType,
 	DevicesAmountPerModelType,
-} from '../@types/types';
+} from '../types';
 
 // Nombre d'agents et d'appareils par service
 export const useGetAgentsAndDevicesPerService = () => {

@@ -14,6 +14,7 @@ export default defineConfig({
 				__dirname,
 				'./src/validationSchemas'
 			),
+			'@types': path.resolve(__dirname, './src/types'),
 		},
 	},
 });

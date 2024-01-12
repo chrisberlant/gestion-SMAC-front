@@ -4,7 +4,7 @@ import {
 	useUpdateCurrentUser,
 } from '../../utils/userQueries';
 import { useForm, zodResolver } from '@mantine/form';
-import { currentUserModificationSchema } from '../../validationSchemas/userSchemas';
+import { currentUserUpdateSchema } from '../../validationSchemas/userSchemas';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import ChangePassword from './ChangePassword/ChangePassword';
@@ -25,7 +25,7 @@ function AccountSettings({
 	] = useDisclosure(false);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
-		validate: zodResolver(currentUserModificationSchema),
+		validate: zodResolver(currentUserUpdateSchema),
 		initialValues: {
 			email: currentUser?.email || '',
 			lastName: currentUser?.lastName || '',

@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { LoggedUser, ServiceType } from '../@types/types';
+import { ServiceType } from '../types';
 import fetchApi from './fetchApi';
-import { UseFormReturnType } from '@mantine/form';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 
@@ -16,23 +15,29 @@ export const useGetAllServices = () => {
 	});
 };
 
-export const useUpdateService = (
-	form: UseFormReturnType<{
-		id: string;
-		title: string;
-	}>
-) => {
+export const useUpdateService = () => {
 	return useMutation({
-		mutationFn: async () => {
+		mutationFn: async (service: ServiceType) => {
 			const data: ServiceType = await fetchApi(
 				'/updateService',
 				'PATCH',
-				form.values
+				service
 			);
 			return data;
 		},
-		onSuccess: (service) => {
-			queryClient.setQueryData(['services'], service.id);
+		onMutate: (newService: ServiceType) => {
+			queryClient.setQueryData(
+				['services'],
+				(prevServices: ServiceType[]) =>
+					prevServices?.map((prevService: ServiceType) =>
+						prevService.id === newService.id
+							? newService
+							: prevService
+					)
+			);
+		},
+
+		onSuccess: () => {
 			toast.success('Informations modifiées avec succès');
 		},
 	});

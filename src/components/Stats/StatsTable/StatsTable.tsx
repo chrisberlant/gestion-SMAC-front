@@ -1,5 +1,5 @@
 import Th from './TableHeader/TableHeader';
-import { StatsType } from '../../../@types/types';
+import { StatsType } from '../../../types';
 import { ScrollArea, Table, TextInput, keys, rem } from '@mantine/core';
 import { useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';

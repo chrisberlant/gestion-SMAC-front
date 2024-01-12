@@ -18,7 +18,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from '@tanstack/react-query';
-import { ServiceType } from '../../../@types/types';
+import { ServiceType } from '../../../types';
 import { useGetAllServices, useUpdateService } from '@utils/serviceQueries';
 
 function ServicesTable2() {

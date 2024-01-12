@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ModelType } from '../@types/types';
+import { ModelType } from '../types';
 import fetchApi from './fetchApi';
 
 export const useGetAllAttributedLines = () => {

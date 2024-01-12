@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { LoggedUser, UserType } from '../@types/types';
+import { LoggedUser, UserType } from '../types';
 import fetchApi from './fetchApi';
 import { toast } from 'sonner';
 import { UseFormReturnType } from '@mantine/form';

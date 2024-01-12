@@ -1,4 +1,4 @@
-import { ServiceType } from '../../../@types/types';
+import { ServiceType } from '../../../types';
 import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
 import { useGetAllServices } from '@utils/serviceQueries';

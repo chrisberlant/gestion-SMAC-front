@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { DeviceType } from '../@types/types';
+import { DeviceType } from '../types';
 import fetchApi from './fetchApi';
 
 export const useGetAllDevices = () => {

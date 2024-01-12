@@ -1,6 +1,6 @@
 import { Button, LoadingOverlay, Modal, PasswordInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
-import { currentUserPasswordModificationSchema } from '../../../validationSchemas/userSchemas';
+import { currentUserPasswordUpdateSchema } from '../../../validationSchemas/userSchemas';
 import { useDisclosure } from '@mantine/hooks';
 import { useUpdateCurrentUserPassword } from '../../../utils/userQueries';
 import { toast } from 'sonner';
@@ -18,7 +18,7 @@ function ChangePassword({
 }: ChangePasswordProps) {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
-		validate: zodResolver(currentUserPasswordModificationSchema),
+		validate: zodResolver(currentUserPasswordUpdateSchema),
 		initialValues: {
 			oldPassword: '',
 			newPassword: '',

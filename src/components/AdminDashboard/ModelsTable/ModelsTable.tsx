@@ -1,4 +1,4 @@
-import { ModelType } from '../../../@types/types';
+import { ModelType } from '../../../types';
 import { Table, Group, Text, ActionIcon, rem, Loader } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { IconPlus } from '@tabler/icons-react';

@@ -26,7 +26,8 @@
 			"@/*": ["./src/*"],
 			"@assets/*": ["./src/assets/*"],
 			"@utils/*": ["./src/utils/*"],
-			"@validationSchemas/*": ["./src/validationSchemas"]
+			"@validationSchemas/*": ["./src/validationSchemas/*"],
+			"@types/*": ["./src/types/*"]
 		}
 	},
 	"include": ["src"],

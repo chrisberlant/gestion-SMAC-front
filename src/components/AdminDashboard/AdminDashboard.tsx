@@ -18,12 +18,12 @@ function AdminDashboard() {
 
 	return (
 		<ZoomableComponent className='admin-dashboard'>
-			{/* <UsersTable /> */}
+			<UsersTable />
 			<div className='horizontal-align-div'>
-				<ServicesTable />
+				<ServicesTable3 />
+				{/* <ServicesTable /> */}
 				<ModelsTable />
 			</div>
-			<ServicesTable3 />
 		</ZoomableComponent>
 	);
 }

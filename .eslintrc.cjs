@@ -14,6 +14,7 @@ module.exports = {
 					['@assets', './src/assets'],
 					['@utils', './src/utils'],
 					['@validationSchemas', './src/validationSchemas'],
+					['@types', './src/types'],
 				],
 			},
 			node: {

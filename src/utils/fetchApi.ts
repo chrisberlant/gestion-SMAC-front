@@ -1,7 +1,9 @@
+import { ServiceType } from '../types';
+
 async function fetchApi(
 	route: string,
 	method?: string,
-	infos?: Record<string, string>
+	infos?: Record<string, string | number> | ServiceType
 ) {
 	const baseUrl = import.meta.env.VITE_API_URL;
 	const options: RequestInit = {

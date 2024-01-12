@@ -3,45 +3,120 @@ import {
 	MantineReactTable,
 	useMantineReactTable,
 	type MRT_ColumnDef,
+	MRT_Row,
+	MRT_TableOptions,
 } from 'mantine-react-table';
-import { useMemo } from 'react';
-import { ServiceType } from '../../../@types/types';
+import { useMemo, useState } from 'react';
+import { ServiceType } from '../../../types';
+import { useForm, zodResolver } from '@mantine/form';
+import { ModalsProvider, modals } from '@mantine/modals';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { serviceUpdateSchema } from '@validationSchemas/serviceSchemas';
+import { Flex, Tooltip, ActionIcon } from '@mantine/core';
 
 function ServicesTable3() {
 	const { data: services, isLoading, isError } = useGetAllServices();
-	// const { mutateAsync: updateService } = useUpdateService();
+	const [validationErrors, setValidationErrors] = useState<
+		Record<string, string | undefined>
+	>({});
+
+	const { mutateAsync: updateService } = useUpdateService();
 
 	const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
 		() => [
 			{
 				header: 'Id',
 				accessorKey: 'id',
+				required: true,
 			},
 			{
 				header: 'Titre',
-				accessorKey: 'title', //simple recommended way to define a column
-				//more column options can be added here to enable/disable features, customize look and feel, etc.
+				accessorKey: 'title',
+				required: true,
+				show: false,
+				error: validationErrors?.title,
+				onFocus: () =>
+					setValidationErrors({
+						...validationErrors,
+						title: undefined,
+					}),
 			},
 		],
-		[]
+		[validationErrors]
 	);
+
+	//UPDATE action
+	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
+		async ({ values, table }) => {
+			console.log(table);
+			const validation = serviceUpdateSchema.safeParse(values);
+			if (!validation.success) {
+				console.log(validation.error.issues);
+				setValidationErrors({ title: 'Titre requis' });
+				return;
+			}
+			setValidationErrors({});
+			await updateService(values);
+			table.setEditingRow(null); //exit editing mode
+		};
+
+	//DELETE action
+	const openDeleteConfirmModal = (row: MRT_Row<ServiceType>) =>
+		modals.openConfirmModal({
+			title: "Suppression d'un service",
+			children: (
+				<p>
+					Voulez-vous vraiment supprimer le service{' '}
+					{row.original.title} ? Cette action est irréversible.
+				</p>
+			),
+			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
+			confirmProps: { color: 'red' },
+			// onConfirm: () => deleteService(row.original.id),
+		});
 
 	const table = useMantineReactTable({
 		columns,
 		data: services || [], //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
-		// enableRowSelection: true, //enable some features
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
-		editDisplayMode: 'cell',
+		editDisplayMode: 'row',
+		enableEditing: true,
 		enableHiding: false,
 		enableDensityToggle: false,
+		onEditingRowSave: handleSaveService,
 		paginationDisplayMode: 'pages',
+		renderRowActions: ({ row, table }) => (
+			<Flex gap='md'>
+				<Tooltip label='Modifier'>
+					<ActionIcon onClick={() => table.setEditingRow(row)}>
+						<IconEdit />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Supprimer'>
+					<ActionIcon
+						color='red'
+						onClick={() => openDeleteConfirmModal(row)}
+					>
+						<IconTrash />
+					</ActionIcon>
+				</Tooltip>
+			</Flex>
+		),
 		initialState: {
-			columnVisibility: {
-				id: false, //hide id column by default
+			pagination: {
+				pageIndex: 0, // page start
+				pageSize: 10, // rows per page
 			},
+			columnVisibility: {
+				id: false,
+			},
+		},
+		mantinePaginationProps: {
+			rowsPerPageOptions: ['5', '10', '20', '30'],
+			withEdges: true,
 		},
 	});
 
