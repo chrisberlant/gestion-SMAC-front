@@ -33,7 +33,18 @@ function App() {
 		<Router>
 			<div className='app'>
 				<AppRoutes />
-				<Toaster richColors closeButton expand={true} />
+				<Toaster
+					richColors
+					closeButton
+					expand={true}
+					toastOptions={{
+						style: {
+							width: 'auto',
+							position: 'absolute',
+							right: '0px',
+						},
+					}}
+				/>
 			</div>
 		</Router>
 	);

@@ -1,4 +1,5 @@
 import {
+	useCreateService,
 	useDeleteService,
 	useGetAllServices,
 	useUpdateService,
@@ -14,14 +15,18 @@ import { useMemo, useState } from 'react';
 import { ServiceType } from '../../../types';
 import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { serviceUpdateSchema } from '@validationSchemas/serviceSchemas';
-import { Flex, Tooltip, ActionIcon } from '@mantine/core';
+import {
+	serviceCreationSchema,
+	serviceUpdateSchema,
+} from '@validationSchemas/serviceSchemas';
+import { Flex, Tooltip, ActionIcon, Text, Button } from '@mantine/core';
+import './servicesTable.css';
 
 function ServicesTable3() {
 	const { data: services, isLoading, isError } = useGetAllServices();
-	const { mutateAsync: updateService } = useUpdateService();
-	const { mutateAsync: deleteService } = useDeleteService();
-
+	const { mutate: createService } = useCreateService();
+	const { mutate: updateService } = useUpdateService();
+	const { mutate: deleteService } = useDeleteService();
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
@@ -29,15 +34,15 @@ function ServicesTable3() {
 	const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
 		() => [
 			{
-				header: 'Id',
 				accessorKey: 'id',
+				header: 'Id',
 				enableEditing: false,
 				required: true,
 				size: 80,
 			},
 			{
-				header: 'Titre',
 				accessorKey: 'title',
+				header: 'Titre',
 				show: false,
 				mantineEditTextInputProps: {
 					required: true,
@@ -53,11 +58,10 @@ function ServicesTable3() {
 		[validationErrors]
 	);
 
-	//UPDATE action
-	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
-		async ({ values, table }) => {
-			// Validation du format des données via un schéma Zod
-			const validation = serviceUpdateSchema.safeParse(values);
+	//CREATE action
+	const handleCreateService: MRT_TableOptions<ServiceType>['onCreatingRowSave'] =
+		async ({ values, exitCreatingMode }) => {
+			const validation = serviceCreationSchema.safeParse(values);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -67,7 +71,27 @@ function ServicesTable3() {
 				return setValidationErrors(errors);
 			}
 			setValidationErrors({});
-			await updateService(values);
+			createService(values);
+			exitCreatingMode();
+		};
+
+	//UPDATE action
+	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
+		async ({ values, table, row }) => {
+			console.log('tentative update');
+			// Récupérer l'id dans les colonnes cachées
+			values.id = row.original.id;
+			// Validation du format des données via un schéma Zod
+			const validation = serviceUpdateSchema.safeParse(values);
+			if (!validation.success) {
+				const errors: Record<string, string> = {};
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
+			}
+			setValidationErrors({});
+			updateService(values);
 			table.setEditingRow(null);
 		};
 
@@ -76,10 +100,11 @@ function ServicesTable3() {
 		modals.openConfirmModal({
 			title: "Suppression d'un service",
 			children: (
-				<p>
+				<Text>
 					Voulez-vous vraiment supprimer le service{' '}
-					{row.original.title} ? Cette action est irréversible.
-				</p>
+					<span className='service-title'>{row.original.title}</span>{' '}
+					? Cette action est irréversible.
+				</Text>
 			),
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
@@ -96,7 +121,11 @@ function ServicesTable3() {
 		editDisplayMode: 'row',
 		enableEditing: true,
 		enableHiding: false,
+		sortDescFirst: true,
+		enableSortingRemoval: false,
 		enableDensityToggle: false,
+		onCreatingRowCancel: () => setValidationErrors({}),
+		onCreatingRowSave: handleCreateService,
 		onEditingRowSave: handleSaveService,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
@@ -117,13 +146,18 @@ function ServicesTable3() {
 				</Tooltip>
 			</Flex>
 		),
+		renderTopToolbarCustomActions: ({ table }) => (
+			<Button onClick={() => table.setCreatingRow(true)}>
+				Créer nouveau service
+			</Button>
+		),
 		initialState: {
 			pagination: {
 				pageIndex: 0, // page start
 				pageSize: 10, // rows per page
 			},
 			columnVisibility: {
-				// id: false,
+				id: false,
 			},
 		},
 		mantinePaginationProps: {

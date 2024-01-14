@@ -14,6 +14,8 @@ const queryClient = new QueryClient({
 				if (query.queryKey[0] === 'logout') {
 					// Si suppression du token impossible
 					toast.error('Impossible de vous déconnecter');
+				} else if (error.message === 'Failed to fetch') {
+					toast.error('Impossible de joindre le serveur');
 				} else {
 					toast.error(error.message);
 					if (error.message.toLowerCase().includes('token')) {
@@ -31,17 +33,21 @@ const queryClient = new QueryClient({
 				queryClient.clear();
 				setTimeout(() => {
 					window.location.href = '/';
-				}, 3000);
+				}, 2000);
 			}
 		},
 	}),
 
 	mutationCache: new MutationCache({
 		onError: (error) => {
-			toast.error(error.message);
-			if (error.message.toLowerCase().includes('token')) {
-				// Redirection vers l'index si problème de token
-				window.location.href = '/';
+			if (error.message === 'Failed to fetch') {
+				toast.error('Impossible de joindre le serveur');
+			} else {
+				toast.error(error.message);
+				if (error.message.toLowerCase().includes('token')) {
+					// Redirection vers l'index si problème de token
+					window.location.href = '/';
+				}
 			}
 		},
 	}),
