@@ -1,4 +1,8 @@
-import { useGetAllServices, useUpdateService } from '@utils/serviceQueries';
+import {
+	useDeleteService,
+	useGetAllServices,
+	useUpdateService,
+} from '@utils/serviceQueries';
 import {
 	MantineReactTable,
 	useMantineReactTable,
@@ -8,8 +12,7 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { ServiceType } from '../../../types';
-import { useForm, zodResolver } from '@mantine/form';
-import { ModalsProvider, modals } from '@mantine/modals';
+import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { serviceUpdateSchema } from '@validationSchemas/serviceSchemas';
 import { Flex, Tooltip, ActionIcon } from '@mantine/core';
@@ -21,25 +24,30 @@ function ServicesTable3() {
 	>({});
 
 	const { mutateAsync: updateService } = useUpdateService();
+	const { mutateAsync: deleteService } = useDeleteService();
 
 	const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
 		() => [
 			{
 				header: 'Id',
 				accessorKey: 'id',
+				enableEditing: false,
 				required: true,
+				size: 80,
 			},
 			{
 				header: 'Titre',
 				accessorKey: 'title',
-				required: true,
 				show: false,
-				error: validationErrors?.title,
-				onFocus: () =>
-					setValidationErrors({
-						...validationErrors,
-						title: undefined,
-					}),
+				mantineEditTextInputProps: {
+					required: true,
+					error: validationErrors?.title,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							title: undefined,
+						}),
+				},
 			},
 		],
 		[validationErrors]
@@ -48,11 +56,11 @@ function ServicesTable3() {
 	//UPDATE action
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table }) => {
-			console.log(table);
+			console.log(values);
 			const validation = serviceUpdateSchema.safeParse(values);
 			if (!validation.success) {
 				console.log(validation.error.issues);
-				setValidationErrors({ title: 'Titre requis' });
+				setValidationErrors({ id: '', title: 'Titre requis' });
 				return;
 			}
 			setValidationErrors({});
@@ -72,7 +80,7 @@ function ServicesTable3() {
 			),
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
-			// onConfirm: () => deleteService(row.original.id),
+			onConfirm: () => deleteService({ id: row.original.id }),
 		});
 
 	const table = useMantineReactTable({
@@ -87,6 +95,7 @@ function ServicesTable3() {
 		enableHiding: false,
 		enableDensityToggle: false,
 		onEditingRowSave: handleSaveService,
+		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
 		renderRowActions: ({ row, table }) => (
 			<Flex gap='md'>
@@ -111,7 +120,7 @@ function ServicesTable3() {
 				pageSize: 10, // rows per page
 			},
 			columnVisibility: {
-				id: false,
+				// id: false,
 			},
 		},
 		mantinePaginationProps: {

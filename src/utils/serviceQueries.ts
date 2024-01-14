@@ -38,7 +38,33 @@ export const useUpdateService = () => {
 		},
 
 		onSuccess: () => {
-			toast.success('Informations modifiées avec succès');
+			toast.success('Service modifié avec succès');
+		},
+	});
+};
+
+export const useDeleteService = () => {
+	return useMutation({
+		mutationFn: async (service: { id: number }) => {
+			const data: ServiceType = await fetchApi(
+				'/deleteService',
+				'DELETE',
+				service
+			);
+			return data;
+		},
+		onMutate: (service: { id: number }) => {
+			queryClient.setQueryData(
+				['services'],
+				(prevServices: ServiceType[]) =>
+					prevServices?.map((prevService: ServiceType) =>
+						prevService.id === service.id ? false : prevService
+					)
+			);
+		},
+
+		onSuccess: () => {
+			toast.success('Service supprimé avec succès');
 		},
 	});
 };
