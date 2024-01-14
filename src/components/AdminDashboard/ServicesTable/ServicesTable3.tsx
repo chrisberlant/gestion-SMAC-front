@@ -19,12 +19,12 @@ import { Flex, Tooltip, ActionIcon } from '@mantine/core';
 
 function ServicesTable3() {
 	const { data: services, isLoading, isError } = useGetAllServices();
+	const { mutateAsync: updateService } = useUpdateService();
+	const { mutateAsync: deleteService } = useDeleteService();
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
-
-	const { mutateAsync: updateService } = useUpdateService();
-	const { mutateAsync: deleteService } = useDeleteService();
 
 	const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
 		() => [
@@ -56,16 +56,19 @@ function ServicesTable3() {
 	//UPDATE action
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table }) => {
-			console.log(values);
+			// Validation du format des données via un schéma Zod
 			const validation = serviceUpdateSchema.safeParse(values);
 			if (!validation.success) {
-				console.log(validation.error.issues);
-				setValidationErrors({ id: '', title: 'Titre requis' });
-				return;
+				const errors: Record<string, string> = {};
+				// Conversion du tableau d'objets retourné par Zod en objet simple
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
 			}
 			setValidationErrors({});
 			await updateService(values);
-			table.setEditingRow(null); //exit editing mode
+			table.setEditingRow(null);
 		};
 
 	//DELETE action
@@ -85,7 +88,7 @@ function ServicesTable3() {
 
 	const table = useMantineReactTable({
 		columns,
-		data: services || [], //must be memoized or stable (useState, useMemo, defined outside of this component, etc.)
+		data: services || [],
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
 		enableColumnActions: false,
