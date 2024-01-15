@@ -40,7 +40,6 @@ export const useCreateService = () => {
 		},
 
 		onSuccess: (newService: ServiceType) => {
-			console.log(newService);
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>
 					service.title === newService.title
@@ -60,7 +59,7 @@ export const useUpdateService = () => {
 		mutationFn: async (service: ServiceType) => {
 			return (await fetchApi(
 				'/updateService',
-				'PATCH',
+				'PUT',
 				service
 			)) as ServiceType;
 		},

@@ -1,11 +1,11 @@
 import UsersTable from './UsersTable/UsersTable';
 import ServicesTable from './ServicesTable/ServicesTable';
 import './adminDashboard.css';
-import ModelsTable from './ModelsTable/ModelsTable';
 import { useGetCurrentUser } from '../../utils/userQueries';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
+import ModelsTable from './ModelsTable/ModelsTable';
 
 function AdminDashboard() {
 	const { data: currentUser } = useGetCurrentUser();

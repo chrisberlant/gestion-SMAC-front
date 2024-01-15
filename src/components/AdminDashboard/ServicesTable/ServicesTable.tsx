@@ -34,12 +34,12 @@ function ServicesTable() {
 	const columns = useMemo<MRT_ColumnDef<ServiceType>[]>(
 		() => [
 			{
-				accessorKey: 'id',
 				header: 'Id',
+				accessorKey: 'id',
 			},
 			{
-				accessorKey: 'title',
 				header: 'Titre',
+				accessorKey: 'title',
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.title,
