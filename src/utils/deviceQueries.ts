@@ -9,6 +9,5 @@ export const useGetAllDevices = () => {
 			const data: DeviceType[] = await fetchApi('/getAllDevices');
 			return data;
 		},
-		retry: false,
 	});
 };

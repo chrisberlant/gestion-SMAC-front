@@ -10,7 +10,6 @@ export const useGetAllModels = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllModels')) as ModelType[];
 		},
-		retry: false,
 	});
 };
 
@@ -31,7 +30,6 @@ export const useCreateModel = () => {
 			]);
 			return { previousModels };
 		},
-
 		onSuccess: (newModel: ModelType) => {
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
 				models.map((model) =>

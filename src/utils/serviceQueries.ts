@@ -10,7 +10,6 @@ export const useGetAllServices = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllServices')) as ServiceType[];
 		},
-		retry: false,
 	});
 };
 
@@ -38,7 +37,6 @@ export const useCreateService = () => {
 			);
 			return { previousServices };
 		},
-
 		onSuccess: (newService: ServiceType) => {
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>

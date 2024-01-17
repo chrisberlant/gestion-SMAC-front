@@ -83,17 +83,6 @@ export const useCheckLoginStatus = () => {
 	});
 };
 
-// Récupérer tous les utilisateurs
-export const useGetAllUsers = () => {
-	return useQuery({
-		queryKey: ['users'],
-		queryFn: async () => {
-			const users: UserType[] = await fetchApi('/getAllUsers');
-			return users;
-		},
-	});
-};
-
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
 	form: UseFormReturnType<{
@@ -161,5 +150,89 @@ export const useUpdateCurrentUserPassword = (
 		onSettled: () => {
 			toggleOverlay();
 		},
+	});
+};
+
+// Récupérer tous les utilisateurs
+export const useGetAllUsers = () => {
+	return useQuery({
+		queryKey: ['users'],
+		queryFn: async () => {
+			return (await fetchApi('/getAllUsers')) as UserType[];
+		},
+	});
+};
+
+export const useCreateUser = () => {
+	return useMutation({
+		mutationFn: async (user: UserType) => {
+			return (await fetchApi('/createUser', 'POST', user)) as UserType;
+		},
+
+		onMutate: async (newUser: UserType) => {
+			await queryClient.cancelQueries({ queryKey: ['users'] });
+			const previousUsers = queryClient.getQueryData(['users']);
+			queryClient.setQueryData(['users'], (users: UserType[]) => [
+				...users,
+				{
+					...newUser,
+				},
+			]);
+			return { previousUsers };
+		},
+		onSuccess: (newUser: UserType) => {
+			queryClient.setQueryData(['users'], (users: UserType[]) =>
+				users.map((user) =>
+					user.email === newUser.email
+						? { ...user, id: newUser.id }
+						: user
+				)
+			);
+			toast.success('Utilisateur créé avec succès');
+		},
+		onError: (_, __, context) =>
+			queryClient.setQueryData(['users'], context?.previousUsers),
+	});
+};
+
+export const useUpdateUser = () => {
+	return useMutation({
+		mutationFn: async (user: UserType) => {
+			return (await fetchApi('/updateUser', 'PATCH', user)) as UserType;
+		},
+
+		onMutate: async (newUser: UserType) => {
+			await queryClient.cancelQueries({ queryKey: ['users'] });
+			const previousUsers = queryClient.getQueryData(['users']);
+			queryClient.setQueryData(['users'], (users: UserType[]) =>
+				users.map((prevUser) =>
+					prevUser.id === newUser.id ? newUser : prevUser
+				)
+			);
+			return { previousUsers };
+		},
+		onSuccess: () => toast.success('Utilisateur modifié avec succès'),
+		onError: (_, __, context) =>
+			queryClient.setQueryData(['users'], context?.previousUsers),
+	});
+};
+
+export const useDeleteUser = () => {
+	return useMutation({
+		mutationFn: async (user: { id: number }) => {
+			return (await fetchApi('/deleteUser', 'DELETE', user)) as UserType;
+		},
+
+		onMutate: async (userToDelete: { id: number }) => {
+			await queryClient.cancelQueries({ queryKey: ['users'] });
+			const previousUsers = queryClient.getQueryData(['users']);
+			queryClient.setQueryData(['users'], (users: UserType[]) =>
+				users?.filter((user: UserType) => user.id !== userToDelete.id)
+			);
+			return { previousUsers };
+		},
+		onSuccess: () => toast.success('Utilisateur supprimé avec succès'),
+		onError: (_, __, context) =>
+			queryClient.setQueryData(['users'], context?.previousUsers),
 	});
 };

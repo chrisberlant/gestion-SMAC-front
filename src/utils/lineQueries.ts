@@ -9,7 +9,6 @@ export const useGetAllAttributedLines = () => {
 			const data: ModelType[] = await fetchApi('/getAllLines/attributed');
 			return data;
 		},
-		retry: false,
 	});
 };
 
@@ -20,6 +19,5 @@ export const useGetAllResiliatedLines = () => {
 			const data: ModelType[] = await fetchApi('/getAllLines/resiliated');
 			return data;
 		},
-		retry: false,
 	});
 };
