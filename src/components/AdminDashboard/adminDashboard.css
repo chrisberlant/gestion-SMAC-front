@@ -1,13 +1,14 @@
 .admin-dashboard {
 	display: flex;
 	flex-direction: column;
+	gap: 50px;
 	align-items: center;
 }
 
 .admin-dashboard .horizontal-align-div {
 	width: 100%;
 	display: flex;
-	gap: 30px;
+	gap: 50px;
 	justify-content: space-around;
 	flex-wrap: wrap;
 }

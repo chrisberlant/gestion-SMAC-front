@@ -166,7 +166,10 @@ export const useGetAllUsers = () => {
 export const useCreateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserType) => {
-			return (await fetchApi('/createUser', 'POST', user)) as UserType;
+			return (await fetchApi('/createUser', 'POST', user)) as {
+				generatedPassword: string;
+				user: UserType;
+			};
 		},
 
 		onMutate: async (newUser: UserType) => {
@@ -180,11 +183,11 @@ export const useCreateUser = () => {
 			]);
 			return { previousUsers };
 		},
-		onSuccess: (newUser: UserType) => {
+		onSuccess: (newUser: { generatedPassword: string; user: UserType }) => {
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
 				users.map((user) =>
-					user.email === newUser.email
-						? { ...user, id: newUser.id }
+					user.email === newUser.user.email
+						? { ...user, id: newUser.user.id }
 						: user
 				)
 			);
