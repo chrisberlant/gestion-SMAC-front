@@ -67,11 +67,13 @@ function AccountSettings({
 						placeholder='Votre email'
 						data-autofocus
 						{...form.getInputProps('email')}
+						mb='xs'
 					/>
 					<TextInput
 						label='Nom'
 						placeholder='Votre nom'
 						{...form.getInputProps('lastName')}
+						mb='xs'
 					/>
 					<TextInput
 						label='Prénom'

@@ -101,6 +101,10 @@ function ServicesTable() {
 					? Cette action est irréversible.
 				</Text>
 			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
 			onConfirm: () => deleteService({ id: row.original.id }),

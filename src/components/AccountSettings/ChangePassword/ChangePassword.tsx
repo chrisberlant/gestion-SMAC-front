@@ -64,11 +64,13 @@ function ChangePassword({
 						placeholder='Votre mot de passe'
 						data-autofocus
 						{...form.getInputProps('oldPassword')}
+						mb='xs'
 					/>
 					<PasswordInput
 						label='Nouveau mot de passe'
 						placeholder='Votre nouveau mot de passe'
 						{...form.getInputProps('newPassword')}
+						mb='xs'
 					/>
 					<PasswordInput
 						label='Confirmation nouveau mot de passe'

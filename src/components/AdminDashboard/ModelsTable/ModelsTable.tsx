@@ -133,6 +133,10 @@ function ModelsTable() {
 					? Cette action est irréversible.
 				</Text>
 			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
 			onConfirm: () => deleteModel({ id: row.original.id }),

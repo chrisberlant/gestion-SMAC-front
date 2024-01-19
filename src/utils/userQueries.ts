@@ -141,6 +141,9 @@ export const useUpdateCurrentUserPassword = (
 				window.location.href = '/';
 			}, 3000);
 		},
+		onError: () => {
+			form.setErrors({ oldPassword: ' ' });
+		},
 		onSettled: () => {
 			toggleOverlay();
 		},
@@ -174,7 +177,7 @@ export const useCreateUser = () => {
 			]);
 			return previousUsers;
 		},
-		onSuccess: (newUser: { generatedPassword: string; user: UserType }) => {
+		onSuccess: (newUser: { user: UserType; generatedPassword: string }) => {
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
 				users.map((user) =>
 					user.email === newUser.user.email
@@ -211,6 +214,19 @@ export const useUpdateUser = () => {
 	});
 };
 
+export const useResetPassword = () => {
+	return useMutation({
+		mutationFn: async (user: { id: number }) => {
+			return await fetchApi('/resetPassword', 'PATCH', user);
+		},
+
+		onSuccess: (user: { fullName: string; generatedPassword: string }) =>
+			toast.success(
+				`Nouveau mot de passe de ${user.fullName}: ${user.generatedPassword} `
+			),
+	});
+};
+
 export const useDeleteUser = () => {
 	return useMutation({
 		mutationFn: async (user: { id: number }) => {
@@ -230,5 +246,3 @@ export const useDeleteUser = () => {
 			queryClient.setQueryData(['users'], previousUsers),
 	});
 };
-
-// TODO Mutation resetPassword

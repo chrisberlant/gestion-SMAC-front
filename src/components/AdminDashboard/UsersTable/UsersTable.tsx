@@ -34,6 +34,7 @@ import {
 	useDeleteUser,
 	useGetAllUsers,
 	useGetCurrentUser,
+	useResetPassword,
 	useUpdateUser,
 } from '@utils/userQueries';
 import './usersTable.css';
@@ -43,6 +44,7 @@ function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
+	const { mutate: resetPassword } = useResetPassword();
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -163,6 +165,29 @@ function UsersTable() {
 			table.setEditingRow(null);
 		};
 
+	//RESET PASSWORD action
+	const openResetPasswordConfirmModal = (row: MRT_Row<UserType>) =>
+		modals.openConfirmModal({
+			title: "Réinitialisation du mot de passe d'un utilisateur",
+			children: (
+				<Text>
+					Voulez-vous vraiment réinitialiser le mot de passe de
+					l'utilisateur{' '}
+					<span className='users-title'>
+						{row.original.firstName} {row.original.lastName}
+					</span>{' '}
+					?
+				</Text>
+			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
+			labels: { confirm: 'Réinitialiser', cancel: 'Annuler' },
+			confirmProps: { color: 'orange' },
+			onConfirm: () => resetPassword({ id: row.original.id }),
+		});
+
 	//DELETE action
 	const openDeleteConfirmModal = (row: MRT_Row<UserType>) =>
 		modals.openConfirmModal({
@@ -176,6 +201,10 @@ function UsersTable() {
 					? Cette action est irréversible.
 				</Text>
 			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
 			onConfirm: () => deleteUser({ id: row.original.id }),
@@ -214,7 +243,7 @@ function UsersTable() {
 					<Tooltip label='Réinitialiser le mot de passe'>
 						<ActionIcon
 							color='orange'
-							onClick={() => table.setEditingRow(row)}
+							onClick={() => openResetPasswordConfirmModal(row)}
 							size='sm'
 						>
 							<IconKey />
