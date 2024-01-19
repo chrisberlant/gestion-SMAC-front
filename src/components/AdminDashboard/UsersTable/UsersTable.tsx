@@ -15,6 +15,8 @@ import {
 	IconEditOff,
 	IconKeyOff,
 	IconTrashOff,
+	IconCopy,
+	IconMail,
 } from '@tabler/icons-react';
 import {
 	userUpdateSchema,
@@ -37,14 +39,15 @@ import {
 	useResetPassword,
 	useUpdateUser,
 } from '@utils/userQueries';
-import './usersTable.css';
+import { sendEmail } from '@utils/functions';
+import { toast } from 'sonner';
 
 function UsersTable() {
 	const { data: currentUser } = useGetCurrentUser();
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
-	const { mutate: resetPassword } = useResetPassword();
+	const { mutate: resetPassword } = useResetPassword(openConfirmationModal);
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -173,7 +176,7 @@ function UsersTable() {
 				<Text>
 					Voulez-vous vraiment réinitialiser le mot de passe de
 					l'utilisateur{' '}
-					<span className='users-title'>
+					<span className='bold-text'>
 						{row.original.firstName} {row.original.lastName}
 					</span>{' '}
 					?
@@ -187,6 +190,64 @@ function UsersTable() {
 			confirmProps: { color: 'orange' },
 			onConfirm: () => resetPassword({ id: row.original.id }),
 		});
+
+	// RESET PASSWORD modale de confirmation
+	function openConfirmationModal(user: {
+		fullName: string;
+		email: string;
+		generatedPassword: string;
+	}) {
+		modals.open({
+			title: 'Confirmation de la réinitialisation',
+			children: (
+				<>
+					<Text>
+						Le mot de passe de{' '}
+						<span className='bold-text'>{user.fullName}</span> a
+						bien été réinitialisé.
+					</Text>
+					<Text>Le nouveau mot de passe à fournir est : </Text>
+					<Flex gap='md' my='lg' justify='center' align='center'>
+						<Text>{user.generatedPassword}</Text>
+						<Tooltip label='Copier dans le presse-papiers'>
+							<ActionIcon
+								onClick={() => {
+									navigator.clipboard.writeText(
+										user.generatedPassword
+									);
+									toast.info(
+										'Mot de passe copié dans le presse-papiers'
+									);
+								}}
+							>
+								<IconCopy />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip label='Envoyer par e-mail'>
+							<ActionIcon
+								onClick={() =>
+									sendEmail(
+										user.email,
+										'Réinitialisation de votre mot de passe sur Gestion-SMAC',
+										`Bonjour ${user.fullName},\r\rVotre mot de passe a été réinitialisé.\r\rVous pouvez désormais vous connecter avec le nouveau : ${user.generatedPassword}\r\r`
+									)
+								}
+							>
+								<IconMail />
+							</ActionIcon>
+						</Tooltip>
+					</Flex>
+					<Button fullWidth onClick={() => modals.closeAll()}>
+						OK
+					</Button>
+				</>
+			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
+		});
+	}
 
 	//DELETE action
 	const openDeleteConfirmModal = (row: MRT_Row<UserType>) =>

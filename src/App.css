@@ -11,3 +11,8 @@ main {
 	justify-content: center;
 	align-items: center;
 }
+
+.bold-text,
+.mantine-Modal-title {
+	font-weight: bold;
+}

@@ -214,16 +214,23 @@ export const useUpdateUser = () => {
 	});
 };
 
-export const useResetPassword = () => {
+export const useResetPassword = (
+	openConfirmationModal: (user: {
+		fullName: string;
+		email: string;
+		generatedPassword: string;
+	}) => void
+) => {
 	return useMutation({
 		mutationFn: async (user: { id: number }) => {
 			return await fetchApi('/resetPassword', 'PATCH', user);
 		},
 
-		onSuccess: (user: { fullName: string; generatedPassword: string }) =>
-			toast.success(
-				`Nouveau mot de passe de ${user.fullName}: ${user.generatedPassword} `
-			),
+		onSuccess: (user: {
+			fullName: string;
+			email: string;
+			generatedPassword: string;
+		}) => openConfirmationModal(user),
 	});
 };
 

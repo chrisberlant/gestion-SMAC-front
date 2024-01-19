@@ -20,7 +20,6 @@ import {
 	useGetAllModels,
 	useUpdateModel,
 } from '@utils/modelQueries';
-import './modelsTable.css';
 
 function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -123,7 +122,7 @@ function ModelsTable() {
 			children: (
 				<Text>
 					Voulez-vous vraiment supprimer le modèle{' '}
-					<span className='models-title'>
+					<span className='bold-text'>
 						{`${row.original.brand} ${row.original.reference} ${
 							row.original.storage
 								? `de stockage ${row.original.storage}`

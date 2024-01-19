@@ -20,7 +20,6 @@ import {
 	useGetAllServices,
 	useUpdateService,
 } from '@utils/serviceQueries';
-import './servicesTable.css';
 
 function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -97,8 +96,8 @@ function ServicesTable() {
 			children: (
 				<Text>
 					Voulez-vous vraiment supprimer le service{' '}
-					<span className='service-title'>{row.original.title}</span>{' '}
-					? Cette action est irréversible.
+					<span className='bold-text'>{row.original.title}</span> ?
+					Cette action est irréversible.
 				</Text>
 			),
 			centered: true,
