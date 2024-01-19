@@ -8,11 +8,18 @@ import {
 import { useMemo, useState } from 'react';
 import { UserType } from '../../../types';
 import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+	IconEdit,
+	IconTrash,
+	IconKey,
+	IconEditOff,
+	IconKeyOff,
+	IconTrashOff,
+} from '@tabler/icons-react';
 import {
 	userUpdateSchema,
 	userCreationSchema,
-} from '../../../validationSchemas/userSchemas';
+} from '@validationSchemas/userSchemas';
 import {
 	Flex,
 	Tooltip,
@@ -28,7 +35,7 @@ import {
 	useGetAllUsers,
 	useGetCurrentUser,
 	useUpdateUser,
-} from '../../../utils/userQueries';
+} from '@utils/userQueries';
 import './usersTable.css';
 
 function UsersTable() {
@@ -75,6 +82,10 @@ function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'isAdmin',
+				accessorFn: (row: UserType) => {
+					if (row.isAdmin) return 'Admin';
+					return 'Tech';
+				},
 				editVariant: 'select',
 				Cell: ({ row }) => (
 					<Badge
@@ -85,8 +96,9 @@ function UsersTable() {
 					</Badge>
 				),
 				mantineEditSelectProps: {
-					data: ['Tech', 'Admin'],
+					data: ['Tech', 'Admin'], // Options disponibles dans le menu déroulant
 					error: validationErrors?.isAdmin,
+					searchable: false, // Désactiver la recherche
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -199,6 +211,15 @@ function UsersTable() {
 							<IconEdit />
 						</ActionIcon>
 					</Tooltip>
+					<Tooltip label='Réinitialiser le mot de passe'>
+						<ActionIcon
+							color='orange'
+							onClick={() => table.setEditingRow(row)}
+							size='sm'
+						>
+							<IconKey />
+						</ActionIcon>
+					</Tooltip>
 					<Tooltip label='Supprimer'>
 						<ActionIcon
 							color='red'
@@ -210,6 +231,7 @@ function UsersTable() {
 					</Tooltip>
 				</Flex>
 			) : (
+				// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
 				<Flex gap='md'>
 					<Tooltip label='Non autorisé'>
 						<ActionIcon
@@ -220,7 +242,7 @@ function UsersTable() {
 							color='grey'
 							size='sm'
 						>
-							<IconEdit />
+							<IconEditOff />
 						</ActionIcon>
 					</Tooltip>
 					<Tooltip label='Non autorisé'>
@@ -232,7 +254,19 @@ function UsersTable() {
 							color='grey'
 							size='sm'
 						>
-							<IconTrash />
+							<IconKeyOff />
+						</ActionIcon>
+					</Tooltip>
+					<Tooltip label='Non autorisé'>
+						<ActionIcon
+							style={{
+								cursor: 'not-allowed',
+								pointerEvents: 'none',
+							}}
+							color='grey'
+							size='sm'
+						>
+							<IconTrashOff />
 						</ActionIcon>
 					</Tooltip>
 				</Flex>
@@ -290,7 +324,8 @@ function UsersTable() {
 	}
 
 	return (
-		<div className='Users-table'>
+		<div className='users-table'>
+			<h2>Utilisateurs et droits</h2>
 			<MantineReactTable table={table} />
 		</div>
 	);

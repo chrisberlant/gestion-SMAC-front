@@ -12,14 +12,14 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 import {
 	modelUpdateSchema,
 	modelCreationSchema,
-} from '../../../validationSchemas/modelSchemas';
+} from '@validationSchemas/modelSchemas';
 import { Flex, Tooltip, ActionIcon, Text, Button, Loader } from '@mantine/core';
 import {
 	useCreateModel,
 	useDeleteModel,
 	useGetAllModels,
 	useUpdateModel,
-} from '../../../utils/modelQueries';
+} from '@utils/modelQueries';
 import './modelsTable.css';
 
 function ModelsTable() {
@@ -227,6 +227,7 @@ function ModelsTable() {
 
 	return (
 		<div className='models-table'>
+			<h2>Modèles d'appareils</h2>
 			<MantineReactTable table={table} />
 		</div>
 	);

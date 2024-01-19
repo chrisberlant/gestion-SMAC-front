@@ -1,10 +1,4 @@
 import {
-	useCreateService,
-	useDeleteService,
-	useGetAllServices,
-	useUpdateService,
-} from '@utils/serviceQueries';
-import {
 	MantineReactTable,
 	useMantineReactTable,
 	type MRT_ColumnDef,
@@ -20,6 +14,12 @@ import {
 	serviceUpdateSchema,
 } from '@validationSchemas/serviceSchemas';
 import { Flex, Tooltip, ActionIcon, Text, Button, Loader } from '@mantine/core';
+import {
+	useCreateService,
+	useDeleteService,
+	useGetAllServices,
+	useUpdateService,
+} from '@utils/serviceQueries';
 import './servicesTable.css';
 
 function ServicesTable() {
@@ -197,6 +197,7 @@ function ServicesTable() {
 
 	return (
 		<div className='services-table'>
+			<h2>Services</h2>
 			<MantineReactTable table={table} />
 		</div>
 	);
