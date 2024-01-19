@@ -6,8 +6,7 @@ export const useGetAllDevices = () => {
 	return useQuery({
 		queryKey: ['devices'],
 		queryFn: async () => {
-			const data: DeviceType[] = await fetchApi('/getAllDevices');
-			return data;
+			return (await fetchApi('/getAllDevices')) as DeviceType[];
 		},
 	});
 };

@@ -28,7 +28,7 @@ export const useCreateModel = () => {
 					...newModel,
 				},
 			]);
-			return { previousModels };
+			return previousModels;
 		},
 		onSuccess: (newModel: ModelType) => {
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
@@ -42,8 +42,8 @@ export const useCreateModel = () => {
 			);
 			toast.success('Modèle créé avec succès');
 		},
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['models'], context?.previousModels),
+		onError: (_, __, previousModels) =>
+			queryClient.setQueryData(['models'], previousModels),
 	});
 };
 
@@ -65,11 +65,11 @@ export const useUpdateModel = () => {
 					prevModel.id === newModel.id ? newModel : prevModel
 				)
 			);
-			return { previousModels };
+			return previousModels;
 		},
 		onSuccess: () => toast.success('Modèle modifié avec succès'),
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['models'], context?.previousModels),
+		onError: (_, __, previousModels) =>
+			queryClient.setQueryData(['models'], previousModels),
 	});
 };
 
@@ -91,10 +91,10 @@ export const useDeleteModel = () => {
 					(model: ModelType) => model.id !== modelToDelete.id
 				)
 			);
-			return { previousModels };
+			return previousModels;
 		},
 		onSuccess: () => toast.success('Modèle supprimé avec succès'),
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['models'], context?.previousModels),
+		onError: (_, __, previousModels) =>
+			queryClient.setQueryData(['models'], previousModels),
 	});
 };

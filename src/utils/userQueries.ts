@@ -18,12 +18,11 @@ export const useLogin = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			const user: LoggedUser = await fetchApi(
+			return (await fetchApi(
 				'/login',
 				'POST',
 				form.values
-			);
-			return user;
+			)) as LoggedUser;
 		},
 		onSuccess: (user) => {
 			queryClient.setQueryData(['currentUser'], user);
@@ -43,8 +42,7 @@ export const useLogout = () => {
 	return useQuery({
 		queryKey: ['logout'],
 		queryFn: async () => {
-			const data = await fetchApi('/logout');
-			return data;
+			return await fetchApi('/logout');
 		},
 		enabled: false,
 		staleTime: 0,
@@ -57,8 +55,7 @@ export const useGetCurrentUser = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			const currentUser: LoggedUser = await fetchApi('/getCurrentUser');
-			return currentUser;
+			return (await fetchApi('/getCurrentUser')) as LoggedUser;
 		},
 		refetchOnWindowFocus: false,
 		staleTime: Infinity,
@@ -71,8 +68,7 @@ export const useCheckLoginStatus = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			const loggedUser: LoggedUser = await fetchApi('/getCurrentUser');
-			return loggedUser;
+			return (await fetchApi('/getCurrentUser')) as LoggedUser;
 		},
 		meta: {
 			loginStatusQuery: 'true',
@@ -96,12 +92,11 @@ export const useUpdateCurrentUser = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			const data: LoggedUser = await fetchApi(
+			return (await fetchApi(
 				'/updateCurrentUser',
 				'PATCH',
 				form.values
-			);
-			return data;
+			)) as LoggedUser;
 		},
 		onSuccess: (user) => {
 			closeAccountModal();
@@ -128,12 +123,11 @@ export const useUpdateCurrentUserPassword = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			const data: string = await fetchApi(
+			return (await fetchApi(
 				'/updateCurrentUserPassword',
 				'PATCH',
 				form.values
-			);
-			return data;
+			)) as string;
 		},
 		onSuccess: async () => {
 			closePasswordModal();
@@ -166,13 +160,10 @@ export const useGetAllUsers = () => {
 export const useCreateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserType) => {
-			return (await fetchApi('/createUser', 'POST', user)) as {
-				generatedPassword: string;
-				user: UserType;
-			};
+			return await fetchApi('/createUser', 'POST', user);
 		},
 
-		onMutate: async (newUser: UserType) => {
+		onMutate: async (newUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) => [
@@ -181,7 +172,7 @@ export const useCreateUser = () => {
 					...newUser,
 				},
 			]);
-			return { previousUsers };
+			return previousUsers;
 		},
 		onSuccess: (newUser: { generatedPassword: string; user: UserType }) => {
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
@@ -193,18 +184,18 @@ export const useCreateUser = () => {
 			);
 			toast.success('Utilisateur créé avec succès');
 		},
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['users'], context?.previousUsers),
+		onError: (_, __, previousUsers) =>
+			queryClient.setQueryData(['users'], previousUsers),
 	});
 };
 
 export const useUpdateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserType) => {
-			return (await fetchApi('/updateUser', 'PATCH', user)) as UserType;
+			return await fetchApi('/updateUser', 'PATCH', user);
 		},
 
-		onMutate: async (newUser: UserType) => {
+		onMutate: async (newUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
@@ -212,30 +203,32 @@ export const useUpdateUser = () => {
 					prevUser.id === newUser.id ? newUser : prevUser
 				)
 			);
-			return { previousUsers };
+			return previousUsers;
 		},
 		onSuccess: () => toast.success('Utilisateur modifié avec succès'),
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['users'], context?.previousUsers),
+		onError: (_, __, previousUsers) =>
+			queryClient.setQueryData(['users'], previousUsers),
 	});
 };
 
 export const useDeleteUser = () => {
 	return useMutation({
 		mutationFn: async (user: { id: number }) => {
-			return (await fetchApi('/deleteUser', 'DELETE', user)) as UserType;
+			return await fetchApi('/deleteUser', 'DELETE', user);
 		},
 
-		onMutate: async (userToDelete: { id: number }) => {
+		onMutate: async (userToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
-				users?.filter((user: UserType) => user.id !== userToDelete.id)
+				users.filter((user: UserType) => user.id !== userToDelete.id)
 			);
-			return { previousUsers };
+			return previousUsers;
 		},
 		onSuccess: () => toast.success('Utilisateur supprimé avec succès'),
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['users'], context?.previousUsers),
+		onError: (_, __, previousUsers) =>
+			queryClient.setQueryData(['users'], previousUsers),
 	});
 };
+
+// TODO Mutation resetPassword

@@ -35,7 +35,7 @@ export const useCreateService = () => {
 					},
 				]
 			);
-			return { previousServices };
+			return previousServices;
 		},
 		onSuccess: (newService: ServiceType) => {
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
@@ -47,8 +47,8 @@ export const useCreateService = () => {
 			);
 			toast.success('Service créé avec succès');
 		},
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['services'], context?.previousServices),
+		onError: (_, __, previousServices) =>
+			queryClient.setQueryData(['services'], previousServices),
 	});
 };
 
@@ -72,12 +72,12 @@ export const useUpdateService = () => {
 					prevService.id === newService.id ? newService : prevService
 				)
 			);
-			return { previousServices };
+			return previousServices;
 		},
 		onSuccess: () => toast.success('Service modifié avec succès'),
-		onError: (_, __, context) =>
+		onError: (_, __, previousServices) =>
 			// Si erreur, rollback du cache
-			queryClient.setQueryData(['services'], context?.previousServices),
+			queryClient.setQueryData(['services'], previousServices),
 	});
 };
 
@@ -99,10 +99,10 @@ export const useDeleteService = () => {
 					(service: ServiceType) => service.id !== serviceToDelete.id
 				)
 			);
-			return { previousServices };
+			return previousServices;
 		},
 		onSuccess: () => toast.success('Service supprimé avec succès'),
-		onError: (_, __, context) =>
-			queryClient.setQueryData(['services'], context?.previousServices),
+		onError: (_, __, previousServices) =>
+			queryClient.setQueryData(['services'], previousServices),
 	});
 };

@@ -10,10 +10,9 @@ export const useGetAgentsAndDevicesPerService = () => {
 	return useQuery({
 		queryKey: ['agentsAndDevicesPerService'],
 		queryFn: async () => {
-			const data: AgentsAndDevicesPerServiceType[] = await fetchApi(
+			return (await fetchApi(
 				'/getAgentsAndDevicesPerService'
-			);
-			return data;
+			)) as AgentsAndDevicesPerServiceType[];
 		},
 		staleTime: Infinity,
 		gcTime: Infinity,
@@ -25,10 +24,9 @@ export const useGetDevicesAmountPerModel = () => {
 	return useQuery({
 		queryKey: ['devicesAmountPerModel'],
 		queryFn: async () => {
-			const data: DevicesAmountPerModelType[] = await fetchApi(
+			return (await fetchApi(
 				'/getDevicesAmountPerModel'
-			);
-			return data;
+			)) as DevicesAmountPerModelType[][];
 		},
 		staleTime: Infinity,
 		gcTime: Infinity,
