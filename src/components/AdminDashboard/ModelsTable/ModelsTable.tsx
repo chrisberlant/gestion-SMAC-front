@@ -65,6 +65,7 @@ function ModelsTable() {
 			{
 				header: 'Stockage',
 				accessorKey: 'storage',
+				size: 120,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.storage,

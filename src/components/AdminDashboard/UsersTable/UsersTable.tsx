@@ -63,6 +63,7 @@ function UsersTable() {
 			{
 				header: 'Nom',
 				accessorKey: 'lastName',
+				size: 150,
 				mantineEditTextInputProps: {
 					error: validationErrors?.lastName,
 					onFocus: () =>
@@ -75,6 +76,7 @@ function UsersTable() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
+				size: 150,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -87,6 +89,7 @@ function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'isAdmin',
+				size: 80,
 				accessorFn: (row: UserType) => {
 					if (row.isAdmin) return 'Admin';
 					return 'Tech';
@@ -114,6 +117,7 @@ function UsersTable() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
+				size: 400,
 				mantineEditTextInputProps: {
 					error: validationErrors?.email,
 					onFocus: () =>

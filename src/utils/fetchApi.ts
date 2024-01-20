@@ -1,11 +1,12 @@
-import { ModelType, ServiceType, UserType } from '../types';
+import { LineType, ModelType, ServiceType, UserType } from '../types';
 
 // Types autorisés dans la méthode
 type FetchType =
 	| Record<string, string | number>
 	| ServiceType
 	| ModelType
-	| UserType;
+	| UserType
+	| LineType;
 
 async function fetchApi(route: string, method?: string, infos?: FetchType) {
 	const baseUrl = import.meta.env.VITE_API_URL;
