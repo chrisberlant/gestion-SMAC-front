@@ -1,22 +1,23 @@
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import {
+	MRT_Row,
+	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
 	type MRT_ColumnDef,
-	MRT_Row,
-	MRT_TableOptions,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { AgentType, LineType, ServiceType } from '../../types';
-import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import { Flex, Tooltip, ActionIcon, Text, Button, Loader } from '@mantine/core';
+import { LineType } from '../../types';
 // import { toast } from 'sonner';
 import {
 	useCreateLine,
 	useGetAllAttributedLines,
 } from '../../utils/lineQueries';
-import { lineCreationSchema } from '../../validationSchemas/lineSchemas';
 import { useGetAllServices } from '../../utils/serviceQueries';
+import { lineCreationSchema } from '../../validationSchemas/lineSchemas';
+import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 interface ValidationErrorsType {
 	number: undefined | string;
@@ -107,7 +108,7 @@ function AttributedLines2() {
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
 					error: validationErrors?.profile,
-					searchable: true, // Désactiver la recherche
+					searchable: false, // Désactiver la recherche
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -190,7 +191,7 @@ function AttributedLines2() {
 				accessorKey: 'agent.service.title',
 				editVariant: 'select',
 				mantineEditSelectProps: {
-					data: ['VD', 'V', 'D'],
+					data: services?.map((service) => service.title),
 					error: validationErrors?.agent.service.title,
 					searchable: true,
 					onFocus: () =>
@@ -210,20 +211,20 @@ function AttributedLines2() {
 	);
 
 	//CREATE action
-	const handleCreateUser: MRT_TableOptions<LineType>['onCreatingRowSave'] =
+	const handleCreateLine: MRT_TableOptions<LineType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
 			const validation = lineCreationSchema.safeParse(values);
 			if (!validation.success) {
 				console.log(validation.error.issues);
 				const errors: Record<string, string> = {};
-				// Conversion du tableau d'objets retourné par Zod en objet simple
+				// // Conversion du tableau d'objets retourné par Zod en objet simple
 				// validation.error.issues.forEach((item) => {
 				// 	errors[item.path[0]] = item.message;
 				// });
 				// return setValidationErrors(errors);
 			}
-			// setValidationErrors({});
-			// createUser(values);
+			setValidationErrors(initialState);
+			// createLine(values);
 			exitCreatingMode();
 		};
 
@@ -303,7 +304,7 @@ function AttributedLines2() {
 		enableSortingRemoval: false,
 		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors(initialState),
-		onCreatingRowSave: handleCreateUser,
+		onCreatingRowSave: handleCreateLine,
 		// onEditingRowSave: handleSaveUser,
 		onEditingRowCancel: () => setValidationErrors(initialState),
 		paginationDisplayMode: 'pages',
@@ -381,10 +382,10 @@ function AttributedLines2() {
 	}
 
 	return (
-		<div>
+		<ZoomableComponent className='attributed-lines'>
 			<h2>Lignes attribuées</h2>
 			<MantineReactTable table={table} />
-		</div>
+		</ZoomableComponent>
 	);
 }
 
