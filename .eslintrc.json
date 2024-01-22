@@ -8,6 +8,13 @@
 	],
 	"ignorePatterns": ["dist", ".eslintrc.cjs"],
 	"settings": {
+		"node": {
+			"paths": ["src"],
+			"extensions": [".js", ".ts", ".d.ts", ".tsx"]
+		},
+		"import/parsers": {
+			"@typescript-eslint/parser": [".ts", ".tsx"]
+		},
 		"import/resolver": {
 			"alias": {
 				"map": [
@@ -16,13 +23,6 @@
 					["@validationSchemas", "./src/validationSchemas"],
 					["@types", "./src/types"]
 				]
-			},
-			"node": {
-				"paths": ["src"],
-				"extensions": [".js", ".ts", ".d.ts", ".tsx"]
-			},
-			"import/parsers": {
-				"@typescript-eslint/parser": [".ts", ".tsx"]
 			},
 			"typescript": {
 				"alwaysTryTypes": true

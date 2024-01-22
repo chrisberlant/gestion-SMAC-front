@@ -1,9 +1,9 @@
-import { useGetAllResiliatedLines } from '../../utils/lineQueries';
 import { Loader } from '@mantine/core';
+import { useGetAllLines } from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 function ResiliatedLines() {
-	const { data: lines, isLoading, isError } = useGetAllResiliatedLines();
+	const { data: lines, isLoading, isError } = useGetAllLines();
 
 	if (isLoading) {
 		return (

@@ -1,23 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { LineType } from '../types';
 import fetchApi from './fetchApi';
-import { toast } from 'sonner';
 import queryClient from './queryClient';
 
-export const useGetAllAttributedLines = () => {
+export const useGetAllLines = () => {
 	return useQuery({
 		queryKey: ['lines'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllLines/attributed')) as LineType[];
-		},
-	});
-};
-
-export const useGetAllResiliatedLines = () => {
-	return useQuery({
-		queryKey: ['resiliatedLines'],
-		queryFn: async () => {
-			return (await fetchApi('/getAllLines/resiliated')) as LineType[];
+			return (await fetchApi('/getAllLines')) as LineType[];
 		},
 	});
 };

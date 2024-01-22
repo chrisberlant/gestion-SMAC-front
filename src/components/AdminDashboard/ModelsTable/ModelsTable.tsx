@@ -1,25 +1,25 @@
-import {
-	MantineReactTable,
-	useMantineReactTable,
-	type MRT_ColumnDef,
-	MRT_Row,
-	MRT_TableOptions,
-} from 'mantine-react-table';
-import { useMemo, useState } from 'react';
-import { ModelType } from '../../../types';
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import {
-	modelUpdateSchema,
-	modelCreationSchema,
-} from '@validationSchemas/modelSchemas';
-import { Flex, Tooltip, ActionIcon, Text, Button, Loader } from '@mantine/core';
 import {
 	useCreateModel,
 	useDeleteModel,
 	useGetAllModels,
 	useUpdateModel,
 } from '@utils/modelQueries';
+import {
+	modelCreationSchema,
+	modelUpdateSchema,
+} from '@validationSchemas/modelSchemas';
+import {
+	MRT_Row,
+	MRT_TableOptions,
+	MantineReactTable,
+	useMantineReactTable,
+	type MRT_ColumnDef,
+} from 'mantine-react-table';
+import { useMemo, useState } from 'react';
+import { ModelType } from '../../../types';
 
 function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();

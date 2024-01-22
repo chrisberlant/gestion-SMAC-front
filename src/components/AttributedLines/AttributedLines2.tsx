@@ -1,6 +1,5 @@
 import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconCopy, IconEdit, IconMail, IconTrash } from '@tabler/icons-react';
 import {
 	MRT_Row,
 	MRT_TableOptions,
@@ -11,12 +10,12 @@ import {
 import { useMemo, useState } from 'react';
 import { LineType } from '../../types';
 // import { toast } from 'sonner';
-import {
-	useCreateLine,
-	useGetAllAttributedLines,
-} from '../../utils/lineQueries';
-import { useGetAllServices } from '../../utils/serviceQueries';
-import { lineCreationSchema } from '../../validationSchemas/lineSchemas';
+import { modals } from '@mantine/modals';
+import { useGetAllServices } from '@utils/serviceQueries';
+import { lineCreationSchema } from '@validationSchemas/lineSchemas';
+import { toast } from 'sonner';
+import { sendEmail } from '../../utils/functions';
+import { useCreateLine, useGetAllLines } from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
 interface ValidationErrorsType {
@@ -39,16 +38,12 @@ interface ValidationErrorsType {
 		status: undefined | string;
 		isNew: undefined | string;
 		comments: undefined | string;
-		model: {
-			brand: undefined | string;
-			reference: undefined | string;
-			storage: undefined | string;
-		};
+		model: undefined | string;
 	};
 }
 
 function AttributedLines2() {
-	const { data: lines, isLoading, isError } = useGetAllAttributedLines();
+	const { data: lines, isLoading, isError } = useGetAllLines();
 	const { data: services } = useGetAllServices();
 	const { mutate: createLine } = useCreateLine();
 	const initialState = {
@@ -71,11 +66,7 @@ function AttributedLines2() {
 			status: undefined,
 			isNew: undefined,
 			comments: undefined,
-			model: {
-				brand: undefined,
-				reference: undefined,
-				storage: undefined,
-			},
+			model: undefined,
 		},
 	};
 	const [validationErrors, setValidationErrors] =
@@ -91,6 +82,7 @@ function AttributedLines2() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
+				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
 					onFocus: () =>
@@ -104,7 +96,7 @@ function AttributedLines2() {
 				header: 'Profil',
 				accessorKey: 'profile',
 				editVariant: 'select',
-				size: 90,
+				size: 70,
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
 					error: validationErrors?.profile,
@@ -120,7 +112,7 @@ function AttributedLines2() {
 				header: 'Statut',
 				accessorKey: 'status',
 				editVariant: 'select',
-				size: 150,
+				size: 90,
 				mantineEditSelectProps: {
 					data: ['Attribuée', 'En cours', 'Résiliée'],
 					error: validationErrors?.status,
@@ -147,6 +139,36 @@ function AttributedLines2() {
 			{
 				header: 'Email',
 				accessorKey: 'agent.email',
+				size: 70,
+				accessorFn: (row) => (
+					<Flex gap='xs' justify='center' align='center'>
+						<Tooltip label={`Copier ${row.agent.email}`}>
+							<ActionIcon
+								size='xs'
+								onClick={() => {
+									navigator.clipboard.writeText(
+										row.agent.email
+									);
+									toast.info(
+										'Adresse e-mail copiée dans le presse-papiers'
+									);
+								}}
+							>
+								<IconCopy />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip label={`E-mail à ${row.agent.email}`}>
+							<ActionIcon
+								size='xs'
+								onClick={() =>
+									sendEmail(row.agent.email, '', '')
+								}
+							>
+								<IconMail />
+							</ActionIcon>
+						</Tooltip>
+					</Flex>
+				),
 				mantineEditTextInputProps: {
 					error: validationErrors?.agent?.email,
 					onFocus: () =>
@@ -189,6 +211,7 @@ function AttributedLines2() {
 			{
 				header: 'Service',
 				accessorKey: 'agent.service.title',
+				size: 100,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
@@ -206,8 +229,43 @@ function AttributedLines2() {
 						}),
 				},
 			},
+			{
+				header: 'IMEI',
+				accessorKey: 'device.imei',
+				size: 100,
+				mantineEditTextInputProps: {
+					error: validationErrors?.device.imei,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							device: {
+								...validationErrors.device,
+								imei: undefined,
+							},
+						}),
+				},
+			},
+			{
+				header: 'Modèle',
+				accessorKey: 'device.model',
+				accessorFn: (row) =>
+					`${row.device.model.brand} ${row.device.model.reference} ${
+						row.device.model.storage || ''
+					}`,
+				mantineEditTextInputProps: {
+					error: validationErrors?.device.model,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							device: {
+								...validationErrors.device,
+								model: undefined,
+							},
+						}),
+				},
+			},
 		],
-		[validationErrors]
+		[validationErrors, services]
 	);
 
 	//CREATE action

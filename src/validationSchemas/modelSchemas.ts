@@ -21,6 +21,7 @@ export const modelCreationSchema = z.strictObject({
 			invalid_type_error:
 				'Le stockage doit être une chaîne de caractères',
 		})
+		.nullable()
 		.optional(),
 });
 
@@ -44,5 +45,6 @@ export const modelUpdateSchema = selectionSchema.extend({
 			invalid_type_error:
 				'Le stockage doit être une chaîne de caractères',
 		})
+		.nullable()
 		.optional(),
 });
