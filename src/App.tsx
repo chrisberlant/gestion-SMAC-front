@@ -1,16 +1,15 @@
 import '@mantine/core/styles.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './components/Login/Login';
-import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
-// import AttributedLines from './components/AttributedLines/AttributedLines';
-import AdminDashboard from './components/AdminDashboard/AdminDashboard';
-import PageNotFound from './components/PageNotFound/PageNotFound';
-import Devices from './components/Devices/Devices';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import ResiliatedLines from './components/ResiliatedLines/ResiliatedLines';
 import './App.css';
+import AdminDashboard from './components/AdminDashboard/AdminDashboard';
+import AttributedLines from './components/AttributedLines/AttributedLines';
+import Devices from './components/Devices/Devices';
+import Login from './components/Login/Login';
+import PageNotFound from './components/PageNotFound/PageNotFound';
+import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
+import ResiliatedLines from './components/ResiliatedLines/ResiliatedLines';
 import Stats from './components/Stats/Stats';
-import AttributedLines2 from './components/AttributedLines/AttributedLines2';
 
 function AppRoutes() {
 	return (
@@ -18,10 +17,7 @@ function AppRoutes() {
 			<Route element={<Login />} path='/' />
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
-				<Route
-					element={<AttributedLines2 />}
-					path='/attributed-lines'
-				/>
+				<Route element={<AttributedLines />} path='/attributed-lines' />
 				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />

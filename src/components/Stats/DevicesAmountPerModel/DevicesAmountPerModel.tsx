@@ -1,5 +1,5 @@
-import { useGetDevicesAmountPerModel } from '../../../utils/statsQueries';
 import { Loader } from '@mantine/core';
+import { useGetDevicesAmountPerModel } from '../../../utils/statsQueries';
 import StatsTable from '../StatsTable/StatsTable';
 
 function DevicesAmountPerModel() {
