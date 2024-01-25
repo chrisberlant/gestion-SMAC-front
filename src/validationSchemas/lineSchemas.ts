@@ -8,7 +8,7 @@ export const lineCreationSchema = z.strictObject({
 			invalid_type_error: 'Le numéro doit être une chaîne de caractères',
 		})
 		.trim()
-		.min(10, 'Le numéro doit être renseigné'),
+		.length(10, 'Le numéro doit faire 10 caractères'),
 	profile: z.enum(['V', 'D', 'VD'], {
 		errorMap: () => {
 			return {
@@ -55,7 +55,7 @@ export const lineUpdateSchema = selectionSchema.extend({
 			invalid_type_error: 'Le numéro doit être une chaîne de caractères',
 		})
 		.trim()
-		.min(10, 'Le numéro doit être renseigné')
+		.length(10, 'Le numéro doit faire 10 caractères')
 		.optional(),
 	profile: z
 		.enum(['V', 'D', 'VD'], {

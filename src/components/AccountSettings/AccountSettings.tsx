@@ -1,12 +1,12 @@
-import { TextInput, Button, LoadingOverlay, Modal } from '@mantine/core';
+import { Button, LoadingOverlay, Modal, TextInput } from '@mantine/core';
+import { useForm, zodResolver } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
+import { toast } from 'sonner';
 import {
 	useGetCurrentUser,
 	useUpdateCurrentUser,
 } from '../../utils/userQueries';
-import { useForm, zodResolver } from '@mantine/form';
 import { currentUserUpdateSchema } from '../../validationSchemas/userSchemas';
-import { useDisclosure } from '@mantine/hooks';
-import { toast } from 'sonner';
 import ChangePassword from './ChangePassword/ChangePassword';
 
 interface AccountSettingsProps {
@@ -85,12 +85,7 @@ function AccountSettings({
 					<Button fullWidth mt='xl' type='submit'>
 						Valider
 					</Button>
-					<Button
-						fullWidth
-						mt='xl'
-						color='cyan'
-						onClick={openPasswordModal}
-					>
+					<Button fullWidth mt='xl' onClick={openPasswordModal}>
 						Modifier le mot de passe
 					</Button>
 				</form>

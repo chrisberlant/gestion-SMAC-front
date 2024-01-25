@@ -9,17 +9,48 @@ export const deviceCreationSchema = z.strictObject({
 		})
 		.trim()
 		.length(15, "L'IMEI fourni est incorrect"),
-	preparationDate: z.date().nullable().optional(),
-	attributionDate: z.date().nullable().optional(),
-	status: z.enum([
-		'Attribué',
-		'Restitué',
-		'En attente de restitution',
-		'En prêt',
-		'En panne',
-		'Volé',
-	]),
-	isNew: z.boolean(),
+	preparationDate: z
+		.string({
+			invalid_type_error:
+				'Le format de la date de préparation est incorrect',
+		})
+		.datetime({
+			message: 'Le format de la date de préparation est incorrect',
+		})
+		.nullable()
+		.optional(),
+	attributionDate: z
+		.string({
+			invalid_type_error:
+				"Le format de la date d'attribution est incorrect",
+		})
+		.datetime({
+			message: "Le format de la date d'attribution est incorrect",
+		})
+		.nullable()
+		.optional(),
+	status: z.enum(
+		[
+			'Attribué',
+			'Restitué',
+			'En attente de restitution',
+			'En prêt',
+			'En panne',
+			'Volé',
+		],
+		{
+			errorMap: () => {
+				return {
+					message:
+						'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
+				};
+			},
+		}
+	),
+	isNew: z.boolean({
+		required_error: 'La valeur isNew doit être renseignée',
+		invalid_type_error: 'La valeur isNew doit être un booléen',
+	}),
 	comments: z
 		.string({
 			invalid_type_error:
@@ -37,11 +68,11 @@ export const deviceCreationSchema = z.strictObject({
 		.optional(),
 	modelId: z
 		.number({
+			required_error: 'Le modèle doit être renseigné',
 			invalid_type_error: "L'id du modèle doit être un nombre",
 		})
 		.int("L'id du modèle doit être un nombre entier")
-		.positive("L'id du modèle fourni est incorrect")
-		.optional(),
+		.positive("L'id du modèle fourni est incorrect"),
 });
 
 export const deviceUpdateSchema = selectionSchema.extend({
@@ -52,19 +83,51 @@ export const deviceUpdateSchema = selectionSchema.extend({
 		.trim()
 		.length(15, "L'IMEI fourni est incorrect")
 		.optional(),
-	preparationDate: z.date().optional(),
-	attributionDate: z.date().optional(),
-	status: z
-		.enum([
-			'Attribué',
-			'Restitué',
-			'En attente de restitution',
-			'En prêt',
-			'En panne',
-			'Volé',
-		])
+	preparationDate: z
+		.string({
+			invalid_type_error:
+				'Le format de la date de préparation est incorrect',
+		})
+		.datetime({
+			message: 'Le format de la date de préparation est incorrect',
+		})
+		.nullable()
 		.optional(),
-	isNew: z.boolean().optional(),
+	attributionDate: z
+		.string({
+			invalid_type_error:
+				"Le format de la date d'attribution est incorrect",
+		})
+		.datetime({
+			message: "Le format de la date d'attribution est incorrect",
+		})
+		.nullable()
+		.optional(),
+	status: z
+		.enum(
+			[
+				'Attribué',
+				'Restitué',
+				'En attente de restitution',
+				'En prêt',
+				'En panne',
+				'Volé',
+			],
+			{
+				errorMap: () => {
+					return {
+						message:
+							'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
+					};
+				},
+			}
+		)
+		.optional(),
+	isNew: z
+		.boolean({
+			invalid_type_error: 'La valeur isNew doit être un booléen',
+		})
+		.optional(),
 	comments: z
 		.string({
 			invalid_type_error:

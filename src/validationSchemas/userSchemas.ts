@@ -4,6 +4,7 @@ export const userLoginSchema = z.strictObject({
 	email: z
 		.string({
 			required_error: "L'adresse mail doit être renseignée",
+			invalid_type_error: "Le format de l'adresse mail est incorrect",
 		})
 		.trim()
 		.email("Le format de l'adresse mail est incorrect")
@@ -24,7 +25,9 @@ export const userLoginSchema = z.strictObject({
 export const currentUserUpdateSchema = z
 	.strictObject({
 		email: z
-			.string()
+			.string({
+				invalid_type_error: "Le format de l'adresse mail est incorrect",
+			})
 			.trim()
 			.min(1, "L'adresse mail doit être renseignée")
 			.email("Le format de l'adresse mail est incorrect"),
@@ -50,6 +53,8 @@ export const currentUserPasswordUpdateSchema = z
 		oldPassword: z
 			.string({
 				required_error: "L'ancien mot de passe doit être renseigné",
+				invalid_type_error:
+					"Le format de l'ancien mot de passe est incorrect",
 			})
 			.min(8, "L'ancien mot de passe doit faire minimum 8 caractères")
 			.regex(
@@ -59,6 +64,8 @@ export const currentUserPasswordUpdateSchema = z
 		newPassword: z
 			.string({
 				required_error: 'Le nouveau mot de passe doit être renseigné',
+				invalid_type_error:
+					'Le format du nouveau mot de passe est incorrect',
 			})
 			.min(8, 'Le nouveau mot de passe doit faire minimum 8 caractères')
 			.regex(
@@ -69,6 +76,8 @@ export const currentUserPasswordUpdateSchema = z
 			.string({
 				required_error:
 					'La confirmation du nouveau mot de passe doit être renseignée',
+				invalid_type_error:
+					'Le format de la confirmation du nouveau mot de passe est incorrect',
 			})
 			.min(
 				8,
@@ -86,7 +95,10 @@ export const currentUserPasswordUpdateSchema = z
 
 export const userCreationSchema = z.strictObject({
 	email: z
-		.string({ required_error: "L'adresse mail doit être renseignée" })
+		.string({
+			required_error: "L'adresse mail doit être renseignée",
+			invalid_type_error: "Le format de l'adresse mail est incorrect",
+		})
 		.trim()
 		.min(1, "L'adresse mail doit être renseignée")
 		.email("Le format de l'adresse mail est incorrect"),
@@ -97,7 +109,7 @@ export const userCreationSchema = z.strictObject({
 				'Le nom de famille doit être une chaîne de caractères',
 		})
 		.trim()
-		.min(1, 'Le nom doit être renseigné'),
+		.min(1, 'Le nom de famille doit être renseigné'),
 	firstName: z
 		.string({
 			required_error: 'Le prénom doit être renseigné',

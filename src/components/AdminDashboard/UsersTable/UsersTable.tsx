@@ -1,36 +1,24 @@
 import {
-	MantineReactTable,
-	useMantineReactTable,
-	type MRT_ColumnDef,
-	MRT_Row,
-	MRT_TableOptions,
-} from 'mantine-react-table';
-import { useMemo, useState } from 'react';
-import { UserType } from '../../../types';
+	ActionIcon,
+	Badge,
+	Button,
+	Flex,
+	Loader,
+	Text,
+	Tooltip,
+} from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
-	IconEdit,
-	IconTrash,
-	IconKey,
-	IconEditOff,
-	IconKeyOff,
-	IconTrashOff,
 	IconCopy,
+	IconEdit,
+	IconEditOff,
+	IconKey,
+	IconKeyOff,
 	IconMail,
+	IconTrash,
+	IconTrashOff,
 } from '@tabler/icons-react';
-import {
-	userUpdateSchema,
-	userCreationSchema,
-} from '@validationSchemas/userSchemas';
-import {
-	Flex,
-	Tooltip,
-	ActionIcon,
-	Text,
-	Button,
-	Loader,
-	Badge,
-} from '@mantine/core';
+import { sendEmail } from '@utils/functions';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -39,8 +27,20 @@ import {
 	useResetPassword,
 	useUpdateUser,
 } from '@utils/userQueries';
-import { sendEmail } from '@utils/functions';
+import {
+	userCreationSchema,
+	userUpdateSchema,
+} from '@validationSchemas/userSchemas';
+import {
+	MRT_Row,
+	MRT_TableOptions,
+	MantineReactTable,
+	useMantineReactTable,
+	type MRT_ColumnDef,
+} from 'mantine-react-table';
+import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { UserType } from '../../../types';
 
 function UsersTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -89,7 +89,7 @@ function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'isAdmin',
-				size: 80,
+				size: 100,
 				accessorFn: (row: UserType) => {
 					if (row.isAdmin) return 'Admin';
 					return 'Tech';
@@ -98,6 +98,7 @@ function UsersTable() {
 				Cell: ({ row }) => (
 					<Badge
 						color={row.original.isAdmin ? 'red' : 'blue'}
+						w={66}
 						variant='light'
 					>
 						{row.original.isAdmin ? 'Admin' : 'Tech'}

@@ -330,7 +330,7 @@ function AttributedLines() {
 	//DELETE action
 	const openDeleteConfirmModal = (row: MRT_Row<LineType>) =>
 		modals.openConfirmModal({
-			title: "Suppression d'un utilisateur",
+			title: "Suppression d'une ligne",
 			children: (
 				<Text>
 					Voulez-vous vraiment supprimer la ligne{' '}
