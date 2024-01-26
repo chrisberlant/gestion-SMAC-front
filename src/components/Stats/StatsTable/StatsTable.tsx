@@ -1,8 +1,8 @@
-import Th from './TableHeader/TableHeader';
-import { StatsType } from '../../../types';
 import { ScrollArea, Table, TextInput, keys, rem } from '@mantine/core';
-import { useState } from 'react';
 import { IconSearch } from '@tabler/icons-react';
+import { useState } from 'react';
+import { StatsType } from '../../../types';
+import Th from './TableHeader/TableHeader';
 import './statsTable.css';
 
 interface StatsTableProps {
@@ -20,7 +20,7 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 	function filterData(data: StatsType[], search: string) {
 		const query = search.toLowerCase().trim();
 		return data.filter((item) =>
-			keys(data[0]).some((key) => item[key].toLowerCase().includes(query))
+			keys(item).some((key) => item[key].toLowerCase().includes(query))
 		);
 	}
 
@@ -34,9 +34,7 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 	) {
 		const { sortBy } = payload;
 
-		if (!sortBy) {
-			return filterData(data, payload.search);
-		}
+		if (!sortBy) return filterData(data, payload.search);
 
 		return filterData(
 			[...data].sort((a, b) => {

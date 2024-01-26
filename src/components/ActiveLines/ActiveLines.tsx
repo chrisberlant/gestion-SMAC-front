@@ -41,7 +41,7 @@ interface ValidationErrorsType {
 	};
 }
 
-function AttributedLines() {
+function ActiveLines() {
 	const { data: lines, isLoading, isError } = useGetAllLines();
 	const { data: services } = useGetAllServices();
 	// const { mutate: createLine } = useCreateLine();
@@ -446,4 +446,4 @@ function AttributedLines() {
 	);
 }
 
-export default AttributedLines;
+export default ActiveLines;

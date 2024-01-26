@@ -1,26 +1,26 @@
-import cx from 'clsx';
-import { useState } from 'react';
 import {
 	Container,
-	UnstyledButton,
 	Group,
-	Text,
 	Menu,
 	Tabs,
+	Text,
+	UnstyledButton,
 	rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconLogout, IconSettings, IconChevronDown } from '@tabler/icons-react';
-import classes from './header.module.css';
+import { IconChevronDown, IconLogout, IconSettings } from '@tabler/icons-react';
+import cx from 'clsx';
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
-import ThemeToggler from '../ThemeToggler/ThemeToggler';
-import AccountSettings from '../AccountSettings/AccountSettings';
 import FrenchFlag from '../../assets/french-flag.svg';
+import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
+import AccountSettings from '../AccountSettings/AccountSettings';
+import ThemeToggler from '../ThemeToggler/ThemeToggler';
+import classes from './header.module.css';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
-	'Lignes attribuées': '/attributed-lines',
+	'Lignes actives': '/active-lines',
 	'Lignes résiliées': '/resiliated-lines',
 	Prêts: '/lent',
 	Appareils: '/devices',
@@ -37,9 +37,9 @@ export function Header() {
 	const { refetch: logout } = useLogout();
 
 	if (currentUser) {
-		if (currentUser.isAdmin) {
+		if (currentUser.role === 'Admin')
 			tabs.Administration = 'admin-dashboard';
-		}
+
 		const items = Object.entries(tabs).map(([title, path]) => (
 			<NavLink to={path} key={title}>
 				{({ isActive }) => (

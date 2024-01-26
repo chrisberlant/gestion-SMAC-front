@@ -88,30 +88,30 @@ function UsersTable() {
 			},
 			{
 				header: 'Rôle',
-				accessorKey: 'isAdmin',
-				size: 100,
-				accessorFn: (row: UserType) => {
-					if (row.isAdmin) return 'Admin';
-					return 'Tech';
-				},
+				accessorKey: 'role',
+				size: 150,
 				editVariant: 'select',
-				Cell: ({ row }) => (
-					<Badge
-						color={row.original.isAdmin ? 'red' : 'blue'}
-						w={66}
-						variant='light'
-					>
-						{row.original.isAdmin ? 'Admin' : 'Tech'}
-					</Badge>
-				),
+				Cell: ({ row }) => {
+					const roleColor =
+						row.original.role === 'Admin'
+							? 'red'
+							: row.original.role === 'Tech'
+							? 'blue'
+							: 'yellow';
+					return (
+						<Badge color={roleColor} w={96} variant='light'>
+							{row.original.role}
+						</Badge>
+					);
+				},
 				mantineEditSelectProps: {
-					data: ['Tech', 'Admin'], // Options disponibles dans le menu déroulant
-					error: validationErrors?.isAdmin,
+					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
+					error: validationErrors?.role,
 					searchable: false, // Désactiver la recherche
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
-							isAdmin: undefined,
+							role: undefined,
 						}),
 				},
 			},
@@ -135,8 +135,6 @@ function UsersTable() {
 	//CREATE action
 	const handleCreateUser: MRT_TableOptions<UserType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			if (values.isAdmin === 'Admin') values.isAdmin = true;
-			else values.isAdmin = false;
 			const validation = userCreationSchema.safeParse(values);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
@@ -157,8 +155,6 @@ function UsersTable() {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
 			values.id = row.original.id;
 			// Conversion en booléen du rôle
-			if (values.isAdmin === 'Admin') values.isAdmin = true;
-			else values.isAdmin = false;
 			// Validation du format des données via un schéma Zod
 			const validation = userUpdateSchema.safeParse(values);
 			if (!validation.success) {

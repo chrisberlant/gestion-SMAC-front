@@ -3,7 +3,7 @@ export interface UserType {
 	email: string;
 	firstName: string;
 	lastName: string;
-	isAdmin: boolean;
+	role: 'Admin' | 'Tech' | 'Consultant';
 }
 
 export type LoggedUser = Omit<UserType, 'id'> | undefined;
@@ -16,8 +16,8 @@ export interface ServiceType {
 export interface LineType {
 	id: number;
 	number: string;
-	profile: string;
-	status: string;
+	profile: 'V' | 'D' | 'VD';
+	status: 'Active' | 'En cours' | 'Résiliée';
 	comments: string | null;
 	agentId: number | null;
 	agent: AgentType;
@@ -46,7 +46,14 @@ export interface DeviceType {
 	imei: string;
 	preparationDate?: Date | null;
 	attributionDate?: Date | null;
-	status: string;
+	status:
+		| 'En stock'
+		| 'Attribué'
+		| 'Restitué'
+		| 'En attente de restitution'
+		| 'En prêt'
+		| 'En panne'
+		| 'Volé';
 	isNew: boolean;
 	comments?: string | null;
 	modeId: number;

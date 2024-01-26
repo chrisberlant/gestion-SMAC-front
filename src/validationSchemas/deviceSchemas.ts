@@ -31,6 +31,7 @@ export const deviceCreationSchema = z.strictObject({
 		.optional(),
 	status: z.enum(
 		[
+			'En stock',
 			'Attribué',
 			'Restitué',
 			'En attente de restitution',
@@ -106,6 +107,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 	status: z
 		.enum(
 			[
+				'En stock',
 				'Attribué',
 				'Restitué',
 				'En attente de restitution',
