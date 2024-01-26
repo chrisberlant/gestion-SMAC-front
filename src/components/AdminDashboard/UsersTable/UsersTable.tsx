@@ -334,7 +334,7 @@ function UsersTable() {
 								cursor: 'not-allowed',
 								pointerEvents: 'none',
 							}}
-							color='grey'
+							color='#B2B2B2'
 							size='sm'
 						>
 							<IconEditOff />
@@ -346,7 +346,7 @@ function UsersTable() {
 								cursor: 'not-allowed',
 								pointerEvents: 'none',
 							}}
-							color='grey'
+							color='#B2B2B2'
 							size='sm'
 						>
 							<IconKeyOff />
@@ -358,7 +358,7 @@ function UsersTable() {
 								cursor: 'not-allowed',
 								pointerEvents: 'none',
 							}}
-							color='grey'
+							color='#B2B2B2'
 							size='sm'
 						>
 							<IconTrashOff />
