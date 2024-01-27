@@ -91,6 +91,16 @@ function UsersTable() {
 				accessorKey: 'role',
 				size: 150,
 				editVariant: 'select',
+				mantineEditSelectProps: {
+					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
+					error: validationErrors?.role,
+					searchable: false, // Désactiver la recherche
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							role: undefined,
+						}),
+				},
 				Cell: ({ row }) => {
 					const roleColor =
 						row.original.role === 'Admin'
@@ -103,16 +113,6 @@ function UsersTable() {
 							{row.original.role}
 						</Badge>
 					);
-				},
-				mantineEditSelectProps: {
-					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
-					error: validationErrors?.role,
-					searchable: false, // Désactiver la recherche
-					onFocus: () =>
-						setValidationErrors({
-							...validationErrors,
-							role: undefined,
-						}),
 				},
 			},
 			{
@@ -257,7 +257,7 @@ function UsersTable() {
 			children: (
 				<Text>
 					Voulez-vous vraiment supprimer l'utilisateur{' '}
-					<span className='users-title'>
+					<span className='bold-text'>
 						{row.original.firstName} {row.original.lastName}
 					</span>{' '}
 					? Cette action est irréversible.

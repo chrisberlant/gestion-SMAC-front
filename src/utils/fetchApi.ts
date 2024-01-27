@@ -27,6 +27,10 @@ async function fetchApi(route: string, method?: MethodType, infos?: FetchType) {
 		credentials: 'include',
 	};
 	if (method && method !== 'GET') {
+		if (!infos)
+			throw new Error(
+				"Les informations n'ont pas été fournies dans la requête"
+			);
 		options.body = JSON.stringify(infos); // Add a body if method is provided and it is not equal to GET
 	}
 

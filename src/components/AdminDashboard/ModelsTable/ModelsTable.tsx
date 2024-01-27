@@ -146,7 +146,6 @@ function ModelsTable() {
 		columns,
 		data: models || [],
 		enableGlobalFilter: true,
-		enableColumnFilters: false,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',

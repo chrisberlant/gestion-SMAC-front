@@ -22,7 +22,6 @@ export interface LineType {
 	agentId: number | null;
 	agent: AgentType;
 	deviceId: number | null;
-	device: DeviceType;
 }
 
 export interface ModelType {
@@ -39,7 +38,7 @@ export interface AgentType {
 	lastName: string;
 	vip: boolean;
 	serviceId: number;
-	service: ServiceType;
+	devices?: { id: number }[];
 }
 
 export interface DeviceType {
@@ -57,10 +56,8 @@ export interface DeviceType {
 		| 'Volé';
 	isNew: boolean;
 	comments?: string | null;
-	modeId: number;
-	model: ModelType;
+	modelId: number;
 	agentId?: number | null;
-	agent: AgentType | null;
 }
 
 export interface AgentsAndDevicesPerServiceType {

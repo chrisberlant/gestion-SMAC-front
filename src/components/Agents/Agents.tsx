@@ -59,6 +59,13 @@ function AgentsTable() {
 							lastName: undefined,
 						}),
 				},
+				Cell: ({ row }) => {
+					return (
+						<span className={row.original.vip ? 'vip-text' : ''}>
+							{row.original.lastName}
+						</span>
+					);
+				},
 			},
 			{
 				header: 'Prénom',
@@ -71,6 +78,13 @@ function AgentsTable() {
 							...validationErrors,
 							firstName: undefined,
 						}),
+				},
+				Cell: ({ row }) => {
+					return (
+						<span className={row.original.vip ? 'vip-text' : ''}>
+							{row.original.firstName}
+						</span>
+					);
 				},
 			},
 			{
@@ -85,10 +99,18 @@ function AgentsTable() {
 							email: undefined,
 						}),
 				},
+				Cell: ({ row }) => {
+					return (
+						<span className={row.original.vip ? 'vip-text' : ''}>
+							{row.original.email}
+						</span>
+					);
+				},
 			},
 			{
 				header: 'VIP',
-				accessorKey: 'vip',
+				id: 'vip',
+				enableColumnFilter: false,
 				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
 				editVariant: 'select',
 				size: 100,
@@ -105,22 +127,29 @@ function AgentsTable() {
 			},
 			{
 				header: 'Service',
-				accessorKey: 'serviceId',
+				id: 'serviceId',
 				accessorFn: (row) =>
 					services?.find((service) => service.id === row.serviceId)
-						?.title || 'Inconnu',
+						?.title,
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
-					error: validationErrors?.service,
+					error: validationErrors?.serviceId,
 					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
-							service: undefined,
+							serviceId: undefined,
 						}),
 				},
+			},
+			{
+				header: 'Appareils possédés',
+				id: 'devices',
+				enableEditing: false,
+				accessorFn: (row) => row.devices?.length,
+				size: 80,
 			},
 		],
 		[services, validationErrors]
@@ -129,6 +158,13 @@ function AgentsTable() {
 	//CREATE action
 	const handleCreateAgent: MRT_TableOptions<AgentType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
+			// Conversion en booléen du statut VIP
+			values.vip = values.vip === 'Oui' ? true : false;
+			values.serviceId = services?.find(
+				(service) => service.title === values.serviceId
+			)?.id;
+			delete values.devices;
+
 			const validation = agentCreationSchema.safeParse(values);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
@@ -138,6 +174,7 @@ function AgentsTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
 			setValidationErrors({});
 			createAgent(values);
 			exitCreatingMode();
@@ -149,12 +186,12 @@ function AgentsTable() {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
 			values.id = row.original.id;
 			// Conversion en booléen du statut VIP
-			if (values.vip === 'Oui') values.vip = true;
-			else values.vip = false;
+			values.vip = values.vip === 'Oui' ? true : false;
 			// Récupération de l'id du service en fonction de son titre
 			values.serviceId = services?.find(
 				(service) => service.title === values.serviceId
 			)?.id;
+
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(values);
 			if (!validation.success) {
@@ -164,6 +201,7 @@ function AgentsTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
 			setValidationErrors({});
 			updateAgent(values);
 			table.setEditingRow(null);

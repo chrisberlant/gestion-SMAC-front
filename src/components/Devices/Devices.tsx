@@ -1,29 +1,379 @@
-import { toast } from 'sonner';
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { modals } from '@mantine/modals';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+	MRT_Row,
+	MRT_TableOptions,
+	MantineReactTable,
+	useMantineReactTable,
+	type MRT_ColumnDef,
+} from 'mantine-react-table';
+import { useMemo, useState } from 'react';
+import { DeviceType } from '../../types';
+import { useGetAllAgents } from '../../utils/agentQueries';
 import { useGetAllDevices } from '../../utils/deviceQueries';
-import { Loader } from '@mantine/core';
-import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
+import { useGetAllModels } from '../../utils/modelQueries';
+import { useGetAllServices } from '../../utils/serviceQueries';
+import {
+	deviceCreationSchema,
+	deviceUpdateSchema,
+} from '../../validationSchemas/deviceSchemas';
 
-function Devices() {
-	const { data: devices, isLoading, isError, error } = useGetAllDevices();
+function DevicesTable() {
+	const {
+		data: services,
+		isLoading: servicesLoading,
+		isError: servicesError,
+	} = useGetAllServices();
+	const {
+		data: agents,
+		isLoading: agentsLoading,
+		isError: agentsError,
+	} = useGetAllAgents();
+	const {
+		data: devices,
+		isLoading: devicesLoading,
+		isError: devicesError,
+	} = useGetAllDevices();
+	const {
+		data: models,
+		isLoading: modelsLoading,
+		isError: modelsError,
+	} = useGetAllModels();
 
-	if (isLoading)
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
+	const [validationErrors, setValidationErrors] = useState<
+		Record<string, string | undefined>
+	>({});
 
-	if (isError) {
-		toast.error('Impossible de récupérer les appareils depuis le serveur');
-		return <div>{error!.message}</div>;
-	}
+	const agentsAndServices = useMemo(
+		() =>
+			agents?.map((agent) => {
+				const serviceTitle = services?.find(
+					(service) => service.id === agent.serviceId
+				)?.title;
+
+				return `${agent.lastName} ${agent.firstName} - ${serviceTitle}`;
+			}),
+		[agents, services]
+	);
+
+	console.table(agentsAndServices);
+
+	const columns = useMemo<MRT_ColumnDef<DeviceType>[]>(
+		() => [
+			{
+				header: 'Id',
+				accessorKey: 'id',
+				enableEditing: false,
+			},
+			{
+				header: 'IMEI',
+				accessorKey: 'imei',
+				size: 80,
+				mantineEditTextInputProps: {
+					error: validationErrors?.imei,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							imei: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Statut',
+				accessorKey: 'status',
+				size: 150,
+				editVariant: 'select',
+				mantineEditSelectProps: {
+					data: [
+						'En stock',
+						'Attribué',
+						'Restitué',
+						'En attente de restitution',
+						'En prêt',
+						'En panne',
+						'Volé',
+					],
+					error: validationErrors?.status,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							status: undefined,
+						}),
+				},
+			},
+			{
+				header: 'État',
+				id: 'isNew',
+				accessorFn: (row) => (row.isNew ? 'Neuf' : 'Occasion'),
+				editVariant: 'select',
+				size: 100,
+				mantineEditSelectProps: {
+					data: ['Neuf', 'Occasion'],
+					error: validationErrors?.isNew,
+					searchable: false,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							isNew: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Date de préparation',
+				accessorKey: 'preparationDate',
+				size: 100,
+				mantineEditTextInputProps: {
+					error: validationErrors?.preparationDate,
+					searchable: false,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							preparationDate: undefined,
+						}),
+				},
+			},
+			{
+				header: "Date d'attribution",
+				accessorKey: 'attributionDate',
+				size: 100,
+				mantineEditTextInputProps: {
+					error: validationErrors?.attributionDate,
+					searchable: false,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							attributionDate: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Commentaires',
+				accessorKey: 'comments',
+				size: 100,
+				mantineEditTextInputProps: {
+					error: validationErrors?.comments,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							comments: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Modèle',
+				id: 'modelId',
+				accessorFn: (row) => {
+					const currentModel = models?.find(
+						(model) => model.id === row.modelId
+					);
+					return `${currentModel?.brand} ${currentModel?.reference} ${currentModel?.storage}`;
+				},
+				editVariant: 'select',
+				size: 100,
+				mantineEditSelectProps: {
+					data: models?.map(
+						(model) =>
+							`${model.brand} ${model.reference} ${model.storage}`
+					),
+					error: validationErrors?.modelId,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							modelId: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Propriétaire',
+				id: 'agentId',
+				accessorFn: (row) => {
+					const currentOwner = agents?.find(
+						(agent) => agent.id === row.agentId
+					);
+					const currentOwnerService = services?.find(
+						(service) => service.id === currentOwner?.serviceId
+					);
+
+					return `${currentOwner?.lastName} ${currentOwner?.firstName} - ${currentOwnerService?.title}`;
+				},
+				editVariant: 'select',
+				size: 100,
+				mantineEditSelectProps: {
+					data: agentsAndServices,
+					error: validationErrors?.modelId,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							agentId: undefined,
+						}),
+				},
+			},
+		],
+		[agents, agentsAndServices, models, services, validationErrors]
+	);
+
+	//CREATE action
+	const handleCreateDevice: MRT_TableOptions<DeviceType>['onCreatingRowSave'] =
+		async ({ values, exitCreatingMode }) => {
+			const validation = deviceCreationSchema.safeParse(values);
+			if (!validation.success) {
+				const errors: Record<string, string> = {};
+				// Conversion du tableau d'objets retourné par Zod en objet simple
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
+			}
+			setValidationErrors({});
+			createDevice(values);
+			exitCreatingMode();
+		};
+
+	//UPDATE action
+	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
+		async ({ values, table, row }) => {
+			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
+			values.id = row.original.id;
+			// Conversion en booléen du statut VIP
+			if (values.vip === 'Oui') values.vip = true;
+			else values.vip = false;
+			// Récupération de l'id du service en fonction de son titre
+			values.serviceId = services?.find(
+				(service) => service.title === values.serviceId
+			)?.id;
+			// Validation du format des données via un schéma Zod
+			const validation = deviceUpdateSchema.safeParse(values);
+			if (!validation.success) {
+				const errors: Record<string, string> = {};
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
+			}
+			setValidationErrors({});
+			updateDevice(values);
+			table.setEditingRow(null);
+		};
+
+	//DELETE action
+	const openDeleteConfirmModal = (row: MRT_Row<DeviceType>) =>
+		modals.openConfirmModal({
+			title: "Suppression d'un device",
+			children: (
+				<Text>
+					Voulez-vous vraiment supprimer l'device{' '}
+					<span className='bold-text'>
+						{row.original.firstName} {row.original.lastName}
+					</span>{' '}
+					? Cette action est irréversible.
+				</Text>
+			),
+			centered: true,
+			overlayProps: {
+				blur: 3,
+			},
+			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
+			confirmProps: { color: 'red' },
+			onConfirm: () => deleteDevice({ id: row.original.id }),
+		});
+
+	const table = useMantineReactTable({
+		columns,
+		data: devices || [],
+		enableGlobalFilter: true,
+		enableColumnActions: false,
+		createDisplayMode: 'row',
+		editDisplayMode: 'row',
+		enableEditing: true,
+		enableHiding: false,
+		sortDescFirst: true,
+		enableSortingRemoval: false,
+		enableDensityToggle: false,
+		onCreatingRowCancel: () => setValidationErrors({}),
+		onCreatingRowSave: handleCreateDevice,
+		onEditingRowSave: handleSaveDevice,
+		onEditingRowCancel: () => setValidationErrors({}),
+		paginationDisplayMode: 'pages',
+		renderRowActions: ({ row, table }) => (
+			<Flex gap='md'>
+				<Tooltip label='Modifier'>
+					<ActionIcon
+						onClick={() => table.setEditingRow(row)}
+						size='sm'
+					>
+						<IconEdit />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Supprimer'>
+					<ActionIcon
+						color='red'
+						onClick={() => openDeleteConfirmModal(row)}
+						size='sm'
+					>
+						<IconTrash />
+					</ActionIcon>
+				</Tooltip>
+			</Flex>
+		),
+		renderTopToolbarCustomActions: ({ table }) => (
+			<Button
+				onClick={() => table.setCreatingRow(true)}
+				mr='auto'
+				ml='xs'
+			>
+				Ajouter
+			</Button>
+		),
+		mantineTableProps: {
+			striped: true,
+		},
+		mantineTopToolbarProps: {
+			mt: 'xs',
+			mr: 'xs',
+		},
+		mantineBottomToolbarProps: {
+			mt: 'sm',
+			mb: 'xs',
+			mx: 'xl',
+		},
+		initialState: {
+			density: 'xs',
+			pagination: {
+				pageIndex: 0, // page start
+				pageSize: 50, // rows per page
+			},
+			columnVisibility: {
+				id: false,
+			},
+		},
+		mantinePaginationProps: {
+			rowsPerPageOptions: ['20', '50', '100', '200'],
+			withEdges: true,
+		},
+	});
 
 	return (
-		<ZoomableComponent className='devices'>
-			Liste des appareils ici
-			<div>{JSON.stringify(devices)}</div>
-		</ZoomableComponent>
+		<div className='devices-table'>
+			<h2>Liste des appareils</h2>
+			{(servicesLoading ||
+				devicesLoading ||
+				agentsLoading ||
+				modelsLoading) && (
+				<div className='loader-box'>
+					<Loader size='xl' />
+				</div>
+			)}
+			{(servicesError || devicesError || agentsError || modelsError) && (
+				<span>
+					Impossible de récupérer les appareils depuis le serveur
+				</span>
+			)}
+			{devices && services && agents && models && (
+				<MantineReactTable table={table} />
+			)}
+		</div>
 	);
 }
 
-export default Devices;
+export default DevicesTable;
