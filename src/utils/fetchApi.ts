@@ -15,7 +15,9 @@ type FetchType =
 	| LineType
 	| AgentType;
 
-async function fetchApi(route: string, method?: string, infos?: FetchType) {
+type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+
+async function fetchApi(route: string, method?: MethodType, infos?: FetchType) {
 	const baseUrl = import.meta.env.VITE_API_URL;
 	const options: RequestInit = {
 		method,

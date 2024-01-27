@@ -225,14 +225,21 @@ function ModelsTable() {
 			</div>
 		);
 	}
-	if (isError) {
-		return <div>Impossible de récupérer les modèles depuis le serveur</div>;
-	}
 
 	return (
 		<div className='models-table'>
 			<h2>Modèles d'appareils</h2>
-			<MantineReactTable table={table} />
+			{isLoading && (
+				<div className='loader-box'>
+					<Loader size='xl' />
+				</div>
+			)}
+			{isError && (
+				<span>
+					Impossible de récupérer les modèles depuis le serveur
+				</span>
+			)}
+			{models && <MantineReactTable table={table} />}
 		</div>
 	);
 }

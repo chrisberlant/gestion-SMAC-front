@@ -23,8 +23,16 @@ import { AgentType } from '../../types';
 import { useGetAllServices } from '../../utils/serviceQueries';
 
 function AgentsTable() {
-	const { data: services, isLoading: agentsLoading } = useGetAllServices();
-	const { data: agents, isLoading, isError } = useGetAllAgents();
+	const {
+		data: services,
+		isLoading: servicesLoading,
+		isError: servicesError,
+	} = useGetAllServices();
+	const {
+		data: agents,
+		isLoading: agentsLoading,
+		isError: agentsError,
+	} = useGetAllAgents();
 	const { mutate: createAgent } = useCreateAgent();
 	const { mutate: updateAgent } = useUpdateAgent();
 	const { mutate: deleteAgent } = useDeleteAgent();
@@ -98,7 +106,9 @@ function AgentsTable() {
 			{
 				header: 'Service',
 				accessorKey: 'serviceId',
-				accessorFn: (row) => row.service?.title,
+				accessorFn: (row) =>
+					services?.find((service) => service.id === row.serviceId)
+						?.title || 'Inconnu',
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
@@ -185,7 +195,6 @@ function AgentsTable() {
 		columns,
 		data: agents || [],
 		enableGlobalFilter: true,
-		enableColumnFilters: false,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',
@@ -257,25 +266,20 @@ function AgentsTable() {
 		},
 	});
 
-	if (isLoading || agentsLoading) {
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
-	}
-	if (isError) {
-		return (
-			<div>
-				Impossible de récupérer les utilisateurs depuis le serveur
-			</div>
-		);
-	}
-
 	return (
 		<div className='agents-table'>
-			<h2>Utilisateurs et droits</h2>
-			<MantineReactTable table={table} />
+			<h2>Liste des agents</h2>
+			{(servicesLoading || agentsLoading) && (
+				<div className='loader-box'>
+					<Loader size='xl' />
+				</div>
+			)}
+			{(servicesError || agentsError) && (
+				<span>
+					Impossible de récupérer les agents depuis le serveur
+				</span>
+			)}
+			{agents && services && <MantineReactTable table={table} />}
 		</div>
 	);
 }

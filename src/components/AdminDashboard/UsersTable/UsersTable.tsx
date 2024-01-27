@@ -399,25 +399,20 @@ function UsersTable() {
 		},
 	});
 
-	if (isLoading) {
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
-	}
-	if (isError) {
-		return (
-			<div>
-				Impossible de récupérer les utilisateurs depuis le serveur
-			</div>
-		);
-	}
-
 	return (
 		<div className='users-table'>
 			<h2>Utilisateurs et droits</h2>
-			<MantineReactTable table={table} />
+			{isLoading && (
+				<div className='loader-box'>
+					<Loader size='xl' />
+				</div>
+			)}
+			{isError && (
+				<span>
+					Impossible de récupérer les utilisateurs depuis le serveur
+				</span>
+			)}
+			{users && <MantineReactTable table={table} />}
 		</div>
 	);
 }

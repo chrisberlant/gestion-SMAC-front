@@ -55,6 +55,13 @@ export const useUpdateAgent = () => {
 		onMutate: async (updatedAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
+			// const services: ServiceType[] = queryClient.getQueryData([
+			// 	'services',
+			// ])!;
+			// const agentService = services.find(
+			// 	(service) => service.id === updatedAgent.serviceId
+			// );
+			// console.table(queryClient.getQueryData(['agents']));
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((prevAgent) =>
 					prevAgent.id === updatedAgent.id ? updatedAgent : prevAgent

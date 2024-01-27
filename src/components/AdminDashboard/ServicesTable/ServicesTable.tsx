@@ -1,25 +1,25 @@
-import {
-	MantineReactTable,
-	useMantineReactTable,
-	type MRT_ColumnDef,
-	MRT_Row,
-	MRT_TableOptions,
-} from 'mantine-react-table';
-import { useMemo, useState } from 'react';
-import { ServiceType } from '../../../types';
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import {
-	serviceCreationSchema,
-	serviceUpdateSchema,
-} from '@validationSchemas/serviceSchemas';
-import { Flex, Tooltip, ActionIcon, Text, Button, Loader } from '@mantine/core';
 import {
 	useCreateService,
 	useDeleteService,
 	useGetAllServices,
 	useUpdateService,
 } from '@utils/serviceQueries';
+import {
+	serviceCreationSchema,
+	serviceUpdateSchema,
+} from '@validationSchemas/serviceSchemas';
+import {
+	MRT_Row,
+	MRT_TableOptions,
+	MantineReactTable,
+	useMantineReactTable,
+	type MRT_ColumnDef,
+} from 'mantine-react-table';
+import { useMemo, useState } from 'react';
+import { ServiceType } from '../../../types';
 
 function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -185,23 +185,20 @@ function ServicesTable() {
 		},
 	});
 
-	if (isLoading) {
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
-	}
-	if (isError) {
-		return (
-			<div>Impossible de récupérer les services depuis le serveur</div>
-		);
-	}
-
 	return (
 		<div className='services-table'>
 			<h2>Services</h2>
-			<MantineReactTable table={table} />
+			{isLoading && (
+				<div className='loader-box'>
+					<Loader size='xl' />
+				</div>
+			)}
+			{isError && (
+				<span>
+					Impossible de récupérer les services depuis le serveur
+				</span>
+			)}
+			{services && <MantineReactTable table={table} />}
 		</div>
 	);
 }
