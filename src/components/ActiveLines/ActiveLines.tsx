@@ -81,7 +81,7 @@ function ActiveLines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
-				size: 90,
+				size: 110,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
 					onFocus: () =>
@@ -113,7 +113,7 @@ function ActiveLines() {
 				editVariant: 'select',
 				size: 90,
 				mantineEditSelectProps: {
-					data: ['Attribuée', 'En cours', 'Résiliée'],
+					data: ['Active', 'En cours', 'Résiliée'],
 					error: validationErrors?.status,
 					searchable: false,
 					onFocus: () =>

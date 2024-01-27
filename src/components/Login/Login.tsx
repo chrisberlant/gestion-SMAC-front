@@ -1,18 +1,18 @@
 import {
-	Paper,
-	TextInput,
-	PasswordInput,
 	Button,
-	Title,
 	LoadingOverlay,
+	Paper,
+	PasswordInput,
+	TextInput,
+	Title,
 } from '@mantine/core';
-import classes from './login.module.css';
 import { useForm, zodResolver } from '@mantine/form';
+import { useDisclosure } from '@mantine/hooks';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckLoginStatus, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
-import { useEffect } from 'react';
-import { useDisclosure } from '@mantine/hooks';
+import classes from './login.module.css';
 
 function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
@@ -36,7 +36,7 @@ function Login() {
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
-		if (user) navigate('/attributed-lines');
+		if (user) navigate('/active-lines');
 	}, [user, navigate]);
 
 	if (isNotConnected || isLoading) {

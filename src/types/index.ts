@@ -37,6 +37,7 @@ export interface AgentType {
 	email: string;
 	firstName: string;
 	lastName: string;
+	vip: boolean;
 	serviceId: number;
 	service: ServiceType;
 }

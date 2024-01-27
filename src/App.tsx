@@ -4,6 +4,7 @@ import { Toaster } from 'sonner';
 import './App.css';
 import ActiveLines from './components/ActiveLines/ActiveLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
+import AgentsTable from './components/Agents/Agents';
 import Devices from './components/Devices/Devices';
 import Login from './components/Login/Login';
 import PageNotFound from './components/PageNotFound/PageNotFound';
@@ -20,8 +21,9 @@ function AppRoutes() {
 				<Route element={<ActiveLines />} path='/active-lines' />
 				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
-				<Route element={<AdminDashboard />} path='/admin-dashboard' />
+				<Route element={<AgentsTable />} path='/agents' />
 				<Route element={<Stats />} path='/stats' />
+				<Route element={<AdminDashboard />} path='/admin-dashboard' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
 		</Routes>

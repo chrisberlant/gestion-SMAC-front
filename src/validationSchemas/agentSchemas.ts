@@ -60,9 +60,11 @@ export const agentUpdateSchema = z.strictObject({
 		.trim()
 		.min(1, 'Le prénom doit être renseigné')
 		.optional(),
-	vip: z.boolean({
-		invalid_type_error: 'Le statut vip doit être un booléen',
-	}),
+	vip: z
+		.boolean({
+			invalid_type_error: 'Le statut vip doit être un booléen',
+		})
+		.optional(),
 	serviceId: z
 		.number({
 			invalid_type_error: "L'id du service doit être un nombre",

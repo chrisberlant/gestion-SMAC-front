@@ -1,4 +1,10 @@
-import { LineType, ModelType, ServiceType, UserType } from '../types';
+import {
+	AgentType,
+	LineType,
+	ModelType,
+	ServiceType,
+	UserType,
+} from '../types';
 
 // Types autorisés dans la méthode
 type FetchType =
@@ -6,7 +12,8 @@ type FetchType =
 	| ServiceType
 	| ModelType
 	| UserType
-	| LineType;
+	| LineType
+	| AgentType;
 
 async function fetchApi(route: string, method?: string, infos?: FetchType) {
 	const baseUrl = import.meta.env.VITE_API_URL;

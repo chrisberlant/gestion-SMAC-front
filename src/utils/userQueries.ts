@@ -1,9 +1,10 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
+import { UseFormReturnType } from '@mantine/form';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { LoggedUser, UserType } from '../types';
 import fetchApi from './fetchApi';
-import { toast } from 'sonner';
-import { UseFormReturnType } from '@mantine/form';
-import { useNavigate } from 'react-router-dom';
 import queryClient from './queryClient';
 
 // Connexion
@@ -57,7 +58,6 @@ export const useGetCurrentUser = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getCurrentUser')) as LoggedUser;
 		},
-		refetchOnWindowFocus: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
@@ -73,7 +73,6 @@ export const useCheckLoginStatus = () => {
 		meta: {
 			loginStatusQuery: 'true',
 		},
-		refetchOnWindowFocus: false,
 		staleTime: Infinity,
 		gcTime: Infinity,
 	});
@@ -98,9 +97,29 @@ export const useUpdateCurrentUser = (
 				form.values
 			)) as LoggedUser;
 		},
-		onSuccess: (user) => {
+		onSuccess: (newCurrentUser) => {
 			closeAccountModal();
-			queryClient.setQueryData(['currentUser'], user);
+			queryClient.setQueryData(
+				['currentUser'],
+				(currentUser: LoggedUser) => ({
+					...currentUser,
+					firstName: newCurrentUser?.firstName,
+					lastName: newCurrentUser?.lastName,
+					email: newCurrentUser?.email,
+				})
+			);
+			queryClient.setQueryData(['users'], (users: UserType[]) =>
+				users.map((user) =>
+					user.email === newCurrentUser?.email
+						? {
+								...user,
+								firstName: newCurrentUser?.firstName,
+								lastName: newCurrentUser?.lastName,
+								email: newCurrentUser?.email,
+						  }
+						: user
+				)
+			);
 			toast.success('Informations modifiées avec succès');
 		},
 		onSettled: () => {
@@ -198,12 +217,12 @@ export const useUpdateUser = () => {
 			return await fetchApi('/updateUser', 'PATCH', user);
 		},
 
-		onMutate: async (newUser) => {
+		onMutate: async (updatedUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
 				users.map((prevUser) =>
-					prevUser.id === newUser.id ? newUser : prevUser
+					prevUser.id === updatedUser.id ? updatedUser : prevUser
 				)
 			);
 			return previousUsers;

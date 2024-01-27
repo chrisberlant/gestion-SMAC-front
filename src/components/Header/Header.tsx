@@ -24,6 +24,7 @@ const tabs = {
 	'Lignes résiliées': '/resiliated-lines',
 	Prêts: '/lent',
 	Appareils: '/devices',
+	Agents: '/agents',
 	Statistiques: '/stats',
 } as Record<string, string>;
 

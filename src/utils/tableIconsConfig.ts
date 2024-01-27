@@ -1,3 +1,0 @@
-const iconsConfig = {
-	IconArrowsSort: () => <></>,
-};
