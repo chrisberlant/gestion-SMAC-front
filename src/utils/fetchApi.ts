@@ -1,5 +1,6 @@
 import {
 	AgentType,
+	DeviceType,
 	LineType,
 	ModelType,
 	ServiceType,
@@ -13,7 +14,8 @@ type FetchType =
 	| ModelType
 	| UserType
 	| LineType
-	| AgentType;
+	| AgentType
+	| DeviceType;
 
 type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 

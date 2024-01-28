@@ -75,7 +75,7 @@ export const deviceCreationSchema = z.strictObject({
 		.int("L'id du modèle doit être un nombre entier")
 		.positive("L'id du modèle fourni est incorrect"),
 });
-
+//TODO autoriser string vide dans les dates
 export const deviceUpdateSchema = selectionSchema.extend({
 	imei: z
 		.string({

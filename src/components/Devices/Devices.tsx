@@ -1,17 +1,17 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Flex, Loader, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import {
+	MRT_ColumnDef,
 	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
-	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { DeviceType } from '../../types';
 import { useGetAllAgents } from '../../utils/agentQueries';
-import { useGetAllDevices } from '../../utils/deviceQueries';
+import { useGetAllDevices, useUpdateDevice } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import { useGetAllServices } from '../../utils/serviceQueries';
 import {
@@ -40,24 +40,41 @@ function DevicesTable() {
 		isLoading: modelsLoading,
 		isError: modelsError,
 	} = useGetAllModels();
+	const { mutate: updateDevice } = useUpdateDevice();
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
 
-	const agentsAndServices = useMemo(
+	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
+	const formattedAgents = useMemo(
 		() =>
 			agents?.map((agent) => {
 				const serviceTitle = services?.find(
 					(service) => service.id === agent.serviceId
 				)?.title;
 
-				return `${agent.lastName} ${agent.firstName} - ${serviceTitle}`;
+				return {
+					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
+					id: agent.id,
+				};
 			}),
 		[agents, services]
 	);
 
-	console.table(agentsAndServices);
+	// La même chose pour les modèles
+	const formattedModels = useMemo(
+		() =>
+			models?.map((model) => {
+				return {
+					infos: `${model.brand} ${model.reference}${
+						model.storage ? ` ${model.storage}` : ''
+					}`,
+					id: model.id,
+				};
+			}),
+		[models]
+	);
 
 	const columns = useMemo<MRT_ColumnDef<DeviceType>[]>(
 		() => [
@@ -123,9 +140,9 @@ function DevicesTable() {
 				header: 'Date de préparation',
 				accessorKey: 'preparationDate',
 				size: 100,
+				// searchable: false,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
-					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -139,7 +156,7 @@ function DevicesTable() {
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
-					searchable: false,
+					// searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -172,10 +189,7 @@ function DevicesTable() {
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
-					data: models?.map(
-						(model) =>
-							`${model.brand} ${model.reference} ${model.storage}`
-					),
+					data: formattedModels?.map((model) => model.infos),
 					error: validationErrors?.modelId,
 					onFocus: () =>
 						setValidationErrors({
@@ -188,20 +202,15 @@ function DevicesTable() {
 				header: 'Propriétaire',
 				id: 'agentId',
 				accessorFn: (row) => {
-					const currentOwner = agents?.find(
+					return formattedAgents?.find(
 						(agent) => agent.id === row.agentId
-					);
-					const currentOwnerService = services?.find(
-						(service) => service.id === currentOwner?.serviceId
-					);
-
-					return `${currentOwner?.lastName} ${currentOwner?.firstName} - ${currentOwnerService?.title}`;
+					)?.infos;
 				},
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
-					data: agentsAndServices,
-					error: validationErrors?.modelId,
+					data: formattedAgents?.map((agent) => agent.infos),
+					error: validationErrors?.agentId,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -210,7 +219,7 @@ function DevicesTable() {
 				},
 			},
 		],
-		[agents, agentsAndServices, models, services, validationErrors]
+		[formattedAgents, models, validationErrors, formattedModels]
 	);
 
 	//CREATE action
@@ -232,18 +241,24 @@ function DevicesTable() {
 
 	//UPDATE action
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
-		async ({ values, table, row }) => {
-			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
-			values.id = row.original.id;
-			// Conversion en booléen du statut VIP
-			if (values.vip === 'Oui') values.vip = true;
-			else values.vip = false;
-			// Récupération de l'id du service en fonction de son titre
-			values.serviceId = services?.find(
-				(service) => service.title === values.serviceId
-			)?.id;
+		async ({ values, row }) => {
+			console.log(values);
+			// Récupération des informations nécessaires pour la validation du schéma
+			const data = {
+				...values,
+				id: row.original.id,
+				agentId: formattedAgents?.find(
+					(agent) => agent.infos === values.agentId
+				)?.id,
+				modelId: formattedModels?.find(
+					(model) => model.infos === values.modelId
+				)?.id,
+				isNew: values.isNew === 'Neuf' ? true : false,
+			};
+			console.log(data);
+
 			// Validation du format des données via un schéma Zod
-			const validation = deviceUpdateSchema.safeParse(values);
+			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -252,7 +267,7 @@ function DevicesTable() {
 				return setValidationErrors(errors);
 			}
 			setValidationErrors({});
-			updateDevice(values);
+			updateDevice(data);
 			table.setEditingRow(null);
 		};
 
