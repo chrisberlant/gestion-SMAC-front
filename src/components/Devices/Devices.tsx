@@ -11,7 +11,11 @@ import {
 import { useMemo, useState } from 'react';
 import { DeviceType } from '../../types';
 import { useGetAllAgents } from '../../utils/agentQueries';
-import { useGetAllDevices, useUpdateDevice } from '../../utils/deviceQueries';
+import {
+	useCreateDevice,
+	useGetAllDevices,
+	useUpdateDevice,
+} from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import { useGetAllServices } from '../../utils/serviceQueries';
 import {
@@ -41,6 +45,7 @@ function DevicesTable() {
 		isError: modelsError,
 	} = useGetAllModels();
 	const { mutate: updateDevice } = useUpdateDevice();
+	const { mutate: createDevice } = useCreateDevice();
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -243,19 +248,18 @@ function DevicesTable() {
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			console.log(values);
-			// Récupération des informations nécessaires pour la validation du schéma
+			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				...values,
 				id: row.original.id,
-				agentId: formattedAgents?.find(
+				agentId: formattedAgents!.find(
 					(agent) => agent.infos === values.agentId
 				)?.id,
-				modelId: formattedModels?.find(
+				modelId: formattedModels!.find(
 					(model) => model.infos === values.modelId
-				)?.id,
+				)!.id,
 				isNew: values.isNew === 'Neuf' ? true : false,
 			};
-			console.log(data);
 
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);

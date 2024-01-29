@@ -6,6 +6,7 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
+		"test": "vitest",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
 		"preview": "vite preview"
 	},
@@ -45,6 +46,7 @@
 		"postcss-preset-mantine": "^1.12.3",
 		"postcss-simple-vars": "^7.0.1",
 		"typescript": "^5.3.3",
-		"vite": "^5.0.12"
+		"vite": "^5.0.12",
+		"vitest": "^1.2.2"
 	}
 }

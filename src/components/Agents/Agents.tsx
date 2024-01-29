@@ -59,13 +59,11 @@ function AgentsTable() {
 							lastName: undefined,
 						}),
 				},
-				Cell: ({ row }) => {
-					return (
-						<span className={row.original.vip ? 'vip-text' : ''}>
-							{row.original.lastName}
-						</span>
-					);
-				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{row.original.lastName}
+					</span>
+				),
 			},
 			{
 				header: 'Prénom',
@@ -79,13 +77,11 @@ function AgentsTable() {
 							firstName: undefined,
 						}),
 				},
-				Cell: ({ row }) => {
-					return (
-						<span className={row.original.vip ? 'vip-text' : ''}>
-							{row.original.firstName}
-						</span>
-					);
-				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{row.original.firstName}
+					</span>
+				),
 			},
 			{
 				header: 'Email',
@@ -99,13 +95,11 @@ function AgentsTable() {
 							email: undefined,
 						}),
 				},
-				Cell: ({ row }) => {
-					return (
-						<span className={row.original.vip ? 'vip-text' : ''}>
-							{row.original.email}
-						</span>
-					);
-				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{row.original.email}
+					</span>
+				),
 			},
 			{
 				header: 'VIP',
