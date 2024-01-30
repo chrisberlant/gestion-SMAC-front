@@ -1,6 +1,8 @@
 import { ActionIcon, Button, Flex, Loader, Tooltip } from '@mantine/core';
+import { DatePicker, DatePickerInput } from '@mantine/dates';
 import { modals } from '@mantine/modals';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
 	MRT_Row,
@@ -22,6 +24,7 @@ import {
 	deviceCreationSchema,
 	deviceUpdateSchema,
 } from '../../validationSchemas/deviceSchemas';
+import '@mantine/dates/styles.css';
 
 function DevicesTable() {
 	const {
@@ -50,6 +53,27 @@ function DevicesTable() {
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
+
+	// Modal calendar
+	// const openCalendar = (date: any) =>
+	// 	modals.open({
+	// 		title: 'Sélectionner une date',
+	// 		children: (
+	// 			<DatePicker
+	// 				locale='fr'
+	// 				value={date}
+	// 				onChange={(e) => {
+	// 					date = e;
+	// 					console.log(date);
+	// 				}}
+	// 			/>
+	// 		),
+	// 		centered: true,
+	// 		size: 'sm',
+	// 		overlayProps: {
+	// 			blur: 3,
+	// 		},
+	// 	});
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -90,6 +114,8 @@ function DevicesTable() {
 			},
 			{
 				header: 'IMEI',
+				// enableClickToCopy: true,
+				searchable: false,
 				accessorKey: 'imei',
 				size: 80,
 				mantineEditTextInputProps: {
@@ -145,15 +171,25 @@ function DevicesTable() {
 				header: 'Date de préparation',
 				accessorKey: 'preparationDate',
 				size: 100,
-				// searchable: false,
-				mantineEditTextInputProps: {
+				mantineEditTextInputProps: ({ row }) => ({
 					error: validationErrors?.preparationDate,
-					onFocus: () =>
+					onFocus: () => {
 						setValidationErrors({
 							...validationErrors,
 							preparationDate: undefined,
-						}),
-				},
+						});
+					},
+					// TODO fix
+					onClick: () => {
+						return (
+							<DatePickerInput
+								placeholder={row.original.preparationDate}
+								// value={value}
+								// onChange={setValue}
+							/>
+						);
+					},
+				}),
 			},
 			{
 				header: "Date d'attribution",
@@ -161,7 +197,6 @@ function DevicesTable() {
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
-					// searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -247,6 +282,7 @@ function DevicesTable() {
 	//UPDATE action
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
+			console.log(values.imei);
 			console.log(values);
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
@@ -281,11 +317,9 @@ function DevicesTable() {
 			title: "Suppression d'un device",
 			children: (
 				<Text>
-					Voulez-vous vraiment supprimer l'device{' '}
-					<span className='bold-text'>
-						{row.original.firstName} {row.original.lastName}
-					</span>{' '}
-					? Cette action est irréversible.
+					Voulez-vous vraiment supprimer l'appareil{' '}
+					<span className='bold-text'>{row.original.id}</span> ? Cette
+					action est irréversible.
 				</Text>
 			),
 			centered: true,

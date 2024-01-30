@@ -74,3 +74,29 @@ export const useUpdateDevice = () => {
 			queryClient.setQueryData(['devices'], previousDevices),
 	});
 };
+
+export const useDeleteDevice = () => {
+	return useMutation({
+		mutationFn: async (device: { id: number }) => {
+			return (await fetchApi(
+				'/deleteDevice',
+				'DELETE',
+				device
+			)) as DeviceType;
+		},
+
+		onMutate: async (deviceToDelete: { id: number }) => {
+			await queryClient.cancelQueries({ queryKey: ['devices'] });
+			const previousDevices = queryClient.getQueryData(['devices']);
+			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
+				devices?.filter(
+					(device: DeviceType) => device.id !== deviceToDelete.id
+				)
+			);
+			return previousDevices;
+		},
+		onSuccess: () => toast.success('Appareil supprimé avec succès'),
+		onError: (_, __, previousDevices) =>
+			queryClient.setQueryData(['devices'], previousDevices),
+	});
+};
