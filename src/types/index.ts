@@ -1,5 +1,5 @@
 export interface UserType {
-	id: number;
+	id?: number;
 	email: string;
 	firstName: string;
 	lastName: string;
@@ -9,12 +9,12 @@ export interface UserType {
 export type LoggedUser = Omit<UserType, 'id'> | undefined;
 
 export interface ServiceType {
-	id: number;
+	id?: number;
 	title: string;
 }
 
 export interface LineType {
-	id: number;
+	id?: number;
 	number: string;
 	profile: 'V' | 'D' | 'VD';
 	status: 'Active' | 'En cours' | 'Résiliée';
@@ -32,7 +32,7 @@ export interface ModelType {
 }
 
 export interface AgentType {
-	id: number;
+	id?: number;
 	email: string;
 	firstName: string;
 	lastName: string;
@@ -42,7 +42,7 @@ export interface AgentType {
 }
 
 export interface DeviceType {
-	id: number;
+	id?: number;
 	imei: string;
 	preparationDate?: Date | null;
 	attributionDate?: Date | null;

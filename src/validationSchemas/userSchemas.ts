@@ -16,7 +16,7 @@ export const userLoginSchema = z.strictObject({
 				'Le mot de passe doit être une chaîne de caractères',
 		})
 		.regex(
-			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*()-])/,
 			'Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial'
 		)
 		.min(8, 'Le mot de passe doit faire minimum 8 caractères'),
@@ -58,7 +58,7 @@ export const currentUserPasswordUpdateSchema = z
 			})
 			.min(8, "L'ancien mot de passe doit faire minimum 8 caractères")
 			.regex(
-				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*()-])/,
 				"L'ancien de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial"
 			),
 		newPassword: z
@@ -69,7 +69,7 @@ export const currentUserPasswordUpdateSchema = z
 			})
 			.min(8, 'Le nouveau mot de passe doit faire minimum 8 caractères')
 			.regex(
-				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*()-])/,
 				'Le nouveau mot de passe doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial'
 			),
 		confirmPassword: z

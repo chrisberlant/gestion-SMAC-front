@@ -282,8 +282,6 @@ function DevicesTable() {
 	//UPDATE action
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
-			console.log(values.imei);
-			console.log(values);
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				...values,

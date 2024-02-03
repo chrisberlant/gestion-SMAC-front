@@ -152,14 +152,17 @@ function AgentsTable() {
 	//CREATE action
 	const handleCreateAgent: MRT_TableOptions<AgentType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			// Conversion en booléen du statut VIP
-			values.vip = values.vip === 'Oui' ? true : false;
-			values.serviceId = services?.find(
-				(service) => service.title === values.serviceId
-			)?.id;
-			delete values.devices;
-
-			const validation = agentCreationSchema.safeParse(values);
+			const { lastName, firstName, email } = values;
+			const data = {
+				lastName,
+				firstName,
+				email,
+				vip: values.vip === 'Oui' ? true : false,
+				serviceId: services?.find(
+					(service) => service.title === values.serviceId
+				)?.id,
+			} as AgentType;
+			const validation = agentCreationSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -170,24 +173,27 @@ function AgentsTable() {
 			}
 
 			setValidationErrors({});
-			createAgent(values);
+			createAgent(data);
 			exitCreatingMode();
 		};
 
 	//UPDATE action
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
-			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
-			values.id = row.original.id;
-			// Conversion en booléen du statut VIP
-			values.vip = values.vip === 'Oui' ? true : false;
-			// Récupération de l'id du service en fonction de son titre
-			values.serviceId = services?.find(
-				(service) => service.title === values.serviceId
-			)?.id;
-
+			const { lastName, firstName, email } = values;
+			// Formatage des informations nécessaires pour la validation du schéma
+			const data = {
+				id: row.original.id,
+				lastName,
+				firstName,
+				email,
+				vip: values.vip === 'Oui' ? true : false,
+				serviceId: services?.find(
+					(service) => service.title === values.serviceId
+				)?.id,
+			} as AgentType;
 			// Validation du format des données via un schéma Zod
-			const validation = agentUpdateSchema.safeParse(values);
+			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -197,7 +203,7 @@ function AgentsTable() {
 			}
 
 			setValidationErrors({});
-			updateAgent(values);
+			updateAgent(data);
 			table.setEditingRow(null);
 		};
 
