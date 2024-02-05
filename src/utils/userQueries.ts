@@ -241,7 +241,7 @@ export const useResetPassword = (
 	}) => void
 ) => {
 	return useMutation({
-		mutationFn: async (user: { id: number }) => {
+		mutationFn: async (user: { id?: number }) => {
 			return await fetchApi('/resetPassword', 'PATCH', user);
 		},
 
@@ -255,7 +255,7 @@ export const useResetPassword = (
 
 export const useDeleteUser = () => {
 	return useMutation({
-		mutationFn: async (user: { id: number }) => {
+		mutationFn: async (user: { id?: number }) => {
 			return await fetchApi('/deleteUser', 'DELETE', user);
 		},
 

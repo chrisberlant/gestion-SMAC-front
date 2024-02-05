@@ -1,6 +1,11 @@
 import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+	IconEdit,
+	IconEditOff,
+	IconTrash,
+	IconTrashOff,
+} from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -21,8 +26,10 @@ import {
 import { useMemo, useState } from 'react';
 import { AgentType } from '../../types';
 import { useGetAllServices } from '../../utils/serviceQueries';
+import { useGetCurrentUser } from '../../utils/userQueries';
 
 function AgentsTable() {
+	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
 		isLoading: servicesLoading,
@@ -226,7 +233,7 @@ function AgentsTable() {
 			},
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
-			onConfirm: () => deleteAgent({ id: row.original.id }),
+			onConfirm: () => deleteAgent({ id: row.original.id! }),
 		});
 
 	const table = useMantineReactTable({
@@ -246,36 +253,78 @@ function AgentsTable() {
 		onEditingRowSave: handleSaveAgent,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
-		renderRowActions: ({ row, table }) => (
-			<Flex gap='md'>
-				<Tooltip label='Modifier'>
-					<ActionIcon
-						onClick={() => table.setEditingRow(row)}
-						size='sm'
-					>
-						<IconEdit />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Supprimer'>
-					<ActionIcon
-						color='red'
-						onClick={() => openDeleteConfirmModal(row)}
-						size='sm'
-					>
-						<IconTrash />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
-		),
-		renderTopToolbarCustomActions: ({ table }) => (
-			<Button
-				onClick={() => table.setCreatingRow(true)}
-				mr='auto'
-				ml='xs'
-			>
-				Ajouter
-			</Button>
-		),
+		renderRowActions: ({ row, table }) =>
+			currentUser!.role !== 'Consultant' ? (
+				<Flex gap='md'>
+					<Tooltip label='Modifier'>
+						<ActionIcon
+							onClick={() => table.setEditingRow(row)}
+							size='sm'
+						>
+							<IconEdit />
+						</ActionIcon>
+					</Tooltip>
+					<Tooltip label='Supprimer'>
+						<ActionIcon
+							color='red'
+							onClick={() => openDeleteConfirmModal(row)}
+							size='sm'
+						>
+							<IconTrash />
+						</ActionIcon>
+					</Tooltip>
+				</Flex>
+			) : (
+				<Flex gap='md'>
+					<Tooltip label='Non autorisé'>
+						<ActionIcon
+							style={{
+								cursor: 'not-allowed',
+								pointerEvents: 'none',
+							}}
+							color='#B2B2B2'
+							size='sm'
+						>
+							<IconEditOff />
+						</ActionIcon>
+					</Tooltip>
+					<Tooltip label='Non autorisé'>
+						<ActionIcon
+							style={{
+								cursor: 'not-allowed',
+								pointerEvents: 'none',
+							}}
+							color='#B2B2B2'
+							size='sm'
+						>
+							<IconTrashOff />
+						</ActionIcon>
+					</Tooltip>
+				</Flex>
+			),
+
+		renderTopToolbarCustomActions: ({ table }) =>
+			currentUser!.role !== 'Consultant' ? (
+				<Button
+					onClick={() => table.setCreatingRow(true)}
+					mr='auto'
+					ml='xs'
+				>
+					Ajouter
+				</Button>
+			) : (
+				<Button
+					mr='auto'
+					ml='xs'
+					style={{
+						cursor: 'not-allowed',
+						pointerEvents: 'none',
+					}}
+					color='#B2B2B2'
+				>
+					Ajout impossible
+				</Button>
+			),
 		mantineTableProps: {
 			striped: true,
 		},

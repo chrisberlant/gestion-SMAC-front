@@ -154,7 +154,6 @@ function UsersTable() {
 		async ({ values, table, row }) => {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
 			values.id = row.original.id;
-			// Conversion en booléen du rôle
 			// Validation du format des données via un schéma Zod
 			const validation = userUpdateSchema.safeParse(values);
 			if (!validation.success) {

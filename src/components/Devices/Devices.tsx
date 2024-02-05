@@ -1,7 +1,12 @@
 import { ActionIcon, Button, Flex, Loader, Tooltip } from '@mantine/core';
-import { DatePicker, DatePickerInput } from '@mantine/dates';
+import { DatePicker, DatePickerInput, DateValue } from '@mantine/dates';
 import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import {
+	IconEdit,
+	IconEditOff,
+	IconTrash,
+	IconTrashOff,
+} from '@tabler/icons-react';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -10,7 +15,7 @@ import {
 	MantineReactTable,
 	useMantineReactTable,
 } from 'mantine-react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { DeviceType } from '../../types';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import {
@@ -25,8 +30,10 @@ import {
 	deviceUpdateSchema,
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
+import { useGetCurrentUser } from '../../utils/userQueries';
 
 function DevicesTable() {
+	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
 		isLoading: servicesLoading,
@@ -54,26 +61,31 @@ function DevicesTable() {
 		Record<string, string | undefined>
 	>({});
 
+	const [value, setValue] = useState<DateValue | null>(null);
+
 	// Modal calendar
-	// const openCalendar = (date: any) =>
-	// 	modals.open({
-	// 		title: 'Sélectionner une date',
-	// 		children: (
-	// 			<DatePicker
-	// 				locale='fr'
-	// 				value={date}
-	// 				onChange={(e) => {
-	// 					date = e;
-	// 					console.log(date);
-	// 				}}
-	// 			/>
-	// 		),
-	// 		centered: true,
-	// 		size: 'sm',
-	// 		overlayProps: {
-	// 			blur: 3,
-	// 		},
-	// 	});
+	const openCalendar = (date: DateValue) =>
+		modals.open({
+			title: 'Sélectionner une date',
+			children: (
+				<DatePicker
+					locale='fr'
+					value={date}
+					onChange={(e) => {
+						date = e;
+						console.log(date);
+						setValue(date);
+					}}
+				/>
+			),
+			centered: true,
+			size: 'sm',
+			overlayProps: {
+				blur: 3,
+			},
+		});
+
+	useEffect(() => {}, [value]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -171,25 +183,26 @@ function DevicesTable() {
 				header: 'Date de préparation',
 				accessorKey: 'preparationDate',
 				size: 100,
-				mantineEditTextInputProps: ({ row }) => ({
-					error: validationErrors?.preparationDate,
-					onFocus: () => {
+				// mantineEditTextInputProps: ({ row }) => ({
+				// 	error: validationErrors?.preparationDate,
+				// 	onFocus: () => {
+				// 		setValidationErrors({
+				// 			...validationErrors,
+				// 			preparationDate: undefined,
+				// 		});
+				// 	},
+				// 	onClick: () => openCalendar(row.original.preparationDate),
+				// }),
+				mantineFilterDateInputProps: {
+					data: ['Neuf', 'Occasion'],
+					error: validationErrors?.isNew,
+					searchable: false,
+					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
-							preparationDate: undefined,
-						});
-					},
-					// TODO fix
-					onClick: () => {
-						return (
-							<DatePickerInput
-								placeholder={row.original.preparationDate}
-								// value={value}
-								// onChange={setValue}
-							/>
-						);
-					},
-				}),
+							isNew: undefined,
+						}),
+				},
 			},
 			{
 				header: "Date d'attribution",
@@ -259,7 +272,7 @@ function DevicesTable() {
 				},
 			},
 		],
-		[formattedAgents, models, validationErrors, formattedModels]
+		[validationErrors, formattedModels, formattedAgents, models]
 	);
 
 	//CREATE action
@@ -346,36 +359,77 @@ function DevicesTable() {
 		onEditingRowSave: handleSaveDevice,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
-		renderRowActions: ({ row, table }) => (
-			<Flex gap='md'>
-				<Tooltip label='Modifier'>
-					<ActionIcon
-						onClick={() => table.setEditingRow(row)}
-						size='sm'
-					>
-						<IconEdit />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Supprimer'>
-					<ActionIcon
-						color='red'
-						onClick={() => openDeleteConfirmModal(row)}
-						size='sm'
-					>
-						<IconTrash />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
-		),
-		renderTopToolbarCustomActions: ({ table }) => (
-			<Button
-				onClick={() => table.setCreatingRow(true)}
-				mr='auto'
-				ml='xs'
-			>
-				Ajouter
-			</Button>
-		),
+		renderRowActions: ({ row, table }) =>
+			currentUser!.role !== 'Consultant' ? (
+				<Flex gap='md'>
+					<Tooltip label='Modifier'>
+						<ActionIcon
+							onClick={() => table.setEditingRow(row)}
+							size='sm'
+						>
+							<IconEdit />
+						</ActionIcon>
+					</Tooltip>
+					<Tooltip label='Supprimer'>
+						<ActionIcon
+							color='red'
+							onClick={() => openDeleteConfirmModal(row)}
+							size='sm'
+						>
+							<IconTrash />
+						</ActionIcon>
+					</Tooltip>
+				</Flex>
+			) : (
+				<Flex gap='md'>
+					<Tooltip label='Non autorisé'>
+						<ActionIcon
+							style={{
+								cursor: 'not-allowed',
+								pointerEvents: 'none',
+							}}
+							color='#B2B2B2'
+							size='sm'
+						>
+							<IconEditOff />
+						</ActionIcon>
+					</Tooltip>
+					<Tooltip label='Non autorisé'>
+						<ActionIcon
+							style={{
+								cursor: 'not-allowed',
+								pointerEvents: 'none',
+							}}
+							color='#B2B2B2'
+							size='sm'
+						>
+							<IconTrashOff />
+						</ActionIcon>
+					</Tooltip>
+				</Flex>
+			),
+		renderTopToolbarCustomActions: ({ table }) =>
+			currentUser!.role !== 'Consultant' ? (
+				<Button
+					onClick={() => table.setCreatingRow(true)}
+					mr='auto'
+					ml='xs'
+				>
+					Ajouter
+				</Button>
+			) : (
+				<Button
+					mr='auto'
+					ml='xs'
+					style={{
+						cursor: 'not-allowed',
+						pointerEvents: 'none',
+					}}
+					color='#B2B2B2'
+				>
+					Ajout impossible
+				</Button>
+			),
 		mantineTableProps: {
 			striped: true,
 		},
