@@ -12,7 +12,7 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { LineType } from '../../types';
+import { LineType } from '../../types/line';
 import { sendEmail } from '../../utils/functions';
 import { useGetAllLines } from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';

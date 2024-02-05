@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { AgentType } from '../types';
 import fetchApi from './fetchApi';
 import queryClient from './queryClient';
+import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
+import { IdSelectionType } from '../types';
 
 // Récupérer tous les utilisateurs
 export const useGetAllAgents = () => {
@@ -16,8 +17,12 @@ export const useGetAllAgents = () => {
 
 export const useCreateAgent = () => {
 	return useMutation({
-		mutationFn: async (agent: AgentType) => {
-			return await fetchApi('/createAgent', 'POST', agent);
+		mutationFn: async (newAgent: AgentCreationType) => {
+			return (await fetchApi(
+				'/createAgent',
+				'POST',
+				newAgent
+			)) as AgentType;
 		},
 
 		onMutate: async (newAgent) => {
@@ -31,7 +36,7 @@ export const useCreateAgent = () => {
 			]);
 			return previousAgents;
 		},
-		onSuccess: (newAgent: AgentType) => {
+		onSuccess: (newAgent) => {
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((agent) =>
 					agent.email.toLowerCase() === newAgent.email
@@ -48,8 +53,12 @@ export const useCreateAgent = () => {
 
 export const useUpdateAgent = () => {
 	return useMutation({
-		mutationFn: async (agent: AgentType) => {
-			return await fetchApi('/updateAgent', 'PATCH', agent);
+		mutationFn: async (agent: AgentUpdateType) => {
+			return (await fetchApi(
+				'/updateAgent',
+				'PATCH',
+				agent
+			)) as AgentType;
 		},
 
 		onMutate: async (updatedAgent) => {
@@ -70,7 +79,7 @@ export const useUpdateAgent = () => {
 
 export const useDeleteAgent = () => {
 	return useMutation({
-		mutationFn: async (agent: { id: number }) => {
+		mutationFn: async (agent: IdSelectionType) => {
 			return await fetchApi('/deleteAgent', 'DELETE', agent);
 		},
 

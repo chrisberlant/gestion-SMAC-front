@@ -1,8 +1,13 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { DeviceType } from '../types';
+import {
+	DeviceType,
+	DeviceCreationType,
+	DeviceUpdateType,
+} from '../types/device';
 import fetchApi from './fetchApi';
 import queryClient from './queryClient';
+import { IdSelectionType } from '../types';
 
 export const useGetAllDevices = () => {
 	return useQuery({
@@ -15,7 +20,7 @@ export const useGetAllDevices = () => {
 
 export const useCreateDevice = () => {
 	return useMutation({
-		mutationFn: async (device: DeviceType) => {
+		mutationFn: async (device: DeviceCreationType) => {
 			return (await fetchApi(
 				'/createDevice',
 				'POST',
@@ -23,7 +28,7 @@ export const useCreateDevice = () => {
 			)) as DeviceType;
 		},
 
-		onMutate: async (newDevice: DeviceType) => {
+		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
@@ -34,7 +39,7 @@ export const useCreateDevice = () => {
 			]);
 			return previousDevices;
 		},
-		onSuccess: (newDevice: DeviceType) => {
+		onSuccess: (newDevice) => {
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices.map((device) =>
 					device.imei === newDevice.imei
@@ -51,7 +56,7 @@ export const useCreateDevice = () => {
 
 export const useUpdateDevice = () => {
 	return useMutation({
-		mutationFn: async (device: DeviceType) => {
+		mutationFn: async (device: DeviceUpdateType) => {
 			return (await fetchApi(
 				'/updateDevice',
 				'PATCH',
@@ -59,7 +64,7 @@ export const useUpdateDevice = () => {
 			)) as DeviceType;
 		},
 
-		onMutate: async (newDevice: DeviceType) => {
+		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
@@ -77,7 +82,7 @@ export const useUpdateDevice = () => {
 
 export const useDeleteDevice = () => {
 	return useMutation({
-		mutationFn: async (device: { id: number }) => {
+		mutationFn: async (device: IdSelectionType) => {
 			return (await fetchApi(
 				'/deleteDevice',
 				'DELETE',
@@ -85,7 +90,7 @@ export const useDeleteDevice = () => {
 			)) as DeviceType;
 		},
 
-		onMutate: async (deviceToDelete: { id: number }) => {
+		onMutate: async (deviceToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>

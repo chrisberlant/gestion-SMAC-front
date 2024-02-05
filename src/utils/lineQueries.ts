@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { LineType } from '../types';
 import fetchApi from './fetchApi';
 import queryClient from './queryClient';
+import { LineType, LineCreationType } from '../types/line';
 
 export const useGetAllLines = () => {
 	return useQuery({
@@ -15,8 +15,8 @@ export const useGetAllLines = () => {
 
 export const useCreateLine = () => {
 	return useMutation({
-		mutationFn: async (line: LineType) => {
-			return await fetchApi('/createLine', 'POST', line);
+		mutationFn: async (line: LineCreationType) => {
+			return (await fetchApi('/createLine', 'POST', line)) as LineType;
 		},
 
 		onMutate: async (newLine) => {
@@ -30,7 +30,7 @@ export const useCreateLine = () => {
 			]);
 			return previousLines;
 		},
-		onSuccess: (newLine: LineType) => {
+		onSuccess: (newLine) => {
 			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 				lines.map((line) =>
 					line.number === newLine.number

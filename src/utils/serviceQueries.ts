@@ -1,5 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ServiceType } from '../types';
+import { IdSelectionType } from '../types';
+import {
+	ServiceType,
+	ServiceCreationType,
+	ServiceUpdateType,
+} from '../types/service';
 import fetchApi from './fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
@@ -15,7 +20,7 @@ export const useGetAllServices = () => {
 
 export const useCreateService = () => {
 	return useMutation({
-		mutationFn: async (service: ServiceType) => {
+		mutationFn: async (service: ServiceCreationType) => {
 			return (await fetchApi(
 				'/createService',
 				'POST',
@@ -23,7 +28,7 @@ export const useCreateService = () => {
 			)) as ServiceType;
 		},
 
-		onMutate: async (newService: ServiceType) => {
+		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);
 			queryClient.setQueryData(
@@ -37,7 +42,7 @@ export const useCreateService = () => {
 			);
 			return previousServices;
 		},
-		onSuccess: (newService: ServiceType) => {
+		onSuccess: (newService) => {
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>
 					service.title === newService.title
@@ -54,7 +59,7 @@ export const useCreateService = () => {
 
 export const useUpdateService = () => {
 	return useMutation({
-		mutationFn: async (service: ServiceType) => {
+		mutationFn: async (service: ServiceUpdateType) => {
 			return (await fetchApi(
 				'/updateService',
 				'PUT',
@@ -62,7 +67,7 @@ export const useUpdateService = () => {
 			)) as ServiceType;
 		},
 
-		onMutate: async (newService: ServiceType) => {
+		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			// Sauvegarde des services actuels
 			const previousServices = queryClient.getQueryData(['services']);
@@ -83,15 +88,11 @@ export const useUpdateService = () => {
 
 export const useDeleteService = () => {
 	return useMutation({
-		mutationFn: async (service: { id: number }) => {
-			return (await fetchApi(
-				'/deleteService',
-				'DELETE',
-				service
-			)) as ServiceType;
+		mutationFn: async (service: IdSelectionType) => {
+			return await fetchApi('/deleteService', 'DELETE', service);
 		},
 
-		onMutate: async (serviceToDelete: { id: number }) => {
+		onMutate: async (serviceToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>

@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ModelType } from '../types';
+import { ModelType, ModelCreationType, ModelUpdateType } from '../types/model';
 import fetchApi from './fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
+import { IdSelectionType } from '../types';
 
 export const useGetAllModels = () => {
 	return useQuery({
@@ -15,11 +16,11 @@ export const useGetAllModels = () => {
 
 export const useCreateModel = () => {
 	return useMutation({
-		mutationFn: async (model: ModelType) => {
+		mutationFn: async (model: ModelCreationType) => {
 			return (await fetchApi('/createModel', 'POST', model)) as ModelType;
 		},
 
-		onMutate: async (newModel: ModelType) => {
+		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) => [
@@ -30,7 +31,7 @@ export const useCreateModel = () => {
 			]);
 			return previousModels;
 		},
-		onSuccess: (newModel: ModelType) => {
+		onSuccess: (newModel) => {
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
 				models.map((model) =>
 					model.brand === newModel.brand &&
@@ -49,7 +50,7 @@ export const useCreateModel = () => {
 
 export const useUpdateModel = () => {
 	return useMutation({
-		mutationFn: async (model: ModelType) => {
+		mutationFn: async (model: ModelUpdateType) => {
 			return (await fetchApi(
 				'/updateModel',
 				'PATCH',
@@ -57,7 +58,7 @@ export const useUpdateModel = () => {
 			)) as ModelType;
 		},
 
-		onMutate: async (newModel: ModelType) => {
+		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
@@ -75,7 +76,7 @@ export const useUpdateModel = () => {
 
 export const useDeleteModel = () => {
 	return useMutation({
-		mutationFn: async (model: { id: number }) => {
+		mutationFn: async (model: IdSelectionType) => {
 			return (await fetchApi(
 				'/deleteModel',
 				'DELETE',
@@ -83,7 +84,7 @@ export const useDeleteModel = () => {
 			)) as ModelType;
 		},
 
-		onMutate: async (modelToDelete: { id: number }) => {
+		onMutate: async (modelToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>

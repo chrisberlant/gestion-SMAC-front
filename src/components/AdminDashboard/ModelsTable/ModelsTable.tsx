@@ -19,7 +19,7 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ModelType } from '../../../types';
+import { ModelType } from '../../../types/model';
 
 function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();

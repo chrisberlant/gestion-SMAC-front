@@ -40,7 +40,7 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { UserType } from '../../../types';
+import { UserPasswordIsResetType, UserType } from '../../../types/user';
 
 function UsersTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -192,11 +192,7 @@ function UsersTable() {
 		});
 
 	// RESET PASSWORD modale de confirmation
-	function openConfirmationModal(user: {
-		fullName: string;
-		email: string;
-		generatedPassword: string;
-	}) {
+	function openConfirmationModal(user: UserPasswordIsResetType) {
 		modals.open({
 			title: 'Confirmation de la réinitialisation',
 			children: (

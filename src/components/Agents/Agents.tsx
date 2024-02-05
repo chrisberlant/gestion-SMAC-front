@@ -24,7 +24,12 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { AgentType } from '../../types';
+// import { AgentType } from '../../types';
+import {
+	AgentCreationType,
+	AgentType,
+	AgentUpdateType,
+} from '../../types/agent';
 import { useGetAllServices } from '../../utils/serviceQueries';
 import { useGetCurrentUser } from '../../utils/userQueries';
 
@@ -168,7 +173,7 @@ function AgentsTable() {
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
-			} as AgentType;
+			} as AgentCreationType;
 			const validation = agentCreationSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
@@ -198,7 +203,7 @@ function AgentsTable() {
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
-			} as AgentType;
+			} as AgentUpdateType;
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {

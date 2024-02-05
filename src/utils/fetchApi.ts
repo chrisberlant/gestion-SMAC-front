@@ -1,11 +1,6 @@
-import {
-	AgentType,
-	DeviceType,
-	LineType,
-	ModelType,
-	ServiceType,
-	UserType,
-} from '../types';
+import { LineType, ModelType, ServiceType, UserType } from '../types';
+import { AgentType } from '../types/agent';
+import { DeviceType } from '../types/device';
 
 // Types autorisés dans la méthode
 type FetchType =
@@ -19,7 +14,7 @@ type FetchType =
 
 type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-async function fetchApi(route: string, method?: MethodType, infos?: FetchType) {
+async function fetchApi(route: string, method?: MethodType, infos?: any) {
 	const baseUrl = import.meta.env.VITE_API_URL;
 	const options: RequestInit = {
 		method,

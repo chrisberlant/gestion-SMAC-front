@@ -3,16 +3,24 @@ import { UseFormReturnType } from '@mantine/form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { LoggedUser, UserType } from '../types';
+import {
+	CurrentUserPasswordUpdateType,
+	CurrentUserUpdateType,
+	LoggedUser,
+	UserCreationType,
+	UserDeletionType,
+	UserLoginType,
+	UserPasswordIsResetType,
+	UserType,
+	UserUpdateType,
+} from '../types/user';
 import fetchApi from './fetchApi';
 import queryClient from './queryClient';
+import { IdSelectionType } from '../types';
 
 // Connexion
 export const useLogin = (
-	form: UseFormReturnType<{
-		email: string;
-		password: string;
-	}>,
+	form: UseFormReturnType<UserLoginType>,
 	toggleOverlay: () => void
 ) => {
 	const navigate = useNavigate();
@@ -80,11 +88,7 @@ export const useCheckLoginStatus = () => {
 
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
-	form: UseFormReturnType<{
-		email: string;
-		lastName: string;
-		firstName: string;
-	}>,
+	form: UseFormReturnType<CurrentUserUpdateType>,
 	toggleOverlay: () => void,
 	closeAccountModal: () => void
 ) => {
@@ -130,11 +134,7 @@ export const useUpdateCurrentUser = (
 
 // Modifier le mot de passe utilisateur actuel
 export const useUpdateCurrentUserPassword = (
-	form: UseFormReturnType<{
-		oldPassword: string;
-		newPassword: string;
-		confirmPassword: string;
-	}>,
+	form: UseFormReturnType<CurrentUserPasswordUpdateType>,
 	toggleOverlay: () => void,
 	closePasswordModal: () => void,
 	closeAccountModal: () => void
@@ -142,11 +142,7 @@ export const useUpdateCurrentUserPassword = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			return (await fetchApi(
-				'/updateCurrentUserPassword',
-				'PATCH',
-				form.values
-			)) as string;
+			await fetchApi('/updateCurrentUserPassword', 'PATCH', form.values);
 		},
 		onSuccess: async () => {
 			closePasswordModal();
@@ -158,7 +154,7 @@ export const useUpdateCurrentUserPassword = (
 			await fetchApi('/logout');
 			setTimeout(() => {
 				window.location.href = '/';
-			}, 3000);
+			}, 2000);
 		},
 		onError: () => {
 			form.setErrors({ oldPassword: ' ' });
@@ -181,7 +177,7 @@ export const useGetAllUsers = () => {
 
 export const useCreateUser = () => {
 	return useMutation({
-		mutationFn: async (user: UserType) => {
+		mutationFn: async (user: UserCreationType) => {
 			return await fetchApi('/createUser', 'POST', user);
 		},
 
@@ -213,7 +209,7 @@ export const useCreateUser = () => {
 
 export const useUpdateUser = () => {
 	return useMutation({
-		mutationFn: async (user: UserType) => {
+		mutationFn: async (user: UserUpdateType) => {
 			return await fetchApi('/updateUser', 'PATCH', user);
 		},
 
@@ -234,28 +230,21 @@ export const useUpdateUser = () => {
 };
 
 export const useResetPassword = (
-	openConfirmationModal: (user: {
-		fullName: string;
-		email: string;
-		generatedPassword: string;
-	}) => void
+	openConfirmationModal: (user: UserPasswordIsResetType) => void
 ) => {
 	return useMutation({
-		mutationFn: async (user: { id?: number }) => {
+		mutationFn: async (user: IdSelectionType) => {
 			return await fetchApi('/resetPassword', 'PATCH', user);
 		},
 
-		onSuccess: (user: {
-			fullName: string;
-			email: string;
-			generatedPassword: string;
-		}) => openConfirmationModal(user),
+		onSuccess: (user: UserPasswordIsResetType) =>
+			openConfirmationModal(user),
 	});
 };
 
 export const useDeleteUser = () => {
 	return useMutation({
-		mutationFn: async (user: { id?: number }) => {
+		mutationFn: async (user: UserDeletionType) => {
 			return await fetchApi('/deleteUser', 'DELETE', user);
 		},
 

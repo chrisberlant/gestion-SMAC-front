@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Flex, Loader, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Flex, Loader, Tooltip, Text } from '@mantine/core';
 import { DatePicker, DatePickerInput, DateValue } from '@mantine/dates';
 import { modals } from '@mantine/modals';
 import {
@@ -16,7 +16,7 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useEffect, useMemo, useState } from 'react';
-import { DeviceType } from '../../types';
+import { DeviceType } from '../../types/device';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import {
 	useCreateDevice,

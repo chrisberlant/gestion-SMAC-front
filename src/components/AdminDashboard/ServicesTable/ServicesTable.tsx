@@ -19,7 +19,7 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ServiceType } from '../../../types';
+import { ServiceType } from '../../../types/service';
 
 function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
