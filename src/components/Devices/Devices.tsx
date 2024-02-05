@@ -32,6 +32,7 @@ import {
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
 import { useGetCurrentUser } from '../../utils/userQueries';
+import { dateFormatting } from '../../utils/functions';
 
 function DevicesTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -129,7 +130,6 @@ function DevicesTable() {
 			{
 				header: 'IMEI',
 				// enableClickToCopy: true,
-				searchable: false,
 				accessorKey: 'imei',
 				size: 80,
 				mantineEditTextInputProps: {
@@ -143,7 +143,8 @@ function DevicesTable() {
 			},
 			{
 				header: 'Statut',
-				accessorKey: 'status',
+				id: 'status',
+				accessorFn: (row) => (!row.status ? 'En stock' : row.status),
 				size: 150,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -167,7 +168,8 @@ function DevicesTable() {
 			{
 				header: 'État',
 				id: 'isNew',
-				accessorFn: (row) => (row.isNew ? 'Neuf' : 'Occasion'),
+				accessorFn: (row) =>
+					row.isNew === false ? 'Occasion' : 'Neuf',
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
@@ -183,32 +185,38 @@ function DevicesTable() {
 			},
 			{
 				header: 'Date de préparation',
-				accessorKey: 'preparationDate',
+				id: 'preparationDate',
+				accessorFn: (row) => {
+					if (row.preparationDate)
+						return dateFormatting(row.preparationDate);
+				},
 				size: 100,
-				// mantineEditTextInputProps: ({ row }) => ({
-				// 	error: validationErrors?.preparationDate,
-				// 	onFocus: () => {
-				// 		setValidationErrors({
-				// 			...validationErrors,
-				// 			preparationDate: undefined,
-				// 		});
-				// 	},
-				// 	onClick: () => openCalendar(row.original.preparationDate),
-				// }),
-				mantineFilterDateInputProps: {
-					data: ['Neuf', 'Occasion'],
-					error: validationErrors?.isNew,
-					searchable: false,
+				Edit: ({ row }) => (
+					<DatePickerInput
+						placeholder='Pick date'
+						locale='fr'
+						valueFormat='DD/MM/YYYY'
+						value={new Date(row.original.preparationDate)}
+						onChange={(e) => console.log(e)}
+					/>
+				),
+				mantineEditTextInputProps: {
+					error: validationErrors?.preparationDate,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
-							isNew: undefined,
+							preparationDate: undefined,
 						}),
 				},
 			},
 			{
 				header: "Date d'attribution",
-				accessorKey: 'attributionDate',
+				id: 'attributionDate',
+				accessorFn: (row) => {
+					if (row.attributionDate)
+						return dateFormatting(row.attributionDate);
+					else return '';
+				},
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
@@ -267,6 +275,7 @@ function DevicesTable() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
+					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
 						setValidationErrors({

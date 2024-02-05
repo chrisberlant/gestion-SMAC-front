@@ -79,7 +79,7 @@ export const deviceCreationSchema = z.strictObject({
 		.int("L'id du modèle doit être un nombre entier")
 		.positive("L'id du modèle fourni est incorrect"),
 });
-//TODO autoriser string vide dans les dates
+
 export const deviceUpdateSchema = selectionSchema.extend({
 	imei: z
 		.string({
@@ -93,7 +93,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 			invalid_type_error:
 				'Le format de la date de préparation est incorrect',
 		})
-		.datetime({
+		.refine((dateString) => /^\d{2}\/\d{2}\/\d{4}$/.test(dateString), {
 			message: 'Le format de la date de préparation est incorrect',
 		})
 		.or(z.literal(''))
@@ -104,7 +104,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 			invalid_type_error:
 				"Le format de la date d'attribution est incorrect",
 		})
-		.datetime({
+		.refine((dateString) => /^\d{2}\/\d{2}\/\d{4}$/.test(dateString), {
 			message: "Le format de la date d'attribution est incorrect",
 		})
 		.or(z.literal(''))
