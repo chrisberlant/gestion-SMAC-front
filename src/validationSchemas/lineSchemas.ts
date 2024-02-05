@@ -28,6 +28,7 @@ export const lineCreationSchema = z.strictObject({
 			invalid_type_error:
 				'Le stockage doit être une chaîne de caractères',
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	agentId: z
@@ -36,6 +37,7 @@ export const lineCreationSchema = z.strictObject({
 		})
 		.int("L'id de l'agent doit être un nombre entier")
 		.positive("L'id de l'agent fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	deviceId: z
@@ -44,6 +46,7 @@ export const lineCreationSchema = z.strictObject({
 		})
 		.int("L'id de l'appareil doit être un nombre entier")
 		.positive("L'id de l'appareil fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 });
@@ -81,6 +84,7 @@ export const lineUpdateSchema = selectionSchema.extend({
 			invalid_type_error:
 				'Le stockage doit être une chaîne de caractères',
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	agentId: z
@@ -89,6 +93,7 @@ export const lineUpdateSchema = selectionSchema.extend({
 		})
 		.int("L'id de l'agent doit être un nombre entier")
 		.positive("L'id de l'agent fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	deviceId: z
@@ -97,6 +102,7 @@ export const lineUpdateSchema = selectionSchema.extend({
 		})
 		.int("L'id de l'appareil doit être un nombre entier")
 		.positive("L'id de l'appareil fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 });

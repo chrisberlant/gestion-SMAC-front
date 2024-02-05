@@ -17,6 +17,7 @@ export const deviceCreationSchema = z.strictObject({
 		.datetime({
 			message: 'Le format de la date de préparation est incorrect',
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	attributionDate: z
@@ -27,6 +28,7 @@ export const deviceCreationSchema = z.strictObject({
 		.datetime({
 			message: "Le format de la date d'attribution est incorrect",
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	status: z.enum(
@@ -65,6 +67,7 @@ export const deviceCreationSchema = z.strictObject({
 		})
 		.int("L'id de l'agent doit être un nombre entier")
 		.positive("L'id de l'agent fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	modelId: z
@@ -92,6 +95,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 		.datetime({
 			message: 'Le format de la date de préparation est incorrect',
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	attributionDate: z
@@ -102,6 +106,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 		.datetime({
 			message: "Le format de la date d'attribution est incorrect",
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	status: z
@@ -143,6 +148,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 		})
 		.int("L'id de l'agent doit être un nombre entier")
 		.positive("L'id de l'agent fourni est incorrect")
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	modelId: z
