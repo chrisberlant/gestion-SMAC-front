@@ -16,10 +16,11 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useEffect, useMemo, useState } from 'react';
-import { DeviceType } from '../../types/device';
+import { DeviceCreationType, DeviceType } from '../../types/device';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import {
 	useCreateDevice,
+	useDeleteDevice,
 	useGetAllDevices,
 	useUpdateDevice,
 } from '../../utils/deviceQueries';
@@ -56,6 +57,7 @@ function DevicesTable() {
 	} = useGetAllModels();
 	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: createDevice } = useCreateDevice();
+	const { mutate: deleteDevice } = useDeleteDevice();
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -237,7 +239,9 @@ function DevicesTable() {
 					const currentModel = models?.find(
 						(model) => model.id === row.modelId
 					);
-					return `${currentModel?.brand} ${currentModel?.reference} ${currentModel?.storage}`;
+					return `${currentModel?.brand} ${currentModel?.reference}${
+						currentModel?.storage ? ` ${currentModel.storage}` : ''
+					}`;
 				},
 				editVariant: 'select',
 				size: 100,
@@ -278,7 +282,33 @@ function DevicesTable() {
 	//CREATE action
 	const handleCreateDevice: MRT_TableOptions<DeviceType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const validation = deviceCreationSchema.safeParse(values);
+			const {
+				imei,
+				status,
+				isNew,
+				preparationDate,
+				attributionDate,
+				comments,
+				modelId,
+				agentId,
+			} = values;
+			// Formatage des informations nécessaires pour la validation du schéma
+			const data = {
+				imei,
+				status,
+				isNew: isNew === 'Neuf' ? true : false,
+				preparationDate,
+				attributionDate,
+				comments,
+				modelId: formattedModels?.find(
+					(model) => model.infos === modelId
+				)?.id,
+				agentId: formattedAgents?.find(
+					(agent) => agent.infos === agentId
+				)?.id,
+			} as DeviceCreationType;
+
+			const validation = deviceCreationSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -287,25 +317,40 @@ function DevicesTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
 			setValidationErrors({});
-			createDevice(values);
+			createDevice(data);
 			exitCreatingMode();
 		};
 
 	//UPDATE action
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
+			const {
+				imei,
+				status,
+				isNew,
+				preparationDate,
+				attributionDate,
+				comments,
+				modelId,
+				agentId,
+			} = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
-				...values,
 				id: row.original.id,
+				imei,
+				status,
+				isNew: isNew === 'Neuf' ? true : false,
+				preparationDate,
+				attributionDate,
+				comments,
 				agentId: formattedAgents!.find(
-					(agent) => agent.infos === values.agentId
+					(agent) => agent.infos === agentId
 				)?.id,
 				modelId: formattedModels!.find(
-					(model) => model.infos === values.modelId
+					(model) => model.infos === modelId
 				)!.id,
-				isNew: values.isNew === 'Neuf' ? true : false,
 			};
 
 			// Validation du format des données via un schéma Zod

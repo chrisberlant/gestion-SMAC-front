@@ -59,6 +59,7 @@ export const deviceCreationSchema = z.strictObject({
 			invalid_type_error:
 				'Les commentaires doivent être une chaîne de caractères',
 		})
+		.or(z.literal(''))
 		.nullable()
 		.optional(),
 	agentId: z
