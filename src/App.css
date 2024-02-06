@@ -18,5 +18,7 @@ main {
 }
 
 .vip-text {
-	color: #ce2029;
+	/* color: #ce2029; */
+	color: #2a7e3b;
+	font-weight: bold;
 }

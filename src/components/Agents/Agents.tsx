@@ -1,10 +1,22 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import {
+	ActionIcon,
+	Button,
+	Flex,
+	Loader,
+	Switch,
+	Text,
+	Tooltip,
+	useMantineTheme,
+	rem,
+} from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
+	IconCheck,
 	IconEdit,
 	IconEditOff,
 	IconTrash,
 	IconTrashOff,
+	IconX,
 } from '@tabler/icons-react';
 import {
 	useCreateAgent,
@@ -32,6 +44,7 @@ import {
 } from '../../types/agent';
 import { useGetAllServices } from '../../utils/serviceQueries';
 import { useGetCurrentUser } from '../../utils/userQueries';
+import SwitchButton from '../SwitchButton/SwitchButton';
 
 function AgentsTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -51,6 +64,8 @@ function AgentsTable() {
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
+
+	const [vipState, setVipState] = useState(false);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -116,20 +131,30 @@ function AgentsTable() {
 			{
 				header: 'VIP',
 				id: 'vip',
-				enableColumnFilter: false,
 				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
-				editVariant: 'select',
-				size: 100,
-				mantineEditSelectProps: {
-					data: ['Oui', 'Non'],
+				enableColumnFilter: false,
+				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
-					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
 							vip: undefined,
 						}),
 				},
+				Edit: ({ row }) => {
+					return (
+						<SwitchButton
+							defaultValue={row.original.vip}
+							setStateValue={setVipState}
+						/>
+					);
+				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{row.original.vip ? 'Oui' : 'Non'}
+					</span>
+				),
+				size: 70,
 			},
 			{
 				header: 'Service',
@@ -142,13 +167,23 @@ function AgentsTable() {
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
 					error: validationErrors?.serviceId,
-					searchable: false,
+					searchable: true,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
 							serviceId: undefined,
 						}),
 				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{
+							services?.find(
+								(service) =>
+									service.id === row.original.serviceId
+							)?.title
+						}
+					</span>
+				),
 			},
 			{
 				header: 'Appareils possédés',
@@ -193,17 +228,20 @@ function AgentsTable() {
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
 			const { lastName, firstName, email } = values;
+			console.log(values);
+			console.log(vipState);
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				id: row.original.id,
 				lastName,
 				firstName,
 				email,
-				vip: values.vip === 'Oui' ? true : false,
+				vip: vipState,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
 			} as AgentUpdateType;
+			console.log(data);
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {
