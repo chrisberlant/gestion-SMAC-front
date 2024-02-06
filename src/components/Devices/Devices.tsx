@@ -33,6 +33,7 @@ import {
 import '@mantine/dates/styles.css';
 import { useGetCurrentUser } from '../../utils/userQueries';
 import { dateFormatting } from '../../utils/functions';
+import SwitchButton from '../SwitchButton/SwitchButton';
 
 function DevicesTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -65,6 +66,7 @@ function DevicesTable() {
 	>({});
 
 	const [value, setValue] = useState<DateValue | null>(null);
+	const [isNewState, setIsNewState] = useState(false);
 
 	// Modal calendar
 	const openCalendar = (date: DateValue) =>
@@ -170,10 +172,8 @@ function DevicesTable() {
 				id: 'isNew',
 				accessorFn: (row) =>
 					row.isNew === false ? 'Occasion' : 'Neuf',
-				editVariant: 'select',
 				size: 100,
-				mantineEditSelectProps: {
-					data: ['Neuf', 'Occasion'],
+				mantineEditTextInputProps: {
 					error: validationErrors?.isNew,
 					searchable: false,
 					onFocus: () =>
@@ -181,6 +181,17 @@ function DevicesTable() {
 							...validationErrors,
 							isNew: undefined,
 						}),
+				},
+				Edit: ({ row }) => {
+					return (
+						<SwitchButton
+							size='lg'
+							defaultValue={row.original.isNew}
+							setStateValue={setIsNewState}
+							onLabel='Neuf'
+							offLabel='Occasion'
+						/>
+					);
 				},
 			},
 			{
@@ -338,7 +349,6 @@ function DevicesTable() {
 			const {
 				imei,
 				status,
-				isNew,
 				preparationDate,
 				attributionDate,
 				comments,
@@ -350,16 +360,16 @@ function DevicesTable() {
 				id: row.original.id,
 				imei,
 				status,
-				isNew: isNew === 'Neuf' ? true : false,
+				isNew: isNewState,
 				preparationDate,
 				attributionDate,
 				comments,
-				agentId: formattedAgents!.find(
-					(agent) => agent.infos === agentId
-				)?.id,
 				modelId: formattedModels!.find(
 					(model) => model.infos === modelId
 				)!.id,
+				agentId: formattedAgents!.find(
+					(agent) => agent.infos === agentId
+				)?.id,
 			};
 
 			// Validation du format des données via un schéma Zod

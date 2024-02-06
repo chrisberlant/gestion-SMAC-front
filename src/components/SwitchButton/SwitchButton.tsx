@@ -2,15 +2,22 @@ import { Switch, rem } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-// Ce bouton permet de récupérer la valeur par défaut fournie et de mettre à jour un state booléen du composant dans lequel il est intégré
+interface SwitchButtonProps {
+	defaultValue: boolean;
+	setStateValue: Dispatch<SetStateAction<boolean>>;
+	size: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
+	onLabel?: string;
+	offLabel?: string;
+}
 
+// Ce bouton permet de récupérer la valeur par défaut fournie et de mettre à jour un state booléen du composant dans lequel il est intégré
 function SwitchButton({
 	defaultValue,
 	setStateValue,
-}: {
-	defaultValue: boolean;
-	setStateValue: Dispatch<SetStateAction<boolean>>;
-}) {
+	onLabel,
+	offLabel,
+	size,
+}: SwitchButtonProps) {
 	// State interne au bouton permettant de changer son style
 	const [checked, setChecked] = useState(defaultValue);
 
@@ -24,8 +31,8 @@ function SwitchButton({
 				setChecked((value) => !value);
 				setStateValue((value) => !value);
 			}}
-			color='teal'
-			size='md'
+			color='blue'
+			size={size}
 			thumbIcon={
 				checked ? (
 					<IconCheck
@@ -33,8 +40,8 @@ function SwitchButton({
 							width: rem(12),
 							height: rem(12),
 						}}
-						color='teal'
 						stroke={3}
+						color='blue'
 					/>
 				) : (
 					<IconX
@@ -47,6 +54,8 @@ function SwitchButton({
 					/>
 				)
 			}
+			onLabel={onLabel}
+			offLabel={offLabel}
 		/>
 	);
 }

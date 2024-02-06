@@ -1,22 +1,10 @@
-import {
-	ActionIcon,
-	Button,
-	Flex,
-	Loader,
-	Switch,
-	Text,
-	Tooltip,
-	useMantineTheme,
-	rem,
-} from '@mantine/core';
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
-	IconCheck,
 	IconEdit,
 	IconEditOff,
 	IconTrash,
 	IconTrashOff,
-	IconX,
 } from '@tabler/icons-react';
 import {
 	useCreateAgent,
@@ -36,7 +24,6 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-// import { AgentType } from '../../types';
 import {
 	AgentCreationType,
 	AgentType,
@@ -144,6 +131,7 @@ function AgentsTable() {
 				Edit: ({ row }) => {
 					return (
 						<SwitchButton
+							size='sm'
 							defaultValue={row.original.vip}
 							setStateValue={setVipState}
 						/>
@@ -204,7 +192,7 @@ function AgentsTable() {
 				lastName,
 				firstName,
 				email,
-				vip: values.vip === 'Oui' ? true : false,
+				vip: vipState,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
