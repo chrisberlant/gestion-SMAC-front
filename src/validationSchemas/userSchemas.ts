@@ -22,31 +22,28 @@ export const userLoginSchema = z.strictObject({
 		.min(8, 'Le mot de passe doit faire minimum 8 caractères'),
 });
 
-export const currentUserUpdateSchema = z
-	.strictObject({
-		email: z
-			.string({
-				invalid_type_error: "Le format de l'adresse mail est incorrect",
-			})
-			.trim()
-			.min(1, "L'adresse mail doit être renseignée")
-			.email("Le format de l'adresse mail est incorrect"),
-		lastName: z
-			.string({
-				invalid_type_error:
-					'Le nom de famille doit être une chaîne de caractères',
-			})
-			.trim()
-			.min(1, 'Le nom de famille doit être renseigné'),
-		firstName: z
-			.string({
-				invalid_type_error:
-					'Le prénom doit être une chaîne de caractères',
-			})
-			.trim()
-			.min(1, 'Le prénom doit être renseigné'),
-	})
-	.partial();
+export const currentUserUpdateSchema = z.strictObject({
+	email: z
+		.string({
+			invalid_type_error: "Le format de l'adresse mail est incorrect",
+		})
+		.trim()
+		.min(1, "L'adresse mail doit être renseignée")
+		.email("Le format de l'adresse mail est incorrect"),
+	lastName: z
+		.string({
+			invalid_type_error:
+				'Le nom de famille doit être une chaîne de caractères',
+		})
+		.trim()
+		.min(1, 'Le nom de famille doit être renseigné'),
+	firstName: z
+		.string({
+			invalid_type_error: 'Le prénom doit être une chaîne de caractères',
+		})
+		.trim()
+		.min(1, 'Le prénom doit être renseigné'),
+});
 
 export const currentUserPasswordUpdateSchema = z
 	.strictObject({

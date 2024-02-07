@@ -2,7 +2,6 @@ import '@mantine/core/styles.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import './App.css';
-import ActiveLines from './components/ActiveLines/ActiveLines';
 import AdminDashboard from './components/AdminDashboard/AdminDashboard';
 import AgentsTable from './components/Agents/Agents';
 import Devices from './components/Devices/Devices';
@@ -18,7 +17,7 @@ function AppRoutes() {
 			<Route element={<Login />} path='/' />
 			{/* Protected routes, can only be accessed by authenticated user */}
 			<Route element={<PrivateRoutes />}>
-				<Route element={<ActiveLines />} path='/active-lines' />
+				{/* <Route element={<ActiveLines />} path='/active-lines' /> */}
 				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AgentsTable />} path='/agents' />

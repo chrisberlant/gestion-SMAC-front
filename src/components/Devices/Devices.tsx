@@ -31,7 +31,7 @@ import {
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
 import { useGetCurrentUser } from '../../utils/userQueries';
-import { dateFrFormatting, dateUsFormatting } from '../../utils/functions';
+import { dateFrFormatting } from '../../utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 

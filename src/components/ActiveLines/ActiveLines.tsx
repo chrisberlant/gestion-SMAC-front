@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconCopy, IconEdit, IconMail, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { useGetAllServices } from '@utils/serviceQueries';
 import { lineCreationSchema } from '@validationSchemas/lineSchemas';
 import {
@@ -11,9 +11,9 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
+
 import { LineType } from '../../types/line';
-import { sendEmail } from '../../utils/functions';
+
 import { useGetAllLines } from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
@@ -139,35 +139,35 @@ function ActiveLines() {
 				header: 'Email',
 				accessorKey: 'agent.email',
 				size: 70,
-				accessorFn: (row) => (
-					<Flex gap='xs' justify='center' align='center'>
-						<Tooltip label={`Copier ${row.agent.email}`}>
-							<ActionIcon
-								size='xs'
-								onClick={() => {
-									navigator.clipboard.writeText(
-										row.agent.email
-									);
-									toast.info(
-										'Adresse e-mail copiée dans le presse-papiers'
-									);
-								}}
-							>
-								<IconCopy />
-							</ActionIcon>
-						</Tooltip>
-						<Tooltip label={`E-mail à ${row.agent.email}`}>
-							<ActionIcon
-								size='xs'
-								onClick={() =>
-									sendEmail(row.agent.email, '', '')
-								}
-							>
-								<IconMail />
-							</ActionIcon>
-						</Tooltip>
-					</Flex>
-				),
+				// accessorFn: (row) => (
+				// 	<Flex gap='xs' justify='center' align='center'>
+				// 		<Tooltip label={`Copier ${row.agent.email}`}>
+				// 			<ActionIcon
+				// 				size='xs'
+				// 				onClick={() => {
+				// 					navigator.clipboard.writeText(
+				// 						row.agent.email
+				// 					);
+				// 					toast.info(
+				// 						'Adresse e-mail copiée dans le presse-papiers'
+				// 					);
+				// 				}}
+				// 			>
+				// 				<IconCopy />
+				// 			</ActionIcon>
+				// 		</Tooltip>
+				// 		<Tooltip label={`E-mail à ${row.agent.email}`}>
+				// 			<ActionIcon
+				// 				size='xs'
+				// 				onClick={() =>
+				// 					sendEmail(row.agent.email, '', '')
+				// 				}
+				// 			>
+				// 				<IconMail />
+				// 			</ActionIcon>
+				// 		</Tooltip>
+				// 	</Flex>
+				// ),
 				mantineEditTextInputProps: {
 					error: validationErrors?.agent?.email,
 					onFocus: () =>
@@ -247,10 +247,10 @@ function ActiveLines() {
 			{
 				header: 'Modèle',
 				accessorKey: 'device.model',
-				accessorFn: (row) =>
-					`${row.device.model.brand} ${row.device.model.reference} ${
-						row.device.model.storage || ''
-					}`,
+				// accessorFn: (row) =>
+				// 	`${row.device.model.brand} ${row.device.model.reference} ${
+				// 		row.device.model.storage || ''
+				// 	}`,
 				mantineEditTextInputProps: {
 					error: validationErrors?.device.model,
 					onFocus: () =>
