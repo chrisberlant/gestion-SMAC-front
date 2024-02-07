@@ -36,7 +36,7 @@ export const useLogin = (
 		onSuccess: (user) => {
 			queryClient.setQueryData(['currentUser'], user);
 			toast.info(`Bienvenue, ${user!.firstName} !`);
-			navigate('/attributed-lines');
+			navigate('/devices');
 		},
 		onError: () => {
 			toggleOverlay();
