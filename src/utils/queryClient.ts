@@ -15,9 +15,10 @@ const queryClient = new QueryClient({
 				// Erreur générée uniquement s'il ne s'agit pas de la vérification du token sur la page de connexion
 				if (query.queryKey[0] === 'logout') {
 					// Si suppression du token impossible
-					toast.error('Impossible de vous déconnecter');
-				} else if (error.message === 'Failed to fetch') {
-					toast.error('Impossible de joindre le serveur');
+					return toast.error('Impossible de vous déconnecter');
+				}
+				if (error.message === 'Failed to fetch') {
+					return toast.error('Impossible de joindre le serveur');
 				} else {
 					toast.error(error.message);
 					if (error.message.toLowerCase().includes('token')) {

@@ -36,7 +36,7 @@ function Login() {
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
 	useEffect(() => {
-		if (user) navigate('/active-lines');
+		if (user) navigate('/devices');
 	}, [user, navigate]);
 
 	if (isNotConnected || isLoading) {
