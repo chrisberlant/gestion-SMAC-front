@@ -128,15 +128,13 @@ function AgentsTable() {
 							vip: undefined,
 						}),
 				},
-				Edit: ({ row }) => {
-					return (
-						<SwitchButton
-							size='sm'
-							defaultValue={row.original.vip}
-							setStateValue={setVipState}
-						/>
-					);
-				},
+				Edit: ({ row }) => (
+					<SwitchButton
+						size='sm'
+						defaultValue={row.original.vip}
+						setStateValue={setVipState}
+					/>
+				),
 				Cell: ({ row }) => (
 					<span className={row.original.vip ? 'vip-text' : ''}>
 						{row.original.vip ? 'Oui' : 'Non'}

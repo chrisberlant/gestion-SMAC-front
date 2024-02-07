@@ -32,8 +32,9 @@ import {
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
 import { useGetCurrentUser } from '../../utils/userQueries';
-import { dateFormatting } from '../../utils/functions';
+import { dateFrFormatting, dateUsFormatting } from '../../utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
+import DateChoice from '../DateChoice/DateChoice';
 
 function DevicesTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -65,32 +66,14 @@ function DevicesTable() {
 		Record<string, string | undefined>
 	>({});
 
-	const [value, setValue] = useState<DateValue | null>(null);
+	// States permettant de rendre interactifs des éléments
+	const [preparationDateState, setPreparationDateState] = useState<string>(
+		dateUsFormatting(new Date().toISOString())
+	);
+	const [attributionDateState, setAttributionDateState] = useState<string>(
+		dateUsFormatting(new Date().toISOString())
+	);
 	const [isNewState, setIsNewState] = useState(false);
-
-	// Modal calendar
-	const openCalendar = (date: DateValue) =>
-		modals.open({
-			title: 'Sélectionner une date',
-			children: (
-				<DatePicker
-					locale='fr'
-					value={date}
-					onChange={(e) => {
-						date = e;
-						console.log(date);
-						setValue(date);
-					}}
-				/>
-			),
-			centered: true,
-			size: 'sm',
-			overlayProps: {
-				blur: 3,
-			},
-		});
-
-	useEffect(() => {}, [value]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -199,18 +182,9 @@ function DevicesTable() {
 				id: 'preparationDate',
 				accessorFn: (row) => {
 					if (row.preparationDate)
-						return dateFormatting(row.preparationDate);
+						return dateFrFormatting(row.preparationDate);
 				},
 				size: 100,
-				Edit: ({ row }) => (
-					<DatePickerInput
-						placeholder='Pick date'
-						locale='fr'
-						valueFormat='DD/MM/YYYY'
-						value={new Date(row.original.preparationDate)}
-						onChange={(e) => console.log(e)}
-					/>
-				),
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
 					onFocus: () =>
@@ -219,14 +193,19 @@ function DevicesTable() {
 							preparationDate: undefined,
 						}),
 				},
+				Edit: ({ row }) => (
+					<DateChoice
+						defaultValue={row.original.preparationDate}
+						setStateValue={setPreparationDateState}
+					/>
+				),
 			},
 			{
 				header: "Date d'attribution",
 				id: 'attributionDate',
 				accessorFn: (row) => {
 					if (row.attributionDate)
-						return dateFormatting(row.attributionDate);
-					else return '';
+						return dateFrFormatting(row.attributionDate);
 				},
 				size: 100,
 				mantineEditTextInputProps: {
@@ -237,6 +216,12 @@ function DevicesTable() {
 							attributionDate: undefined,
 						}),
 				},
+				Edit: ({ row }) => (
+					<DateChoice
+						defaultValue={row.original.attributionDate}
+						setStateValue={setAttributionDateState}
+					/>
+				),
 			},
 			{
 				header: 'Commentaires',
@@ -302,23 +287,14 @@ function DevicesTable() {
 	//CREATE action
 	const handleCreateDevice: MRT_TableOptions<DeviceType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const {
-				imei,
-				status,
-				isNew,
-				preparationDate,
-				attributionDate,
-				comments,
-				modelId,
-				agentId,
-			} = values;
+			const { imei, status, isNew, comments, modelId, agentId } = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				imei,
 				status,
 				isNew: isNew === 'Neuf' ? true : false,
-				preparationDate,
-				attributionDate,
+				preparationDate: preparationDateState,
+				attributionDate: attributionDateState,
 				comments,
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
@@ -346,23 +322,15 @@ function DevicesTable() {
 	//UPDATE action
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
-			const {
-				imei,
-				status,
-				preparationDate,
-				attributionDate,
-				comments,
-				modelId,
-				agentId,
-			} = values;
+			const { imei, status, comments, modelId, agentId } = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				id: row.original.id,
 				imei,
 				status,
 				isNew: isNewState,
-				preparationDate,
-				attributionDate,
+				preparationDate: preparationDateState,
+				attributionDate: attributionDateState,
 				comments,
 				modelId: formattedModels!.find(
 					(model) => model.infos === modelId
@@ -371,7 +339,7 @@ function DevicesTable() {
 					(agent) => agent.infos === agentId
 				)?.id,
 			};
-
+			console.log(data);
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {

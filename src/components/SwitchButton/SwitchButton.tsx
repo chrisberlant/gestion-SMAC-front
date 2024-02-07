@@ -11,7 +11,7 @@ interface SwitchButtonProps {
 }
 
 // Ce bouton permet de récupérer la valeur par défaut fournie et de mettre à jour un state booléen du composant dans lequel il est intégré
-function SwitchButton({
+export default function SwitchButton({
 	defaultValue,
 	setStateValue,
 	onLabel,
@@ -59,5 +59,3 @@ function SwitchButton({
 		/>
 	);
 }
-
-export default SwitchButton;

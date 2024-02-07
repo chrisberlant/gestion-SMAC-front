@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export const sendEmail = (sendTo: string, subject: string, content: string) => {
 	const emailSubject = encodeURIComponent(subject);
 	const emailContent = encodeURIComponent(content);
@@ -6,9 +8,10 @@ export const sendEmail = (sendTo: string, subject: string, content: string) => {
 	window.location.href = mailtoLink;
 };
 
-export const dateFormatting = (dateString: string) => {
-	// if (!dateString) return '';
-	const [year, month, day] = dateString.split('-');
+export const dateFrFormatting = (dateString: string | undefined) => {
+	return dateString ? dayjs(dateString).format('DD/MM/YYYY') : '';
+};
 
-	return `${day}/${month}/${year}`;
+export const dateUsFormatting = (dateString: string | undefined) => {
+	return dateString ? dayjs(dateString).format('YYYY-MM-DD') : '';
 };

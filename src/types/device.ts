@@ -7,8 +7,8 @@ import {
 export interface DeviceType {
 	id: number;
 	imei: string;
-	preparationDate: Date | null;
-	attributionDate: Date | null;
+	preparationDate: string;
+	attributionDate: string;
 	status:
 		| 'En stock'
 		| 'Attribué'
