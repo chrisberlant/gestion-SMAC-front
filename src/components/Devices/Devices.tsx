@@ -1,5 +1,4 @@
 import { ActionIcon, Button, Flex, Loader, Tooltip, Text } from '@mantine/core';
-import { DatePicker, DatePickerInput, DateValue } from '@mantine/dates';
 import { modals } from '@mantine/modals';
 import {
 	IconEdit,
@@ -15,7 +14,7 @@ import {
 	MantineReactTable,
 	useMantineReactTable,
 } from 'mantine-react-table';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { DeviceCreationType, DeviceType } from '../../types/device';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import {
@@ -67,12 +66,12 @@ function DevicesTable() {
 	>({});
 
 	// States permettant de rendre interactifs des éléments
-	const [preparationDateState, setPreparationDateState] = useState<string>(
-		dateUsFormatting(new Date().toISOString())
-	);
-	const [attributionDateState, setAttributionDateState] = useState<string>(
-		dateUsFormatting(new Date().toISOString())
-	);
+	const [preparationDateState, setPreparationDateState] = useState<
+		string | null
+	>(null);
+	const [attributionDateState, setAttributionDateState] = useState<
+		string | null
+	>(null);
 	const [isNewState, setIsNewState] = useState(false);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
@@ -195,7 +194,11 @@ function DevicesTable() {
 				},
 				Edit: ({ row }) => (
 					<DateChoice
-						defaultValue={row.original.preparationDate}
+						defaultValue={
+							row.original.preparationDate
+								? row.original.preparationDate
+								: null
+						}
 						setStateValue={setPreparationDateState}
 					/>
 				),

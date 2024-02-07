@@ -8,8 +8,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 interface DateInputProps {
-	defaultValue: string;
-	setStateValue: Dispatch<SetStateAction<string>>;
+	defaultValue: string | null;
+	setStateValue: Dispatch<SetStateAction<string | null>>;
 }
 
 export default function DateChoice({
@@ -17,17 +17,21 @@ export default function DateChoice({
 	setStateValue,
 }: DateInputProps) {
 	// Valeur utilisée au format date dans le calendrier
-	const [value, setValue] = useState<DateValue>(new Date(defaultValue));
+	const [value, setValue] = useState<DateValue | null>(
+		defaultValue ? new Date(defaultValue) : null
+	);
 
 	useEffect(() => {
 		// Valeur utilisée au format string dans le composant parent
+		if (!defaultValue) return setStateValue(null);
 		setStateValue(defaultValue);
 	}, [defaultValue, setStateValue]);
 
 	return (
 		<DateInput
 			valueFormat='DD/MM/YYYY'
-			placeholder={defaultValue}
+			clearable
+			placeholder='Date'
 			value={value}
 			onChange={(e) => {
 				setValue(e);
