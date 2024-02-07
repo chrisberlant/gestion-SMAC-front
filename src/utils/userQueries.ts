@@ -27,15 +27,15 @@ export const useLogin = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			return (await fetchApi(
-				'/login',
-				'POST',
-				form.values
-			)) as LoggedUser;
+			return (await fetchApi('/login', 'POST', form.values)) as {
+				loggedUser: LoggedUser;
+				smac_token: string;
+			};
 		},
 		onSuccess: (user) => {
-			queryClient.setQueryData(['currentUser'], user);
-			toast.info(`Bienvenue, ${user!.firstName} !`);
+			queryClient.setQueryData(['currentUser'], user.loggedUser);
+			localStorage.setItem('smac_token', user.smac_token);
+			toast.info(`Bienvenue, ${user!.loggedUser.firstName} !`);
 			navigate('/devices');
 		},
 		onError: () => {

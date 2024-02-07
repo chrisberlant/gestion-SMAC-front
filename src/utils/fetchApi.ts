@@ -2,13 +2,18 @@ type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
 async function fetchApi(route: string, method?: MethodType, infos?: object) {
 	const baseUrl = import.meta.env.VITE_API_URL;
+	const tokenAuthorization = `Bearer ${localStorage
+		.getItem('smac_token')
+		?.replace(/^"(.*)"$/, '$1')}`;
 	const options: RequestInit = {
 		method,
 		headers: {
+			authorization: tokenAuthorization,
 			'Content-Type': 'application/json',
 		},
 		credentials: 'include',
 	};
+	console.log(tokenAuthorization);
 	if (method && method !== 'GET') {
 		if (!infos)
 			throw new Error(
