@@ -188,16 +188,19 @@ function ServicesTable() {
 	return (
 		<div className='services-table'>
 			<h2>Services</h2>
+
 			{isLoading && (
 				<div className='loader-box'>
 					<Loader size='xl' />
 				</div>
 			)}
+
 			{isError && (
 				<span>
 					Impossible de récupérer les services depuis le serveur
 				</span>
 			)}
+
 			{services && <MantineReactTable table={table} />}
 		</div>
 	);

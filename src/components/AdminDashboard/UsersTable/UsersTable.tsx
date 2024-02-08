@@ -107,7 +107,7 @@ function UsersTable() {
 							? 'red'
 							: row.original.role === 'Tech'
 							? 'blue'
-							: 'yellow';
+							: 'gray';
 					return (
 						<Badge color={roleColor} w={96} variant='light'>
 							{row.original.role}
@@ -397,16 +397,19 @@ function UsersTable() {
 	return (
 		<div className='users-table'>
 			<h2>Utilisateurs et droits</h2>
+
 			{isLoading && (
 				<div className='loader-box'>
 					<Loader size='xl' />
 				</div>
 			)}
+
 			{isError && (
 				<span>
 					Impossible de récupérer les utilisateurs depuis le serveur
 				</span>
 			)}
+
 			{users && <MantineReactTable table={table} />}
 		</div>
 	);

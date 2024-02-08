@@ -21,8 +21,10 @@ export default function SwitchButton({
 	// State interne au bouton permettant de changer son style
 	const [checked, setChecked] = useState(defaultValue);
 
-	// Le state est tout d'abord initialisé via le booléen fourni
-	useEffect(() => setStateValue(defaultValue), [defaultValue, setStateValue]);
+	// Le state est du parent est initialisé via le booléen fourni
+	useEffect(() => {
+		setStateValue(defaultValue);
+	}, [defaultValue, setStateValue]);
 
 	return (
 		<Switch

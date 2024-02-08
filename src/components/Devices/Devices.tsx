@@ -151,13 +151,10 @@ function DevicesTable() {
 			},
 			{
 				header: 'État',
-				id: 'isNew',
-				accessorFn: (row) =>
-					row.isNew === false ? 'Occasion' : 'Neuf',
+				accessorKey: 'isNew',
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.isNew,
-					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -165,24 +162,26 @@ function DevicesTable() {
 						}),
 				},
 				Edit: ({ row }) => {
+					// Bouton sur "Neuf" par défaut lors de la création (donc imei vide)
+					const defaultValue =
+						row.original.isNew || !row.original.imei ? true : false;
 					return (
 						<SwitchButton
 							size='lg'
-							defaultValue={row.original.isNew}
+							defaultValue={defaultValue}
 							setStateValue={setIsNewState}
 							onLabel='Neuf'
 							offLabel='Occasion'
 						/>
 					);
 				},
+				Cell: ({ row }) => {
+					return row.original.isNew === false ? 'Occasion' : 'Neuf';
+				},
 			},
 			{
 				header: 'Date de préparation',
-				id: 'preparationDate',
-				accessorFn: (row) => {
-					if (row.preparationDate)
-						return dateFrFormatting(row.preparationDate);
-				},
+				accessorKey: 'preparationDate',
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
@@ -191,6 +190,10 @@ function DevicesTable() {
 							...validationErrors,
 							preparationDate: undefined,
 						}),
+				},
+				Cell: ({ row }) => {
+					if (row.original.preparationDate)
+						return dateFrFormatting(row.original.preparationDate);
 				},
 				Edit: ({ row }) => (
 					<DateChoice
@@ -290,12 +293,12 @@ function DevicesTable() {
 	//CREATE action
 	const handleCreateDevice: MRT_TableOptions<DeviceType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const { imei, status, isNew, comments, modelId, agentId } = values;
+			const { imei, status, comments, modelId, agentId } = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				imei,
 				status,
-				isNew: isNew === 'Neuf' ? true : false,
+				isNew: isNewState,
 				preparationDate: preparationDateState,
 				attributionDate: attributionDateState,
 				comments,

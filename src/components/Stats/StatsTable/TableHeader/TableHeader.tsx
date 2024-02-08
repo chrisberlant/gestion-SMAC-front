@@ -13,7 +13,7 @@ interface ThProps {
 	onSort(): void;
 }
 
-function Th({ title, reversed, sorted, onSort }: ThProps) {
+export default function Th({ title, reversed, sorted, onSort }: ThProps) {
 	const Icon = sorted
 		? reversed
 			? IconChevronUp
@@ -37,5 +37,3 @@ function Th({ title, reversed, sorted, onSort }: ThProps) {
 		</Table.Th>
 	);
 }
-
-export default Th;

@@ -11,7 +11,11 @@ interface StatsTableProps {
 	tableTitle: string;
 }
 
-function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
+export default function StatsTable({
+	data,
+	titles,
+	tableTitle,
+}: StatsTableProps) {
 	const [search, setSearch] = useState('');
 	const [sortedData, setSortedData] = useState(data);
 	const [sortBy, setSortBy] = useState<keyof StatsType | null>(null);
@@ -19,6 +23,7 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 
 	function filterData(data: StatsType[], search: string) {
 		const query = search.toLowerCase().trim();
+		console.log(data);
 		return data.filter((item) =>
 			keys(item).some((key) => item[key].toLowerCase().includes(query))
 		);
@@ -123,5 +128,3 @@ function StatsTable({ data, titles, tableTitle }: StatsTableProps) {
 		</div>
 	);
 }
-
-export default StatsTable;
