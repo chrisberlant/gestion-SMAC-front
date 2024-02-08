@@ -65,8 +65,8 @@ export const useUpdateAgent = () => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
-				agents.map((prevAgent) =>
-					prevAgent.id === updatedAgent.id ? updatedAgent : prevAgent
+				agents.map((agent) =>
+					agent.id === updatedAgent.id ? updatedAgent : agent
 				)
 			);
 			return previousAgents;

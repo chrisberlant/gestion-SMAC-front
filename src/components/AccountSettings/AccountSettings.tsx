@@ -14,7 +14,7 @@ interface AccountSettingsProps {
 	closeAccountModal: () => void;
 }
 
-function AccountSettings({
+export default function AccountSettings({
 	openedAccountModal,
 	closeAccountModal,
 }: AccountSettingsProps) {
@@ -98,5 +98,3 @@ function AccountSettings({
 		</div>
 	);
 }
-
-export default AccountSettings;

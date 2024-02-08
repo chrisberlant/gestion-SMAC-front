@@ -58,12 +58,12 @@ export const useUpdateModel = () => {
 			)) as ModelType;
 		},
 
-		onMutate: async (newModel) => {
+		onMutate: async (updatedModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
-				models.map((prevModel) =>
-					prevModel.id === newModel.id ? newModel : prevModel
+				models.map((model) =>
+					model.id === updatedModel.id ? updatedModel : model
 				)
 			);
 			return previousModels;

@@ -13,10 +13,11 @@ import cx from 'clsx';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import FrenchFlag from '../../assets/french-flag.svg';
-import { useGetCurrentUser, useLogout } from '../../utils/userQueries';
+import { useGetCurrentUser } from '../../utils/userQueries';
 import AccountSettings from '../AccountSettings/AccountSettings';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';
+import { toast } from 'sonner';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
@@ -35,7 +36,6 @@ export function Header() {
 		{ open: openAccountModal, close: closeAccountModal },
 	] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
-	const { refetch: logout } = useLogout();
 
 	if (currentUser) {
 		if (currentUser.role === 'Admin')
@@ -113,7 +113,15 @@ export function Header() {
 									Paramètres du compte
 								</Menu.Item>
 								<Menu.Item
-									onClick={() => logout()}
+									onClick={() => {
+										localStorage.removeItem('smac_token');
+										toast.warning(
+											'Vous avez été déconnecté, vous allez être redirigé vers la page de connexion'
+										);
+										setTimeout(() => {
+											window.location.href = '/';
+										}, 2000);
+									}}
 									leftSection={
 										<IconLogout
 											style={{

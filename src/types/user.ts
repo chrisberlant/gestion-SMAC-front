@@ -16,7 +16,9 @@ export type UserType = {
 	role: 'Admin' | 'Tech' | 'Consultant';
 };
 
-export type LoggedUser = Omit<UserType, 'id'>;
+export type LoggedUserType = Omit<UserType, 'id'>;
+
+export type UserInfosWithoutRoleType = Omit<UserType, 'role'>;
 
 export type UserLoginType = z.infer<typeof userLoginSchema>;
 

@@ -64,12 +64,12 @@ export const useUpdateDevice = () => {
 			)) as DeviceType;
 		},
 
-		onMutate: async (newDevice) => {
+		onMutate: async (updatedDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-				devices.map((prevDevice) =>
-					prevDevice.id === newDevice.id ? newDevice : prevDevice
+				devices.map((device) =>
+					device.id === updatedDevice.id ? updatedDevice : device
 				)
 			);
 			return previousDevices;

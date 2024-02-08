@@ -4,9 +4,10 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
+	UserInfosWithoutRoleType,
 	CurrentUserPasswordUpdateType,
 	CurrentUserUpdateType,
-	LoggedUser,
+	LoggedUserType,
 	UserCreationType,
 	UserDeletionType,
 	UserLoginType,
@@ -28,7 +29,7 @@ export const useLogin = (
 		mutationFn: async () => {
 			toggleOverlay();
 			return (await fetchApi('/login', 'POST', form.values)) as {
-				loggedUser: LoggedUser;
+				loggedUser: LoggedUserType;
 				smac_token: string;
 			};
 		},
@@ -46,25 +47,12 @@ export const useLogin = (
 	});
 };
 
-// Déconnexion
-export const useLogout = () => {
-	return useQuery({
-		queryKey: ['logout'],
-		queryFn: async () => {
-			return await fetchApi('/logout');
-		},
-		enabled: false,
-		staleTime: 0,
-		gcTime: 0,
-	});
-};
-
 // Récupérer les infos utilisateur
 export const useGetCurrentUser = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			return (await fetchApi('/getCurrentUser')) as LoggedUser;
+			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
 		},
 		staleTime: Infinity,
 		gcTime: Infinity,
@@ -76,7 +64,7 @@ export const useCheckLoginStatus = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			return (await fetchApi('/getCurrentUser')) as LoggedUser;
+			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
 		},
 		meta: {
 			loginStatusQuery: 'true',
@@ -99,27 +87,27 @@ export const useUpdateCurrentUser = (
 				'/updateCurrentUser',
 				'PATCH',
 				form.values
-			)) as LoggedUser;
+			)) as UserInfosWithoutRoleType;
 		},
-		onSuccess: (newCurrentUser) => {
+		onSuccess: (updatedCurrentUser) => {
 			closeAccountModal();
 			queryClient.setQueryData(
 				['currentUser'],
-				(currentUser: LoggedUser) => ({
+				(currentUser: LoggedUserType) => ({
 					...currentUser,
-					firstName: newCurrentUser?.firstName,
-					lastName: newCurrentUser?.lastName,
-					email: newCurrentUser?.email,
+					firstName: updatedCurrentUser?.firstName,
+					lastName: updatedCurrentUser?.lastName,
+					email: updatedCurrentUser?.email,
 				})
 			);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
 				users.map((user) =>
-					user.email === newCurrentUser?.email
+					user.id === updatedCurrentUser?.id
 						? {
 								...user,
-								firstName: newCurrentUser?.firstName,
-								lastName: newCurrentUser?.lastName,
-								email: newCurrentUser?.email,
+								firstName: updatedCurrentUser?.firstName,
+								lastName: updatedCurrentUser?.lastName,
+								email: updatedCurrentUser?.email,
 						  }
 						: user
 				)
@@ -151,7 +139,7 @@ export const useUpdateCurrentUserPassword = (
 			toast.success(
 				'Mot de passe modifié avec succès, vous allez être redirigé vers la page de connexion'
 			);
-			await fetchApi('/logout');
+			localStorage.removeItem('smac_token');
 			setTimeout(() => {
 				window.location.href = '/';
 			}, 2000);

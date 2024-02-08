@@ -67,14 +67,14 @@ export const useUpdateService = () => {
 			)) as ServiceType;
 		},
 
-		onMutate: async (newService) => {
+		onMutate: async (updatedService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			// Sauvegarde des services actuels
 			const previousServices = queryClient.getQueryData(['services']);
 			// Mise à jour du cache avant l'appel API pour màj instantée de l'UI
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
-				services.map((prevService) =>
-					prevService.id === newService.id ? newService : prevService
+				services.map((service) =>
+					service.id === updatedService.id ? updatedService : service
 				)
 			);
 			return previousServices;

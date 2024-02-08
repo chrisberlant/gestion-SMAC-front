@@ -11,32 +11,23 @@ const queryClient = new QueryClient({
 
 	queryCache: new QueryCache({
 		onError: (error, query) => {
+			// Erreur générée uniquement s'il ne s'agit pas de la vérification du token sur la page de connexion
 			if (!query.meta?.loginStatusQuery) {
-				// Erreur générée uniquement s'il ne s'agit pas de la vérification du token sur la page de connexion
-				if (query.queryKey[0] === 'logout') {
-					// Si suppression du token impossible
-					return toast.error('Impossible de vous déconnecter');
-				}
 				if (error.message === 'Failed to fetch') {
 					return toast.error('Impossible de joindre le serveur');
 				} else {
 					toast.error(error.message);
 					if (error.message.toLowerCase().includes('token')) {
 						// Redirection vers l'index si problème de token
+						localStorage.removeItem('smac_token');
 						window.location.href = '/';
 					}
 				}
 			}
 		},
 		onSuccess: (_, query) => {
-			if (query.queryKey[0] === 'logout') {
-				toast.warning(
-					'Vous avez été déconnecté, vous allez être redirigé vers la page de connexion'
-				);
-				queryClient.clear();
-				setTimeout(() => {
-					window.location.href = '/';
-				}, 2000);
+			if (query.meta?.loginStatusQuery) {
+				window.location.href = '/devices';
 			}
 		},
 	}),
@@ -49,6 +40,7 @@ const queryClient = new QueryClient({
 				toast.error(error.message);
 				if (error.message.toLowerCase().includes('token')) {
 					// Redirection vers l'index si problème de token
+					localStorage.removeItem('smac_token');
 					window.location.href = '/';
 				}
 			}
