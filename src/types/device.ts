@@ -4,7 +4,7 @@ import {
 	deviceUpdateSchema,
 } from '../validationSchemas/deviceSchemas';
 
-export interface DeviceType {
+export type DeviceType = {
 	id: number;
 	imei: string;
 	preparationDate: string;
@@ -21,7 +21,7 @@ export interface DeviceType {
 	comments: string | null;
 	modelId: number;
 	agentId: number | null;
-}
+};
 
 export type DeviceCreationType = z.infer<typeof deviceCreationSchema>;
 

@@ -499,6 +499,7 @@ function DevicesTable() {
 	return (
 		<div className='devices-table'>
 			<h2>Liste des appareils</h2>
+
 			{(servicesLoading ||
 				devicesLoading ||
 				agentsLoading ||
@@ -507,11 +508,13 @@ function DevicesTable() {
 					<Loader size='xl' />
 				</div>
 			)}
+
 			{(servicesError || devicesError || agentsError || modelsError) && (
 				<span>
 					Impossible de récupérer les appareils depuis le serveur
 				</span>
 			)}
+
 			{devices && services && agents && models && (
 				<MantineReactTable table={table} />
 			)}
