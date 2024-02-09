@@ -15,6 +15,7 @@ export const useGetAllDevices = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllDevices')) as DeviceType[];
 		},
+		staleTime: Infinity,
 	});
 };
 

@@ -160,6 +160,7 @@ export const useGetAllUsers = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllUsers')) as UserType[];
 		},
+		staleTime: Infinity,
 	});
 };
 

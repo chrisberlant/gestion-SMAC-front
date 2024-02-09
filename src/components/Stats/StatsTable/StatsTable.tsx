@@ -23,9 +23,10 @@ export default function StatsTable({
 
 	function filterData(data: StatsType[], search: string) {
 		const query = search.toLowerCase().trim();
-		console.log(data);
 		return data.filter((item) =>
-			keys(item).some((key) => item[key].toLowerCase().includes(query))
+			keys(data[0]).some((key) =>
+				item[key]?.toLowerCase().includes(query)
+			)
 		);
 	}
 

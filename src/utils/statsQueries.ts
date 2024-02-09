@@ -5,20 +5,6 @@ import {
 } from '../types';
 import fetchApi from './fetchApi';
 
-// Nombre d'agents et d'appareils par service
-export const useGetAgentsAndDevicesPerService = () => {
-	return useQuery({
-		queryKey: ['agentsAndDevicesPerService'],
-		queryFn: async () => {
-			return (await fetchApi(
-				'/getAgentsAndDevicesPerService'
-			)) as AgentsAndDevicesPerServiceType[];
-		},
-		staleTime: Infinity,
-		gcTime: Infinity,
-	});
-};
-
 // Nombre d'appareils par modèle
 export const useGetDevicesAmountPerModel = () => {
 	return useQuery({
@@ -28,7 +14,21 @@ export const useGetDevicesAmountPerModel = () => {
 				'/getDevicesAmountPerModel'
 			)) as DevicesAmountPerModelType[];
 		},
-		staleTime: Infinity,
-		gcTime: Infinity,
+		staleTime: 0,
+		gcTime: 0,
+	});
+};
+
+// Nombre d'agents et d'appareils par service
+export const useGetAgentsAndDevicesPerService = () => {
+	return useQuery({
+		queryKey: ['agentsAndDevicesPerService'],
+		queryFn: async () => {
+			return (await fetchApi(
+				'/getAgentsAndDevicesPerService'
+			)) as AgentsAndDevicesPerServiceType[];
+		},
+		staleTime: 0,
+		gcTime: 0,
 	});
 };

@@ -11,6 +11,7 @@ export const useGetAllModels = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllModels')) as ModelType[];
 		},
+		staleTime: Infinity,
 	});
 };
 
