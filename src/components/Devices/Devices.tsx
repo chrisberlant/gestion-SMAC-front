@@ -345,7 +345,6 @@ function DevicesTable() {
 					(agent) => agent.infos === agentId
 				)?.id,
 			};
-			console.log(data);
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {

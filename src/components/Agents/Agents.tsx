@@ -245,8 +245,6 @@ function AgentsTable() {
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
 			const { lastName, firstName, email } = values;
-			console.log(values);
-			console.log(vipState);
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				id: row.original.id,
@@ -258,7 +256,6 @@ function AgentsTable() {
 					(service) => service.title === values.serviceId
 				)?.id,
 			} as AgentUpdateType;
-			console.log(data);
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {
