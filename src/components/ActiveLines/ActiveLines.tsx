@@ -1,6 +1,5 @@
 import { Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
 	lineCreationSchema,
@@ -14,9 +13,7 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-
 import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
-
 import {
 	useCreateLine,
 	useDeleteLine,
@@ -111,7 +108,6 @@ export default function ActiveLines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
-				enableClickToCopy: true,
 				size: 50,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
@@ -121,9 +117,10 @@ export default function ActiveLines() {
 							number: undefined,
 						}),
 				},
-				mantineCopyButtonProps: {
-					style: { fontSize: 14 },
-				},
+				// enableClickToCopy: true,
+				// mantineCopyButtonProps: {
+				// 	style: { fontSize: 14 },
+				// },
 			},
 			{
 				header: 'Profil',

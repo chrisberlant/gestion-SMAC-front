@@ -1,6 +1,5 @@
-import { Loader, Text } from '@mantine/core';
+import { Box, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -34,6 +33,7 @@ import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
+import { IconArrowsSort } from '@tabler/icons-react';
 
 export default function DevicesTable() {
 	const {
@@ -112,7 +112,6 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'IMEI',
-				// enableClickToCopy: true,
 				accessorKey: 'imei',
 				size: 80,
 				mantineEditTextInputProps: {
@@ -123,6 +122,10 @@ export default function DevicesTable() {
 							imei: undefined,
 						}),
 				},
+				// enableClickToCopy: true,
+				// mantineCopyButtonProps: {
+				// 	style: { fontSize: 14 },
+				// },
 			},
 			{
 				header: 'Statut',
@@ -381,6 +384,13 @@ export default function DevicesTable() {
 	const table = useMantineReactTable({
 		columns,
 		data: devices || [],
+		icons: {
+			IconArrowsSort: () => (
+				<Box>
+					<IconArrowsSort />
+				</Box>
+			),
+		},
 		enableGlobalFilter: true,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
