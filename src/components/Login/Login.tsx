@@ -14,7 +14,7 @@ import { useCheckLoginStatus, useLogin } from '../../utils/userQueries';
 import { userLoginSchema } from '../../validationSchemas/userSchemas';
 import classes from './login.module.css';
 
-function Login() {
+export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	// Rediriger vers l'app si utilisateur déjà connecté
@@ -109,5 +109,3 @@ function Login() {
 		);
 	}
 }
-
-export default Login;

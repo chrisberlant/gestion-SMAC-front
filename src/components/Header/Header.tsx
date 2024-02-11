@@ -29,7 +29,7 @@ const tabs = {
 	Statistiques: '/stats',
 } as Record<string, string>;
 
-export function Header() {
+export default function Header() {
 	const { data: currentUser } = useGetCurrentUser();
 	const [
 		openedAccountModal,
@@ -162,5 +162,3 @@ export function Header() {
 		);
 	}
 }
-
-export default Header;

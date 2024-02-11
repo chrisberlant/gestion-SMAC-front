@@ -7,7 +7,7 @@ import ServicesTable from './ServicesTable/ServicesTable';
 import UsersTable from './UsersTable/UsersTable';
 import './adminDashboard.css';
 
-function AdminDashboard() {
+export default function AdminDashboard() {
 	const { data: currentUser } = useGetCurrentUser();
 	const navigate = useNavigate();
 
@@ -25,5 +25,3 @@ function AdminDashboard() {
 		</ZoomableComponent>
 	);
 }
-
-export default AdminDashboard;

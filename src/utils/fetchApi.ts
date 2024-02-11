@@ -1,6 +1,10 @@
 type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
-async function fetchApi(route: string, method?: MethodType, infos?: object) {
+export default async function fetchApi(
+	route: string,
+	method?: MethodType,
+	infos?: object
+) {
 	const baseUrl = import.meta.env.VITE_API_URL;
 	const tokenAuthorization = `Bearer ${localStorage
 		.getItem('smac_token')
@@ -32,5 +36,3 @@ async function fetchApi(route: string, method?: MethodType, infos?: object) {
 
 	return data;
 }
-
-export default fetchApi;

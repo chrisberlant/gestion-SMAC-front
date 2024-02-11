@@ -7,7 +7,7 @@ import {
 import { IconSun, IconMoon } from '@tabler/icons-react';
 import classes from './themeToggler.module.css';
 
-function ThemeToggler() {
+export default function ThemeToggler() {
 	const { setColorScheme } = useMantineColorScheme();
 	const computedColorScheme = useComputedColorScheme('light', {
 		getInitialValueInEffect: true,
@@ -37,5 +37,3 @@ function ThemeToggler() {
 		</div>
 	);
 }
-
-export default ThemeToggler;

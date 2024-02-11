@@ -2,7 +2,7 @@ import { Loader } from '@mantine/core';
 import { useGetAllLines } from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 
-function ResiliatedLines() {
+export default function ResiliatedLines() {
 	const { data: lines, isLoading, isError } = useGetAllLines();
 
 	if (isLoading) {
@@ -24,5 +24,3 @@ function ResiliatedLines() {
 		</ZoomableComponent>
 	);
 }
-
-export default ResiliatedLines;

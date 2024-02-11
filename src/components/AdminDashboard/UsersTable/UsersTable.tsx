@@ -42,7 +42,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { UserPasswordIsResetType, UserType } from '../../../types/user';
 
-function UsersTable() {
+export default function UsersTable() {
 	const { data: currentUser } = useGetCurrentUser();
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
@@ -411,5 +411,3 @@ function UsersTable() {
 		</div>
 	);
 }
-
-export default UsersTable;

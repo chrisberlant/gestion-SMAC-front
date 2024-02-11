@@ -6,7 +6,10 @@ interface ZoomableComponentProps {
 	className?: string;
 }
 
-function ZoomableComponent({ children, className }: ZoomableComponentProps) {
+export default function ZoomableComponent({
+	children,
+	className,
+}: ZoomableComponentProps) {
 	const [zoom, setZoom] = useState(100);
 	return (
 		<>
@@ -38,5 +41,3 @@ function ZoomableComponent({ children, className }: ZoomableComponentProps) {
 		</>
 	);
 }
-
-export default ZoomableComponent;

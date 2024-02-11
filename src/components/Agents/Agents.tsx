@@ -37,7 +37,7 @@ import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
 import { sendEmail } from '../../utils/functions';
 
-function AgentsTable() {
+export default function AgentsTable() {
 	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
@@ -424,5 +424,3 @@ function AgentsTable() {
 		</div>
 	);
 }
-
-export default AgentsTable;

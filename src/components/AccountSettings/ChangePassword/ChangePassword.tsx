@@ -11,7 +11,7 @@ interface ChangePasswordProps {
 	closeAccountModal: () => void;
 }
 
-function ChangePassword({
+export default function ChangePassword({
 	opened,
 	closePasswordModal,
 	closeAccountModal,
@@ -94,4 +94,3 @@ function ChangePassword({
 		</div>
 	);
 }
-export default ChangePassword;

@@ -3,7 +3,7 @@ import Illustration from './Illustration/Illustration';
 import classes from './pageNotFound.module.css';
 import { useNavigate } from 'react-router-dom';
 
-function PageNotFound() {
+export default function PageNotFound() {
 	const navigate = useNavigate();
 
 	return (
@@ -43,5 +43,3 @@ function PageNotFound() {
 		</main>
 	);
 }
-
-export default PageNotFound;

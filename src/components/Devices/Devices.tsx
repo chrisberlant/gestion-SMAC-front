@@ -35,7 +35,7 @@ import { dateFrFormatting } from '../../utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 
-function DevicesTable() {
+export default function DevicesTable() {
 	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
@@ -518,5 +518,3 @@ function DevicesTable() {
 		</div>
 	);
 }
-
-export default DevicesTable;

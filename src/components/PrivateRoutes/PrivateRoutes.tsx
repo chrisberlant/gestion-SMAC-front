@@ -3,7 +3,7 @@ import Header from '../Header/Header';
 import PageTopScroller from '../PageTopScroller/PageTopScroller';
 import { useGetCurrentUser } from '../../utils/userQueries';
 
-function PrivateRoutes() {
+export default function PrivateRoutes() {
 	const { data: loggedUser } = useGetCurrentUser();
 
 	if (loggedUser) {
@@ -18,5 +18,3 @@ function PrivateRoutes() {
 		);
 	}
 }
-
-export default PrivateRoutes;

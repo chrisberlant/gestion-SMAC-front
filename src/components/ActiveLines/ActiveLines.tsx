@@ -45,7 +45,7 @@ interface ValidationErrorsType {
 	};
 }
 
-function ActiveLines() {
+export default function ActiveLines() {
 	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
@@ -400,5 +400,3 @@ function ActiveLines() {
 		</ZoomableComponent>
 	);
 }
-
-export default ActiveLines;

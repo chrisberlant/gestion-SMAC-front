@@ -2,7 +2,7 @@ import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 import DevicesAmountPerModel from './DevicesAmountPerModel/DevicesAmountPerModel';
 import AgentsAndDevicesPerService from './AgentsAndDevicesPerService/AgentsAndDevicesPerService';
 
-function Stats() {
+export default function Stats() {
 	return (
 		<ZoomableComponent className='stats'>
 			<DevicesAmountPerModel />
@@ -10,5 +10,3 @@ function Stats() {
 		</ZoomableComponent>
 	);
 }
-
-export default Stats;

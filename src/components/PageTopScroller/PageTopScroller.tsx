@@ -2,7 +2,7 @@ import { Affix, Transition, Button, rem } from '@mantine/core';
 import { useWindowScroll } from '@mantine/hooks';
 import { IconArrowUp } from '@tabler/icons-react';
 
-function PageTopScroller() {
+export default function PageTopScroller() {
 	const [scroll, scrollTo] = useWindowScroll();
 	return (
 		<>
@@ -29,5 +29,3 @@ function PageTopScroller() {
 		</>
 	);
 }
-
-export default PageTopScroller;

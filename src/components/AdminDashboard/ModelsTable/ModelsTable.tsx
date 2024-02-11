@@ -21,7 +21,7 @@ import {
 import { useMemo, useState } from 'react';
 import { ModelType } from '../../../types/model';
 
-function ModelsTable() {
+export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
 	const { mutate: createModel } = useCreateModel();
 	const { mutate: updateModel } = useUpdateModel();
@@ -245,5 +245,3 @@ function ModelsTable() {
 		</div>
 	);
 }
-
-export default ModelsTable;

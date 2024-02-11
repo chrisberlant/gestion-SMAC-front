@@ -30,7 +30,7 @@ function AppRoutes() {
 	);
 }
 
-function App() {
+export default function App() {
 	return (
 		<Router>
 			<div className='app'>
@@ -51,5 +51,3 @@ function App() {
 		</Router>
 	);
 }
-
-export default App;

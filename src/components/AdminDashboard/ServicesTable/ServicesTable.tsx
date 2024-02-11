@@ -21,7 +21,7 @@ import {
 import { useMemo, useState } from 'react';
 import { ServiceType } from '../../../types/service';
 
-function ServicesTable() {
+export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
 	const { mutate: createService } = useCreateService();
 	const { mutate: updateService } = useUpdateService();
@@ -205,5 +205,3 @@ function ServicesTable() {
 		</div>
 	);
 }
-
-export default ServicesTable;
