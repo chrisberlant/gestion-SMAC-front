@@ -1,8 +1,10 @@
 import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import {
+	IconCopy,
 	IconEdit,
 	IconEditOff,
+	IconMail,
 	IconTrash,
 	IconTrashOff,
 } from '@tabler/icons-react';
@@ -32,6 +34,8 @@ import {
 import { useGetAllServices } from '../../utils/serviceQueries';
 import { useGetCurrentUser } from '../../utils/userQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
+import { toast } from 'sonner';
+import { sendEmail } from '../../utils/functions';
 
 function AgentsTable() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -110,9 +114,36 @@ function AgentsTable() {
 						}),
 				},
 				Cell: ({ row }) => (
-					<span className={row.original.vip ? 'vip-text' : ''}>
-						{row.original.email}
-					</span>
+					<Flex gap='xs' align='center'>
+						<span className={row.original.vip ? 'vip-text' : ''}>
+							{row.original.email}
+						</span>
+						<Tooltip label={`Copier ${row.original.email}`}>
+							<ActionIcon
+								size='xs'
+								onClick={() => {
+									navigator.clipboard.writeText(
+										row.original.email
+									);
+									toast.info(
+										'Adresse e-mail copiée dans le presse-papiers'
+									);
+								}}
+							>
+								<IconCopy />
+							</ActionIcon>
+						</Tooltip>
+						<Tooltip label={`E-mail à ${row.original.email}`}>
+							<ActionIcon
+								size='xs'
+								onClick={() =>
+									sendEmail(row.original.email, '', '')
+								}
+							>
+								<IconMail />
+							</ActionIcon>
+						</Tooltip>
+					</Flex>
 				),
 			},
 			{
@@ -309,7 +340,6 @@ function AgentsTable() {
 						<ActionIcon
 							style={{
 								cursor: 'not-allowed',
-								pointerEvents: 'none',
 							}}
 							color='#B2B2B2'
 							size='sm'
@@ -321,7 +351,6 @@ function AgentsTable() {
 						<ActionIcon
 							style={{
 								cursor: 'not-allowed',
-								pointerEvents: 'none',
 							}}
 							color='#B2B2B2'
 							size='sm'
@@ -331,7 +360,6 @@ function AgentsTable() {
 					</Tooltip>
 				</Flex>
 			),
-
 		renderTopToolbarCustomActions: ({ table }) =>
 			currentUser!.role !== 'Consultant' ? (
 				<Button

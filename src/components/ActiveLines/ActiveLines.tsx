@@ -170,6 +170,7 @@ function ActiveLines() {
 			{
 				header: 'Commentaires',
 				accessorKey: 'comments',
+				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.comments,
 					onFocus: () =>

@@ -424,7 +424,6 @@ function DevicesTable() {
 						<ActionIcon
 							style={{
 								cursor: 'not-allowed',
-								pointerEvents: 'none',
 							}}
 							color='#B2B2B2'
 							size='sm'
@@ -436,7 +435,6 @@ function DevicesTable() {
 						<ActionIcon
 							style={{
 								cursor: 'not-allowed',
-								pointerEvents: 'none',
 							}}
 							color='#B2B2B2'
 							size='sm'
