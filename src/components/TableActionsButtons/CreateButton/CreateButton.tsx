@@ -12,21 +12,21 @@ export default function CreateButton({
 }: CreateButtonProps) {
 	const { data: currentUser } = useGetCurrentUser();
 
-	return checkRole && currentUser && currentUser.role === 'Consultant' ? (
-		<Button
-			mr='auto'
-			ml='xs'
-			style={{
-				cursor: 'not-allowed',
-				pointerEvents: 'none',
-			}}
-			color='#B2B2B2'
-		>
-			Ajout impossible
-		</Button>
-	) : (
-		<Button onClick={createFunction} mr='auto' ml='xs'>
-			Ajouter
-		</Button>
-	);
+	if (currentUser)
+		return checkRole && currentUser.role === 'Consultant' ? (
+			<Button
+				mr='auto'
+				ml='xs'
+				style={{
+					cursor: 'not-allowed',
+				}}
+				color='#B2B2B2'
+			>
+				Ajouter
+			</Button>
+		) : (
+			<Button onClick={createFunction} mr='auto' ml='xs'>
+				Ajouter
+			</Button>
+		);
 }

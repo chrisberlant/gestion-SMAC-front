@@ -133,7 +133,7 @@ export default function ServicesTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
-				checkRole={false}
+				roleCheck={false}
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (

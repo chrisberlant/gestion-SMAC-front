@@ -4,28 +4,34 @@ import {
 	IconTrash,
 	IconEditOff,
 	IconTrashOff,
+	IconKey,
+	IconKeyOff,
 } from '@tabler/icons-react';
 import { useGetCurrentUser } from '../../../utils/userQueries';
 
-interface EditDeleteButtonsProps {
+interface EditDeleteResetPasswordButtonsProps {
 	editFunction: () => void;
 	deleteFunction: () => void;
-	roleCheck?: boolean; // Vérifier manuellement le rôle, passer à false si déjà effectué, par exemple une route admin
+	resetPasswordFunction: () => void;
+	rowEmail: string;
+	rowId: number;
 }
 
 // Boutons affichés sur le côté gauche du tableau permettant d'éditer ou supprimer une ligne
-export default function EditDeleteButtons({
+export default function EditDeleteResetPasswordButtons({
 	editFunction,
 	deleteFunction,
-	roleCheck = true,
-}: EditDeleteButtonsProps) {
+	resetPasswordFunction,
+	rowEmail,
+	rowId,
+}: EditDeleteResetPasswordButtonsProps) {
 	const { data: currentUser, isLoading } = useGetCurrentUser();
 
 	if (isLoading) return <Loader />;
 
 	if (currentUser)
-		return roleCheck && currentUser.role === 'Consultant' ? (
-			// Si on demande à vérifier le rôle et que l'utilisateur actuel est un consultant, il n'a pas accès aux boutons
+		return currentUser.email === rowEmail || rowId === 1 ? (
+			// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
 			<Flex gap='md'>
 				<Tooltip label='Non autorisé'>
 					<ActionIcon
@@ -46,6 +52,17 @@ export default function EditDeleteButtons({
 						color='#B2B2B2'
 						size='sm'
 					>
+						<IconKeyOff />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Non autorisé'>
+					<ActionIcon
+						style={{
+							cursor: 'not-allowed',
+						}}
+						color='#B2B2B2'
+						size='sm'
+					>
 						<IconTrashOff />
 					</ActionIcon>
 				</Tooltip>
@@ -55,6 +72,15 @@ export default function EditDeleteButtons({
 				<Tooltip label='Modifier'>
 					<ActionIcon onClick={editFunction} size='sm'>
 						<IconEdit />
+					</ActionIcon>
+				</Tooltip>
+				<Tooltip label='Réinitialiser le mot de passe'>
+					<ActionIcon
+						color='orange'
+						onClick={resetPasswordFunction}
+						size='sm'
+					>
+						<IconKey />
 					</ActionIcon>
 				</Tooltip>
 				<Tooltip label='Supprimer'>

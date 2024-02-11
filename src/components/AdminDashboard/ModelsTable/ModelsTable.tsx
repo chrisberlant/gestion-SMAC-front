@@ -165,7 +165,7 @@ export default function ModelsTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
-				checkRole={false}
+				roleCheck={false}
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (

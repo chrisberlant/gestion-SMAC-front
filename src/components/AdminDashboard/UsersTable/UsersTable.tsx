@@ -8,22 +8,12 @@ import {
 	Tooltip,
 } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import {
-	IconCopy,
-	IconEdit,
-	IconEditOff,
-	IconKey,
-	IconKeyOff,
-	IconMail,
-	IconTrash,
-	IconTrashOff,
-} from '@tabler/icons-react';
+import { IconCopy, IconMail } from '@tabler/icons-react';
 import { sendEmail } from '@utils/functions';
 import {
 	useCreateUser,
 	useDeleteUser,
 	useGetAllUsers,
-	useGetCurrentUser,
 	useResetPassword,
 	useUpdateUser,
 } from '@utils/userQueries';
@@ -41,9 +31,10 @@ import {
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { UserPasswordIsResetType, UserType } from '../../../types/user';
+import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
+import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
 
 export default function UsersTable() {
-	const { data: currentUser } = useGetCurrentUser();
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
@@ -285,83 +276,17 @@ export default function UsersTable() {
 		onEditingRowSave: handleSaveUser,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
-		renderRowActions: ({ row, table }) =>
-			currentUser!.email !== row.original.email &&
-			row.original.id !== 1 ? (
-				<Flex gap='md'>
-					<Tooltip label='Modifier'>
-						<ActionIcon
-							onClick={() => table.setEditingRow(row)}
-							size='sm'
-						>
-							<IconEdit />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Réinitialiser le mot de passe'>
-						<ActionIcon
-							color='orange'
-							onClick={() => openResetPasswordConfirmModal(row)}
-							size='sm'
-						>
-							<IconKey />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Supprimer'>
-						<ActionIcon
-							color='red'
-							onClick={() => openDeleteConfirmModal(row)}
-							size='sm'
-						>
-							<IconTrash />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			) : (
-				// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
-				<Flex gap='md'>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconEditOff />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconKeyOff />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconTrashOff />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			),
+		renderRowActions: ({ row, table }) => (
+			<EditDeleteResetPasswordButtons
+				rowEmail={row.original.email}
+				rowId={row.original.id}
+				editFunction={() => table.setEditingRow(row)}
+				deleteFunction={() => openDeleteConfirmModal(row)}
+				resetPasswordFunction={() => openResetPasswordConfirmModal(row)}
+			/>
+		),
 		renderTopToolbarCustomActions: ({ table }) => (
-			<Button
-				onClick={() => table.setCreatingRow(true)}
-				mr='auto'
-				ml='xs'
-			>
-				Ajouter
-			</Button>
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		mantineTableProps: {
 			striped: true,

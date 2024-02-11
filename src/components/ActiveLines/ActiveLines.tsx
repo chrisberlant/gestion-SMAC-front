@@ -1,4 +1,4 @@
-import { Button, Loader, Text } from '@mantine/core';
+import { Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 
 import { useGetAllServices } from '@utils/serviceQueries';
@@ -28,6 +28,7 @@ import { useGetAllAgents } from '../../utils/agentQueries';
 import { useGetAllDevices } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 
 export default function ActiveLines() {
 	const {
@@ -282,7 +283,6 @@ export default function ActiveLines() {
 				)?.id,
 			} as LineCreationType;
 
-			console.log(data);
 			const validation = lineCreationSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
@@ -318,7 +318,6 @@ export default function ActiveLines() {
 				)?.id,
 			} as LineUpdateType;
 
-			console.log(data);
 			// Validation du format des données via un schéma Zod
 			const validation = lineUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -375,17 +374,10 @@ export default function ActiveLines() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
-				checkRole={true}
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
-			<Button
-				onClick={() => table.setCreatingRow(true)}
-				mr='auto'
-				ml='xs'
-			>
-				Ajouter
-			</Button>
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		mantineTableProps: {
 			striped: true,
