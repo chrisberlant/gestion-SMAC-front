@@ -1,8 +1,11 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { Button, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+
 import { useGetAllServices } from '@utils/serviceQueries';
-import { lineCreationSchema } from '@validationSchemas/lineSchemas';
+import {
+	lineCreationSchema,
+	lineUpdateSchema,
+} from '@validationSchemas/lineSchemas';
 import {
 	MRT_Row,
 	MRT_TableOptions,
@@ -12,41 +15,21 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 
-import { LineType } from '../../types/line';
+import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
 
-import { useCreateLine, useGetAllLines } from '../../utils/lineQueries';
+import {
+	useCreateLine,
+	useDeleteLine,
+	useGetAllLines,
+	useUpdateLine,
+} from '../../utils/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import { useGetAllDevices } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
-import { useGetCurrentUser } from '../../utils/userQueries';
-
-interface ValidationErrorsType {
-	number: undefined | string;
-	profile: undefined | string;
-	status: undefined | string;
-	comments: undefined | string;
-	agent: {
-		email: undefined | string;
-		firstName: undefined | string;
-		lastName: undefined | string;
-		service: {
-			title: undefined | string;
-		};
-	};
-	device: {
-		imei: undefined | string;
-		preparationDate: undefined | string;
-		attributionDate: undefined | string;
-		status: undefined | string;
-		isNew: undefined | string;
-		comments: undefined | string;
-		model: undefined | string;
-	};
-}
+import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 
 export default function ActiveLines() {
-	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
 		isLoading: servicesLoading,
@@ -74,6 +57,8 @@ export default function ActiveLines() {
 	} = useGetAllLines();
 
 	const { mutate: createLine } = useCreateLine();
+	const { mutate: updateLine } = useUpdateLine();
+	const { mutate: deleteLine } = useDeleteLine();
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -125,6 +110,7 @@ export default function ActiveLines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
+				enableClickToCopy: true,
 				size: 50,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
@@ -133,6 +119,9 @@ export default function ActiveLines() {
 							...validationErrors,
 							number: undefined,
 						}),
+				},
+				mantineCopyButtonProps: {
+					style: { fontSize: 14 },
 				},
 			},
 			{
@@ -274,6 +263,76 @@ export default function ActiveLines() {
 		[validationErrors, formattedAgents, formattedDevices]
 	);
 
+	//CREATE action
+	const handleCreateLine: MRT_TableOptions<LineType>['onCreatingRowSave'] =
+		async ({ values, exitCreatingMode }) => {
+			const { number, profile, status, comments, agentId, deviceId } =
+				values;
+			// Formatage des informations nécessaires pour la validation du schéma
+			const data = {
+				number,
+				profile,
+				status,
+				comments,
+				agentId: formattedAgents?.find(
+					(agent) => agent.infos === agentId
+				)?.id,
+				deviceId: formattedDevices?.find(
+					(device) => device.infos === deviceId
+				)?.id,
+			} as LineCreationType;
+
+			console.log(data);
+			const validation = lineCreationSchema.safeParse(data);
+			if (!validation.success) {
+				const errors: Record<string, string> = {};
+				// Conversion du tableau d'objets retourné par Zod en objet simple
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
+			}
+
+			setValidationErrors({});
+			createLine(data);
+			exitCreatingMode();
+		};
+
+	//UPDATE action
+	const handleSaveLine: MRT_TableOptions<LineType>['onEditingRowSave'] =
+		async ({ values, row }) => {
+			const { number, profile, status, comments, deviceId, agentId } =
+				values;
+			// Formatage des informations nécessaires pour la validation du schéma
+			const data = {
+				id: row.original.id,
+				number,
+				profile,
+				status,
+				comments,
+				agentId: formattedAgents?.find(
+					(agent) => agent.infos === agentId
+				)?.id,
+				deviceId: formattedDevices?.find(
+					(device) => device.infos === deviceId
+				)?.id,
+			} as LineUpdateType;
+
+			console.log(data);
+			// Validation du format des données via un schéma Zod
+			const validation = lineUpdateSchema.safeParse(data);
+			if (!validation.success) {
+				const errors: Record<string, string> = {};
+				validation.error.issues.forEach((item) => {
+					errors[item.path[0]] = item.message;
+				});
+				return setValidationErrors(errors);
+			}
+			setValidationErrors({});
+			updateLine(data);
+			table.setEditingRow(null);
+		};
+
 	//DELETE action
 	const openDeleteConfirmModal = (row: MRT_Row<LineType>) =>
 		modals.openConfirmModal({
@@ -291,7 +350,7 @@ export default function ActiveLines() {
 			},
 			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 			confirmProps: { color: 'red' },
-			// onConfirm: () => deleteUser({ id: row.original.id }),
+			onConfirm: () => deleteLine({ id: row.original.id }),
 		});
 
 	const table = useMantineReactTable({
@@ -307,31 +366,17 @@ export default function ActiveLines() {
 		sortDescFirst: true,
 		enableSortingRemoval: false,
 		enableDensityToggle: false,
-		// onCreatingRowCancel: () => setValidationErrors(initialState),
-		// onCreatingRowSave: handleCreateLine,
-		// onEditingRowSave: handleSaveUser,
-		// onEditingRowCancel: () => setValidationErrors(initialState),
+		onCreatingRowCancel: () => setValidationErrors({}),
+		onCreatingRowSave: handleCreateLine,
+		onEditingRowSave: handleSaveLine,
+		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
 		renderRowActions: ({ row, table }) => (
-			<Flex gap='md'>
-				<Tooltip label='Modifier'>
-					<ActionIcon
-						onClick={() => table.setEditingRow(row)}
-						size='sm'
-					>
-						<IconEdit />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Supprimer'>
-					<ActionIcon
-						color='red'
-						onClick={() => openDeleteConfirmModal(row)}
-						size='sm'
-					>
-						<IconTrash />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
+			<EditDeleteButtons
+				editFunction={() => table.setEditingRow(row)}
+				deleteFunction={() => openDeleteConfirmModal(row)}
+				checkRole={true}
+			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
 			<Button

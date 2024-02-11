@@ -1,13 +1,6 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import {
-	IconCopy,
-	IconEdit,
-	IconEditOff,
-	IconMail,
-	IconTrash,
-	IconTrashOff,
-} from '@tabler/icons-react';
+import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -32,13 +25,13 @@ import {
 	AgentUpdateType,
 } from '../../types/agent';
 import { useGetAllServices } from '../../utils/serviceQueries';
-import { useGetCurrentUser } from '../../utils/userQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
 import { sendEmail } from '../../utils/functions';
+import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 
 export default function AgentsTable() {
-	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
 		isLoading: servicesLoading,
@@ -310,75 +303,15 @@ export default function AgentsTable() {
 		onEditingRowSave: handleSaveAgent,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
-		renderRowActions: ({ row, table }) =>
-			currentUser!.role !== 'Consultant' ? (
-				<Flex gap='md'>
-					<Tooltip label='Modifier'>
-						<ActionIcon
-							onClick={() => table.setEditingRow(row)}
-							size='sm'
-						>
-							<IconEdit />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Supprimer'>
-						<ActionIcon
-							color='red'
-							onClick={() => openDeleteConfirmModal(row)}
-							size='sm'
-						>
-							<IconTrash />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			) : (
-				<Flex gap='md'>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconEditOff />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconTrashOff />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			),
-		renderTopToolbarCustomActions: ({ table }) =>
-			currentUser!.role !== 'Consultant' ? (
-				<Button
-					onClick={() => table.setCreatingRow(true)}
-					mr='auto'
-					ml='xs'
-				>
-					Ajouter
-				</Button>
-			) : (
-				<Button
-					mr='auto'
-					ml='xs'
-					style={{
-						cursor: 'not-allowed',
-						pointerEvents: 'none',
-					}}
-					color='#B2B2B2'
-				>
-					Ajout impossible
-				</Button>
-			),
+		renderRowActions: ({ row, table }) => (
+			<EditDeleteButtons
+				editFunction={() => table.setEditingRow(row)}
+				deleteFunction={() => openDeleteConfirmModal(row)}
+			/>
+		),
+		renderTopToolbarCustomActions: ({ table }) => (
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+		),
 		mantineTableProps: {
 			striped: true,
 		},

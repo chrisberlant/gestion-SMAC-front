@@ -95,9 +95,7 @@ export const useDeleteDevice = () => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-				devices?.filter(
-					(device: DeviceType) => device.id !== deviceToDelete.id
-				)
+				devices?.filter((device) => device.id !== deviceToDelete.id)
 			);
 			return previousDevices;
 		},

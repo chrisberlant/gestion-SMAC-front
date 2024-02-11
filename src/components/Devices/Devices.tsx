@@ -1,11 +1,6 @@
-import { ActionIcon, Button, Flex, Loader, Tooltip, Text } from '@mantine/core';
+import { Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import {
-	IconEdit,
-	IconEditOff,
-	IconTrash,
-	IconTrashOff,
-} from '@tabler/icons-react';
+
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -15,7 +10,11 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { DeviceCreationType, DeviceType } from '../../types/device';
+import {
+	DeviceCreationType,
+	DeviceType,
+	DeviceUpdateType,
+} from '../../types/device';
 import { useGetAllAgents } from '../../utils/agentQueries';
 import {
 	useCreateDevice,
@@ -30,13 +29,13 @@ import {
 	deviceUpdateSchema,
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { useGetCurrentUser } from '../../utils/userQueries';
 import { dateFrFormatting } from '../../utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
+import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 
 export default function DevicesTable() {
-	const { data: currentUser } = useGetCurrentUser();
 	const {
 		data: services,
 		isLoading: servicesLoading,
@@ -57,8 +56,8 @@ export default function DevicesTable() {
 		isLoading: modelsLoading,
 		isError: modelsError,
 	} = useGetAllModels();
-	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: createDevice } = useCreateDevice();
+	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: deleteDevice } = useDeleteDevice();
 
 	const [validationErrors, setValidationErrors] = useState<
@@ -344,7 +343,7 @@ export default function DevicesTable() {
 				agentId: formattedAgents!.find(
 					(agent) => agent.infos === agentId
 				)?.id,
-			};
+			} as DeviceUpdateType;
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -396,75 +395,15 @@ export default function DevicesTable() {
 		onEditingRowSave: handleSaveDevice,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
-		renderRowActions: ({ row, table }) =>
-			currentUser!.role !== 'Consultant' ? (
-				<Flex gap='md'>
-					<Tooltip label='Modifier'>
-						<ActionIcon
-							onClick={() => table.setEditingRow(row)}
-							size='sm'
-						>
-							<IconEdit />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Supprimer'>
-						<ActionIcon
-							color='red'
-							onClick={() => openDeleteConfirmModal(row)}
-							size='sm'
-						>
-							<IconTrash />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			) : (
-				<Flex gap='md'>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconEditOff />
-						</ActionIcon>
-					</Tooltip>
-					<Tooltip label='Non autorisé'>
-						<ActionIcon
-							style={{
-								cursor: 'not-allowed',
-							}}
-							color='#B2B2B2'
-							size='sm'
-						>
-							<IconTrashOff />
-						</ActionIcon>
-					</Tooltip>
-				</Flex>
-			),
-		renderTopToolbarCustomActions: ({ table }) =>
-			currentUser!.role !== 'Consultant' ? (
-				<Button
-					onClick={() => table.setCreatingRow(true)}
-					mr='auto'
-					ml='xs'
-				>
-					Ajouter
-				</Button>
-			) : (
-				<Button
-					mr='auto'
-					ml='xs'
-					style={{
-						cursor: 'not-allowed',
-						pointerEvents: 'none',
-					}}
-					color='#B2B2B2'
-				>
-					Ajout impossible
-				</Button>
-			),
+		renderRowActions: ({ row, table }) => (
+			<EditDeleteButtons
+				editFunction={() => table.setEditingRow(row)}
+				deleteFunction={() => openDeleteConfirmModal(row)}
+			/>
+		),
+		renderTopToolbarCustomActions: ({ table }) => (
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+		),
 		mantineTableProps: {
 			striped: true,
 		},

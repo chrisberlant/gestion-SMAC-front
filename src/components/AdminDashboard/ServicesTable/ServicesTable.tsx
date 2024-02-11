@@ -1,6 +1,6 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+
 import {
 	useCreateService,
 	useDeleteService,
@@ -20,6 +20,8 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { ServiceType } from '../../../types/service';
+import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -128,34 +130,14 @@ export default function ServicesTable() {
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
 		renderRowActions: ({ row, table }) => (
-			<Flex gap='md'>
-				<Tooltip label='Modifier'>
-					<ActionIcon
-						onClick={() => table.setEditingRow(row)}
-						size='sm'
-					>
-						<IconEdit />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Supprimer'>
-					<ActionIcon
-						color='red'
-						onClick={() => openDeleteConfirmModal(row)}
-						size='sm'
-					>
-						<IconTrash />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
+			<EditDeleteButtons
+				editFunction={() => table.setEditingRow(row)}
+				deleteFunction={() => openDeleteConfirmModal(row)}
+				checkRole={false}
+			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
-			<Button
-				onClick={() => table.setCreatingRow(true)}
-				mr='auto'
-				ml='xs'
-			>
-				Ajouter
-			</Button>
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		mantineTableProps: {
 			striped: true,
