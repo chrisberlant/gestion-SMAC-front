@@ -143,6 +143,7 @@ export default function DevicesTable() {
 						'En panne',
 						'Volé',
 					],
+					allowDeselect: false,
 					error: validationErrors?.status,
 					onFocus: () =>
 						setValidationErrors({
@@ -259,6 +260,7 @@ export default function DevicesTable() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: formattedModels?.map((model) => model.infos),
+					allowDeselect: false,
 					error: validationErrors?.modelId,
 					onFocus: () =>
 						setValidationErrors({
@@ -279,6 +281,7 @@ export default function DevicesTable() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
+					allowDeselect: false,
 					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>

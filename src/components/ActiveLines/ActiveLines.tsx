@@ -129,6 +129,7 @@ export default function ActiveLines() {
 				size: 50,
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
+					allowDeselect: false,
 					error: validationErrors?.profile,
 					searchable: false, // Désactiver la recherche
 					onFocus: () =>
@@ -145,6 +146,7 @@ export default function ActiveLines() {
 				size: 90,
 				mantineEditSelectProps: {
 					data: ['Active', 'En cours', 'Résiliée'],
+					allowDeselect: false,
 					error: validationErrors?.status,
 					searchable: false,
 					onFocus: () =>
@@ -179,6 +181,7 @@ export default function ActiveLines() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
+					allowDeselect: false,
 					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
@@ -307,12 +310,13 @@ export default function ActiveLines() {
 				profile,
 				status,
 				comments,
-				agentId: formattedAgents?.find(
-					(agent) => agent.infos === agentId
-				)?.id,
-				deviceId: formattedDevices?.find(
-					(device) => device.infos === deviceId
-				)?.id,
+				agentId:
+					formattedAgents?.find((agent) => agent.infos === agentId)
+						?.id || null,
+				deviceId:
+					formattedDevices?.find(
+						(device) => device.infos === deviceId
+					)?.id || null,
 			} as LineUpdateType;
 
 			// Validation du format des données via un schéma Zod
@@ -324,9 +328,19 @@ export default function ActiveLines() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			// Si l'appareil a changé
+			if (data.deviceId !== row.original.deviceId) {
+				console.log("Changement d'appareil");
+			}
+
+			if (data.agentId !== row.original.agentId) {
+				console.log('Changement de propriétaire');
+			}
+
 			setValidationErrors({});
-			updateLine(data);
-			table.setEditingRow(null);
+			// updateLine(data);
+			// table.setEditingRow(null);
 		};
 
 	//DELETE action

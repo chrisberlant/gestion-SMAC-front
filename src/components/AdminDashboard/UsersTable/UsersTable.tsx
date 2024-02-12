@@ -84,6 +84,7 @@ export default function UsersTable() {
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
+					allowDeselect: false,
 					error: validationErrors?.role,
 					searchable: false, // Désactiver la recherche
 					onFocus: () =>

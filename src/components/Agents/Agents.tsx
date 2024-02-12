@@ -176,6 +176,7 @@ export default function AgentsTable() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
+					allowDeselect: false,
 					error: validationErrors?.serviceId,
 					searchable: true,
 					onFocus: () =>

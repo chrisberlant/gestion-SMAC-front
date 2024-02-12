@@ -8,14 +8,66 @@ main.loginPage {
 	}
 
 	.form {
+		display: flex;
+		flex-direction: column;
 		min-height: 100vh;
 		border-right: rem(1px) solid
 			light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-7));
 		max-width: rem(500px);
 		padding-top: rem(80px);
 
-		@media (max-width: $mantine-breakpoint-sm) {
+		@media (max-width: 768px) {
 			max-width: 100%;
+		}
+
+		.serverStatus {
+			/* width: 100%; */
+			align-self: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+			position: absolute;
+			bottom: 2rem;
+			.statusDot {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				display: inline-block;
+				margin-right: 5px;
+			}
+			.statusGreen {
+				color: #28a745;
+				border-radius: 20px;
+				padding: 2px 10px 3px;
+				background-color: #e6f4ea;
+				.statusDot {
+					background-color: #28a745;
+				}
+				.statusDotAnimated {
+					animation: pulse 1s infinite;
+					@keyframes pulse {
+						0% {
+							transform: scale(1);
+						}
+						50% {
+							transform: scale(1.2);
+						}
+						100% {
+							transform: scale(1);
+						}
+					}
+				}
+			}
+			.statusRed {
+				color: #dc3545;
+				background-color: #f7e8e9;
+				border-radius: 20px;
+				padding: 3px 10px;
+				.statusDot {
+					background-color: #dc3545;
+				}
+			}
 		}
 	}
 
@@ -29,50 +81,5 @@ main.loginPage {
 			var(--mantine-color-white)
 		);
 		font-family: Greycliff CF, var(--mantine-font-family);
-	}
-
-	.serverStatus {
-		position: absolute;
-		bottom: 20px;
-		left: 150px;
-		.statusDot {
-			width: 10px;
-			height: 10px;
-			border-radius: 50%;
-			display: inline-block;
-			margin-right: 5px;
-		}
-		.statusGreen {
-			color: #28a745;
-			border-radius: 20px;
-			padding: 2px 10px 3px;
-			background-color: #e6f4ea;
-			.statusDot {
-				background-color: #28a745;
-			}
-			.statusDotAnimated {
-				animation: pulse 1s infinite;
-				@keyframes pulse {
-					0% {
-						transform: scale(1);
-					}
-					50% {
-						transform: scale(1.2);
-					}
-					100% {
-						transform: scale(1);
-					}
-				}
-			}
-		}
-		.statusRed {
-			color: #dc3545;
-			background-color: #f7e8e9;
-			border-radius: 20px;
-			padding: 3px 10px;
-			.statusDot {
-				background-color: #dc3545;
-			}
-		}
 	}
 }
