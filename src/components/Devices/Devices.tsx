@@ -83,6 +83,7 @@ export default function DevicesTable() {
 
 				return {
 					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
+					vip: agent.vip,
 					id: agent.id,
 				};
 			}),
@@ -92,14 +93,12 @@ export default function DevicesTable() {
 	// La même chose pour les modèles
 	const formattedModels = useMemo(
 		() =>
-			models?.map((model) => {
-				return {
-					infos: `${model.brand} ${model.reference}${
-						model.storage ? ` ${model.storage}` : ''
-					}`,
-					id: model.id,
-				};
-			}),
+			models?.map((model) => ({
+				infos: `${model.brand} ${model.reference}${
+					model.storage ? ` ${model.storage}` : ''
+				}`,
+				id: model.id,
+			})),
 		[models]
 	);
 
@@ -122,15 +121,15 @@ export default function DevicesTable() {
 							imei: undefined,
 						}),
 				},
-				// enableClickToCopy: true,
-				// mantineCopyButtonProps: {
-				// 	style: { fontSize: 14 },
-				// },
+				enableClickToCopy: true,
+				mantineCopyButtonProps: {
+					style: { fontSize: 14 },
+				},
 			},
 			{
 				header: 'Statut',
 				id: 'status',
-				accessorFn: (row) => (!row.status ? 'En stock' : row.status),
+				accessorFn: (row) => row.status || 'En stock',
 				size: 150,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -289,6 +288,16 @@ export default function DevicesTable() {
 							...validationErrors,
 							agentId: undefined,
 						}),
+				},
+				Cell: ({ row }) => {
+					const currentAgent = formattedAgents?.find(
+						(agent) => agent.id === row.original.agentId
+					);
+					return (
+						<span className={currentAgent?.vip ? 'vip-text' : ''}>
+							{currentAgent?.infos}
+						</span>
+					);
 				},
 			},
 		],

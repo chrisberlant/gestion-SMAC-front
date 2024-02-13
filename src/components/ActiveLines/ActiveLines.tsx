@@ -1,4 +1,4 @@
-import { Loader, Text } from '@mantine/core';
+import { Button, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
@@ -124,7 +124,8 @@ export default function ActiveLines() {
 			},
 			{
 				header: 'Profil',
-				accessorKey: 'profile',
+				id: 'profile',
+				accessorFn: (row) => row.profile || 'VD',
 				editVariant: 'select',
 				size: 50,
 				mantineEditSelectProps: {
@@ -141,7 +142,8 @@ export default function ActiveLines() {
 			},
 			{
 				header: 'Statut',
-				accessorKey: 'status',
+				id: 'status',
+				accessorFn: (row) => row.status || 'Active',
 				editVariant: 'select',
 				size: 90,
 				mantineEditSelectProps: {
@@ -200,36 +202,6 @@ export default function ActiveLines() {
 						</span>
 					);
 				},
-
-				// accessorFn: (row) => (
-				// 	<Flex gap='xs' justify='center' align='center'>
-				// 		<Tooltip label={`Copier ${row.agent.email}`}>
-				// 			<ActionIcon
-				// 				size='xs'
-				// 				onClick={() => {
-				// 					navigator.clipboard.writeText(
-				// 						row.agent.email
-				// 					);
-				// 					toast.info(
-				// 						'Adresse e-mail copiée dans le presse-papiers'
-				// 					);
-				// 				}}
-				// 			>
-				// 				<IconCopy />
-				// 			</ActionIcon>
-				// 		</Tooltip>
-				// 		<Tooltip label={`E-mail à ${row.agent.email}`}>
-				// 			<ActionIcon
-				// 				size='xs'
-				// 				onClick={() =>
-				// 					sendEmail(row.agent.email, '', '')
-				// 				}
-				// 			>
-				// 				<IconMail />
-				// 			</ActionIcon>
-				// 		</Tooltip>
-				// 	</Flex>
-				// ),
 			},
 			{
 				header: 'Appareil',
@@ -269,6 +241,8 @@ export default function ActiveLines() {
 		async ({ values, exitCreatingMode }) => {
 			const { number, profile, status, comments, agentId, deviceId } =
 				values;
+			const agentFullName = agentId.split(' - ')[0];
+			const deviceFullName = deviceId;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				number,
@@ -293,6 +267,80 @@ export default function ActiveLines() {
 				return setValidationErrors(errors);
 			}
 
+			// Recherche si l'appareil sélectionné est déjà possédé par un autre agent
+			if (deviceId) {
+				const newAttributedDevice = devices?.find(
+					(device) => device.id === data.deviceId
+				);
+				// Si l'agent actuellement attribué est différent
+				if (newAttributedDevice?.agentId !== data.agentId) {
+					const oldOwner = agents?.find(
+						(agent) => agent.id === newAttributedDevice?.agentId
+					);
+					const oldOwnerFullName = `${oldOwner?.lastName} ${oldOwner?.firstName}`;
+					// TODO Modale confirmation
+					return modals.open({
+						title: 'Appareil déjà affecté à un autre agent',
+						size: 'lg',
+						centered: true,
+						children: (
+							<>
+								<Text>
+									L'appareil {deviceFullName} appartient déjà
+									à l'agent{' '}
+									<span className='bold-text'>
+										{oldOwnerFullName}
+									</span>
+									.
+								</Text>
+								<Text>
+									Voulez-vous le réaffecter à{' '}
+									<span className='bold-text'>
+										{agentFullName}{' '}
+									</span>
+									?
+								</Text>
+								<Text>
+									La ligne en cours de création sera
+									automatiquement associée au propriétaire de
+									l'appareil.
+								</Text>
+								<Button
+									mt='lg'
+									mx='md'
+									onClick={() => {
+										data.agentId = oldOwner?.id;
+										createLine(data);
+										modals.closeAll();
+									}}
+								>
+									Le laisser affecté à {oldOwnerFullName}
+								</Button>
+								<Button
+									mt='lg'
+									mx='md'
+									color='rgba(68, 145, 42, 1)'
+									onClick={() => {
+										createLine(data);
+										modals.closeAll();
+									}}
+								>
+									Confirmer la réaffectation à {agentFullName}
+								</Button>
+								<Button
+									fullWidth
+									mt='xl'
+									variant='default'
+									onClick={() => modals.closeAll()}
+								>
+									Annuler
+								</Button>
+							</>
+						),
+					});
+				}
+			}
+
 			setValidationErrors({});
 			createLine(data);
 			exitCreatingMode();
@@ -304,7 +352,7 @@ export default function ActiveLines() {
 			const { number, profile, status, comments, deviceId, agentId } =
 				values;
 			// Formatage des informations nécessaires pour la validation du schéma
-			const data = {
+			const newData = {
 				id: row.original.id,
 				number,
 				profile,
@@ -320,7 +368,7 @@ export default function ActiveLines() {
 			} as LineUpdateType;
 
 			// Validation du format des données via un schéma Zod
-			const validation = lineUpdateSchema.safeParse(data);
+			const validation = lineUpdateSchema.safeParse(newData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -330,11 +378,25 @@ export default function ActiveLines() {
 			}
 
 			// Si l'appareil a changé
-			if (data.deviceId !== row.original.deviceId) {
+			if (newData.deviceId !== row.original.deviceId) {
 				console.log("Changement d'appareil");
+				// Si un nouvel appareil est affecté (non nul)
+				if (newData.deviceId) {
+					// Recherche de l'ancien propriétaire
+					const currentOwner = devices?.find(
+						(device) => device.id === newData.deviceId
+					)?.agentId;
+					if (currentOwner !== newData.agentId) {
+						console.log('Appareil affecté à un autre agent');
+						// TODO Ouvrir modale de confirmation de changement
+						if (!newData.agentId)
+							console.log('Pas de nouveau propriétaire');
+						// TODO Ouvrir modale d'affectation automatique
+					} else console.log('Appareil appartenant au même agent');
+				}
 			}
 
-			if (data.agentId !== row.original.agentId) {
+			if (newData.agentId !== row.original.agentId) {
 				console.log('Changement de propriétaire');
 			}
 

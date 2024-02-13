@@ -7,7 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 dayjs.extend(customParseFormat);
 
-interface DateInputProps {
+interface DateChoiceProps {
 	defaultValue: string | null;
 	setStateValue: Dispatch<SetStateAction<string | null>>;
 }
@@ -15,7 +15,7 @@ interface DateInputProps {
 export default function DateChoice({
 	defaultValue,
 	setStateValue,
-}: DateInputProps) {
+}: DateChoiceProps) {
 	// Valeur utilisée au format date dans le calendrier
 	const [value, setValue] = useState<DateValue | null>(
 		defaultValue ? new Date(defaultValue) : null

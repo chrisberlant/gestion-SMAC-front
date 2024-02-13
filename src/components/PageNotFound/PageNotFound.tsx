@@ -31,7 +31,7 @@ export default function PageNotFound() {
 							) : (
 								<Button
 									size='md'
-									onClick={() => navigate('/devices')}
+									onClick={() => navigate('/active-lines')}
 								>
 									Retour à la page d'accueil
 								</Button>

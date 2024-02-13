@@ -1,7 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { UseFormReturnType } from '@mantine/form';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
 	UserInfosWithoutRoleType,
@@ -24,7 +23,6 @@ export const useLogin = (
 	form: UseFormReturnType<UserLoginType>,
 	toggleOverlay: () => void
 ) => {
-	const navigate = useNavigate();
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
@@ -37,7 +35,6 @@ export const useLogin = (
 			queryClient.setQueryData(['currentUser'], user.loggedUser);
 			localStorage.setItem('smac_token', user.smac_token);
 			toast.info(`Bienvenue, ${user!.loggedUser.firstName} !`);
-			navigate('/devices');
 		},
 		onError: () => {
 			toggleOverlay();

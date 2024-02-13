@@ -25,11 +25,7 @@ const queryClient = new QueryClient({
 				}
 			}
 		},
-		onSuccess: (_, query) => {
-			if (query.meta?.loginStatusQuery) {
-				window.location.href = '/devices';
-			}
-		},
+		onSuccess: () => {},
 	}),
 
 	mutationCache: new MutationCache({
