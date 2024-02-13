@@ -159,19 +159,6 @@ export default function ActiveLines() {
 				},
 			},
 			{
-				header: 'Commentaires',
-				accessorKey: 'comments',
-				size: 90,
-				mantineEditTextInputProps: {
-					error: validationErrors?.comments,
-					onFocus: () =>
-						setValidationErrors({
-							...validationErrors,
-							comments: undefined,
-						}),
-				},
-			},
-			{
 				header: 'Propriétaire',
 				id: 'agentId',
 				accessorFn: (row) => {
@@ -229,6 +216,19 @@ export default function ActiveLines() {
 						setValidationErrors({
 							...validationErrors,
 							status: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Commentaires',
+				accessorKey: 'comments',
+				size: 90,
+				mantineEditTextInputProps: {
+					error: validationErrors?.comments,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							comments: undefined,
 						}),
 				},
 			},
@@ -311,6 +311,7 @@ export default function ActiveLines() {
 									onClick={() => {
 										data.agentId = oldOwner?.id;
 										createLine(data);
+										exitCreatingMode();
 										modals.closeAll();
 									}}
 								>
@@ -322,6 +323,7 @@ export default function ActiveLines() {
 									color='rgba(68, 145, 42, 1)'
 									onClick={() => {
 										createLine(data);
+										exitCreatingMode();
 										modals.closeAll();
 									}}
 								>

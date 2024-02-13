@@ -182,6 +182,62 @@ export default function DevicesTable() {
 				},
 			},
 			{
+				header: 'Modèle',
+				id: 'modelId',
+				accessorFn: (row) => {
+					const currentModel = models?.find(
+						(model) => model.id === row.modelId
+					);
+					return `${currentModel?.brand} ${currentModel?.reference}${
+						currentModel?.storage ? ` ${currentModel.storage}` : ''
+					}`;
+				},
+				editVariant: 'select',
+				size: 100,
+				mantineEditSelectProps: {
+					data: formattedModels?.map((model) => model.infos),
+					allowDeselect: false,
+					error: validationErrors?.modelId,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							modelId: undefined,
+						}),
+				},
+			},
+			{
+				header: 'Propriétaire',
+				id: 'agentId',
+				accessorFn: (row) => {
+					return formattedAgents?.find(
+						(agent) => agent.id === row.agentId
+					)?.infos;
+				},
+				editVariant: 'select',
+				size: 100,
+				mantineEditSelectProps: {
+					data: formattedAgents?.map((agent) => agent.infos),
+					allowDeselect: false,
+					clearable: true,
+					error: validationErrors?.agentId,
+					onFocus: () =>
+						setValidationErrors({
+							...validationErrors,
+							agentId: undefined,
+						}),
+				},
+				Cell: ({ row }) => {
+					const currentAgent = formattedAgents?.find(
+						(agent) => agent.id === row.original.agentId
+					);
+					return (
+						<span className={currentAgent?.vip ? 'vip-text' : ''}>
+							{currentAgent?.infos}
+						</span>
+					);
+				},
+			},
+			{
 				header: 'Date de préparation',
 				accessorKey: 'preparationDate',
 				size: 100,
@@ -242,62 +298,6 @@ export default function DevicesTable() {
 							...validationErrors,
 							comments: undefined,
 						}),
-				},
-			},
-			{
-				header: 'Modèle',
-				id: 'modelId',
-				accessorFn: (row) => {
-					const currentModel = models?.find(
-						(model) => model.id === row.modelId
-					);
-					return `${currentModel?.brand} ${currentModel?.reference}${
-						currentModel?.storage ? ` ${currentModel.storage}` : ''
-					}`;
-				},
-				editVariant: 'select',
-				size: 100,
-				mantineEditSelectProps: {
-					data: formattedModels?.map((model) => model.infos),
-					allowDeselect: false,
-					error: validationErrors?.modelId,
-					onFocus: () =>
-						setValidationErrors({
-							...validationErrors,
-							modelId: undefined,
-						}),
-				},
-			},
-			{
-				header: 'Propriétaire',
-				id: 'agentId',
-				accessorFn: (row) => {
-					return formattedAgents?.find(
-						(agent) => agent.id === row.agentId
-					)?.infos;
-				},
-				editVariant: 'select',
-				size: 100,
-				mantineEditSelectProps: {
-					data: formattedAgents?.map((agent) => agent.infos),
-					allowDeselect: false,
-					clearable: true,
-					error: validationErrors?.agentId,
-					onFocus: () =>
-						setValidationErrors({
-							...validationErrors,
-							agentId: undefined,
-						}),
-				},
-				Cell: ({ row }) => {
-					const currentAgent = formattedAgents?.find(
-						(agent) => agent.id === row.original.agentId
-					);
-					return (
-						<span className={currentAgent?.vip ? 'vip-text' : ''}>
-							{currentAgent?.infos}
-						</span>
-					);
 				},
 			},
 		],

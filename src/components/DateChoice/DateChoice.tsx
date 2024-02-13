@@ -1,10 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { DateInput, DateValue } from '@mantine/dates';
 import { dateUsFormatting } from '../../utils/functions';
-
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-
 dayjs.extend(customParseFormat);
 
 interface DateChoiceProps {
