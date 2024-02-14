@@ -251,7 +251,7 @@ export default function ActiveLines() {
 			if (deviceId) deviceFullName = deviceId;
 
 			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
-			const data = {
+			const creationData = {
 				number,
 				profile,
 				status,
@@ -267,7 +267,7 @@ export default function ActiveLines() {
 					: null,
 			} as LineCreationType;
 
-			const validation = lineCreationSchema.safeParse(data);
+			const validation = lineCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -280,15 +280,15 @@ export default function ActiveLines() {
 			// Si un appareil a été défini
 			if (deviceFullName) {
 				const newAttributedDevice = devices?.find(
-					(device) => device.id === data.deviceId
+					(device) => device.id === creationData.deviceId
 				);
 
 				// Si un propriétaire a été renseigné et qu'il est différent de l'actuel
 				if (
-					data.agentId &&
-					newAttributedDevice?.agentId !== data.agentId
+					creationData.agentId &&
+					newAttributedDevice?.agentId !== creationData.agentId
 				) {
-					// Si l'appareil possédait un propriétaire
+					// Si l'appareil possédait déjà un propriétaire
 					if (newAttributedDevice?.agentId) {
 						// Récupération des informations du propriétaire actuel
 						const currentOwner = agents?.find(
@@ -317,17 +317,15 @@ export default function ActiveLines() {
 										</span>
 										?
 									</Text>
-									<Text>
-										La ligne en cours de création sera
-										automatiquement associée au propriétaire
-										de l'appareil.
-									</Text>
 									<Button
 										mt='lg'
 										mx='md'
 										onClick={() => {
-											data.agentId = currentOwner?.id;
-											createLine(data);
+											creationData.agentId =
+												currentOwner?.id;
+											createLine({
+												data: creationData,
+											});
 											setValidationErrors({});
 											exitCreatingMode();
 											modals.closeAll();
@@ -341,7 +339,10 @@ export default function ActiveLines() {
 										mx='md'
 										color='rgba(68, 145, 42, 1)'
 										onClick={() => {
-											createLine(data);
+											createLine({
+												data: creationData,
+												updateDevice: true,
+											});
 											setValidationErrors({});
 											exitCreatingMode();
 											modals.closeAll();
@@ -388,7 +389,10 @@ export default function ActiveLines() {
 							labels: { confirm: 'Confirm', cancel: 'Cancel' },
 							onCancel: modals.closeAll,
 							onConfirm: () => {
-								createLine(data);
+								createLine({
+									data: creationData,
+									updateDevice: true,
+								});
 								setValidationErrors({});
 								exitCreatingMode();
 								modals.closeAll();
@@ -398,7 +402,7 @@ export default function ActiveLines() {
 				}
 
 				setValidationErrors({});
-				createLine(data);
+				createLine({ data: creationData });
 				exitCreatingMode();
 			}
 		};
@@ -409,7 +413,7 @@ export default function ActiveLines() {
 			const { number, profile, status, comments, deviceId, agentId } =
 				values;
 			// Formatage des informations nécessaires pour la validation du schéma
-			const newData = {
+			const updateData = {
 				id: row.original.id,
 				number,
 				profile,
@@ -425,7 +429,7 @@ export default function ActiveLines() {
 			} as LineUpdateType;
 
 			// Validation du format des données via un schéma Zod
-			const validation = lineUpdateSchema.safeParse(newData);
+			const validation = lineUpdateSchema.safeParse(updateData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -435,25 +439,25 @@ export default function ActiveLines() {
 			}
 
 			// Si l'appareil a changé
-			if (newData.deviceId !== row.original.deviceId) {
+			if (updateData.deviceId !== row.original.deviceId) {
 				console.log("Changement d'appareil");
 				// Si un nouvel appareil est affecté (non nul)
-				if (newData.deviceId) {
+				if (updateData.deviceId) {
 					// Recherche de l'ancien propriétaire
 					const currentOwner = devices?.find(
-						(device) => device.id === newData.deviceId
+						(device) => device.id === updateData.deviceId
 					)?.agentId;
-					if (currentOwner !== newData.agentId) {
+					if (currentOwner !== updateData.agentId) {
 						console.log('Appareil affecté à un autre agent');
 						// TODO Ouvrir modale de confirmation de changement
-						if (!newData.agentId)
+						if (!updateData.agentId)
 							console.log('Pas de nouveau propriétaire');
 						// TODO Ouvrir modale d'affectation automatique
 					} else console.log('Appareil appartenant au même agent');
 				}
 			}
 
-			if (newData.agentId !== row.original.agentId) {
+			if (updateData.agentId !== row.original.agentId) {
 				console.log('Changement de propriétaire');
 			}
 

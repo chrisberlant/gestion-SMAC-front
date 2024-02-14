@@ -4,6 +4,7 @@ import fetchApi from './fetchApi';
 import queryClient from './queryClient';
 import { LineType, LineCreationType, LineUpdateType } from '../types/line';
 import { IdSelectionType } from '../types';
+import { DeviceType } from '../types/device';
 
 export const useGetAllLines = () => {
 	return useQuery({
@@ -16,20 +17,40 @@ export const useGetAllLines = () => {
 
 export const useCreateLine = () => {
 	return useMutation({
-		mutationFn: async (line: LineCreationType) => {
-			return (await fetchApi('/createLine', 'POST', line)) as LineType;
+		mutationFn: async ({
+			data,
+		}: {
+			data: LineCreationType;
+			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
+		}) => {
+			return (await fetchApi('/createLine', 'POST', data)) as LineType;
 		},
 
 		onMutate: async (newLine) => {
-			await queryClient.cancelQueries({ queryKey: ['lines'] });
+			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
+			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
+			const previousDevices = queryClient.getQueryData(['devices']);
+			// Ajout de la nouvelle ligne dans le tableau
 			queryClient.setQueryData(['lines'], (lines: LineType[]) => [
 				...lines,
 				{
-					...newLine,
+					...newLine.data,
 				},
 			]);
-			return previousLines;
+
+			if (newLine.updateDevice) {
+				// Si nécessaire, mise à jour des appareils pour définir le nouveau propriétaire
+				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
+					devices.map((device) =>
+						device.id === newLine.data.deviceId
+							? { ...device, agentId: newLine.data.agentId }
+							: device
+					)
+				);
+			}
+
+			return { previousLines, previousDevices };
 		},
 		onSuccess: (newLine) => {
 			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
@@ -41,8 +62,14 @@ export const useCreateLine = () => {
 			);
 			toast.success('Ligne créée avec succès');
 		},
-		onError: (_, __, previousLines) =>
-			queryClient.setQueryData(['lines'], previousLines),
+		onError: (_, { updateDevice }, previousValues) => {
+			queryClient.setQueryData(['lines'], previousValues?.previousLines);
+			if (updateDevice)
+				queryClient.setQueryData(
+					['devices'],
+					previousValues?.previousDevices
+				);
+		},
 	});
 };
 
