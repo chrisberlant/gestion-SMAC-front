@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { Button, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useGetAllServices } from '@utils/serviceQueries';
@@ -161,11 +162,9 @@ export default function ActiveLines() {
 			{
 				header: 'Propriétaire',
 				id: 'agentId',
-				accessorFn: (row) => {
-					return formattedAgents?.find(
-						(agent) => agent.id === row.agentId
-					)?.infos;
-				},
+				accessorFn: (row) =>
+					formattedAgents?.find((agent) => agent.id === row.agentId)
+						?.infos,
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
@@ -193,18 +192,11 @@ export default function ActiveLines() {
 			{
 				header: 'Appareil',
 				id: 'deviceId',
-				accessorFn: (row) => {
-					const currentDevice = formattedDevices?.find(
+				accessorFn: (row) =>
+					formattedDevices?.find(
 						(device) => device.id === row.deviceId
-					);
-					return currentDevice?.infos ? (
-						currentDevice?.infos
-					) : (
-						<span className='personal-device-text'>
-							Aucun appareil (ou personnel)
-						</span>
-					);
-				},
+					)?.infos,
+
 				editVariant: 'select',
 				size: 90,
 				mantineEditSelectProps: {
@@ -217,6 +209,18 @@ export default function ActiveLines() {
 							...validationErrors,
 							status: undefined,
 						}),
+				},
+				Cell: ({ row }) => {
+					const currentDevice = formattedDevices?.find(
+						(device) => device.id === row.original.deviceId
+					)?.infos;
+					return (
+						currentDevice ?? (
+							<span className='personal-device-text'>
+								Aucun appareil (ou personnel)
+							</span>
+						)
+					);
 				},
 			},
 			{
@@ -241,20 +245,26 @@ export default function ActiveLines() {
 		async ({ values, exitCreatingMode }) => {
 			const { number, profile, status, comments, agentId, deviceId } =
 				values;
-			const agentFullName = agentId.split(' - ')[0];
-			const deviceFullName = deviceId;
-			// Formatage des informations nécessaires pour la validation du schéma
+			let agentFullName: string | null = null;
+			let deviceFullName: string | null = null;
+			if (agentId) agentFullName = agentId.split(' - ')[0];
+			if (deviceId) deviceFullName = deviceId;
+
+			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
 			const data = {
 				number,
 				profile,
 				status,
 				comments,
-				agentId: formattedAgents?.find(
-					(agent) => agent.infos === agentId
-				)?.id,
-				deviceId: formattedDevices?.find(
-					(device) => device.infos === deviceId
-				)?.id,
+				agentId: agentId
+					? formattedAgents?.find((agent) => agent.infos === agentId)
+							?.id
+					: null,
+				deviceId: deviceId
+					? formattedDevices?.find(
+							(device) => device.infos === deviceId
+					  )?.id
+					: null,
 			} as LineCreationType;
 
 			const validation = lineCreationSchema.safeParse(data);
@@ -267,85 +277,130 @@ export default function ActiveLines() {
 				return setValidationErrors(errors);
 			}
 
-			// Recherche si l'appareil sélectionné est déjà possédé par un autre agent
-			if (deviceId) {
+			// Si un appareil a été défini
+			if (deviceFullName) {
 				const newAttributedDevice = devices?.find(
 					(device) => device.id === data.deviceId
 				);
-				// Si l'agent actuellement attribué est différent
-				if (newAttributedDevice?.agentId !== data.agentId) {
-					const oldOwner = agents?.find(
-						(agent) => agent.id === newAttributedDevice?.agentId
-					);
-					const oldOwnerFullName = `${oldOwner?.lastName} ${oldOwner?.firstName}`;
-					// TODO Modale confirmation
-					return modals.open({
-						title: 'Appareil déjà affecté à un autre agent',
-						size: 'lg',
-						centered: true,
-						children: (
-							<>
-								<Text>
-									L'appareil {deviceFullName} appartient déjà
-									à l'agent{' '}
-									<span className='bold-text'>
-										{oldOwnerFullName}
-									</span>
-									.
-								</Text>
-								<Text>
-									Voulez-vous le réaffecter à{' '}
-									<span className='bold-text'>
-										{agentFullName}{' '}
-									</span>
-									?
-								</Text>
-								<Text>
-									La ligne en cours de création sera
-									automatiquement associée au propriétaire de
-									l'appareil.
-								</Text>
-								<Button
-									mt='lg'
-									mx='md'
-									onClick={() => {
-										data.agentId = oldOwner?.id;
-										createLine(data);
-										exitCreatingMode();
-										modals.closeAll();
-									}}
-								>
-									Le laisser affecté à {oldOwnerFullName}
-								</Button>
-								<Button
-									mt='lg'
-									mx='md'
-									color='rgba(68, 145, 42, 1)'
-									onClick={() => {
-										createLine(data);
-										exitCreatingMode();
-										modals.closeAll();
-									}}
-								>
-									Confirmer la réaffectation à {agentFullName}
-								</Button>
-								<Button
-									fullWidth
-									mt='xl'
-									variant='default'
-									onClick={() => modals.closeAll()}
-								>
-									Annuler
-								</Button>
-							</>
-						),
-					});
-				}
-			}
 
-			setValidationErrors({});
-			createLine(data);
-			exitCreatingMode();
+				// Si un propriétaire a été renseigné et qu'il est différent de l'actuel
+				if (
+					data.agentId &&
+					newAttributedDevice?.agentId !== data.agentId
+				) {
+					// Si l'appareil possédait un propriétaire
+					if (newAttributedDevice?.agentId) {
+						// Récupération des informations du propriétaire actuel
+						const currentOwner = agents?.find(
+							(agent) => agent.id === newAttributedDevice?.agentId
+						);
+						const currentOwnerFullName = `${currentOwner?.lastName} ${currentOwner?.firstName}`;
+
+						return modals.open({
+							title: 'Appareil déjà affecté à un autre agent',
+							size: 'lg',
+							centered: true,
+							children: (
+								<>
+									<Text>
+										L'appareil {deviceFullName} appartient
+										déjà à l'agent{' '}
+										<span className='bold-text'>
+											{currentOwnerFullName}
+										</span>
+										.
+									</Text>
+									<Text>
+										Voulez-vous le réaffecter à{' '}
+										<span className='bold-text'>
+											{agentFullName}{' '}
+										</span>
+										?
+									</Text>
+									<Text>
+										La ligne en cours de création sera
+										automatiquement associée au propriétaire
+										de l'appareil.
+									</Text>
+									<Button
+										mt='lg'
+										mx='md'
+										onClick={() => {
+											data.agentId = currentOwner?.id;
+											createLine(data);
+											setValidationErrors({});
+											exitCreatingMode();
+											modals.closeAll();
+										}}
+									>
+										Le laisser affecté à{' '}
+										{currentOwnerFullName}
+									</Button>
+									<Button
+										mt='lg'
+										mx='md'
+										color='rgba(68, 145, 42, 1)'
+										onClick={() => {
+											createLine(data);
+											setValidationErrors({});
+											exitCreatingMode();
+											modals.closeAll();
+										}}
+									>
+										Confirmer la réaffectation à{' '}
+										{agentFullName}
+									</Button>
+									<Button
+										fullWidth
+										mt='xl'
+										variant='default'
+										onClick={() => modals.closeAll()}
+									>
+										Annuler
+									</Button>
+								</>
+							),
+						});
+					}
+
+					// Si aucun propriétaire actuellement affecté
+					else {
+						return modals.openConfirmModal({
+							title: "Affectation automatique de l'appareil",
+							size: 'lg',
+							centered: true,
+							children: (
+								<>
+									<Text>
+										L'appareil {deviceFullName} n'a
+										actuellement aucun propriétaire.
+									</Text>
+									<Text mb='xl'>
+										Si vous continuez, il sera affecté
+										automatiquement à l'agent{' '}
+										<span className='bold-text'>
+											{agentFullName}
+										</span>
+										.
+									</Text>
+								</>
+							),
+							labels: { confirm: 'Confirm', cancel: 'Cancel' },
+							onCancel: modals.closeAll,
+							onConfirm: () => {
+								createLine(data);
+								setValidationErrors({});
+								exitCreatingMode();
+								modals.closeAll();
+							},
+						});
+					}
+				}
+
+				setValidationErrors({});
+				createLine(data);
+				exitCreatingMode();
+			}
 		};
 
 	//UPDATE action

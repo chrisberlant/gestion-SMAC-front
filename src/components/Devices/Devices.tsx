@@ -208,11 +208,9 @@ export default function DevicesTable() {
 			{
 				header: 'Propriétaire',
 				id: 'agentId',
-				accessorFn: (row) => {
-					return formattedAgents?.find(
-						(agent) => agent.id === row.agentId
-					)?.infos;
-				},
+				accessorFn: (row) =>
+					formattedAgents?.find((agent) => agent.id === row.agentId)
+						?.infos,
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
@@ -255,22 +253,14 @@ export default function DevicesTable() {
 				},
 				Edit: ({ row }) => (
 					<DateChoice
-						defaultValue={
-							row.original.preparationDate
-								? row.original.preparationDate
-								: null
-						}
+						defaultValue={row.original.preparationDate}
 						setStateValue={setPreparationDateState}
 					/>
 				),
 			},
 			{
 				header: "Date d'attribution",
-				id: 'attributionDate',
-				accessorFn: (row) => {
-					if (row.attributionDate)
-						return dateFrFormatting(row.attributionDate);
-				},
+				accessorKey: 'attributionDate',
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
@@ -279,6 +269,10 @@ export default function DevicesTable() {
 							...validationErrors,
 							attributionDate: undefined,
 						}),
+				},
+				Cell: ({ row }) => {
+					if (row.original.attributionDate)
+						return dateFrFormatting(row.original.attributionDate);
 				},
 				Edit: ({ row }) => (
 					<DateChoice
@@ -308,6 +302,7 @@ export default function DevicesTable() {
 	const handleCreateDevice: MRT_TableOptions<DeviceType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
 			const { imei, status, comments, modelId, agentId } = values;
+
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				imei,
@@ -319,9 +314,10 @@ export default function DevicesTable() {
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)?.id,
-				agentId: formattedAgents?.find(
-					(agent) => agent.infos === agentId
-				)?.id,
+				agentId: agentId
+					? formattedAgents?.find((agent) => agent.infos === agentId)
+							?.id
+					: null,
 			} as DeviceCreationType;
 
 			const validation = deviceCreationSchema.safeParse(data);
@@ -343,6 +339,7 @@ export default function DevicesTable() {
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { imei, status, comments, modelId, agentId } = values;
+			console.log(values);
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				id: row.original.id,
@@ -352,13 +349,15 @@ export default function DevicesTable() {
 				preparationDate: preparationDateState,
 				attributionDate: attributionDateState,
 				comments,
-				modelId: formattedModels!.find(
+				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)!.id,
-				agentId: formattedAgents!.find(
-					(agent) => agent.infos === agentId
-				)?.id,
+				agentId: agentId
+					? formattedAgents?.find((agent) => agent.infos === agentId)
+							?.id
+					: null,
 			} as DeviceUpdateType;
+
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {

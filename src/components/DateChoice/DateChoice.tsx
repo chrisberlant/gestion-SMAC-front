@@ -6,7 +6,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 interface DateChoiceProps {
-	defaultValue: string | null;
+	defaultValue: string;
 	setStateValue: Dispatch<SetStateAction<string | null>>;
 }
 

@@ -66,7 +66,9 @@ export const useUpdateAgent = () => {
 			const previousAgents = queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((agent) =>
-					agent.id === updatedAgent.id ? updatedAgent : agent
+					agent.id === updatedAgent.id
+						? { ...updatedAgent, devices: agent.devices }
+						: agent
 				)
 			);
 			return previousAgents;
