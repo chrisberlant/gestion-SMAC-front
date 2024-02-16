@@ -1,19 +1,19 @@
 import { Switch, rem } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface SwitchButtonProps {
 	defaultValue: boolean;
-	setStateValue: Dispatch<SetStateAction<boolean>>;
+	valueRef: React.MutableRefObject<boolean>;
 	size: 'lg' | 'md' | 'sm' | 'xl' | 'xs';
 	onLabel?: string;
 	offLabel?: string;
 }
 
-// Ce bouton permet de récupérer la valeur par défaut fournie et de mettre à jour un state booléen du composant dans lequel il est intégré
+// Ce bouton permet de récupérer la valeur par défaut fournie et de mettre à jour une ref booléen du composant dans lequel il est intégré
 export default function SwitchButton({
 	defaultValue,
-	setStateValue,
+	valueRef,
 	onLabel,
 	offLabel,
 	size,
@@ -21,17 +21,16 @@ export default function SwitchButton({
 	// State interne au bouton permettant de changer son style
 	const [checked, setChecked] = useState(defaultValue);
 
-	// Le state est du parent est initialisé via le booléen fourni
+	// La ref du parent est initialisée et modifiée par le state interne au composant
 	useEffect(() => {
-		setStateValue(defaultValue);
-	}, [defaultValue, setStateValue]);
+		valueRef.current = checked;
+	}, [checked, valueRef]);
 
 	return (
 		<Switch
 			checked={checked}
 			onChange={() => {
 				setChecked((value) => !value);
-				setStateValue((value) => !value);
 			}}
 			color='blue'
 			size={size}

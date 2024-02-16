@@ -18,7 +18,7 @@ import {
 	useMantineReactTable,
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
 	AgentCreationType,
 	AgentType,
@@ -49,7 +49,7 @@ export default function AgentsTable() {
 		Record<string, string | undefined>
 	>({});
 
-	const [vipState, setVipState] = useState(false);
+	const vipRef = useRef<boolean>(false);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -156,7 +156,7 @@ export default function AgentsTable() {
 					<SwitchButton
 						size='sm'
 						defaultValue={row.original.vip}
-						setStateValue={setVipState}
+						valueRef={vipRef}
 					/>
 				),
 				Cell: ({ row }) => (
@@ -215,7 +215,7 @@ export default function AgentsTable() {
 				lastName,
 				firstName,
 				email,
-				vip: vipState,
+				vip: vipRef.current,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
@@ -245,7 +245,7 @@ export default function AgentsTable() {
 				lastName,
 				firstName,
 				email,
-				vip: vipState,
+				vip: vipRef.current,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,

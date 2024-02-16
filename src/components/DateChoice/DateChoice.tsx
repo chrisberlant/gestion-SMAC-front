@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DateInput, DateValue } from '@mantine/dates';
 import { dateUsFormatting } from '../../utils/functions';
 import dayjs from 'dayjs';
@@ -7,23 +7,20 @@ dayjs.extend(customParseFormat);
 
 interface DateChoiceProps {
 	defaultValue: string;
-	setStateValue: Dispatch<SetStateAction<string | null>>;
+	dateRef: React.MutableRefObject<string | null>;
 }
 
-export default function DateChoice({
-	defaultValue,
-	setStateValue,
-}: DateChoiceProps) {
+export default function DateChoice({ defaultValue, dateRef }: DateChoiceProps) {
 	// Valeur utilisée au format date dans le calendrier
 	const [value, setValue] = useState<DateValue | null>(
 		defaultValue ? new Date(defaultValue) : null
 	);
 
 	useEffect(() => {
-		// Valeur utilisée au format string dans le composant parent
-		if (!defaultValue) return setStateValue(null);
-		setStateValue(defaultValue);
-	}, [defaultValue, setStateValue]);
+		// Valeur utilisée au format string dans la ref du composant parent
+		if (!value) dateRef.current = '';
+		else dateRef.current = dateUsFormatting(value.toISOString());
+	}, [dateRef, value]);
 
 	return (
 		<DateInput
@@ -33,7 +30,6 @@ export default function DateChoice({
 			value={value}
 			onChange={(e) => {
 				setValue(e);
-				setStateValue(dateUsFormatting(e?.toISOString()));
 			}}
 		/>
 	);

@@ -8,7 +8,7 @@ import {
 	MantineReactTable,
 	useMantineReactTable,
 } from 'mantine-react-table';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
 	DeviceCreationType,
 	DeviceType,
@@ -64,14 +64,10 @@ export default function DevicesTable() {
 		Record<string, string | undefined>
 	>({});
 
-	// States permettant de rendre interactifs des éléments
-	const [preparationDateState, setPreparationDateState] = useState<
-		string | null
-	>(null);
-	const [attributionDateState, setAttributionDateState] = useState<
-		string | null
-	>(null);
-	const [isNewState, setIsNewState] = useState(false);
+	// Ref permettant de récupérer les valeurs des enfants
+	const preparationDateRef = useRef<string>('');
+	const attributionDateRef = useRef<string>('');
+	const isNewRef = useRef<boolean>(true);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -171,7 +167,7 @@ export default function DevicesTable() {
 						<SwitchButton
 							size='lg'
 							defaultValue={defaultValue}
-							setStateValue={setIsNewState}
+							valueRef={isNewRef}
 							onLabel='Neuf'
 							offLabel='Occasion'
 						/>
@@ -254,7 +250,7 @@ export default function DevicesTable() {
 				Edit: ({ row }) => (
 					<DateChoice
 						defaultValue={row.original.preparationDate}
-						setStateValue={setPreparationDateState}
+						dateRef={preparationDateRef}
 					/>
 				),
 			},
@@ -277,7 +273,7 @@ export default function DevicesTable() {
 				Edit: ({ row }) => (
 					<DateChoice
 						defaultValue={row.original.attributionDate}
-						setStateValue={setAttributionDateState}
+						dateRef={attributionDateRef}
 					/>
 				),
 			},
@@ -307,9 +303,9 @@ export default function DevicesTable() {
 			const data = {
 				imei,
 				status,
-				isNew: isNewState,
-				preparationDate: preparationDateState,
-				attributionDate: attributionDateState,
+				isNew: isNewRef.current,
+				preparationDate: preparationDateRef.current,
+				attributionDate: preparationDateRef.current,
 				comments,
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
@@ -345,9 +341,9 @@ export default function DevicesTable() {
 				id: row.original.id,
 				imei,
 				status,
-				isNew: isNewState,
-				preparationDate: preparationDateState,
-				attributionDate: attributionDateState,
+				isNew: isNewRef.current,
+				preparationDate: preparationDateRef.current,
+				attributionDate: attributionDateRef.current,
 				comments,
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
