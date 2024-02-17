@@ -209,6 +209,62 @@ export function displayDeviceAlreadyAffectedToLineModal({
 	});
 }
 
+interface displayDeviceAlreadyAffectedToAgentLineModalProps {
+	createLine: ({ data, updateDevice }: createLineProps) => void;
+	exitCreatingMode: () => void;
+	setValidationErrors: (
+		value: React.SetStateAction<Record<string, string | undefined>>
+	) => void;
+	alreadyUsingDeviceLine: LineType;
+	deviceFullName: string;
+	lineOwnerFullName: string;
+	creationData: LineCreationType;
+}
+
+export function displayDeviceAlreadyAffectedToAgentLineModal({
+	createLine,
+	exitCreatingMode,
+	setValidationErrors,
+	alreadyUsingDeviceLine,
+	deviceFullName,
+	lineOwnerFullName,
+	creationData,
+}: displayDeviceAlreadyAffectedToAgentLineModalProps) {
+	return modals.openConfirmModal({
+		title: "Appareil déjà affecté à une autre ligne appartenant à l'agent",
+		size: 'lg',
+		centered: true,
+		children: (
+			<>
+				<Text mb='xs'>
+					L'appareil {deviceFullName} est actuellement affecté à la
+					ligne{' '}
+					<span className='bold-text'>
+						{alreadyUsingDeviceLine.number}
+					</span>{' '}
+					de l'agent{' '}
+					<span className='bold-text'>{lineOwnerFullName}</span>.
+				</Text>
+				<Text mb='xl'>
+					Si vous continuez, il sera désaffecté de la ligne{' '}
+					<span className='bold-text'>{creationData.number}</span>, le
+					propriétaire restera inchangé.
+				</Text>
+			</>
+		),
+		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
+		onCancel: modals.closeAll,
+		onConfirm: () => {
+			createLine({
+				data: creationData,
+			});
+			setValidationErrors({});
+			exitCreatingMode();
+			modals.closeAll();
+		},
+	});
+}
+
 interface displayDeviceHasOwnerModalProps {
 	createLine: ({ data, updateDevice }: createLineProps) => void;
 	exitCreatingMode: () => void;
