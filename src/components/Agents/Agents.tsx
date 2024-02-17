@@ -49,7 +49,8 @@ export default function AgentsTable() {
 		Record<string, string | undefined>
 	>({});
 
-	const vipRef = useRef<boolean>(false);
+	const vipRef = useRef<boolean>(true);
+	console.log(vipRef.current);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -155,7 +156,7 @@ export default function AgentsTable() {
 				Edit: ({ row }) => (
 					<SwitchButton
 						size='sm'
-						defaultValue={row.original.vip}
+						defaultValue={row.original.vip ? true : false}
 						valueRef={vipRef}
 					/>
 				),

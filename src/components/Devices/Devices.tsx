@@ -335,7 +335,7 @@ export default function DevicesTable() {
 	const handleSaveDevice: MRT_TableOptions<DeviceType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { imei, status, comments, modelId, agentId } = values;
-			console.log(values);
+
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				id: row.original.id,

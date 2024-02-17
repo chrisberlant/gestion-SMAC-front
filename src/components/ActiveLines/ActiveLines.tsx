@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Button, Loader, Text } from '@mantine/core';
+import { Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
@@ -27,7 +27,11 @@ import { useGetAllDevices } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import { alreadyAffectedDeviceModal } from '../../modals/lineModals';
+import {
+	displayDeviceAlreadyAffectedToAgentModal,
+	displayAutomaticAgentAffectationModal,
+	displayDeviceAlreadyAffectedToLineModal,
+} from '../../modals/lineModals';
 
 export default function ActiveLines() {
 	const {
@@ -119,10 +123,10 @@ export default function ActiveLines() {
 							number: undefined,
 						}),
 				},
-				// enableClickToCopy: true,
-				// mantineCopyButtonProps: {
-				// 	style: { fontSize: 14 },
-				// },
+				enableClickToCopy: true,
+				mantineCopyButtonProps: {
+					style: { fontSize: 14 },
+				},
 			},
 			{
 				header: 'Profil',
@@ -278,117 +282,67 @@ export default function ActiveLines() {
 				return setValidationErrors(errors);
 			}
 
-			// Si un appareil a été défini
+			// Si un appareil a été défini, des vérifications sont à effectuer
 			if (deviceFullName) {
-				const newAttributedDevice = devices?.find(
+				const currentOwnerId = devices?.find(
 					(device) => device.id === creationData.deviceId
-				);
+				)?.id;
 
 				// Recherche si l'appareil est déjà affecté à une ligne
 				const alreadyUsingDeviceLine = lines?.find(
 					(line) => line.deviceId === creationData.deviceId
 				);
 
+				// Si l'appareil est déjà affecté à une ligne
+				if (alreadyUsingDeviceLine) {
+					return displayDeviceAlreadyAffectedToLineModal({
+						createLine,
+						exitCreatingMode,
+						setValidationErrors,
+						alreadyUsingDeviceLine,
+						deviceFullName,
+						creationData,
+					});
+				}
+
 				// Si un propriétaire a été renseigné et qu'il est différent de l'actuel
 				if (
 					creationData.agentId &&
-					creationData.agentId !== newAttributedDevice?.agentId
+					creationData.agentId !== currentOwnerId
 				) {
-					// Si l'appareil possédait déjà un propriétaire
-					if (newAttributedDevice?.agentId) {
-						// Récupération des informations du propriétaire actuel
-						const currentOwner = agents?.find(
-							(agent) => agent.id === newAttributedDevice?.agentId
-						);
-						const currentOwnerFullName = `${currentOwner?.lastName} ${currentOwner?.firstName}`;
-
-						return alreadyAffectedDeviceModal({
+					// Si aucun propriétaire actuellement affecté
+					if (!currentOwnerId) {
+						return displayAutomaticAgentAffectationModal({
 							createLine,
 							exitCreatingMode,
 							setValidationErrors,
 							deviceFullName,
 							agentFullName,
 							creationData,
-							currentOwner,
-							currentOwnerFullName,
 						});
 					}
 
-					// Si aucun propriétaire actuellement affecté
-					else {
-						return modals.openConfirmModal({
-							title: "Affectation automatique de l'appareil",
-							size: 'lg',
-							centered: true,
-							children: (
-								<>
-									<Text>
-										L'appareil {deviceFullName} n'a
-										actuellement aucun propriétaire.
-									</Text>
-									<Text mb='xl'>
-										Si vous continuez, il sera affecté
-										automatiquement à l'agent{' '}
-										<span className='bold-text'>
-											{agentFullName}
-										</span>
-										.
-									</Text>
-								</>
-							),
-							labels: { confirm: 'Confirm', cancel: 'Cancel' },
-							onCancel: modals.closeAll,
-							onConfirm: () => {
-								createLine({
-									data: creationData,
-									updateDevice: true,
-								});
-								setValidationErrors({});
-								exitCreatingMode();
-								modals.closeAll();
-							},
-						});
-					}
-				} else if (alreadyUsingDeviceLine) {
-					// Si l'appareil est déjà affecté à une ligne
-					return modals.openConfirmModal({
-						title: 'Appareil déjà affecté à une autre ligne',
-						size: 'lg',
-						centered: true,
-						children: (
-							<>
-								<Text>
-									L'appareil {deviceFullName} est actuellement
-									affecté à la ligne{' '}
-									{alreadyUsingDeviceLine.number}
-								</Text>
-								<Text mb='xl'>
-									Si vous continuez, il sera affecté
-									automatiquement à la ligne{' '}
-									<span className='bold-text'>
-										{creationData.number}
-									</span>
-									.
-								</Text>
-							</>
-						),
-						labels: { confirm: 'Confirm', cancel: 'Cancel' },
-						onCancel: modals.closeAll,
-						onConfirm: () => {
-							createLine({
-								data: creationData,
-							});
-							setValidationErrors({});
-							exitCreatingMode();
-							modals.closeAll();
-						},
+					// Si l'appareil possédait déjà un propriétaire, récupération de ses infos
+					const currentOwner = agents?.find(
+						(agent) => agent.id === currentOwnerId
+					);
+					const currentOwnerFullName = `${currentOwner?.lastName} ${currentOwner?.firstName}`;
+					return displayDeviceAlreadyAffectedToAgentModal({
+						createLine,
+						exitCreatingMode,
+						setValidationErrors,
+						deviceFullName,
+						agentFullName,
+						creationData,
+						currentOwner,
+						currentOwnerFullName,
 					});
 				}
-
-				setValidationErrors({});
-				createLine({ data: creationData });
-				exitCreatingMode();
 			}
+
+			createLine({ data: creationData });
+			setValidationErrors({});
+			exitCreatingMode();
 		};
 
 	//UPDATE action
