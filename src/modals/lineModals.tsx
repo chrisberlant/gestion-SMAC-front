@@ -17,7 +17,6 @@ interface displayDeviceAlreadyAffectedToAgentModalProps {
 	deviceFullName: string;
 	agentFullName: string | null;
 	creationData: LineCreationType;
-	currentOwner: AgentType | undefined;
 	currentOwnerFullName: string;
 }
 
@@ -28,7 +27,6 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 	deviceFullName,
 	agentFullName,
 	creationData,
-	currentOwner,
 	currentOwnerFullName,
 }: displayDeviceAlreadyAffectedToAgentModalProps) {
 	return modals.open({
@@ -37,9 +35,9 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 		centered: true,
 		children: (
 			<>
-				<Text>
+				<Text mb='xs'>
 					L'appareil {deviceFullName} appartient déjà à l'agent{' '}
-					<span className='bold-text'>currentOwnerFullName</span>.
+					<span className='bold-text'>{currentOwnerFullName}</span>.
 				</Text>
 				<Text>
 					Voulez-vous le réaffecter à{' '}
@@ -50,7 +48,6 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 						mt='lg'
 						mx='md'
 						onClick={() => {
-							creationData.agentId = currentOwner?.id;
 							createLine({
 								data: creationData,
 							});
@@ -59,7 +56,8 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 							modals.closeAll();
 						}}
 					>
-						Le laisser affecté à {currentOwnerFullName}
+						Affecter la ligne au propriétaire actuel{' '}
+						{currentOwnerFullName}
 					</Button>
 					<Button
 						mt='lg'
@@ -116,7 +114,7 @@ export function displayAutomaticAgentAffectationModal({
 		centered: true,
 		children: (
 			<>
-				<Text>
+				<Text mb='xs'>
 					L'appareil {deviceFullName} n'a actuellement aucun
 					propriétaire.
 				</Text>
@@ -126,7 +124,7 @@ export function displayAutomaticAgentAffectationModal({
 				</Text>
 			</>
 		),
-		labels: { confirm: 'Confirm', cancel: 'Cancel' },
+		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 		onCancel: modals.closeAll,
 		onConfirm: () => {
 			createLine({
@@ -148,6 +146,8 @@ interface displayDeviceAlreadyAffectedToLineModalProps {
 	) => void;
 	alreadyUsingDeviceLine: LineType;
 	deviceFullName: string;
+	currentLineOwnerFullName: string | null;
+	newLineOwnerFullName: string | null;
 	creationData: LineCreationType;
 }
 
@@ -157,6 +157,8 @@ export function displayDeviceAlreadyAffectedToLineModal({
 	setValidationErrors,
 	alreadyUsingDeviceLine,
 	deviceFullName,
+	currentLineOwnerFullName,
+	newLineOwnerFullName,
 	creationData,
 }: displayDeviceAlreadyAffectedToLineModalProps) {
 	return modals.openConfirmModal({
@@ -165,18 +167,84 @@ export function displayDeviceAlreadyAffectedToLineModal({
 		centered: true,
 		children: (
 			<>
-				<Text>
+				<Text mb='xs'>
 					L'appareil {deviceFullName} est actuellement affecté à la
-					ligne {alreadyUsingDeviceLine.number}
+					ligne{' '}
+					<span className='bold-text'>
+						{alreadyUsingDeviceLine.number}
+					</span>
+					{currentLineOwnerFullName ? (
+						<>
+							{' '}
+							de l'agent{' '}
+							<span className='bold-text'>
+								{currentLineOwnerFullName}
+							</span>
+						</>
+					) : (
+						<> sans propriétaire</>
+					)}
+					.
 				</Text>
 				<Text mb='xl'>
 					Si vous continuez, il sera affecté automatiquement à la
 					ligne{' '}
-					<span className='bold-text'>{creationData.number}</span>.
+					<span className='bold-text'>{creationData.number}</span> et
+					à son propriétaire{' '}
+					<span className='bold-text'>{newLineOwnerFullName}</span>.
 				</Text>
 			</>
 		),
-		labels: { confirm: 'Confirm', cancel: 'Cancel' },
+		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
+		onCancel: modals.closeAll,
+		onConfirm: () => {
+			createLine({
+				data: creationData,
+				updateDevice: true,
+			});
+			setValidationErrors({});
+			exitCreatingMode();
+			modals.closeAll();
+		},
+	});
+}
+
+interface displayDeviceHasOwnerModalProps {
+	createLine: ({ data, updateDevice }: createLineProps) => void;
+	exitCreatingMode: () => void;
+	setValidationErrors: (
+		value: React.SetStateAction<Record<string, string | undefined>>
+	) => void;
+	deviceFullName: string;
+	currentOwnerFullName: string;
+	creationData: LineCreationType;
+}
+
+export function displayDeviceHasOwnerModal({
+	createLine,
+	exitCreatingMode,
+	setValidationErrors,
+	deviceFullName,
+	currentOwnerFullName,
+	creationData,
+}: displayDeviceHasOwnerModalProps) {
+	return modals.openConfirmModal({
+		title: "Affectation automatique de l'appareil",
+		size: 'lg',
+		centered: true,
+		children: (
+			<>
+				<Text mb='xs'>
+					L'appareil {deviceFullName} appartient actuellement à
+					l'agent {currentOwnerFullName}.
+				</Text>
+				<Text mb='xl'>
+					Vous n'avez pas défini de propriétaire de la ligne. Si vous
+					continuez, celle-ci lui sera automatiquement affectée.
+				</Text>
+			</>
+		),
+		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 		onCancel: modals.closeAll,
 		onConfirm: () => {
 			createLine({

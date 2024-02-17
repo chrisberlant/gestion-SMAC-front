@@ -212,7 +212,7 @@ export default function DevicesTable() {
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
 					clearable: true,
-					allowDeselect: false,
+					allowDeselect: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
 						setValidationErrors({
