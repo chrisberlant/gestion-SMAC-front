@@ -1,34 +1,34 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { LineCreationType, LineType } from '../types/line';
-import { AgentType } from '../types/agent';
 
 interface createLineProps {
 	data: LineCreationType;
 	updateDevice?: boolean;
 }
 
-interface displayDeviceAlreadyAffectedToAgentModalProps {
+interface displayDeviceAlreadyAffectedToAnotherAgentModalProps {
 	createLine: ({ data, updateDevice }: createLineProps) => void;
 	exitCreatingMode: () => void;
 	setValidationErrors: (
 		value: React.SetStateAction<Record<string, string | undefined>>
 	) => void;
 	deviceFullName: string;
-	agentFullName: string | null;
+	newOwnerFullName: string | null;
 	creationData: LineCreationType;
 	currentOwnerFullName: string;
 }
 
-export function displayDeviceAlreadyAffectedToAgentModal({
+// L'appareil possède déjà un propriétaire différent, propose le choix entre les deux
+export function displayDeviceAlreadyAffectedToAnotherAgentModal({
 	createLine,
 	exitCreatingMode,
 	setValidationErrors,
 	deviceFullName,
-	agentFullName,
+	newOwnerFullName,
 	creationData,
 	currentOwnerFullName,
-}: displayDeviceAlreadyAffectedToAgentModalProps) {
+}: displayDeviceAlreadyAffectedToAnotherAgentModalProps) {
 	return modals.open({
 		title: 'Appareil déjà affecté à un autre agent',
 		size: 'xl',
@@ -41,7 +41,7 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 				</Text>
 				<Text>
 					Voulez-vous le réaffecter à{' '}
-					<span className='bold-text'>{agentFullName} </span>?
+					<span className='bold-text'>{newOwnerFullName} </span>?
 				</Text>
 				<Flex align='center'>
 					<Button
@@ -73,7 +73,7 @@ export function displayDeviceAlreadyAffectedToAgentModal({
 							modals.closeAll();
 						}}
 					>
-						Confirmer la réaffectation à {agentFullName}
+						Confirmer la réaffectation à {newOwnerFullName}
 					</Button>
 				</Flex>
 				<Button
@@ -96,16 +96,17 @@ interface displayAutomaticAgentAffectationModalProps {
 		value: React.SetStateAction<Record<string, string | undefined>>
 	) => void;
 	deviceFullName: string;
-	agentFullName: string | null;
+	newOwnerFullName: string | null;
 	creationData: LineCreationType;
 }
 
+// Pas d'ancien propriétaire, indique une réaffectation automatique
 export function displayAutomaticAgentAffectationModal({
 	createLine,
 	exitCreatingMode,
 	setValidationErrors,
 	deviceFullName,
-	agentFullName,
+	newOwnerFullName,
 	creationData,
 }: displayAutomaticAgentAffectationModalProps) {
 	return modals.openConfirmModal({
@@ -120,7 +121,7 @@ export function displayAutomaticAgentAffectationModal({
 				</Text>
 				<Text mb='xl'>
 					Si vous continuez, il sera affecté automatiquement à l'agent{' '}
-					<span className='bold-text'>{agentFullName}</span>.
+					<span className='bold-text'>{newOwnerFullName}</span>.
 				</Text>
 			</>
 		),
@@ -151,6 +152,7 @@ interface displayDeviceAlreadyAffectedToLineModalProps {
 	creationData: LineCreationType;
 }
 
+// Appareil déjà affecté à une ligne, indique une réaffectation
 export function displayDeviceAlreadyAffectedToLineModal({
 	createLine,
 	exitCreatingMode,
@@ -189,9 +191,19 @@ export function displayDeviceAlreadyAffectedToLineModal({
 				<Text mb='xl'>
 					Si vous continuez, il sera affecté automatiquement à la
 					ligne{' '}
-					<span className='bold-text'>{creationData.number}</span> et
-					à son propriétaire{' '}
-					<span className='bold-text'>{newLineOwnerFullName}</span>.
+					<span className='bold-text'>{creationData.number}</span>
+					{newLineOwnerFullName ? (
+						<>
+							{' '}
+							et à son propriétaire{' '}
+							<span className='bold-text'>
+								{newLineOwnerFullName}
+							</span>
+						</>
+					) : (
+						''
+					)}
+					.
 				</Text>
 			</>
 		),
@@ -221,6 +233,7 @@ interface displayDeviceAlreadyAffectedToAgentLineModalProps {
 	creationData: LineCreationType;
 }
 
+// Appareil déjà affecté à une ligne de l'agent, indique une réaffectation
 export function displayDeviceAlreadyAffectedToAgentLineModal({
 	createLine,
 	exitCreatingMode,
@@ -276,6 +289,7 @@ interface displayDeviceHasOwnerModalProps {
 	creationData: LineCreationType;
 }
 
+// Pas de proprétaire de ligne défini, indique que le propriétaire de l'appareil sera affecté
 export function displayDeviceHasOwnerModal({
 	createLine,
 	exitCreatingMode,
