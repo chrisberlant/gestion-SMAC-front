@@ -147,6 +147,7 @@ interface displayDeviceAlreadyAffectedToLineModalProps {
 	) => void;
 	alreadyUsingDeviceLine: LineType;
 	deviceFullName: string;
+	currentLineOwnerId: number | null;
 	currentLineOwnerFullName: string | null;
 	newLineOwnerFullName: string | null;
 	creationData: LineCreationType;
@@ -159,13 +160,52 @@ export function displayDeviceAlreadyAffectedToLineModal({
 	setValidationErrors,
 	alreadyUsingDeviceLine,
 	deviceFullName,
+	currentLineOwnerId,
 	currentLineOwnerFullName,
 	newLineOwnerFullName,
 	creationData,
 }: displayDeviceAlreadyAffectedToLineModalProps) {
-	return modals.openConfirmModal({
+	// Si ancien et nouveau propriétaires nuls
+	if (!currentLineOwnerId && !newLineOwnerFullName) {
+		return modals.openConfirmModal({
+			title: 'Appareil déjà affecté à une autre ligne',
+			size: 'lg',
+			centered: true,
+			children: (
+				<>
+					<Text mb='xs'>
+						L'appareil {deviceFullName} est actuellement affecté à
+						la ligne{' '}
+						<span className='bold-text'>
+							{alreadyUsingDeviceLine.number}{' '}
+						</span>
+						sans propriétaire.
+					</Text>
+					<Text mb='xl'>
+						Si vous continuez, il sera affecté automatiquement à la
+						ligne{' '}
+						<span className='bold-text'>{creationData.number}</span>
+						.
+					</Text>
+				</>
+			),
+			labels: { confirm: 'Confirmer', cancel: 'Annuler' },
+			onCancel: modals.closeAll,
+			onConfirm: () => {
+				createLine({
+					data: creationData,
+					updateDevice: true,
+				});
+				setValidationErrors({});
+				exitCreatingMode();
+				modals.closeAll();
+			},
+		});
+	}
+
+	return modals.open({
 		title: 'Appareil déjà affecté à une autre ligne',
-		size: 'lg',
+		size: 'xl',
 		centered: true,
 		children: (
 			<>
@@ -188,36 +228,52 @@ export function displayDeviceAlreadyAffectedToLineModal({
 					)}
 					.
 				</Text>
-				<Text mb='xl'>
-					Si vous continuez, il sera affecté automatiquement à la
-					ligne{' '}
-					<span className='bold-text'>{creationData.number}</span>
-					{newLineOwnerFullName ? (
-						<>
-							{' '}
-							et à son propriétaire{' '}
-							<span className='bold-text'>
-								{newLineOwnerFullName}
-							</span>
-						</>
-					) : (
-						''
-					)}
-					.
-				</Text>
+				<Flex align='center'>
+					<Button
+						mt='lg'
+						mx='md'
+						onClick={() => {
+							creationData.agentId = currentLineOwnerId;
+							createLine({
+								data: creationData,
+							});
+							setValidationErrors({});
+							exitCreatingMode();
+							modals.closeAll();
+						}}
+					>
+						Affecter le propriétaire actuel{' '}
+						{currentLineOwnerFullName}
+					</Button>
+					<Button
+						mt='lg'
+						mx='md'
+						color='rgba(68, 145, 42, 1)'
+						onClick={() => {
+							createLine({
+								data: creationData,
+								updateDevice: true,
+							});
+							setValidationErrors({});
+							exitCreatingMode();
+							modals.closeAll();
+						}}
+					>
+						{newLineOwnerFullName
+							? `Confirmer la réaffectation à ${newLineOwnerFullName}`
+							: 'Ne pas affecter de propriétaire'}
+					</Button>
+				</Flex>
+				<Button
+					fullWidth
+					mt='xl'
+					variant='default'
+					onClick={() => modals.closeAll()}
+				>
+					Annuler
+				</Button>
 			</>
 		),
-		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
-		onCancel: modals.closeAll,
-		onConfirm: () => {
-			createLine({
-				data: creationData,
-				updateDevice: true,
-			});
-			setValidationErrors({});
-			exitCreatingMode();
-			modals.closeAll();
-		},
 	});
 }
 

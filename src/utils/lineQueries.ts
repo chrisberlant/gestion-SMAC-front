@@ -42,11 +42,11 @@ export const useCreateLine = () => {
 			if (newLine.updateDevice) {
 				// Si nécessaire, mise à jour des appareils pour définir le nouveau propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-					devices.map((device) =>
+					devices.map((device) => {
 						device.id === newLine.data.deviceId
 							? { ...device, agentId: newLine.data.agentId }
-							: device
-					)
+							: device;
+					})
 				);
 			}
 
