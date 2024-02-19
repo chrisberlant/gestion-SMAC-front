@@ -27,13 +27,7 @@ import { useGetAllDevices } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import {
-	displayDeviceAlreadyAffectedToAnotherAgentModal,
-	displayAutomaticAgentAffectationModal,
-	displayDeviceAlreadyAffectedToLineModal,
-	displayDeviceHasOwnerModal,
-	displayDeviceAlreadyAffectedToAgentLineModal,
-} from '../../modals/lineModals';
+import { displayLineCreationModal } from '../../modals/lineModals';
 
 export default function ActiveLines() {
 	const {
@@ -288,11 +282,10 @@ export default function ActiveLines() {
 			}
 
 			// Si un appareil a été défini lors de la création, des vérifications sont à effectuer
-
 			// Vérification de la présence de l'appareil dans les autres lignes et de son propriétaire actuel
-			const newOwnerId = creationData.agentId;
+			const newOwnerId = creationData.agentId ?? null;
 			const newOwnerFullName: string | null = agentId ?? null;
-			const deviceFullName: string = deviceId;
+			const deviceFullName: string | null = deviceId;
 			const alreadyUsingDeviceLine =
 				lines?.find(
 					(line) => line.deviceId === creationData.deviceId
@@ -300,95 +293,30 @@ export default function ActiveLines() {
 			const currentOwnerId =
 				devices?.find((device) => device.id === creationData.deviceId)
 					?.agentId || null;
-			const currentOwnerFullName: string | null =
+			const currentOwnerFullName =
 				formattedAgents?.find((agent) => agent.id === currentOwnerId)
 					?.infos || null;
 
-			// Si l'appareil appartient déjà à l'agent et qu'il n'est affecté à aucune autre ligne, pas de modale
+			// Si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
+			// et qu'il n'est affecté à aucune autre ligne, aucune modale
 			if (newOwnerId === currentOwnerId && !alreadyUsingDeviceLine) {
 				createLine({ data: creationData });
 				setValidationErrors({});
 				return exitCreatingMode();
 			}
 
-			// Si l'appareil est déjà affecté à une ligne
-			if (alreadyUsingDeviceLine) {
-				// Récupération des informations des ancien et nouveau propriétaires
-				const currentLineOwnerFullName =
-					formattedAgents?.find(
-						(agent) => agent.id === alreadyUsingDeviceLine.agentId
-					)?.infos || null;
-
-				// Si le propriétaire reste le même
-				if (
-					newOwnerFullName &&
-					newOwnerFullName === currentLineOwnerFullName
-				)
-					return displayDeviceAlreadyAffectedToAgentLineModal({
-						createLine,
-						exitCreatingMode,
-						setValidationErrors,
-						alreadyUsingDeviceLine,
-						deviceFullName,
-						lineOwnerFullName: newOwnerFullName,
-						creationData,
-					});
-
-				// Si le propriétaire est différent (ou que l'ancien est nul)
-				return displayDeviceAlreadyAffectedToLineModal({
-					createLine,
-					exitCreatingMode,
-					setValidationErrors,
-					alreadyUsingDeviceLine,
-					deviceFullName,
-					currentLineOwnerId: currentOwnerId,
-					currentLineOwnerFullName,
-					newLineOwnerFullName: newOwnerFullName,
-					creationData,
-				});
-			}
-
-			// Si l'appareil n'était pas affecté à une ligne
-
-			// Si un propriétaire est fourni et différent de l'actuel (qui peut être nul)
-			if (newOwnerId && newOwnerId !== currentOwnerId) {
-				// Si aucun propriétaire actuellement affecté
-				if (!currentOwnerFullName) {
-					return displayAutomaticAgentAffectationModal({
-						createLine,
-						exitCreatingMode,
-						setValidationErrors,
-						deviceFullName,
-						newOwnerFullName,
-						creationData,
-					});
-				}
-
-				// Si pas de nouveau propriétaire mais un propriétaire actuellement affecté
-				if (!newOwnerId) {
-					creationData.agentId = currentOwnerId;
-					return displayDeviceHasOwnerModal({
-						createLine,
-						exitCreatingMode,
-						setValidationErrors,
-						deviceFullName,
-						currentOwnerFullName,
-						creationData,
-					});
-				}
-
-				// Si nouveau propriétaire fourni et l'appareil possédait déjà un propriétaire
-				creationData.agentId = currentOwnerId;
-				return displayDeviceAlreadyAffectedToAnotherAgentModal({
-					createLine,
-					exitCreatingMode,
-					setValidationErrors,
-					deviceFullName,
-					newOwnerFullName,
-					creationData,
-					currentOwnerFullName,
-				});
-			}
+			return displayLineCreationModal({
+				createLine,
+				exitCreatingMode,
+				setValidationErrors,
+				alreadyUsingDeviceLine,
+				deviceFullName,
+				currentOwnerFullName,
+				currentOwnerId,
+				newOwnerFullName,
+				newOwnerId,
+				creationData,
+			});
 		};
 
 	//UPDATE action

@@ -22,6 +22,7 @@ export const useCreateLine = () => {
 		}: {
 			data: LineCreationType;
 			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
+			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
 		}) => {
 			return (await fetchApi('/createLine', 'POST', data)) as LineType;
 		},
@@ -40,12 +41,22 @@ export const useCreateLine = () => {
 			]);
 
 			if (newLine.updateDevice) {
-				// Si nécessaire, mise à jour des appareils pour définir le nouveau propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) => {
 						device.id === newLine.data.deviceId
 							? { ...device, agentId: newLine.data.agentId }
 							: device;
+					})
+				);
+			}
+			if (newLine.updateOldLine) {
+				console.log('update ancienne ligne');
+				// Si nécessaire, mise à jour des lignes et appareils pour définir/retirer le propriétaire
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) => {
+						line.deviceId === newLine.data.deviceId
+							? { ...line, deviceId: null }
+							: line;
 					})
 				);
 			}
