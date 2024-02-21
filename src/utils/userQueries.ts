@@ -51,7 +51,6 @@ export const useGetCurrentUser = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
 		},
-		staleTime: Infinity,
 		gcTime: Infinity,
 	});
 };
@@ -66,7 +65,6 @@ export const useCheckLoginStatus = () => {
 		meta: {
 			loginStatusQuery: 'true',
 		},
-		staleTime: Infinity,
 		gcTime: Infinity,
 	});
 };
@@ -157,7 +155,6 @@ export const useGetAllUsers = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllUsers')) as UserType[];
 		},
-		staleTime: Infinity,
 	});
 };
 

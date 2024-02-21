@@ -29,11 +29,11 @@ export const useCreateLine = () => {
 
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
-			console.log(newLine);
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
-			const previousDevices = queryClient.getQueryData(['devices']);
 			// Ajout de la nouvelle ligne dans le tableau
+			const previousDevices = queryClient.getQueryData(['devices']);
+
 			queryClient.setQueryData(['lines'], (lines: LineType[]) => [
 				...lines,
 				{
@@ -45,24 +45,24 @@ export const useCreateLine = () => {
 			if (newLine.updateDevice) {
 				console.log('update device');
 				// Si nécessaire, mise à jour de l'appareil pour définir/retirer le propriétaire
-				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-					devices.map((device) => {
-						device.id === newLine.data.deviceId
-							? { ...device, agentId: newLine.data.agentId }
-							: device;
-					})
-				);
+				// queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
+				// 	devices.map((device) => {
+				// 		device.id === newLine.data.deviceId
+				// 			? { ...device, agentId: newLine.data.agentId }
+				// 			: device;
+				// 	})
+				// );
 			}
 			if (newLine.updateOldLine) {
 				// Mise à jour de l'ancienne ligne pour retirer l'appareil
 				console.log('update ancienne ligne');
-				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-					lines.map((line) => {
-						line.deviceId === newLine.data.deviceId
-							? { ...line, deviceId: null }
-							: line;
-					})
-				);
+				// queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+				// 	lines.map((line) => {
+				// 		line.deviceId === newLine.data.deviceId
+				// 			? { ...line, deviceId: null }
+				// 			: line;
+				// 	})
+				// );
 			}
 
 			return { previousLines, previousDevices };

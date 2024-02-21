@@ -15,7 +15,6 @@ export const useGetAllServices = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllServices')) as ServiceType[];
 		},
-		staleTime: Infinity,
 	});
 };
 

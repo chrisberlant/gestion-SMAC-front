@@ -146,7 +146,7 @@ export function displayLineCreationModal({
 									modals.closeAll();
 								}}
 							>
-								`À ${newOwnerFullName}`
+								À {newOwnerFullName}
 							</Button>
 						</Flex>
 						<Button

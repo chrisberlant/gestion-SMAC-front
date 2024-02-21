@@ -370,7 +370,10 @@ export default function DevicesTable() {
 				return setValidationErrors(errors);
 			}
 			setValidationErrors({});
-			updateDevice(data);
+			// Si le propriétaire a changé, le cache des lignes est mis à jour
+			row.original.agentId !== data.agentId
+				? updateDevice({ data, updateLine: true })
+				: updateDevice({ data });
 			table.setEditingRow(null);
 		};
 

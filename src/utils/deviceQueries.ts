@@ -8,6 +8,8 @@ import {
 import fetchApi from './fetchApi';
 import queryClient from './queryClient';
 import { IdSelectionType } from '../types';
+import { LineType } from '../types/line';
+import { useUpdateLine } from './lineQueries';
 
 export const useGetAllDevices = () => {
 	return useQuery({
@@ -15,7 +17,6 @@ export const useGetAllDevices = () => {
 		queryFn: async () => {
 			return (await fetchApi('/getAllDevices')) as DeviceType[];
 		},
-		staleTime: Infinity,
 	});
 };
 
@@ -57,27 +58,57 @@ export const useCreateDevice = () => {
 
 export const useUpdateDevice = () => {
 	return useMutation({
-		mutationFn: async (device: DeviceUpdateType) => {
+		mutationFn: async ({
+			data,
+		}: {
+			data: DeviceUpdateType;
+			updateLine?: boolean;
+		}) => {
 			return (await fetchApi(
 				'/updateDevice',
 				'PATCH',
-				device
+				data
 			)) as DeviceType;
 		},
 
 		onMutate: async (updatedDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
+			const previousLines = queryClient.getQueryData(['lines']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices.map((device) =>
-					device.id === updatedDevice.id ? updatedDevice : device
+					device.id === updatedDevice.data.id
+						? updatedDevice.data
+						: device
 				)
 			);
-			return previousDevices;
+
+			// Mise à jour du propriétaire de la ligne si l'appareil y est affecté
+			// et que les lignes sont en cache
+			if (updatedDevice.updateLine && previousLines) {
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) =>
+						line.deviceId === updatedDevice.data.id
+							? { ...line, agentId: updatedDevice.data.agentId }
+							: line
+					)
+				);
+			}
+
+			return { previousDevices, previousLines };
 		},
 		onSuccess: () => toast.success('Appareil modifié avec succès'),
-		onError: (_, __, previousDevices) =>
-			queryClient.setQueryData(['devices'], previousDevices),
+		onError: (_, { updateLine }, previousValues) => {
+			queryClient.setQueryData(
+				['devices'],
+				previousValues?.previousDevices
+			);
+			if (updateLine)
+				queryClient.setQueryData(
+					['lines'],
+					previousValues?.previousLines
+				);
+		},
 	});
 };
 
