@@ -60,6 +60,20 @@ export default function ActiveLines() {
 	const { mutate: updateLine } = useUpdateLine();
 	const { mutate: deleteLine } = useDeleteLine();
 
+	const anyLoading =
+		linesLoading ||
+		servicesLoading ||
+		devicesLoading ||
+		agentsLoading ||
+		modelsLoading;
+	const anyError =
+		linesError ||
+		servicesError ||
+		devicesError ||
+		agentsError ||
+		modelsError;
+	const allData = services && agents && devices && models && lines;
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
@@ -457,29 +471,19 @@ export default function ActiveLines() {
 		<ZoomableComponent className='attributed-lines'>
 			<h2>Lignes attribuées</h2>
 
-			{(linesLoading ||
-				servicesLoading ||
-				devicesLoading ||
-				agentsLoading ||
-				modelsLoading) && (
+			{anyLoading && (
 				<div className='loader-box'>
 					<Loader size='xl' />
 				</div>
 			)}
 
-			{(linesError ||
-				servicesError ||
-				devicesError ||
-				agentsError ||
-				modelsError) && (
+			{anyError && (
 				<span>
 					Impossible de récupérer les appareils depuis le serveur
 				</span>
 			)}
 
-			{lines && devices && services && agents && models && (
-				<MantineReactTable table={table} />
-			)}
+			{allData && <MantineReactTable table={table} />}
 		</ZoomableComponent>
 	);
 }

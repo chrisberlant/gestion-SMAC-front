@@ -60,6 +60,12 @@ export default function DevicesTable() {
 	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: deleteDevice } = useDeleteDevice();
 
+	const anyLoading =
+		servicesLoading || devicesLoading || agentsLoading || modelsLoading;
+	const anyError =
+		servicesError || devicesError || agentsError || modelsError;
+	const allData = devices && services && agents && models;
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
@@ -453,24 +459,19 @@ export default function DevicesTable() {
 		<div className='devices-table'>
 			<h2>Liste des appareils</h2>
 
-			{(servicesLoading ||
-				devicesLoading ||
-				agentsLoading ||
-				modelsLoading) && (
+			{anyLoading && (
 				<div className='loader-box'>
 					<Loader size='xl' />
 				</div>
 			)}
 
-			{(servicesError || devicesError || agentsError || modelsError) && (
+			{anyError && (
 				<span>
 					Impossible de récupérer les appareils depuis le serveur
 				</span>
 			)}
 
-			{devices && services && agents && models && (
-				<MantineReactTable table={table} />
-			)}
+			{allData && <MantineReactTable table={table} />}
 		</div>
 	);
 }

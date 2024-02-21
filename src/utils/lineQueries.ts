@@ -29,6 +29,7 @@ export const useCreateLine = () => {
 
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
+			console.log(newLine);
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -40,7 +41,10 @@ export const useCreateLine = () => {
 				},
 			]);
 
+			// TODO FIX
 			if (newLine.updateDevice) {
+				console.log('update device');
+				// Si nécessaire, mise à jour de l'appareil pour définir/retirer le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) => {
 						device.id === newLine.data.deviceId
@@ -50,8 +54,8 @@ export const useCreateLine = () => {
 				);
 			}
 			if (newLine.updateOldLine) {
+				// Mise à jour de l'ancienne ligne pour retirer l'appareil
 				console.log('update ancienne ligne');
-				// Si nécessaire, mise à jour des lignes et appareils pour définir/retirer le propriétaire
 				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 					lines.map((line) => {
 						line.deviceId === newLine.data.deviceId

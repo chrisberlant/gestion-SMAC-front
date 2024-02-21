@@ -97,7 +97,7 @@ export function displayLineCreationModal({
 							<span className='bold-text'>
 								{alreadyUsingDeviceLine.number}
 							</span>
-							{currentOwnerFullName ? (
+							{currentOwnerId ? (
 								<>
 									{' '}
 									de l'agent{' '}
@@ -110,6 +110,7 @@ export function displayLineCreationModal({
 							)}
 							.
 						</Text>
+						<Text>A qui souhaitez-vous affecter la ligne ?</Text>
 						<Flex align='center'>
 							<Button
 								mt='lg'
@@ -126,8 +127,8 @@ export function displayLineCreationModal({
 									modals.closeAll();
 								}}
 							>
-								{currentOwnerFullName
-									? `Affecter le propriétaire actuel ${currentOwnerFullName}`
+								{currentOwnerId
+									? `Au propriétaire actuel ${currentOwnerFullName}`
 									: 'Créer la ligne sans propriétaire'}
 							</Button>
 							<Button
@@ -145,9 +146,7 @@ export function displayLineCreationModal({
 									modals.closeAll();
 								}}
 							>
-								{newOwnerFullName
-									? `Confirmer la réaffectation à ${newOwnerFullName}`
-									: 'Créer sans propriétaire'}
+								`À ${newOwnerFullName}`
 							</Button>
 						</Flex>
 						<Button
@@ -163,35 +162,37 @@ export function displayLineCreationModal({
 			});
 		}
 
-		// Si pas de propriétaire actuel et pas de propriétaire fourni
-		if (!currentOwnerId) {
+		// Si pas de nouveau propriétaire mais un ancien
+		if (currentOwnerId) {
 			return modals.openConfirmModal({
-				title: 'Appareil déjà affecté à une autre ligne',
+				title: "Affectation automatique de l'appareil",
 				size: 'lg',
 				centered: true,
 				children: (
 					<>
 						<Text mb='xs'>
-							L'appareil {deviceFullName} est actuellement affecté
+							L'appareil {deviceFullName} appartient actuellement
 							à la ligne{' '}
 							<span className='bold-text'>
-								{alreadyUsingDeviceLine.number}{' '}
+								{alreadyUsingDeviceLine.number}
+							</span>{' '}
+							de l'agent{' '}
+							<span className='bold-text'>
+								{currentOwnerFullName}
 							</span>
-							sans propriétaire.
+							.
 						</Text>
 						<Text mb='xl'>
-							Si vous continuez, il sera affecté automatiquement à
-							la ligne{' '}
-							<span className='bold-text'>
-								{creationData.number}
-							</span>
-							, également sans propriétaire.
+							Vous n'avez pas défini de propriétaire de la ligne.
+							Si vous continuez, celle-ci lui sera automatiquement
+							affectée.
 						</Text>
 					</>
 				),
 				labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 				onCancel: modals.closeAll,
 				onConfirm: () => {
+					creationData.agentId = currentOwnerId;
 					createLine({
 						data: creationData,
 						updateOldLine: true,
@@ -203,29 +204,32 @@ export function displayLineCreationModal({
 			});
 		}
 
-		// Si pas de nouveau propriétaire mais un ancien
+		// Si pas de propriétaire actuel et pas de propriétaire fourni
 		return modals.openConfirmModal({
-			title: "Affectation automatique de l'appareil",
+			title: 'Appareil déjà affecté à une autre ligne',
 			size: 'lg',
 			centered: true,
 			children: (
 				<>
 					<Text mb='xs'>
-						L'appareil {deviceFullName} appartient actuellement à la
-						ligne {alreadyUsingDeviceLine.number} de l'agent{' '}
-						{currentOwnerFullName}.
+						L'appareil {deviceFullName} est actuellement affecté à
+						la ligne{' '}
+						<span className='bold-text'>
+							{alreadyUsingDeviceLine.number}{' '}
+						</span>
+						sans propriétaire.
 					</Text>
 					<Text mb='xl'>
-						Vous n'avez pas défini de propriétaire de la ligne. Si
-						vous continuez, celle-ci lui sera automatiquement
-						affectée.
+						Si vous continuez, il sera affecté automatiquement à la
+						ligne{' '}
+						<span className='bold-text'>{creationData.number}</span>
+						, également sans propriétaire.
 					</Text>
 				</>
 			),
 			labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 			onCancel: modals.closeAll,
 			onConfirm: () => {
-				creationData.agentId = currentOwnerId;
 				createLine({
 					data: creationData,
 					updateOldLine: true,
@@ -249,7 +253,11 @@ export function displayLineCreationModal({
 				<>
 					<Text mb='xs'>
 						L'appareil {deviceFullName} appartient actuellement à
-						l'agent {currentOwnerFullName}.
+						l'agent{' '}
+						<span className='bold-text'>
+							{currentOwnerFullName}
+						</span>{' '}
+						et n'est affecté à aucune ligne.
 					</Text>
 					<Text mb='xl'>
 						Vous n'avez pas défini de propriétaire de la ligne. Si
@@ -283,7 +291,7 @@ export function displayLineCreationModal({
 				<>
 					<Text mb='xs'>
 						L'appareil {deviceFullName} n'a actuellement aucun
-						propriétaire.
+						propriétaire et n'est affecté à aucune ligne.
 					</Text>
 					<Text mb='xl'>
 						Si vous continuez, il sera affecté automatiquement à
@@ -315,7 +323,8 @@ export function displayLineCreationModal({
 			<>
 				<Text mb='xs'>
 					L'appareil {deviceFullName} appartient déjà à l'agent{' '}
-					<span className='bold-text'>{currentOwnerFullName}</span>.
+					<span className='bold-text'>{currentOwnerFullName}</span> et
+					n'est affecté à aucune ligne.
 				</Text>
 				<Text>
 					Voulez-vous le réaffecter à{' '}
