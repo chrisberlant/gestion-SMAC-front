@@ -34,6 +34,8 @@ import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import { IconArrowsSort } from '@tabler/icons-react';
+import { useGetAllLines } from '../../utils/lineQueries';
+import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
 
 export default function DevicesTable() {
 	const {
@@ -56,14 +58,27 @@ export default function DevicesTable() {
 		isLoading: modelsLoading,
 		isError: modelsError,
 	} = useGetAllModels();
+	const {
+		data: lines,
+		isLoading: linesLoading,
+		isError: linesError,
+	} = useGetAllLines();
 	const { mutate: createDevice } = useCreateDevice();
 	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: deleteDevice } = useDeleteDevice();
 
 	const anyLoading =
-		servicesLoading || devicesLoading || agentsLoading || modelsLoading;
+		servicesLoading ||
+		devicesLoading ||
+		agentsLoading ||
+		modelsLoading ||
+		linesLoading;
 	const anyError =
-		servicesError || devicesError || agentsError || modelsError;
+		servicesError ||
+		devicesError ||
+		agentsError ||
+		modelsError ||
+		linesError;
 	const allData = devices && services && agents && models;
 
 	const [validationErrors, setValidationErrors] = useState<
@@ -369,12 +384,31 @@ export default function DevicesTable() {
 				});
 				return setValidationErrors(errors);
 			}
-			setValidationErrors({});
-			// Si le propriétaire a changé, le cache des lignes est mis à jour
-			row.original.agentId !== data.agentId
-				? updateDevice({ data, updateLine: true })
-				: updateDevice({ data });
-			table.setEditingRow(null);
+
+			const lineUsingDevice =
+				lines?.find((line) => line.deviceId === data.id) || null;
+			const lineOwnerFullName =
+				formattedAgents?.find(
+					(agent) => agent.id === lineUsingDevice?.agentId
+				)?.infos || null;
+
+			// Si le propriétaire a changé et qu'une ligne utilise l'appareil,
+			// le cache des lignes est mis à jour
+			if (row.original.agentId !== data.agentId && lineUsingDevice) {
+				displayDeviceOwnerChangeModal({
+					updateDevice,
+					setValidationErrors,
+					closeEditing: () => table.setEditingRow(null),
+					data,
+					lineUsingDevice: lineUsingDevice.number,
+					lineOwnerFullName,
+					imei,
+				});
+			} else {
+				updateDevice({ data });
+				setValidationErrors({});
+				table.setEditingRow(null);
+			}
 		};
 
 	//DELETE action

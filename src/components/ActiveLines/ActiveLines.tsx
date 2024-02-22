@@ -27,7 +27,7 @@ import { useGetAllDevices } from '../../utils/deviceQueries';
 import { useGetAllModels } from '../../utils/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import { displayLineCreationModal } from '../../modals/lineModals';
+import displayLineCreationModal from '../../modals/lineCreationModal';
 
 export default function ActiveLines() {
 	const {
@@ -313,24 +313,22 @@ export default function ActiveLines() {
 
 			// Si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
-			if (newOwnerId === currentOwnerId && !alreadyUsingDeviceLine) {
-				createLine({ data: creationData });
-				setValidationErrors({});
-				return exitCreatingMode();
-			}
-
-			return displayLineCreationModal({
-				createLine,
-				exitCreatingMode,
-				setValidationErrors,
-				alreadyUsingDeviceLine,
-				deviceFullName,
-				currentOwnerFullName,
-				currentOwnerId,
-				newOwnerFullName,
-				newOwnerId,
-				creationData,
-			});
+			newOwnerId === currentOwnerId && !alreadyUsingDeviceLine
+				? (createLine({ data: creationData }),
+				  setValidationErrors({}),
+				  exitCreatingMode())
+				: displayLineCreationModal({
+						createLine,
+						exitCreatingMode,
+						setValidationErrors,
+						alreadyUsingDeviceLine,
+						deviceFullName,
+						currentOwnerFullName,
+						currentOwnerId,
+						newOwnerFullName,
+						newOwnerId,
+						creationData,
+				  });
 		};
 
 	//UPDATE action

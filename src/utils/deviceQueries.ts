@@ -84,8 +84,7 @@ export const useUpdateDevice = () => {
 			);
 
 			// Mise à jour du propriétaire de la ligne si l'appareil y est affecté
-			// et que les lignes sont en cache
-			if (updatedDevice.updateLine && previousLines) {
+			if (updatedDevice.updateLine) {
 				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 					lines.map((line) =>
 						line.deviceId === updatedDevice.data.id

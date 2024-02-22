@@ -2,14 +2,14 @@ import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { LineCreationType, LineType } from '../types/line';
 
-interface createLineProps {
+interface CreateLineProps {
 	data: LineCreationType;
 	updateDevice?: boolean;
 	updateOldLine?: boolean;
 }
 
-interface displayLineCreationModalProps {
-	createLine: ({ data, updateDevice }: createLineProps) => void;
+interface DisplayLineCreationModalProps {
+	createLine: ({ data, updateDevice }: CreateLineProps) => void;
 	exitCreatingMode: () => void;
 	setValidationErrors: (
 		value: React.SetStateAction<Record<string, string | undefined>>
@@ -24,7 +24,7 @@ interface displayLineCreationModalProps {
 }
 
 // L'appareil possède déjà un propriétaire différent, propose le choix entre les deux
-export function displayLineCreationModal({
+export default function displayLineCreationModal({
 	createLine,
 	exitCreatingMode,
 	setValidationErrors,
@@ -35,7 +35,7 @@ export function displayLineCreationModal({
 	newOwnerFullName,
 	newOwnerId,
 	creationData,
-}: displayLineCreationModalProps) {
+}: DisplayLineCreationModalProps) {
 	// Si l'appareil est déjà affecté à une ligne
 	if (alreadyUsingDeviceLine) {
 		// Si un propriétaire est affecté à la ligne en création
