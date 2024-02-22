@@ -281,7 +281,7 @@ export function displayLineCreationModal({
 	}
 
 	// Si un propriétaire est affecté à la ligne en création
-	// Si pas de propriétaire actuel
+	// et pas de propriétaire actuel
 	if (!currentOwnerId) {
 		return modals.openConfirmModal({
 			title: "Affectation automatique de l'appareil",

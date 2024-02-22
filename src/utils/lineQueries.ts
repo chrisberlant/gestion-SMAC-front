@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from './fetchApi';
@@ -31,38 +32,39 @@ export const useCreateLine = () => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
-			// Ajout de la nouvelle ligne dans le tableau
 			const previousDevices = queryClient.getQueryData(['devices']);
 
-			queryClient.setQueryData(['lines'], (lines: LineType[]) => [
-				...lines,
-				{
-					...newLine.data,
-				},
-			]);
-
-			// TODO FIX
-			if (newLine.updateDevice) {
-				console.log('update device');
-				// Si nécessaire, mise à jour de l'appareil pour définir/retirer le propriétaire
-				// queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-				// 	devices.map((device) => {
-				// 		device.id === newLine.data.deviceId
-				// 			? { ...device, agentId: newLine.data.agentId }
-				// 			: device;
-				// 	})
-				// );
-			}
 			if (newLine.updateOldLine) {
-				// Mise à jour de l'ancienne ligne pour retirer l'appareil
-				console.log('update ancienne ligne');
-				// queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-				// 	lines.map((line) => {
-				// 		line.deviceId === newLine.data.deviceId
-				// 			? { ...line, deviceId: null }
-				// 			: line;
-				// 	})
-				// );
+				// Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
+				queryClient.setQueryData(['lines'], (lines: LineType[]) => [
+					...lines.map((line) =>
+						line.deviceId === newLine.data.deviceId
+							? { ...line, deviceId: null }
+							: line
+					),
+					{
+						...newLine.data,
+					},
+				]);
+			} else {
+				// Si pas d'ancienne ligne, uniquement ajout dans le tableau
+				queryClient.setQueryData(['lines'], (lines: LineType[]) => [
+					...lines,
+					{
+						...newLine.data,
+					},
+				]);
+			}
+
+			if (newLine.updateDevice) {
+				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
+				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
+					devices.map((device) =>
+						device.id === newLine.data.deviceId
+							? { ...device, agentId: newLine.data.agentId }
+							: device
+					)
+				);
 			}
 
 			return { previousLines, previousDevices };
