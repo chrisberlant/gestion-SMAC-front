@@ -16,10 +16,10 @@ interface DisplayLineUpdateModalProps {
 	) => void;
 	alreadyUsingDeviceLine: LineType | null;
 	deviceFullName: string | null;
-	currentOwnerFullName: string | null;
-	currentOwnerId: number | null;
-	newOwnerFullName: string | null;
-	newOwnerId: number | null;
+	currentLineOwnerFullName: string | null;
+	currentLineOwnerId: number | null;
+	newLineOwnerFullName: string | null;
+	newLineOwnerId: number | null;
 	currentDeviceId: number | null;
 	newDeviceId: number | null;
 	updateData: LineUpdateType;
@@ -31,10 +31,10 @@ export default function displayLineUpdateModal({
 	setValidationErrors,
 	alreadyUsingDeviceLine,
 	deviceFullName,
-	currentOwnerFullName,
-	currentOwnerId,
-	newOwnerFullName,
-	newOwnerId,
+	currentLineOwnerFullName,
+	currentLineOwnerId,
+	newLineOwnerFullName,
+	newLineOwnerId,
 	currentDeviceId,
 	newDeviceId,
 	updateData,
@@ -42,9 +42,9 @@ export default function displayLineUpdateModal({
 	// Si un appareil est fourni et qu'il n'a pas changé
 	if (newDeviceId && newDeviceId === currentDeviceId) {
 		// Si le propriétaire actuel est différent de l'ancien
-		if (currentOwnerId !== newOwnerId) {
+		if (currentLineOwnerId !== newLineOwnerId) {
 			// Si un nouveau propriétaire mais pas d'ancien
-			if (!currentOwnerId) {
+			if (!currentLineOwnerId) {
 				return modals.openConfirmModal({
 					title: "Changement de propriétaire de l'appareil",
 					size: 'lg',
@@ -58,7 +58,7 @@ export default function displayLineUpdateModal({
 							<Text mb='xl'>
 								Si vous continuez, il sera affecté à l'agent{' '}
 								<span className='bold-text'>
-									{newOwnerFullName}
+									{newLineOwnerFullName}
 								</span>
 								.
 							</Text>
@@ -75,7 +75,7 @@ export default function displayLineUpdateModal({
 				});
 			}
 			// Pas de nouveau propriétaire mais un ancien
-			if (!newOwnerId) {
+			if (!newLineOwnerId) {
 				return modals.open({
 					title: 'Appareil actuellement affecté à un agent',
 					size: 'xl',
@@ -86,7 +86,7 @@ export default function displayLineUpdateModal({
 								L'appareil {deviceFullName} appartient
 								actuellement à l'agent{' '}
 								<span className='bold-text'>
-									{currentOwnerFullName}
+									{currentLineOwnerFullName}
 								</span>
 								.
 							</Text>
@@ -96,14 +96,15 @@ export default function displayLineUpdateModal({
 									mt='lg'
 									mx='md'
 									onClick={() => {
-										updateData.agentId = currentOwnerId;
+										updateData.agentId = currentLineOwnerId;
 										updateLine(updateData);
 										setValidationErrors({});
 										exitUpdatingMode();
 										modals.closeAll();
 									}}
 								>
-									Affecter la ligne à {currentOwnerFullName}
+									Affecter la ligne à{' '}
+									{currentLineOwnerFullName}
 								</Button>
 								<Button
 									mt='lg'
@@ -143,14 +144,14 @@ export default function displayLineUpdateModal({
 							L'appareil {deviceFullName} appartient actuellement
 							à l'agent{' '}
 							<span className='bold-text'>
-								{currentOwnerFullName}
+								{currentLineOwnerFullName}
 							</span>{' '}
 							.
 						</Text>
 						<Text mb='xl'>
 							Si vous continuez, il sera affecté à l'agent{' '}
 							<span className='bold-text'>
-								{newOwnerFullName}
+								{newLineOwnerFullName}
 							</span>
 							.
 						</Text>

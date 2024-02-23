@@ -364,9 +364,14 @@ export default function ActiveLines() {
 				return setValidationErrors(errors);
 			}
 
-			const newOwnerId = updateData.agentId ?? null;
-			const newOwnerFullName: string | null = agentId ?? null;
+			const currentLineOwnerId = row.original.agentId ?? null;
+			const newLineOwnerId = updateData.agentId ?? null;
+			const newLineOwnerFullName: string | null = agentId ?? null;
 			const newDeviceId = updateData.deviceId ?? null;
+			const newDevice = devices?.find(
+				(device) => device.id === newDeviceId
+			);
+			const newDeviceCurrentOwnerId = newDevice?.agentId;
 			const currentDeviceId = row.original.deviceId;
 			const deviceFullName: string | null = deviceId;
 			const alreadyUsingDeviceLine =
@@ -375,16 +380,20 @@ export default function ActiveLines() {
 						line.deviceId === newDeviceId &&
 						line.id !== row.original.id
 				) || null;
-			const currentOwnerId =
-				devices?.find((device) => device.id === updateData.deviceId)
-					?.agentId || null;
-			const currentOwnerFullName =
-				formattedAgents?.find((agent) => agent.id === currentOwnerId)
-					?.infos || null;
+			const currentLineOwnerFullName =
+				formattedAgents?.find(
+					(agent) => agent.id === currentLineOwnerId
+				)?.infos || null;
 
-			// Si l'appareil et le propriétaire n'ont pas été modifiés
-			row.original.deviceId === newDeviceId &&
-			row.original.agentId === newOwnerId
+			// Si aucun nouveal appareil
+			// ou si l'appareil et le propriétaire n'ont pas été modifiés
+			// ou si l'appareil et l'agent fournis sont déjà liés, pas de modale
+			!newDeviceId ||
+			(currentDeviceId === newDeviceId &&
+				currentLineOwnerId === newLineOwnerId) ||
+			(!alreadyUsingDeviceLine &&
+				currentLineOwnerId === newLineOwnerId &&
+				newDeviceCurrentOwnerId === newLineOwnerId)
 				? (setValidationErrors({}),
 				  updateLine(updateData),
 				  table.setEditingRow(null))
@@ -394,10 +403,10 @@ export default function ActiveLines() {
 						setValidationErrors,
 						alreadyUsingDeviceLine,
 						deviceFullName,
-						currentOwnerFullName,
-						currentOwnerId,
-						newOwnerFullName,
-						newOwnerId,
+						currentLineOwnerFullName,
+						currentLineOwnerId,
+						newLineOwnerFullName,
+						newLineOwnerId,
 						currentDeviceId,
 						newDeviceId,
 						updateData,
