@@ -9,7 +9,6 @@ import fetchApi from './fetchApi';
 import queryClient from './queryClient';
 import { IdSelectionType } from '../types';
 import { LineType } from '../types/line';
-import { useUpdateLine } from './lineQueries';
 
 export const useGetAllDevices = () => {
 	return useQuery({

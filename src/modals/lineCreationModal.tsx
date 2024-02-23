@@ -280,8 +280,7 @@ export default function displayLineCreationModal({
 		});
 	}
 
-	// Si un propriétaire est affecté à la ligne en création
-	// et pas de propriétaire actuel
+	// Si un nouveau propriétaire est fourni et pas de propriétaire actuel
 	if (!currentOwnerId) {
 		return modals.openConfirmModal({
 			title: "Affectation automatique de l'appareil",
@@ -322,7 +321,8 @@ export default function displayLineCreationModal({
 		children: (
 			<>
 				<Text mb='xs'>
-					L'appareil {deviceFullName} appartient déjà à l'agent{' '}
+					L'appareil {deviceFullName} appartient actuellement à
+					l'agent{' '}
 					<span className='bold-text'>{currentOwnerFullName}</span> et
 					n'est affecté à aucune ligne.
 				</Text>
@@ -335,6 +335,7 @@ export default function displayLineCreationModal({
 						mt='lg'
 						mx='md'
 						onClick={() => {
+							creationData.agentId = currentOwnerId;
 							createLine({
 								data: creationData,
 							});

@@ -12,6 +12,7 @@ import {
 	MantineReactTable,
 	useMantineReactTable,
 	type MRT_ColumnDef,
+	MRT_TableInstance,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
@@ -28,6 +29,7 @@ import { useGetAllModels } from '../../utils/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayLineCreationModal from '../../modals/lineCreationModal';
+import displayLineUpdateModal from '../../modals/lineUpdateModal';
 
 export default function ActiveLines() {
 	const {
@@ -299,21 +301,21 @@ export default function ActiveLines() {
 			// Vérification de la présence de l'appareil dans les autres lignes et de son propriétaire actuel
 			const newOwnerId = creationData.agentId ?? null;
 			const newOwnerFullName: string | null = agentId ?? null;
+			const newDeviceId = creationData.deviceId ?? null;
 			const deviceFullName: string | null = deviceId;
 			const alreadyUsingDeviceLine =
-				lines?.find(
-					(line) => line.deviceId === creationData.deviceId
-				) || null;
+				lines?.find((line) => line.deviceId === newDeviceId) || null;
 			const currentOwnerId =
-				devices?.find((device) => device.id === creationData.deviceId)
-					?.agentId || null;
+				devices?.find((device) => device.id === newDeviceId)?.agentId ||
+				null;
 			const currentOwnerFullName =
 				formattedAgents?.find((agent) => agent.id === currentOwnerId)
 					?.infos || null;
 
-			// Si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
+			// Si aucun appareil ou si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
-			newOwnerId === currentOwnerId && !alreadyUsingDeviceLine
+			!newDeviceId ||
+			(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
 				? (createLine({ data: creationData }),
 				  setValidationErrors({}),
 				  exitCreatingMode())
@@ -362,32 +364,44 @@ export default function ActiveLines() {
 				return setValidationErrors(errors);
 			}
 
-			// Si l'appareil a changé
-			if (updateData.deviceId !== row.original.deviceId) {
-				console.log("Changement d'appareil");
-				// Si un nouvel appareil est affecté (non nul)
-				if (updateData.deviceId) {
-					// Recherche de l'ancien propriétaire
-					const currentOwner = devices?.find(
-						(device) => device.id === updateData.deviceId
-					)?.agentId;
-					if (currentOwner !== updateData.agentId) {
-						console.log('Appareil affecté à un autre agent');
-						// TODO Ouvrir modale de confirmation de changement
-						if (!updateData.agentId)
-							console.log('Pas de nouveau propriétaire');
-						// TODO Ouvrir modale d'affectation automatique
-					} else console.log('Appareil appartenant au même agent');
-				}
-			}
+			const newOwnerId = updateData.agentId ?? null;
+			const newOwnerFullName: string | null = agentId ?? null;
+			const newDeviceId = updateData.deviceId ?? null;
+			const currentDeviceId = row.original.deviceId;
+			const deviceFullName: string | null = deviceId;
+			const alreadyUsingDeviceLine =
+				lines?.find(
+					(line) =>
+						line.deviceId === newDeviceId &&
+						line.id !== row.original.id
+				) || null;
+			const currentOwnerId =
+				devices?.find((device) => device.id === updateData.deviceId)
+					?.agentId || null;
+			const currentOwnerFullName =
+				formattedAgents?.find((agent) => agent.id === currentOwnerId)
+					?.infos || null;
 
-			if (updateData.agentId !== row.original.agentId) {
-				console.log('Changement de propriétaire');
-			}
-
-			setValidationErrors({});
-			// updateLine(data);
-			// table.setEditingRow(null);
+			// Si l'appareil et le propriétaire n'ont pas été modifiés
+			row.original.deviceId === newDeviceId &&
+			row.original.agentId === newOwnerId
+				? (setValidationErrors({}),
+				  updateLine(updateData),
+				  table.setEditingRow(null))
+				: displayLineUpdateModal({
+						updateLine,
+						exitUpdatingMode: () => table.setEditingRow(null),
+						setValidationErrors,
+						alreadyUsingDeviceLine,
+						deviceFullName,
+						currentOwnerFullName,
+						currentOwnerId,
+						newOwnerFullName,
+						newOwnerId,
+						currentDeviceId,
+						newDeviceId,
+						updateData,
+				  });
 		};
 
 	//DELETE action
@@ -410,7 +424,7 @@ export default function ActiveLines() {
 			onConfirm: () => deleteLine({ id: row.original.id }),
 		});
 
-	const table = useMantineReactTable({
+	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,
 		data: lines || [],
 		enableGlobalFilter: true,
