@@ -368,32 +368,38 @@ export default function ActiveLines() {
 			const newLineOwnerId = updateData.agentId ?? null;
 			const newLineOwnerFullName: string | null = agentId ?? null;
 			const newDeviceId = updateData.deviceId ?? null;
-			const newDevice = devices?.find(
-				(device) => device.id === newDeviceId
-			);
-			const newDeviceCurrentOwnerId = newDevice?.agentId;
-			const currentDeviceId = row.original.deviceId;
-			const deviceFullName: string | null = deviceId;
+			const newDevice = newDeviceId
+				? devices?.find((device) => device.id === newDeviceId)
+				: null;
+			const deviceCurrentOwnerId = newDevice ? newDevice.agentId : null;
+			const deviceCurrentOwnerFullName =
+				formattedAgents?.find(
+					(agent) => agent.id === deviceCurrentOwnerId
+				)?.infos ?? null;
+			const currentDeviceId = row.original.deviceId || null;
+			const deviceFullName: string | null = deviceId ?? null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
 					(line) =>
 						line.deviceId === newDeviceId &&
 						line.id !== row.original.id
 				) || null;
+			const alreadyUsingDeviceLineOwnerFullName =
+				formattedAgents?.find(
+					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
+				)?.infos || null;
 			const currentLineOwnerFullName =
 				formattedAgents?.find(
 					(agent) => agent.id === currentLineOwnerId
 				)?.infos || null;
 
-			// Si aucun nouveal appareil
+			// Si aucun nouvel appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
-			// ou si l'appareil et l'agent fournis sont déjà liés, pas de modale
+			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
 			!newDeviceId ||
 			(currentDeviceId === newDeviceId &&
 				currentLineOwnerId === newLineOwnerId) ||
-			(!alreadyUsingDeviceLine &&
-				currentLineOwnerId === newLineOwnerId &&
-				newDeviceCurrentOwnerId === newLineOwnerId)
+			(!alreadyUsingDeviceLine && deviceCurrentOwnerId === newLineOwnerId)
 				? (setValidationErrors({}),
 				  updateLine(updateData),
 				  table.setEditingRow(null))
@@ -402,12 +408,15 @@ export default function ActiveLines() {
 						exitUpdatingMode: () => table.setEditingRow(null),
 						setValidationErrors,
 						alreadyUsingDeviceLine,
+						alreadyUsingDeviceLineOwnerFullName,
 						deviceFullName,
 						currentLineOwnerFullName,
 						currentLineOwnerId,
 						newLineOwnerFullName,
 						newLineOwnerId,
 						currentDeviceId,
+						deviceCurrentOwnerId,
+						deviceCurrentOwnerFullName,
 						newDeviceId,
 						updateData,
 				  });
