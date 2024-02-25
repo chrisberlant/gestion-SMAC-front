@@ -186,7 +186,7 @@ export default function displayLineUpdateModal({
 		// Si l'autre ligne a le même propriétaire que la ligne actuelle (peuvent être nuls)
 		if (alreadyUsingDeviceLine.agentId === newLineOwnerId) {
 			return modals.openConfirmModal({
-				title: "Appareil déjà associé à une ligne de l'agent",
+				title: "Appareil déjà associé à une autre ligne de l'agent",
 				size: 'lg',
 				centered: true,
 				children: (
@@ -246,7 +246,7 @@ export default function displayLineUpdateModal({
 							<>
 								et à son propriétaire{' '}
 								<span className='bold-text'>
-									{newLineOwnerFullName}
+									{alreadyUsingDeviceLineOwnerFullName}
 								</span>
 							</>
 						) : (
