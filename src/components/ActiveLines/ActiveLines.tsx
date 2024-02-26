@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Loader } from '@mantine/core';
+import { Button, Flex, Loader } from '@mantine/core';
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
 	lineCreationSchema,
@@ -460,8 +460,18 @@ export default function ActiveLines() {
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
+		// TODO
 		renderTopToolbarCustomActions: ({ table }) => (
-			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+			<>
+				<CreateButton
+					createFunction={() => table.setCreatingRow(true)}
+				/>
+				<Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
+					<Button color='green'>Actives</Button>
+					<Button color='orange'>En cours</Button>
+					<Button color='red'>Résiliées</Button>
+				</Flex>
+			</>
 		),
 		mantineTableProps: {
 			striped: true,
