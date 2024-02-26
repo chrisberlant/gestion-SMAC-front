@@ -16,6 +16,7 @@ export const useGetAllLines = () => {
 	});
 };
 
+// Création de ligne
 export const useCreateLine = () => {
 	return useMutation({
 		mutationFn: async ({
@@ -90,28 +91,77 @@ export const useCreateLine = () => {
 	});
 };
 
+// Modification de ligne
 export const useUpdateLine = () => {
 	return useMutation({
-		mutationFn: async (line: LineUpdateType) => {
-			return (await fetchApi('/updateLine', 'PATCH', line)) as LineType;
+		mutationFn: async ({
+			data,
+		}: {
+			data: LineUpdateType;
+			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
+			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
+		}) => {
+			return (await fetchApi('/updateLine', 'PATCH', data)) as LineType;
 		},
 
 		onMutate: async (updatedLine) => {
-			await queryClient.cancelQueries({ queryKey: ['lines'] });
+			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
 			const previousLines = queryClient.getQueryData(['lines']);
-			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-				lines.map((line) =>
-					line.id === updatedLine.id ? updatedLine : line
-				)
-			);
-			return previousLines;
+			const previousDevices = queryClient.getQueryData(['devices']);
+
+			// Mises à jour de la ligne éditée et de l'ancienne ligne pour retirer l'appareil
+			if (updatedLine.updateOldLine) {
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) => {
+						if (
+							line.deviceId === updatedLine.data.deviceId &&
+							line.id !== updatedLine.data.id
+						) {
+							return { ...line, deviceId: null };
+						} else if (line.id === updatedLine.data.id) {
+							return updatedLine.data;
+						} else {
+							return line;
+						}
+					})
+				);
+			} else {
+				// Si pas d'ancienne ligne, uniquement mise à jour de la ligne éditée
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) =>
+						line.id === updatedLine.data.id
+							? updatedLine.data
+							: line
+					)
+				);
+			}
+
+			if (updatedLine.updateDevice) {
+				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
+				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
+					devices.map((device) =>
+						device.id === updatedLine.data.deviceId
+							? { ...device, agentId: updatedLine.data.agentId }
+							: device
+					)
+				);
+			}
+
+			return { previousLines, previousDevices };
 		},
 		onSuccess: () => toast.success('Appareil modifié avec succès'),
-		onError: (_, __, previousLines) =>
-			queryClient.setQueryData(['lines'], previousLines),
+		onError: (_, { updateDevice }, previousValues) => {
+			queryClient.setQueryData(['lines'], previousValues?.previousLines);
+			if (updateDevice)
+				queryClient.setQueryData(
+					['devices'],
+					previousValues?.previousDevices
+				);
+		},
 	});
 };
 
+// Suppression de ligne
 export const useDeleteLine = () => {
 	return useMutation({
 		mutationFn: async (line: IdSelectionType) => {

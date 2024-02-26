@@ -1,6 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Loader, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
+import { Loader } from '@mantine/core';
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
 	lineCreationSchema,
@@ -30,6 +29,7 @@ import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDele
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayLineCreationModal from '../../modals/lineCreationModal';
 import displayLineUpdateModal from '../../modals/lineUpdateModal';
+import displayLineDeleteModal from '../../modals/lineDeleteModal';
 
 export default function ActiveLines() {
 	const {
@@ -401,7 +401,7 @@ export default function ActiveLines() {
 				currentLineOwnerId === newLineOwnerId) ||
 			(!alreadyUsingDeviceLine && deviceCurrentOwnerId === newLineOwnerId)
 				? (setValidationErrors({}),
-				  updateLine(updateData),
+				  updateLine({ data: updateData }),
 				  table.setEditingRow(null))
 				: displayLineUpdateModal({
 						updateLine,
@@ -423,24 +423,18 @@ export default function ActiveLines() {
 		};
 
 	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<LineType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'une ligne",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer la ligne{' '}
-					<span className='bold-text'>{row.original.number}</span> ?
-					Cette action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteLine({ id: row.original.id }),
+	const openDeleteConfirmModal = (row: MRT_Row<LineType>) => {
+		const currentOwnerFullName =
+			formattedAgents?.find((agent) => agent.id === row.original.agentId)
+				?.infos || null;
+		const lineNumber = row.original.number;
+		displayLineDeleteModal({
+			id: row.original.id,
+			lineNumber,
+			currentOwnerFullName,
+			deleteLine,
 		});
+	};
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,

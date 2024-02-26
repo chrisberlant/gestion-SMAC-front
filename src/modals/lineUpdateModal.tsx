@@ -2,14 +2,18 @@ import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { LineUpdateType, LineType } from '../types/line';
 
-// interface UpdateLineProps {
-// 	data: LineUpdateType;
-// 	updateDevice?: boolean;
-// 	updateOldLine?: boolean;
-// }
+interface UpdateLineProps {
+	data: LineUpdateType;
+	updateDevice?: boolean;
+	updateOldLine?: boolean;
+}
 
 interface DisplayLineUpdateModalProps {
-	updateLine: (data: LineUpdateType) => void;
+	updateLine: ({
+		data,
+		updateDevice,
+		updateOldLine,
+	}: UpdateLineProps) => void;
 	exitUpdatingMode: () => void;
 	setValidationErrors: (
 		value: React.SetStateAction<Record<string, string | undefined>>
@@ -73,8 +77,7 @@ export default function displayLineUpdateModal({
 					labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 					onCancel: modals.closeAll,
 					onConfirm: () => {
-						// TODO Update device
-						updateLine(updateData);
+						updateLine({ data: updateData, updateDevice: true });
 						setValidationErrors({});
 						exitUpdatingMode();
 						modals.closeAll();
@@ -83,9 +86,9 @@ export default function displayLineUpdateModal({
 			}
 			// Retrait du propriétaire existant de la ligne
 			if (!newLineOwnerId) {
-				return modals.open({
-					title: 'Appareil actuellement affecté à un agent',
-					size: 'xl',
+				return modals.openConfirmModal({
+					title: "Changement de propriétaire de l'appareil",
+					size: 'lg',
 					centered: true,
 					children: (
 						<>
@@ -97,48 +100,19 @@ export default function displayLineUpdateModal({
 								</span>
 								.
 							</Text>
-							<Text>Que souhaitez-vous faire ?</Text>
-							<Flex align='center'>
-								<Button
-									mt='lg'
-									mx='md'
-									onClick={() => {
-										updateData.agentId =
-											deviceCurrentOwnerId;
-										updateLine(updateData);
-										setValidationErrors({});
-										exitUpdatingMode();
-										modals.closeAll();
-									}}
-								>
-									Garder la ligne et l'appareil affectés à{' '}
-									{currentLineOwnerFullName}
-								</Button>
-								<Button
-									mt='lg'
-									mx='md'
-									color='rgba(68, 145, 42, 1)'
-									onClick={() => {
-										//TODO Update device
-										updateLine(updateData);
-										setValidationErrors({});
-										exitUpdatingMode();
-										modals.closeAll();
-									}}
-								>
-									Désaffecter la ligne et l'appareil
-								</Button>
-							</Flex>
-							<Button
-								fullWidth
-								mt='xl'
-								variant='default'
-								onClick={() => modals.closeAll()}
-							>
-								Annuler
-							</Button>
+							<Text mb='xl'>
+								Si vous continuez, celui-ci sera désaffecté.
+							</Text>
 						</>
 					),
+					labels: { confirm: 'Confirmer', cancel: 'Annuler' },
+					onCancel: modals.closeAll,
+					onConfirm: () => {
+						updateLine({ data: updateData, updateDevice: true });
+						setValidationErrors({});
+						exitUpdatingMode();
+						modals.closeAll();
+					},
 				});
 			}
 
@@ -169,8 +143,7 @@ export default function displayLineUpdateModal({
 				labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 				onCancel: modals.closeAll,
 				onConfirm: () => {
-					//TODO Update device
-					updateLine(updateData);
+					updateLine({ data: updateData, updateDevice: true });
 					setValidationErrors({});
 					exitUpdatingMode();
 					modals.closeAll();
@@ -205,7 +178,7 @@ export default function displayLineUpdateModal({
 									</span>
 								</>
 							) : (
-								<>sans propriétaire</>
+								'sans propriétaire'
 							)}
 							.
 						</Text>
@@ -219,8 +192,7 @@ export default function displayLineUpdateModal({
 				labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 				onCancel: modals.closeAll,
 				onConfirm: () => {
-					//TODO update old line
-					updateLine(updateData);
+					updateLine({ data: updateData, updateOldLine: true });
 					setValidationErrors({});
 					exitUpdatingMode();
 					modals.closeAll();
@@ -255,7 +227,7 @@ export default function displayLineUpdateModal({
 						.
 					</Text>
 					<Text mb='xl'>
-						Si vous continuez, il sera désaffecté de celle-ci pour
+						Si vous continuez, il sera désaffecté de ceux-ci pour
 						être affecté à la ligne en cours de modification{' '}
 						{newLineOwnerFullName ? (
 							<>
@@ -274,8 +246,11 @@ export default function displayLineUpdateModal({
 			labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 			onCancel: modals.closeAll,
 			onConfirm: () => {
-				//TODO Update device & old line
-				updateLine(updateData);
+				updateLine({
+					data: updateData,
+					updateDevice: true,
+					updateOldLine: true,
+				});
 				setValidationErrors({});
 				exitUpdatingMode();
 				modals.closeAll();
@@ -310,9 +285,8 @@ export default function displayLineUpdateModal({
 							mt='lg'
 							mx='md'
 							onClick={() => {
-								updateData.agentId =
-									deviceCurrentOwnerId ?? null;
-								updateLine(updateData);
+								updateData.agentId = deviceCurrentOwnerId;
+								updateLine({ data: updateData });
 								setValidationErrors({});
 								exitUpdatingMode();
 								modals.closeAll();
@@ -325,8 +299,10 @@ export default function displayLineUpdateModal({
 							mx='md'
 							color='rgba(68, 145, 42, 1)'
 							onClick={() => {
-								//TODO Update device
-								updateLine(updateData);
+								updateLine({
+									data: updateData,
+									updateDevice: true,
+								});
 								setValidationErrors({});
 								exitUpdatingMode();
 								modals.closeAll();
@@ -369,8 +345,11 @@ export default function displayLineUpdateModal({
 			labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 			onCancel: modals.closeAll,
 			onConfirm: () => {
-				//TODO update old line
-				updateLine(updateData);
+				updateLine({
+					data: updateData,
+					updateDevice: true,
+					updateOldLine: true,
+				});
 				setValidationErrors({});
 				exitUpdatingMode();
 				modals.closeAll();
@@ -396,8 +375,11 @@ export default function displayLineUpdateModal({
 						mt='lg'
 						mx='md'
 						onClick={() => {
-							updateData.agentId = deviceCurrentOwnerId ?? null;
-							updateLine(updateData);
+							updateData.agentId = deviceCurrentOwnerId;
+							updateLine({
+								data: updateData,
+								updateDevice: true,
+							});
 							setValidationErrors({});
 							exitUpdatingMode();
 							modals.closeAll();
@@ -410,8 +392,10 @@ export default function displayLineUpdateModal({
 						mx='md'
 						color='rgba(68, 145, 42, 1)'
 						onClick={() => {
-							//TODO Update device
-							updateLine(updateData);
+							updateLine({
+								data: updateData,
+								updateDevice: true,
+							});
 							setValidationErrors({});
 							exitUpdatingMode();
 							modals.closeAll();

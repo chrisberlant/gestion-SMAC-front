@@ -9,7 +9,11 @@ interface CreateLineProps {
 }
 
 interface DisplayLineCreationModalProps {
-	createLine: ({ data, updateDevice }: CreateLineProps) => void;
+	createLine: ({
+		data,
+		updateDevice,
+		updateOldLine,
+	}: CreateLineProps) => void;
 	exitCreatingMode: () => void;
 	setValidationErrors: (
 		value: React.SetStateAction<Record<string, string | undefined>>
@@ -106,7 +110,7 @@ export default function displayLineCreationModal({
 									</span>
 								</>
 							) : (
-								<> sans propriétaire</>
+								' sans propriétaire'
 							)}
 							.
 						</Text>
