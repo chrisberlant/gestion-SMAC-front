@@ -50,7 +50,6 @@ export default function AgentsTable() {
 	>({});
 
 	const vipRef = useRef<boolean>(true);
-	console.log(vipRef.current);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [

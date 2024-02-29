@@ -1,4 +1,4 @@
-import { Box, Loader, Text } from '@mantine/core';
+import { Box, Button, Flex, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import 'dayjs/locale/fr';
 import {
@@ -36,6 +36,8 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import { IconArrowsSort } from '@tabler/icons-react';
 import { useGetAllLines } from '../../utils/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
+import ExportToExcelButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
+import ExportDevicesToExcelButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
 
 export default function DevicesTable() {
 	const {
@@ -464,6 +466,16 @@ export default function DevicesTable() {
 		renderTopToolbarCustomActions: ({ table }) => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
+		renderBottomToolbarCustomActions: () => {
+			console.log(table);
+			return devices && formattedAgents && formattedModels ? (
+				<ExportDevicesToExcelButton
+					data={devices}
+					formattedAgents={formattedAgents}
+					formattedModels={formattedModels}
+				/>
+			) : null;
+		},
 		mantineTableProps: {
 			striped: true,
 		},

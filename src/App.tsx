@@ -8,7 +8,6 @@ import Devices from './components/Devices/Devices';
 import Login from './components/Login/Login';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
-import ResiliatedLines from './components/ResiliatedLines/ResiliatedLines';
 import Stats from './components/Stats/Stats';
 import ActiveLines from './components/ActiveLines/ActiveLines';
 
@@ -16,10 +15,9 @@ function AppRoutes() {
 	return (
 		<Routes>
 			<Route element={<Login />} path='/' />
-			{/* Protected routes, can only be accessed by authenticated user */}
+			{/* Routes protégées, la connexion est nécessaire */}
 			<Route element={<PrivateRoutes />}>
 				<Route element={<ActiveLines />} path='/active-lines' />
-				<Route element={<ResiliatedLines />} path='/resiliated-lines' />
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AgentsTable />} path='/agents' />
 				<Route element={<Stats />} path='/stats' />

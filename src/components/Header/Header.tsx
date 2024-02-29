@@ -1,5 +1,6 @@
 import {
 	Container,
+	Flex,
 	Group,
 	Menu,
 	Tabs,
@@ -21,9 +22,7 @@ import { toast } from 'sonner';
 
 // Liste des différents onglets avec leurs titres et liens
 const tabs = {
-	'Lignes actives': '/active-lines',
-	'Lignes résiliées': '/resiliated-lines',
-	Prêts: '/lent',
+	Lignes: '/lines',
 	Appareils: '/devices',
 	Agents: '/agents',
 	Statistiques: '/stats',
@@ -64,6 +63,7 @@ export default function Header() {
 								Gestion SMAC
 							</span>
 						</div>
+						{/* Menu utilisateur */}
 						<Menu
 							width={260}
 							position='bottom-end'
@@ -139,8 +139,9 @@ export default function Header() {
 						<ThemeToggler />
 					</Group>
 				</Container>
+				{/* Onglets de navigation */}
 				<nav>
-					<Container size='md'>
+					<Flex justify='center'>
 						<Tabs
 							variant='outline'
 							visibleFrom='sm'
@@ -152,8 +153,9 @@ export default function Header() {
 						>
 							<Tabs.List>{items}</Tabs.List>
 						</Tabs>
-					</Container>
+					</Flex>
 				</nav>
+				{/* Modale de paramètres utilisateur */}
 				<AccountSettings
 					openedAccountModal={openedAccountModal}
 					closeAccountModal={closeAccountModal}

@@ -13,7 +13,7 @@ import {
 	type MRT_ColumnDef,
 	MRT_TableInstance,
 } from 'mantine-react-table';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
 import {
 	useCreateLine,
@@ -75,10 +75,41 @@ export default function ActiveLines() {
 		agentsError ||
 		modelsError;
 	const allData = services && agents && devices && models && lines;
-
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
+
+	const [filter, setFilter] = useState<
+		'active' | 'inProgress' | 'resiliated' | null
+	>(null);
+
+	const [filteredData, setFilteredData] = useState<LineType[]>();
+
+	// Filtrer les données affichées selon le state filter
+	useEffect(() => {
+		// TODO fix
+		if (lines) {
+			switch (filter) {
+				case 'active':
+					setFilteredData(
+						lines.filter((line) => line.status === 'Active')
+					);
+					break;
+				case 'inProgress':
+					setFilteredData(
+						lines.filter((line) => line.status === 'En cours')
+					);
+					break;
+				case 'resiliated':
+					setFilteredData(
+						lines.filter((line) => line.status === 'Résiliée')
+					);
+					break;
+				default:
+					setFilteredData(lines);
+			}
+		}
+	}, [filter, filteredData, lines]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -232,7 +263,7 @@ export default function ActiveLines() {
 						(device) => device.id === row.original.deviceId
 					)?.infos;
 					return (
-						currentDevice ?? (
+						currentDevice || (
 							<span className='personal-device-text'>
 								Aucun appareil (ou personnel)
 							</span>
@@ -438,7 +469,8 @@ export default function ActiveLines() {
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,
-		data: lines || [],
+		// TODO fix
+		data: filteredData || [],
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
 		enableColumnActions: false,
@@ -460,16 +492,28 @@ export default function ActiveLines() {
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
-		// TODO
+		// TODO fix
 		renderTopToolbarCustomActions: ({ table }) => (
 			<>
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
 				<Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
-					<Button color='green'>Actives</Button>
-					<Button color='orange'>En cours</Button>
-					<Button color='red'>Résiliées</Button>
+					<Button color='green' onClick={() => setFilter(null)}>
+						Toutes les lignes
+					</Button>
+					<Button color='green' onClick={() => setFilter('active')}>
+						Actives
+					</Button>
+					<Button
+						color='orange'
+						onClick={() => setFilter('inProgress')}
+					>
+						En cours
+					</Button>
+					<Button color='red' onClick={() => setFilter('resiliated')}>
+						Résiliées
+					</Button>
 				</Flex>
 			</>
 		),
