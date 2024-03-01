@@ -31,7 +31,7 @@ import displayLineCreationModal from '../../modals/lineCreationModal';
 import displayLineUpdateModal from '../../modals/lineUpdateModal';
 import displayLineDeleteModal from '../../modals/lineDeleteModal';
 
-export default function ActiveLines() {
+export default function Lines() {
 	const {
 		data: services,
 		isLoading: servicesLoading,

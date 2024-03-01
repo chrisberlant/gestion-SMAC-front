@@ -9,7 +9,7 @@ import Login from './components/Login/Login';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 import Stats from './components/Stats/Stats';
-import ActiveLines from './components/ActiveLines/ActiveLines';
+import Lines from './components/Lines/Lines';
 
 function AppRoutes() {
 	return (
@@ -17,7 +17,7 @@ function AppRoutes() {
 			<Route element={<Login />} path='/' />
 			{/* Routes protégées, la connexion est nécessaire */}
 			<Route element={<PrivateRoutes />}>
-				<Route element={<ActiveLines />} path='/active-lines' />
+				<Route element={<Lines />} path='/lines' />
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AgentsTable />} path='/agents' />
 				<Route element={<Stats />} path='/stats' />
