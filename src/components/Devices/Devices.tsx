@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Loader, Text } from '@mantine/core';
+import { Box, Flex, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import 'dayjs/locale/fr';
 import {
@@ -36,8 +36,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import { IconArrowsSort } from '@tabler/icons-react';
 import { useGetAllLines } from '../../utils/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
-import ExportToExcelButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
-import ExportDevicesToExcelButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
+import ExportDevicesToCsvButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
 
 export default function DevicesTable() {
 	const {
@@ -466,14 +465,34 @@ export default function DevicesTable() {
 		renderTopToolbarCustomActions: ({ table }) => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		renderBottomToolbarCustomActions: () => {
-			console.log(table);
+		renderBottomToolbarCustomActions: ({ table }) => {
+			// Récupération des lignes du tableau affichées directement via leur cache
+			const displayedTableRows = table.getRowModel().rows.map((row) => ({
+				...row._valuesCache,
+				imei: `"${row._valuesCache.imei}`, // Ajout de devant l'imei pour l'affichage dans le tableur
+			}));
+
+			// Récupération de toutes les lignes, incluant celles non affichées
+			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
+				...row.original,
+				imei: `"${row.original.imei}`,
+				agentId: formattedAgents?.find(
+					(agent) => agent.id === row.original.agentId
+				)?.infos,
+				modelId: formattedModels?.find(
+					(model) => model.id === row.original.modelId
+				)?.infos,
+			}));
+
 			return devices && formattedAgents && formattedModels ? (
-				<ExportDevicesToExcelButton
-					data={devices}
-					formattedAgents={formattedAgents}
-					formattedModels={formattedModels}
-				/>
+				<Flex justify='end'>
+					<ExportDevicesToCsvButton data={allTableRows}>
+						Exporter toutes les données en CSV
+					</ExportDevicesToCsvButton>
+					<ExportDevicesToCsvButton data={displayedTableRows}>
+						Exporter l'affichage actuel en CSV
+					</ExportDevicesToCsvButton>
+				</Flex>
 			) : null;
 		},
 		mantineTableProps: {
@@ -492,14 +511,14 @@ export default function DevicesTable() {
 			density: 'xs',
 			pagination: {
 				pageIndex: 0, // page start
-				pageSize: 50, // rows per page
+				pageSize: 20, // rows per page
 			},
 			columnVisibility: {
 				id: false,
 			},
 		},
 		mantinePaginationProps: {
-			rowsPerPageOptions: ['20', '50', '100', '200'],
+			rowsPerPageOptions: ['20', '50', '100', '200', '1000', '2000'],
 			withEdges: true,
 		},
 	});

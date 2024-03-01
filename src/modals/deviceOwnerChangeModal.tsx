@@ -52,7 +52,7 @@ export default function displayDeviceOwnerChangeModal({
 				</Text>
 				<Text mb='xl'>
 					Si vous continuez, le propriétaire de cette ligne sera
-					également mis à jour.
+					également {data.agentId ? 'mis à jour' : 'supprimé'}.
 				</Text>
 			</>
 		),

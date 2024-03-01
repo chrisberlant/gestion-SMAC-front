@@ -1,29 +1,16 @@
 import { Button } from '@mantine/core';
 import { CSVLink } from 'react-csv';
-import { DeviceType } from '../../types/device';
-
-type formattedAgentsType = {
-	infos: string;
-	vip: boolean;
-	id: number;
-}[];
-
-type formattedModelsType = {
-	infos: string;
-	id: number;
-}[];
-
-interface ExportDevicesToCsvButtonProps {
-	data: DeviceType[];
-	formattedAgents: formattedAgentsType;
-	formattedModels: formattedModelsType;
-}
+import { ReactNode } from 'react';
+import { IconDownload } from '@tabler/icons-react';
+import { Data } from 'react-csv/lib/core';
 
 export default function ExportDevicesToCsvButton({
 	data,
-	formattedModels,
-	formattedAgents,
-}: ExportDevicesToCsvButtonProps) {
+	children,
+}: {
+	data: Data;
+	children: ReactNode;
+}) {
 	const headers = [
 		{ label: 'IMEI', key: 'imei' },
 		{ label: 'Date de préparation', key: 'preparationDate' },
@@ -35,29 +22,16 @@ export default function ExportDevicesToCsvButton({
 		{ label: 'Modèle', key: 'modelId' },
 	];
 
-	const exportedData = data.map((device) => {
-		return {
-			...device,
-			imei: `"${device.imei}`,
-			isNew: device.isNew ? 'Neuf' : 'Occasion',
-			agentId: formattedAgents.find(
-				(agent) => agent.id === device.agentId
-			)?.infos,
-			modelId: formattedModels.find(
-				(model) => model.id === device.modelId
-			)?.infos,
-		};
-	});
-
 	return (
 		<CSVLink
-			data={exportedData}
+			data={data}
 			headers={headers}
 			filename={`Export_appareils_${Date.now()}`}
 			separator={';'}
 		>
-			<Button color='green' my='md'>
-				Exporter vers Excel
+			<Button color='green' mt='lg' mr='xl' px='sm'>
+				<IconDownload />
+				{children}
 			</Button>
 		</CSVLink>
 	);
