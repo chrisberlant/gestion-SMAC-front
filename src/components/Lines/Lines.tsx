@@ -13,7 +13,7 @@ import {
 	type MRT_ColumnDef,
 	MRT_TableInstance,
 } from 'mantine-react-table';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
 import {
 	useCreateLine,
@@ -82,34 +82,6 @@ export default function Lines() {
 	const [filter, setFilter] = useState<
 		'active' | 'inProgress' | 'resiliated' | null
 	>(null);
-
-	const [filteredData, setFilteredData] = useState<LineType[]>();
-
-	// Filtrer les données affichées selon le state filter
-	useEffect(() => {
-		// TODO fix
-		if (lines) {
-			switch (filter) {
-				case 'active':
-					setFilteredData(
-						lines.filter((line) => line.status === 'Active')
-					);
-					break;
-				case 'inProgress':
-					setFilteredData(
-						lines.filter((line) => line.status === 'En cours')
-					);
-					break;
-				case 'resiliated':
-					setFilteredData(
-						lines.filter((line) => line.status === 'Résiliée')
-					);
-					break;
-				default:
-					setFilteredData(lines);
-			}
-		}
-	}, [filter, filteredData, lines]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -470,7 +442,7 @@ export default function Lines() {
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,
 		// TODO fix
-		data: filteredData || [],
+		data: lines || [],
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
 		enableColumnActions: false,
@@ -546,8 +518,8 @@ export default function Lines() {
 	});
 
 	return (
-		<ZoomableComponent className='attributed-lines'>
-			<h2>Lignes attribuées</h2>
+		<ZoomableComponent>
+			<h2>Liste des lignes</h2>
 
 			{anyLoading && (
 				<div className='loader-box'>
