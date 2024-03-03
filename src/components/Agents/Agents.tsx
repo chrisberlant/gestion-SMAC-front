@@ -106,43 +106,47 @@ export default function AgentsTable() {
 							email: undefined,
 						}),
 				},
-				Cell: ({ row }) => (
-					<Flex gap='xs' align='center'>
-						<span className={row.original.vip ? 'vip-text' : ''}>
-							{row.original.email}
-						</span>
-						<Tooltip label={`Copier ${row.original.email}`}>
-							<ActionIcon
-								size='xs'
-								onClick={() => {
-									navigator.clipboard.writeText(
-										row.original.email
-									);
-									toast.info(
-										'Adresse e-mail copiée dans le presse-papiers'
-									);
-								}}
+				Cell: ({ cell, row }) => {
+					const agentEmail = cell.getValue() as string;
+					return (
+						<Flex gap='xs' align='center'>
+							<span
+								className={row.original.vip ? 'vip-text' : ''}
 							>
-								<IconCopy />
-							</ActionIcon>
-						</Tooltip>
-						<Tooltip label={`E-mail à ${row.original.email}`}>
-							<ActionIcon
-								size='xs'
-								onClick={() =>
-									sendEmail(row.original.email, '', '')
-								}
-							>
-								<IconMail />
-							</ActionIcon>
-						</Tooltip>
-					</Flex>
-				),
+								{agentEmail}
+							</span>
+							<Tooltip label={`Copier ${agentEmail}`}>
+								<ActionIcon
+									size='xs'
+									onClick={() => {
+										navigator.clipboard.writeText(
+											agentEmail
+										);
+										toast.info(
+											'Adresse e-mail copiée dans le presse-papiers'
+										);
+									}}
+								>
+									<IconCopy />
+								</ActionIcon>
+							</Tooltip>
+							<Tooltip label={`E-mail à ${agentEmail}`}>
+								<ActionIcon
+									size='xs'
+									onClick={() =>
+										sendEmail(agentEmail, '', '')
+									}
+								>
+									<IconMail />
+								</ActionIcon>
+							</Tooltip>
+						</Flex>
+					);
+				},
 			},
 			{
 				header: 'VIP',
-				id: 'vip',
-				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
+				accessorKey: 'vip',
 				enableColumnFilter: false,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
@@ -152,16 +156,16 @@ export default function AgentsTable() {
 							vip: undefined,
 						}),
 				},
-				Edit: ({ row }) => (
+				Edit: ({ cell }) => (
 					<SwitchButton
 						size='sm'
-						defaultValue={row.original.vip ? true : false}
+						defaultValue={cell.getValue() ? true : false}
 						valueRef={vipRef}
 					/>
 				),
-				Cell: ({ row }) => (
-					<span className={row.original.vip ? 'vip-text' : ''}>
-						{row.original.vip ? 'Oui' : 'Non'}
+				Cell: ({ cell }) => (
+					<span className={cell.getValue() ? 'vip-text' : ''}>
+						{cell.getValue() ? 'Oui' : 'Non'}
 					</span>
 				),
 				size: 70,
@@ -185,16 +189,14 @@ export default function AgentsTable() {
 							serviceId: undefined,
 						}),
 				},
-				Cell: ({ row }) => (
-					<span className={row.original.vip ? 'vip-text' : ''}>
-						{
-							services?.find(
-								(service) =>
-									service.id === row.original.serviceId
-							)?.title
-						}
-					</span>
-				),
+				Cell: ({ row, cell }) => {
+					const serviceTitle = cell.getValue() as string;
+					return (
+						<span className={row.original.vip ? 'vip-text' : ''}>
+							{serviceTitle}
+						</span>
+					);
+				},
 			},
 			{
 				header: 'Appareils possédés',

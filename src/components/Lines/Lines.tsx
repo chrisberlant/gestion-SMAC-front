@@ -216,7 +216,6 @@ export default function Lines() {
 					formattedDevices?.find(
 						(device) => device.id === row.deviceId
 					)?.infos,
-
 				editVariant: 'select',
 				size: 90,
 				mantineEditSelectProps: {
@@ -230,16 +229,14 @@ export default function Lines() {
 							status: undefined,
 						}),
 				},
-				Cell: ({ row }) => {
-					const currentDevice = formattedDevices?.find(
-						(device) => device.id === row.original.deviceId
-					)?.infos;
-					return (
-						currentDevice || (
-							<span className='personal-device-text'>
-								Aucun appareil (ou personnel)
-							</span>
-						)
+				Cell: ({ cell }) => {
+					const currentDevice = cell.getValue();
+					return currentDevice ? (
+						<>{currentDevice}</>
+					) : (
+						<span className='personal-device-text'>
+							Aucun appareil (ou personnel)
+						</span>
 					);
 				},
 			},
@@ -441,7 +438,6 @@ export default function Lines() {
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,
-		// TODO fix
 		data: lines || [],
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
@@ -458,12 +454,18 @@ export default function Lines() {
 		onEditingRowSave: handleSaveLine,
 		onEditingRowCancel: () => setValidationErrors({}),
 		paginationDisplayMode: 'pages',
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			style: { minWidth: '300px' },
+			variant: 'default',
+		},
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
+		// globalFilterFn: 'contains',
 		// TODO fix
 		renderTopToolbarCustomActions: ({ table }) => (
 			<>

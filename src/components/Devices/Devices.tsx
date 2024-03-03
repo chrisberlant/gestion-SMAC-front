@@ -195,9 +195,8 @@ export default function DevicesTable() {
 						/>
 					);
 				},
-				Cell: ({ row }) => {
-					return row.original.isNew === false ? 'Occasion' : 'Neuf';
-				},
+				Cell: ({ cell }) =>
+					cell.getValue() === false ? 'Occasion' : 'Neuf',
 			},
 			{
 				header: 'Modèle',
