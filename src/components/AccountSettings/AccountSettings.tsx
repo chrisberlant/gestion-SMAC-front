@@ -11,11 +11,13 @@ import ChangePassword from './ChangePassword/ChangePassword';
 
 interface AccountSettingsProps {
 	openedAccountModal: boolean;
+	openAccountModal: () => void;
 	closeAccountModal: () => void;
 }
 
 export default function AccountSettings({
 	openedAccountModal,
+	openAccountModal,
 	closeAccountModal,
 }: AccountSettingsProps) {
 	const { data: currentUser } = useGetCurrentUser();
@@ -82,18 +84,33 @@ export default function AccountSettings({
 						mb='xl'
 					/>
 
-					<Button fullWidth mt='xl' type='submit'>
+					<Button fullWidth mt='md' type='submit'>
 						Valider
 					</Button>
-					<Button fullWidth mt='xl' onClick={openPasswordModal}>
+					<Button
+						fullWidth
+						mt='md'
+						onClick={() => {
+							closeAccountModal();
+							openPasswordModal();
+						}}
+					>
 						Modifier le mot de passe
+					</Button>
+					<Button
+						fullWidth
+						mt='md'
+						color='grey'
+						onClick={closeAccountModal}
+					>
+						Annuler
 					</Button>
 				</form>
 			</Modal>
 			<ChangePassword
 				opened={openedPasswordModal}
 				closePasswordModal={closePasswordModal}
-				closeAccountModal={closeAccountModal}
+				openAccountModal={openAccountModal}
 			/>
 		</div>
 	);

@@ -158,6 +158,7 @@ export default function Header() {
 				{/* Modale de paramètres utilisateur */}
 				<AccountSettings
 					openedAccountModal={openedAccountModal}
+					openAccountModal={openAccountModal}
 					closeAccountModal={closeAccountModal}
 				/>
 			</header>

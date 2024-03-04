@@ -119,8 +119,7 @@ export const useUpdateCurrentUser = (
 export const useUpdateCurrentUserPassword = (
 	form: UseFormReturnType<CurrentUserPasswordUpdateType>,
 	toggleOverlay: () => void,
-	closePasswordModal: () => void,
-	closeAccountModal: () => void
+	closePasswordModal: () => void
 ) => {
 	return useMutation({
 		mutationFn: async () => {
@@ -129,7 +128,6 @@ export const useUpdateCurrentUserPassword = (
 		},
 		onSuccess: async () => {
 			closePasswordModal();
-			closeAccountModal();
 			queryClient.invalidateQueries({ queryKey: ['currentUser'] });
 			toast.success(
 				'Mot de passe modifié avec succès, vous allez être redirigé vers la page de connexion'

@@ -8,13 +8,13 @@ import { toast } from 'sonner';
 interface ChangePasswordProps {
 	opened: boolean;
 	closePasswordModal: () => void;
-	closeAccountModal: () => void;
+	openAccountModal: () => void;
 }
 
 export default function ChangePassword({
 	opened,
 	closePasswordModal,
-	closeAccountModal,
+	openAccountModal,
 }: ChangePasswordProps) {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
@@ -28,12 +28,10 @@ export default function ChangePassword({
 	const { mutate: updateCurrentUserPassword } = useUpdateCurrentUserPassword(
 		form,
 		toggleOverlay,
-		closePasswordModal,
-		closeAccountModal
+		closePasswordModal
 	);
 	const closeModals = () => {
 		closePasswordModal();
-		closeAccountModal();
 		form.reset();
 		// Si des champs avaient été modifiés
 		if (form.isDirty())
@@ -48,7 +46,7 @@ export default function ChangePassword({
 				title='Changement du mot de passe'
 				centered
 				overlayProps={{
-					backgroundOpacity: 0,
+					blur: 3,
 				}}
 			>
 				<form
@@ -85,7 +83,10 @@ export default function ChangePassword({
 						fullWidth
 						mt='xl'
 						color='grey'
-						onClick={closePasswordModal}
+						onClick={() => {
+							openAccountModal();
+							closePasswordModal();
+						}}
 					>
 						Retour
 					</Button>
