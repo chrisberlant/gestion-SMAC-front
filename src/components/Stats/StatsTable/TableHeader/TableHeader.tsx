@@ -13,6 +13,7 @@ interface ThProps {
 	onSort(): void;
 }
 
+// En-têtes des tableaux de statistiques, permettant de trier les éléments
 export default function Th({ title, reversed, sorted, onSort }: ThProps) {
 	const Icon = sorted
 		? reversed

@@ -33,7 +33,6 @@ import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import { IconArrowsSort } from '@tabler/icons-react';
 import { useGetAllLines } from '../../utils/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
 import ExportDevicesToCsvButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
@@ -102,6 +101,7 @@ export default function DevicesTable() {
 				return {
 					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
 					vip: agent.vip,
+					email: agent.email,
 					id: agent.id,
 				};
 			}),
@@ -253,9 +253,9 @@ export default function DevicesTable() {
 				},
 			},
 			{
-				header: 'Date de préparation',
+				header: 'Préparation',
 				accessorKey: 'preparationDate',
-				size: 100,
+				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
 					onFocus: () =>
@@ -276,9 +276,9 @@ export default function DevicesTable() {
 				),
 			},
 			{
-				header: "Date d'attribution",
+				header: 'Attribution',
 				accessorKey: 'attributionDate',
-				size: 100,
+				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
 					onFocus: () =>
@@ -434,14 +434,11 @@ export default function DevicesTable() {
 	const table = useMantineReactTable({
 		columns,
 		data: devices || [],
-		icons: {
-			IconArrowsSort: () => (
-				<Box>
-					<IconArrowsSort />
-				</Box>
-			),
-		},
+		enablePagination: false,
+		enableRowVirtualization: true,
 		enableGlobalFilter: true,
+		enableColumnFilters: false,
+		enableColumnOrdering: true,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',
@@ -454,7 +451,7 @@ export default function DevicesTable() {
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
 		onEditingRowCancel: () => setValidationErrors({}),
-		paginationDisplayMode: 'pages',
+		mantineTableContainerProps: { style: { maxHeight: '600px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
@@ -468,7 +465,7 @@ export default function DevicesTable() {
 			// Récupération des lignes du tableau affichées directement via leur cache
 			const displayedTableRows = table.getRowModel().rows.map((row) => ({
 				...row._valuesCache,
-				imei: `"${row._valuesCache.imei}`, // Ajout de devant l'imei pour l'affichage dans le tableur
+				imei: `"${row._valuesCache.imei}`, // Ajout de " devant l'imei pour l'affichage dans le tableur
 			}));
 
 			// Récupération de toutes les lignes, incluant celles non affichées
@@ -484,7 +481,7 @@ export default function DevicesTable() {
 			}));
 
 			return devices && formattedAgents && formattedModels ? (
-				<Flex justify='end'>
+				<Flex justify='end' flex={1}>
 					<ExportDevicesToCsvButton data={allTableRows}>
 						Exporter toutes les données en CSV
 					</ExportDevicesToCsvButton>
@@ -502,24 +499,23 @@ export default function DevicesTable() {
 			mr: 'xs',
 		},
 		mantineBottomToolbarProps: {
-			mt: 'sm',
+			mt: 'xs',
 			mb: 'xs',
-			mx: 'xl',
 		},
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 20, // rows per page
-			},
+			// pagination: {
+			// 	pageIndex: 0, // page start
+			// 	pageSize: 20, // rows per page
+			// },
 			columnVisibility: {
 				id: false,
 			},
 		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['20', '50', '100', '200', '1000', '2000'],
-			withEdges: true,
-		},
+		// mantinePaginationProps: {
+		// 	rowsPerPageOptions: ['20', '50', '100', '200', '1000', '2000'],
+		// 	withEdges: true,
+		// },
 	});
 
 	return (

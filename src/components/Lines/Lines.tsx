@@ -79,9 +79,9 @@ export default function Lines() {
 		Record<string, string | undefined>
 	>({});
 
-	const [filter, setFilter] = useState<
-		'active' | 'inProgress' | 'resiliated' | null
-	>(null);
+	// const [filter, setFilter] = useState<
+	// 	'active' | 'inProgress' | 'resiliated' | null
+	// >(null);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -94,6 +94,7 @@ export default function Lines() {
 				return {
 					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
 					vip: agent.vip,
+					email: agent.email,
 					id: agent.id,
 				};
 			}),
@@ -338,6 +339,7 @@ export default function Lines() {
 		async ({ values, row }) => {
 			const { number, profile, status, comments, deviceId, agentId } =
 				values;
+
 			// Formatage des informations nécessaires pour la validation du schéma
 			const updateData = {
 				id: row.original.id,
@@ -439,8 +441,11 @@ export default function Lines() {
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		columns,
 		data: lines || [],
+		enablePagination: false,
+		enableRowVirtualization: true,
 		enableGlobalFilter: true,
 		enableColumnFilters: false,
+		enableColumnOrdering: true,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',
@@ -465,14 +470,13 @@ export default function Lines() {
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
-		// globalFilterFn: 'contains',
 		// TODO fix
 		renderTopToolbarCustomActions: ({ table }) => (
 			<>
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
+				{/* <Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
 					<Button color='green' onClick={() => setFilter(null)}>
 						Toutes les lignes
 					</Button>
@@ -488,7 +492,7 @@ export default function Lines() {
 					<Button color='red' onClick={() => setFilter('resiliated')}>
 						Résiliées
 					</Button>
-				</Flex>
+				</Flex> */}
 			</>
 		),
 		mantineTableProps: {

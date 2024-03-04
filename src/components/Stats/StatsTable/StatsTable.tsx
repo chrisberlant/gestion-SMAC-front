@@ -11,6 +11,37 @@ interface StatsTableProps {
 	tableTitle: string;
 }
 
+const filterData = (data: StatsType[], search: string) => {
+	const query = search.toLowerCase().trim();
+	return data.filter((item) =>
+		keys(data[0]).some((key) => item[key]?.toLowerCase().includes(query))
+	);
+};
+
+const sortData = (
+	data: StatsType[],
+	payload: {
+		sortBy: keyof StatsType | null;
+		reversed: boolean;
+		search: string;
+	}
+) => {
+	const { sortBy } = payload;
+
+	if (!sortBy) return filterData(data, payload.search);
+
+	return filterData(
+		[...data].sort((a, b) => {
+			if (payload.reversed) {
+				return b[sortBy].localeCompare(a[sortBy]);
+			}
+
+			return a[sortBy].localeCompare(b[sortBy]);
+		}),
+		payload.search
+	);
+};
+
 export default function StatsTable({
 	data,
 	titles,
@@ -20,39 +51,6 @@ export default function StatsTable({
 	const [sortedData, setSortedData] = useState(data);
 	const [sortBy, setSortBy] = useState<keyof StatsType | null>(null);
 	const [reverseSortDirection, setReverseSortDirection] = useState(false);
-
-	function filterData(data: StatsType[], search: string) {
-		const query = search.toLowerCase().trim();
-		return data.filter((item) =>
-			keys(data[0]).some((key) =>
-				item[key]?.toLowerCase().includes(query)
-			)
-		);
-	}
-
-	function sortData(
-		data: StatsType[],
-		payload: {
-			sortBy: keyof StatsType | null;
-			reversed: boolean;
-			search: string;
-		}
-	) {
-		const { sortBy } = payload;
-
-		if (!sortBy) return filterData(data, payload.search);
-
-		return filterData(
-			[...data].sort((a, b) => {
-				if (payload.reversed) {
-					return b[sortBy].localeCompare(a[sortBy]);
-				}
-
-				return a[sortBy].localeCompare(b[sortBy]);
-			}),
-			payload.search
-		);
-	}
 
 	const setSorting = (field: keyof StatsType) => {
 		const reversed = field === sortBy ? !reverseSortDirection : false;

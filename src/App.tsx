@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import 'mantine-react-table/styles.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import './App.css';

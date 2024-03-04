@@ -61,7 +61,7 @@ export default function AgentsTable() {
 			{
 				header: 'Nom',
 				accessorKey: 'lastName',
-				size: 150,
+				size: 120,
 				mantineEditTextInputProps: {
 					error: validationErrors?.lastName,
 					onFocus: () =>
@@ -79,7 +79,7 @@ export default function AgentsTable() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				size: 150,
+				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -97,7 +97,7 @@ export default function AgentsTable() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				size: 100,
+				size: 150,
 				mantineEditTextInputProps: {
 					error: validationErrors?.email,
 					onFocus: () =>
@@ -147,6 +147,7 @@ export default function AgentsTable() {
 			{
 				header: 'VIP',
 				accessorKey: 'vip',
+				size: 20,
 				enableColumnFilter: false,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
@@ -168,7 +169,6 @@ export default function AgentsTable() {
 						{cell.getValue() ? 'Oui' : 'Non'}
 					</span>
 				),
-				size: 70,
 			},
 			{
 				header: 'Service',
@@ -176,8 +176,8 @@ export default function AgentsTable() {
 				accessorFn: (row) =>
 					services?.find((service) => service.id === row.serviceId)
 						?.title,
-				editVariant: 'select',
 				size: 100,
+				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
 					allowDeselect: false,
@@ -199,11 +199,11 @@ export default function AgentsTable() {
 				},
 			},
 			{
-				header: 'Appareils possédés',
+				header: "Nb d'appareils",
 				id: 'devices',
 				enableEditing: false,
 				accessorFn: (row) => row.devices?.length,
-				size: 80,
+				size: 75,
 			},
 		],
 		[services, validationErrors]
@@ -292,7 +292,11 @@ export default function AgentsTable() {
 	const table = useMantineReactTable({
 		columns,
 		data: agents || [],
+		enablePagination: false,
+		enableRowVirtualization: true,
 		enableGlobalFilter: true,
+		enableColumnFilters: false,
+		enableColumnOrdering: true,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',
