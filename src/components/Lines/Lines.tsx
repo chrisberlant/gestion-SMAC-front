@@ -30,6 +30,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayLineCreationModal from '../../modals/lineCreationModal';
 import displayLineUpdateModal from '../../modals/lineUpdateModal';
 import displayLineDeleteModal from '../../modals/lineDeleteModal';
+import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 
 export default function Lines() {
 	const {
@@ -495,6 +496,24 @@ export default function Lines() {
 				</Flex> */}
 			</>
 		),
+		renderBottomToolbarCustomActions: ({ table }) => {
+			// Récupération de toutes les lignes du tableau, incluant celles non affichées
+			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
+				...row.original,
+				deviceId: formattedDevices?.find(
+					(device) => device.id === row.original.deviceId
+				)?.infos,
+				agentId: formattedAgents?.find(
+					(agent) => agent.id === row.original.agentId
+				)?.infos,
+			}));
+
+			return devices && formattedAgents && formattedDevices ? (
+				<Flex justify='end' flex={1}>
+					<ExportToCsvButton data={allTableRows} variant='lines' />
+				</Flex>
+			) : null;
+		},
 		mantineTableProps: {
 			striped: true,
 		},

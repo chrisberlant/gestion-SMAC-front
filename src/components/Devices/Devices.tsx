@@ -1,4 +1,4 @@
-import { Box, Flex, Loader, Text } from '@mantine/core';
+import { Flex, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import 'dayjs/locale/fr';
 import {
@@ -35,7 +35,7 @@ import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDele
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import { useGetAllLines } from '../../utils/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
-import ExportDevicesToCsvButton from '../ExportToCsvButtons/ExportDevicesToCsvButton';
+import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 
 export default function DevicesTable() {
 	const {
@@ -232,8 +232,8 @@ export default function DevicesTable() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
-					clearable: true,
 					allowDeselect: true,
+					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
 						setValidationErrors({
@@ -462,32 +462,24 @@ export default function DevicesTable() {
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		renderBottomToolbarCustomActions: ({ table }) => {
-			// Récupération des lignes du tableau affichées directement via leur cache
-			const displayedTableRows = table.getRowModel().rows.map((row) => ({
-				...row._valuesCache,
-				imei: `"${row._valuesCache.imei}`, // Ajout de " devant l'imei pour l'affichage dans le tableur
-			}));
-
-			// Récupération de toutes les lignes, incluant celles non affichées
+			// Récupération de toutes les lignes du tableau, incluant celles non affichées
 			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
-				...row.original,
 				imei: `"${row.original.imei}`,
-				agentId: formattedAgents?.find(
-					(agent) => agent.id === row.original.agentId
-				)?.infos,
+				status: row.original.status,
+				isNew: row.original.isNew ? 'Neuf' : 'Occasion',
 				modelId: formattedModels?.find(
 					(model) => model.id === row.original.modelId
 				)?.infos,
+				agentId: formattedAgents?.find(
+					(agent) => agent.id === row.original.agentId
+				)?.infos,
+				preparationDate: dateFrFormatting(row.original.preparationDate),
+				attributionDate: dateFrFormatting(row.original.attributionDate),
 			}));
 
 			return devices && formattedAgents && formattedModels ? (
 				<Flex justify='end' flex={1}>
-					<ExportDevicesToCsvButton data={allTableRows}>
-						Exporter toutes les données en CSV
-					</ExportDevicesToCsvButton>
-					<ExportDevicesToCsvButton data={displayedTableRows}>
-						Exporter l'affichage actuel en CSV
-					</ExportDevicesToCsvButton>
+					<ExportToCsvButton data={allTableRows} variant='devices' />
 				</Flex>
 			) : null;
 		},
@@ -504,18 +496,10 @@ export default function DevicesTable() {
 		},
 		initialState: {
 			density: 'xs',
-			// pagination: {
-			// 	pageIndex: 0, // page start
-			// 	pageSize: 20, // rows per page
-			// },
 			columnVisibility: {
 				id: false,
 			},
 		},
-		// mantinePaginationProps: {
-		// 	rowsPerPageOptions: ['20', '50', '100', '200', '1000', '2000'],
-		// 	withEdges: true,
-		// },
 	});
 
 	return (

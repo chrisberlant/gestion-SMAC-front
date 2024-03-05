@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import { sendEmail } from '../../utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
+import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 
 export default function AgentsTable() {
 	const {
@@ -319,6 +320,22 @@ export default function AgentsTable() {
 		renderTopToolbarCustomActions: ({ table }) => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
+		renderBottomToolbarCustomActions: ({ table }) => {
+			// Récupération de toutes les lignes du tableau, incluant celles non affichées
+			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
+				...row.original,
+				vip: row.original.vip ? 'Oui' : 'Non',
+				service: services?.find(
+					(service) => service.id === row.original.serviceId
+				),
+			}));
+
+			return agents && services ? (
+				<Flex justify='end' flex={1}>
+					<ExportToCsvButton data={allTableRows} variant='agents' />
+				</Flex>
+			) : null;
+		},
 		mantineTableProps: {
 			striped: true,
 		},
