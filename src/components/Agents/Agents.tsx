@@ -318,7 +318,19 @@ export default function AgentsTable() {
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
-			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+			<>
+				{/* <Button
+					color='green'
+					onClick={async () => {
+						console.log(await fetchApi('/generateAgentsCsvFile'));
+					}}
+				>
+					Test CSV
+				</Button> */}
+				<CreateButton
+					createFunction={() => table.setCreatingRow(true)}
+				/>
+			</>
 		),
 		renderBottomToolbarCustomActions: ({ table }) => {
 			// Récupération de toutes les lignes du tableau, incluant celles non affichées
