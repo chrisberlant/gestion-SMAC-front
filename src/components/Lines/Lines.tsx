@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Button, Flex, Loader } from '@mantine/core';
+import { Flex, Loader } from '@mantine/core';
 import { useGetAllServices } from '@utils/serviceQueries';
 import {
 	lineCreationSchema,
@@ -391,10 +391,6 @@ export default function Lines() {
 				formattedAgents?.find(
 					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
 				)?.infos || null;
-			const currentLineOwnerFullName =
-				formattedAgents?.find(
-					(agent) => agent.id === currentLineOwnerId
-				)?.infos || null;
 
 			// Si aucun nouvel appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
@@ -413,7 +409,6 @@ export default function Lines() {
 						alreadyUsingDeviceLine,
 						alreadyUsingDeviceLineOwnerFullName,
 						deviceFullName,
-						currentLineOwnerFullName,
 						currentLineOwnerId,
 						newLineOwnerFullName,
 						newLineOwnerId,

@@ -21,7 +21,6 @@ interface DisplayLineUpdateModalProps {
 	alreadyUsingDeviceLine: LineType | null;
 	alreadyUsingDeviceLineOwnerFullName: string | null;
 	deviceFullName: string | null;
-	currentLineOwnerFullName: string | null;
 	currentLineOwnerId: number | null;
 	newLineOwnerFullName: string | null;
 	newLineOwnerId: number | null;
@@ -39,7 +38,6 @@ export default function displayLineUpdateModal({
 	alreadyUsingDeviceLine,
 	alreadyUsingDeviceLineOwnerFullName,
 	deviceFullName,
-	currentLineOwnerFullName,
 	currentLineOwnerId,
 	newLineOwnerFullName,
 	newLineOwnerId,
