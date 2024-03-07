@@ -1,5 +1,6 @@
 type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
+// Fonction utilisée pour fetch les données depuis l'API en simplifiant la syntaxe
 export default async function fetchApi(
 	route: string,
 	method?: MethodType,
@@ -27,9 +28,30 @@ export default async function fetchApi(
 	}
 
 	const response = await fetch(baseUrl + route, options);
+
+	// Vérifier si la réponse contient une pièce jointe en CSV
+	const contentDisposition = response.headers.get('content-disposition');
+	if (contentDisposition && contentDisposition.includes('attachment')) {
+		// Nom par défaut si le header ne contient pas le nom du document
+		let fileName = `export_${Date.now()}.csv`;
+		const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+		const matches = filenameRegex.exec(contentDisposition);
+		if (matches && matches[1]) {
+			// Association du nom s'il est envoyé par le serveur
+			fileName = matches[1].replace(/['"]/g, '');
+		}
+		const blob = await response.blob();
+		const url = window.URL.createObjectURL(new Blob([blob]));
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('download', fileName);
+		return link.click();
+	}
+
+	// Si pas de pièce jointe, conversion en json
 	const data = await response.json();
 
-	// If request failed
+	// Si la requête a échoué
 	if (!response.ok) {
 		throw new Error(data);
 	}

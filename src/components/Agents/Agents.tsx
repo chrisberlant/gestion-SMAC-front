@@ -1,4 +1,4 @@
-import { ActionIcon, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
@@ -31,6 +31,7 @@ import { sendEmail } from '../../utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import fetchApi from '../../utils/fetchApi';
 
 export default function AgentsTable() {
 	const {
@@ -319,14 +320,14 @@ export default function AgentsTable() {
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
 			<>
-				{/* <Button
+				<Button
 					color='green'
 					onClick={async () => {
-						console.log(await fetchApi('/generateAgentsCsvFile'));
+						await fetchApi('/generateAgentsCsvFile');
 					}}
 				>
 					Test CSV
-				</Button> */}
+				</Button>
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
