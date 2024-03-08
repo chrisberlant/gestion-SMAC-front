@@ -1,6 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { Flex, Loader } from '@mantine/core';
-import { useGetAllServices } from '@utils/serviceQueries';
+import { useGetAllServices } from '@/queries/serviceQueries';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
@@ -20,11 +20,11 @@ import {
 	useDeleteLine,
 	useGetAllLines,
 	useUpdateLine,
-} from '../../utils/lineQueries';
+} from '../../queries/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
-import { useGetAllAgents } from '../../utils/agentQueries';
-import { useGetAllDevices } from '../../utils/deviceQueries';
-import { useGetAllModels } from '../../utils/modelQueries';
+import { useGetAllAgents } from '../../queries/agentQueries';
+import { useGetAllDevices } from '../../queries/deviceQueries';
+import { useGetAllModels } from '../../queries/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayLineCreationModal from '../../modals/lineCreationModal';

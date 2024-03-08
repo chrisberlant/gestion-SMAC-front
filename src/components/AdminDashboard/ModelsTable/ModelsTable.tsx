@@ -6,7 +6,7 @@ import {
 	useDeleteModel,
 	useGetAllModels,
 	useUpdateModel,
-} from '@utils/modelQueries';
+} from '@/queries/modelQueries';
 import {
 	modelCreationSchema,
 	modelUpdateSchema,

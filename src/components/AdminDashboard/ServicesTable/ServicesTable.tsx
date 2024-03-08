@@ -6,7 +6,7 @@ import {
 	useDeleteService,
 	useGetAllServices,
 	useUpdateService,
-} from '@utils/serviceQueries';
+} from '@/queries/serviceQueries';
 import {
 	serviceCreationSchema,
 	serviceUpdateSchema,

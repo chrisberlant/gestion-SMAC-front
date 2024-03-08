@@ -3,7 +3,7 @@ import {
 	AgentsAndDevicesPerServiceType,
 	DevicesAmountPerModelType,
 } from '../types';
-import fetchApi from './fetchApi';
+import fetchApi from '../utils/fetchApi';
 
 // Nombre d'appareils par modèle
 export const useGetDevicesAmountPerModel = () => {

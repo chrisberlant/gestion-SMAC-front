@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import PageTopScroller from '../PageTopScroller/PageTopScroller';
-import { useGetCurrentUser } from '../../utils/userQueries';
+import { useGetCurrentUser } from '../../queries/userQueries';
 
 export default function PrivateRoutes() {
 	const { data: loggedUser } = useGetCurrentUser();

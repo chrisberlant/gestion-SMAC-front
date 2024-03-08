@@ -1,4 +1,4 @@
-import { useGetAgentsAndDevicesPerService } from '../../../utils/statsQueries';
+import { useGetAgentsAndDevicesPerService } from '../../../queries/statsQueries';
 import { Loader } from '@mantine/core';
 import StatsTable from '../StatsTable/StatsTable';
 

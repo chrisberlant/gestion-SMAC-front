@@ -16,7 +16,7 @@ import {
 	useGetAllUsers,
 	useResetPassword,
 	useUpdateUser,
-} from '@utils/userQueries';
+} from '@/queries/userQueries';
 import {
 	userCreationSchema,
 	userUpdateSchema,

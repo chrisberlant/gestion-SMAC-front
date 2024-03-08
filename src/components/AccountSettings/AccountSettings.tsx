@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import {
 	useGetCurrentUser,
 	useUpdateCurrentUser,
-} from '../../utils/userQueries';
+} from '../../queries/userQueries';
 import { currentUserUpdateSchema } from '../../validationSchemas/userSchemas';
 import ChangePassword from './ChangePassword/ChangePassword';
 

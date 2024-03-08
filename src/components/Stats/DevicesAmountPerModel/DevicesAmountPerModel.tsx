@@ -1,4 +1,4 @@
-import { useGetDevicesAmountPerModel } from '../../../utils/statsQueries';
+import { useGetDevicesAmountPerModel } from '../../../queries/statsQueries';
 import { Loader } from '@mantine/core';
 import StatsTable from '../StatsTable/StatsTable';
 

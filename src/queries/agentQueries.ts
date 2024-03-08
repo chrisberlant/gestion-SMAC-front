@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import fetchApi from './fetchApi';
+import fetchApi from '../utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
 import { IdSelectionType } from '../types';
 
-// Récupérer tous les utilisateurs
+// Récupérer tous les agents
 export const useGetAllAgents = () => {
 	return useQuery({
 		queryKey: ['agents'],
@@ -15,6 +15,7 @@ export const useGetAllAgents = () => {
 	});
 };
 
+// Créer un agent
 export const useCreateAgent = () => {
 	return useMutation({
 		mutationFn: async (newAgent: AgentCreationType) => {
@@ -51,6 +52,7 @@ export const useCreateAgent = () => {
 	});
 };
 
+// Mettre à jour un agent
 export const useUpdateAgent = () => {
 	return useMutation({
 		mutationFn: async (agent: AgentUpdateType) => {
@@ -79,6 +81,7 @@ export const useUpdateAgent = () => {
 	});
 };
 
+// Supprimer un agent
 export const useDeleteAgent = () => {
 	return useMutation({
 		mutationFn: async (agent: IdSelectionType) => {
@@ -98,5 +101,19 @@ export const useDeleteAgent = () => {
 		onSuccess: () => toast.success('Agent supprimé avec succès'),
 		onError: (_, __, previousAgents) =>
 			queryClient.setQueryData(['agents'], previousAgents),
+	});
+};
+
+// Exporter les agents en CSV
+export const useExportAgentsToCsv = () => {
+	return useQuery({
+		queryKey: ['agentsCsv'],
+		queryFn: async () => {
+			await fetchApi('/generateAgentsCsvFile');
+			return true;
+		},
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
 	});
 };

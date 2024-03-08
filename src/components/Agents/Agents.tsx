@@ -4,9 +4,10 @@ import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
+	useExportAgentsToCsv,
 	useGetAllAgents,
 	useUpdateAgent,
-} from '@utils/agentQueries';
+} from '@/queries/agentQueries';
 import {
 	agentCreationSchema,
 	agentUpdateSchema,
@@ -24,7 +25,7 @@ import {
 	AgentType,
 	AgentUpdateType,
 } from '../../types/agent';
-import { useGetAllServices } from '../../utils/serviceQueries';
+import { useGetAllServices } from '../../queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
 import { sendEmail } from '../../utils/functions';
@@ -47,10 +48,11 @@ export default function AgentsTable() {
 	const { mutate: createAgent } = useCreateAgent();
 	const { mutate: updateAgent } = useUpdateAgent();
 	const { mutate: deleteAgent } = useDeleteAgent();
+	const { refetch: exportsAgentsToCsv } = useExportAgentsToCsv();
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
-
 	const vipRef = useRef<boolean>(true);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
@@ -319,36 +321,13 @@ export default function AgentsTable() {
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
-			<>
-				<Button
-					color='green'
-					onClick={async () => {
-						await fetchApi('/generateAgentsCsvFile');
-					}}
-				>
-					Test CSV
-				</Button>
-				<CreateButton
-					createFunction={() => table.setCreatingRow(true)}
-				/>
-			</>
+			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		renderBottomToolbarCustomActions: ({ table }) => {
-			// Récupération de toutes les lignes du tableau, incluant celles non affichées
-			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
-				...row.original,
-				vip: row.original.vip ? 'Oui' : 'Non',
-				service: services?.find(
-					(service) => service.id === row.original.serviceId
-				),
-			}));
-
-			return agents && services ? (
-				<Flex justify='end' flex={1}>
-					<ExportToCsvButton data={allTableRows} variant='agents' />
-				</Flex>
-			) : null;
-		},
+		renderBottomToolbarCustomActions: () => (
+			<Flex justify='end' flex={1}>
+				<ExportToCsvButton request={exportsAgentsToCsv} />
+			</Flex>
+		),
 		mantineTableProps: {
 			striped: true,
 		},

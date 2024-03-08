@@ -14,7 +14,7 @@ import {
 	UserType,
 	UserUpdateType,
 } from '../types/user';
-import fetchApi from './fetchApi';
+import fetchApi from '../utils/fetchApi';
 import queryClient from './queryClient';
 import { IdSelectionType } from '../types';
 

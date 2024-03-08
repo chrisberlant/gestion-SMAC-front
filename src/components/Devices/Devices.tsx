@@ -14,15 +14,15 @@ import {
 	DeviceType,
 	DeviceUpdateType,
 } from '../../types/device';
-import { useGetAllAgents } from '../../utils/agentQueries';
+import { useGetAllAgents } from '../../queries/agentQueries';
 import {
 	useCreateDevice,
 	useDeleteDevice,
 	useGetAllDevices,
 	useUpdateDevice,
-} from '../../utils/deviceQueries';
-import { useGetAllModels } from '../../utils/modelQueries';
-import { useGetAllServices } from '../../utils/serviceQueries';
+} from '../../queries/deviceQueries';
+import { useGetAllModels } from '../../queries/modelQueries';
+import { useGetAllServices } from '../../queries/serviceQueries';
 import {
 	deviceCreationSchema,
 	deviceUpdateSchema,
@@ -33,7 +33,7 @@ import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import { useGetAllLines } from '../../utils/lineQueries';
+import { useGetAllLines } from '../../queries/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 
