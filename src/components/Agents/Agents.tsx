@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Flex, Loader, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
@@ -32,7 +32,6 @@ import { sendEmail } from '../../utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
-import fetchApi from '../../utils/fetchApi';
 
 export default function AgentsTable() {
 	const {

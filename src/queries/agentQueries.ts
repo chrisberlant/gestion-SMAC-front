@@ -108,10 +108,7 @@ export const useDeleteAgent = () => {
 export const useExportAgentsToCsv = () => {
 	return useQuery({
 		queryKey: ['agentsCsv'],
-		queryFn: async () => {
-			await fetchApi('/generateAgentsCsvFile');
-			return true;
-		},
+		queryFn: async () => await fetchApi('/generateAgentsCsvFile'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,

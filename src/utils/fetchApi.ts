@@ -29,15 +29,15 @@ export default async function fetchApi(
 
 	const response = await fetch(baseUrl + route, options);
 
-	// Vérifier si la réponse contient une pièce jointe en CSV
+	// Vérifier si la réponse contient une pièce jointe
 	const contentDisposition = response.headers.get('content-disposition');
 	if (contentDisposition && contentDisposition.includes('attachment')) {
-		// Nom par défaut si le header ne contient pas le nom du document
+		// Nom par défaut si les en-têtes renvoyés par l'API ne contiennent pas le nom du document
 		let fileName = `export_${Date.now()}.csv`;
 		const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
 		const matches = filenameRegex.exec(contentDisposition);
 		if (matches && matches[1]) {
-			// Association du nom s'il est envoyé par le serveur
+			// Association du nom s'il est envoyé par l'API
 			fileName = matches[1].replace(/['"]/g, '');
 		}
 		const blob = await response.blob();
@@ -45,7 +45,8 @@ export default async function fetchApi(
 		const link = document.createElement('a');
 		link.href = url;
 		link.setAttribute('download', fileName);
-		return link.click();
+		link.click();
+		return true;
 	}
 
 	// Si pas de pièce jointe, conversion en json
