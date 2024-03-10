@@ -181,3 +181,14 @@ export const useDeleteLine = () => {
 			queryClient.setQueryData(['lines'], previousLines),
 	});
 };
+
+// Exporter les appareils en CSV
+export const useExportLinesToCsv = () => {
+	return useQuery({
+		queryKey: ['linesCsv'],
+		queryFn: async () => await fetchApi('/generateLinesCsvFile'),
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
+	});
+};

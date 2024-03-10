@@ -18,6 +18,7 @@ import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
 import {
 	useCreateLine,
 	useDeleteLine,
+	useExportLinesToCsv,
 	useGetAllLines,
 	useUpdateLine,
 } from '../../queries/lineQueries';
@@ -62,6 +63,7 @@ export default function Lines() {
 	const { mutate: createLine } = useCreateLine();
 	const { mutate: updateLine } = useUpdateLine();
 	const { mutate: deleteLine } = useDeleteLine();
+	const { refetch: exportsLinesToCsv } = useExportLinesToCsv();
 
 	const anyLoading =
 		linesLoading ||
@@ -491,24 +493,11 @@ export default function Lines() {
 				</Flex> */}
 			</>
 		),
-		renderBottomToolbarCustomActions: ({ table }) => {
-			// Récupération de toutes les lignes du tableau, incluant celles non affichées
-			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
-				...row.original,
-				deviceId: formattedDevices?.find(
-					(device) => device.id === row.original.deviceId
-				)?.infos,
-				agentId: formattedAgents?.find(
-					(agent) => agent.id === row.original.agentId
-				)?.infos,
-			}));
-
-			return devices && formattedAgents && formattedDevices ? (
-				<Flex justify='end' flex={1}>
-					<ExportToCsvButton data={allTableRows} variant='lines' />
-				</Flex>
-			) : null;
-		},
+		renderBottomToolbarCustomActions: () => (
+			<Flex justify='end' flex={1}>
+				<ExportToCsvButton request={exportsLinesToCsv} />
+			</Flex>
+		),
 		mantineTableProps: {
 			striped: true,
 		},
