@@ -133,3 +133,14 @@ export const useDeleteDevice = () => {
 			queryClient.setQueryData(['devices'], previousDevices),
 	});
 };
+
+// Exporter les appareils en CSV
+export const useExportDevicesToCsv = () => {
+	return useQuery({
+		queryKey: ['devicesCsv'],
+		queryFn: async () => await fetchApi('/generateDevicesCsvFile'),
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
+	});
+};

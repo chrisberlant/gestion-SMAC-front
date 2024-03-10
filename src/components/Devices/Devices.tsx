@@ -18,6 +18,7 @@ import { useGetAllAgents } from '../../queries/agentQueries';
 import {
 	useCreateDevice,
 	useDeleteDevice,
+	useExportDevicesToCsv,
 	useGetAllDevices,
 	useUpdateDevice,
 } from '../../queries/deviceQueries';
@@ -66,6 +67,7 @@ export default function DevicesTable() {
 	const { mutate: createDevice } = useCreateDevice();
 	const { mutate: updateDevice } = useUpdateDevice();
 	const { mutate: deleteDevice } = useDeleteDevice();
+	const { refetch: exportsDevicesToCsv } = useExportDevicesToCsv();
 
 	const anyLoading =
 		servicesLoading ||
@@ -461,28 +463,11 @@ export default function DevicesTable() {
 		renderTopToolbarCustomActions: ({ table }) => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		renderBottomToolbarCustomActions: ({ table }) => {
-			// Récupération de toutes les lignes du tableau, incluant celles non affichées
-			const allTableRows = table.getCoreRowModel().rows.map((row) => ({
-				imei: `"${row.original.imei}`,
-				status: row.original.status,
-				isNew: row.original.isNew ? 'Neuf' : 'Occasion',
-				modelId: formattedModels?.find(
-					(model) => model.id === row.original.modelId
-				)?.infos,
-				agentId: formattedAgents?.find(
-					(agent) => agent.id === row.original.agentId
-				)?.infos,
-				preparationDate: dateFrFormatting(row.original.preparationDate),
-				attributionDate: dateFrFormatting(row.original.attributionDate),
-			}));
-
-			return devices && formattedAgents && formattedModels ? (
-				<Flex justify='end' flex={1}>
-					<ExportToCsvButton data={allTableRows} variant='devices' />
-				</Flex>
-			) : null;
-		},
+		renderBottomToolbarCustomActions: () => (
+			<Flex justify='end' flex={1}>
+				<ExportToCsvButton request={exportsDevicesToCsv} />
+			</Flex>
+		),
 		mantineTableProps: {
 			striped: true,
 		},
