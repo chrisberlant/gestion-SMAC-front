@@ -57,7 +57,9 @@ export default function ServicesTable() {
 
 	//CREATE action
 	const handleCreateService: MRT_TableOptions<ServiceType>['onCreatingRowSave'] =
-		async ({ values, exitCreatingMode }) => {
+		async ({ values, exitCreatingMode, table }) => {
+			// TODO vérifier si le service existe déjà
+			console.log(table.getRowModel());
 			const validation = serviceCreationSchema.safeParse(values);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};

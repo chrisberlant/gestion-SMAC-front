@@ -9,13 +9,12 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 
 ## Fonctionnalités
 
-### Divers
-
 -   [x] Changement de thème (sombre/clair)
 -   [x] Notifications (toasts) en cas d'échec/succès/annulation
 -   [x] Mise en cache des données
 -   [x] Mise à jour instantanée de l'interface (_optimistic updates_)
 -   [x] Affichage de statistiques
+-   [x] Export en CSV des données
 
 ### Utilisateur connecté
 
@@ -57,9 +56,9 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 
 #### Gestion de lignes téléphoniques
 
--   [x] Ajout de lignes
+-   [x] Ajout de lignes téléphoniques
 -   [x] Modification des informations (numéro, profil, statut, propriétaire, appareil associé, commentaires)
--   [x] Suppression de lignes
+-   [x] Suppression de lignes téléphoniques
 
 ## Principale bibliothèques employées
 
@@ -67,6 +66,6 @@ TypeScript
 React  
 Mantine UI/Hooks  
 Tanstack query  
-Mantine Tanstack table
+Tanstack table
 Zod  
 Sonner

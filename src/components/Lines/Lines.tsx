@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Flex, Loader } from '@mantine/core';
+import { Button, Flex, Loader } from '@mantine/core';
 import { useGetAllServices } from '@/queries/serviceQueries';
 import {
 	lineCreationSchema,
@@ -143,9 +143,6 @@ export default function Lines() {
 						}),
 				},
 				enableClickToCopy: true,
-				mantineCopyButtonProps: {
-					style: { fontSize: 14 },
-				},
 			},
 			{
 				header: 'Profil',
@@ -474,23 +471,26 @@ export default function Lines() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				{/* <Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
-					<Button color='green' onClick={() => setFilter(null)}>
+				<Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
+					<Button color='green' onClick={() => console.log(null)}>
 						Toutes les lignes
 					</Button>
-					<Button color='green' onClick={() => setFilter('active')}>
+					<Button color='green' onClick={() => console.log('active')}>
 						Actives
 					</Button>
 					<Button
 						color='orange'
-						onClick={() => setFilter('inProgress')}
+						onClick={() => console.log('inProgress')}
 					>
 						En cours
 					</Button>
-					<Button color='red' onClick={() => setFilter('resiliated')}>
+					<Button
+						color='red'
+						onClick={() => console.log('resiliated')}
+					>
 						Résiliées
 					</Button>
-				</Flex> */}
+				</Flex>
 			</>
 		),
 		renderBottomToolbarCustomActions: () => (
@@ -512,17 +512,9 @@ export default function Lines() {
 		},
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 20, // rows per page
-			},
 			columnVisibility: {
 				id: false,
 			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['20', '50', '100', '200'],
-			withEdges: true,
 		},
 	});
 

@@ -312,7 +312,6 @@ export default function AgentsTable() {
 		onCreatingRowSave: handleCreateAgent,
 		onEditingRowSave: handleSaveAgent,
 		onEditingRowCancel: () => setValidationErrors({}),
-		paginationDisplayMode: 'pages',
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
@@ -341,17 +340,9 @@ export default function AgentsTable() {
 		},
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 50, // rows per page
-			},
 			columnVisibility: {
 				id: false,
 			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['20', '50', '100', '200'],
-			withEdges: true,
 		},
 	});
 

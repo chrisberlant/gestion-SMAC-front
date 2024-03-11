@@ -142,9 +142,6 @@ export default function DevicesTable() {
 						}),
 				},
 				enableClickToCopy: true,
-				mantineCopyButtonProps: {
-					style: { fontSize: 14 },
-				},
 			},
 			{
 				header: 'Statut',
