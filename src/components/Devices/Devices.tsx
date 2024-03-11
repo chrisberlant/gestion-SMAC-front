@@ -37,6 +37,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import { useGetAllLines } from '../../queries/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import { toast } from 'sonner';
 
 export default function DevicesTable() {
 	const {
@@ -346,6 +347,18 @@ export default function DevicesTable() {
 				return setValidationErrors(errors);
 			}
 
+			// Si l'appareil existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some((row) => row.original.imei === data.imei.trim())
+			) {
+				toast.error('Un appareil avec cet IMEI existe déjà');
+				return setValidationErrors({
+					imei: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			createDevice(data);
 			exitCreatingMode();
@@ -382,6 +395,18 @@ export default function DevicesTable() {
 					errors[item.path[0]] = item.message;
 				});
 				return setValidationErrors(errors);
+			}
+
+			// Si l'appareil existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some((row) => row.original.imei === data.imei.trim())
+			) {
+				toast.error('Un appareil avec cet IMEI existe déjà');
+				return setValidationErrors({
+					imei: ' ',
+				});
 			}
 
 			const lineUsingDevice =

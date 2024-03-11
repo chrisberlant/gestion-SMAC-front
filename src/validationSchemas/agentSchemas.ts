@@ -43,16 +43,14 @@ export const agentUpdateSchema = z.strictObject({
 		})
 		.trim()
 		.min(1, "L'adresse mail doit être renseignée")
-		.email("Le format de l'adresse mail est incorrect")
-		.optional(),
+		.email("Le format de l'adresse mail est incorrect"),
 	lastName: z
 		.string({
 			invalid_type_error:
 				'Le nom de famille doit être une chaîne de caractères',
 		})
 		.trim()
-		.min(1, 'Le nom de famille doit être renseigné')
-		.optional(),
+		.min(1, 'Le nom de famille doit être renseigné'),
 	firstName: z
 		.string({
 			invalid_type_error: 'Le prénom doit être une chaîne de caractères',
@@ -60,16 +58,13 @@ export const agentUpdateSchema = z.strictObject({
 		.trim()
 		.min(1, 'Le prénom doit être renseigné')
 		.optional(),
-	vip: z
-		.boolean({
-			invalid_type_error: 'Le statut vip doit être un booléen',
-		})
-		.optional(),
+	vip: z.boolean({
+		invalid_type_error: 'Le statut vip doit être un booléen',
+	}),
 	serviceId: z
 		.number({
 			invalid_type_error: "L'id du service doit être un nombre",
 		})
 		.int("L'id du service doit être un nombre entier")
-		.positive("L'id du service fourni est incorrect")
-		.optional(),
+		.positive("L'id du service fourni est incorrect"),
 });

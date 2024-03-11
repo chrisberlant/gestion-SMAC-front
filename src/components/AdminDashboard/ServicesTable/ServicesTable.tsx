@@ -22,6 +22,7 @@ import { useMemo, useState } from 'react';
 import { ServiceType } from '../../../types/service';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
+import { toast } from 'sonner';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -57,18 +58,30 @@ export default function ServicesTable() {
 
 	//CREATE action
 	const handleCreateService: MRT_TableOptions<ServiceType>['onCreatingRowSave'] =
-		async ({ values, exitCreatingMode, table }) => {
-			// TODO vérifier si le service existe déjà
-			console.log(table.getRowModel());
+		async ({ values, exitCreatingMode }) => {
 			const validation = serviceCreationSchema.safeParse(values);
 			if (!validation.success) {
-				const errors: Record<string, string> = {};
-				// Conversion du tableau d'objets retourné par Zod en objet simple
-				validation.error.issues.forEach((item) => {
-					errors[item.path[0]] = item.message;
+				return setValidationErrors({
+					title: validation.error.issues[0].message,
 				});
-				return setValidationErrors(errors);
 			}
+
+			// Si le service existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.title.toLocaleLowerCase() ===
+							values.title.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un service porte déjà ce nom');
+				return setValidationErrors({
+					title: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			createService(values);
 			exitCreatingMode();
@@ -82,12 +95,27 @@ export default function ServicesTable() {
 			// Validation du format des données via un schéma Zod
 			const validation = serviceUpdateSchema.safeParse(values);
 			if (!validation.success) {
-				const errors: Record<string, string> = {};
-				validation.error.issues.forEach((item) => {
-					errors[item.path[0]] = item.message;
+				return setValidationErrors({
+					title: validation.error.issues[0].message,
 				});
-				return setValidationErrors(errors);
 			}
+
+			// Si le service existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.title.toLocaleLowerCase() ===
+							values.title.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un service porte déjà ce nom');
+				return setValidationErrors({
+					title: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			updateService(values);
 			table.setEditingRow(null);

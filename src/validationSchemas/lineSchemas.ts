@@ -55,26 +55,21 @@ export const lineUpdateSchema = selectionSchema.extend({
 			invalid_type_error: 'Le numéro doit être une chaîne de caractères',
 		})
 		.trim()
-		.length(10, 'Le numéro doit faire 10 caractères')
-		.optional(),
-	profile: z
-		.enum(['V', 'D', 'VD'], {
-			errorMap: () => {
-				return {
-					message: 'Le profil doit être V, D ou VD',
-				};
-			},
-		})
-		.optional(),
-	status: z
-		.enum(['Active', 'En cours', 'Résiliée'], {
-			errorMap: () => {
-				return {
-					message: 'Le statut doit être Active, En cours ou Résiliée',
-				};
-			},
-		})
-		.optional(),
+		.length(10, 'Le numéro doit faire 10 caractères'),
+	profile: z.enum(['V', 'D', 'VD'], {
+		errorMap: () => {
+			return {
+				message: 'Le profil doit être V, D ou VD',
+			};
+		},
+	}),
+	status: z.enum(['Active', 'En cours', 'Résiliée'], {
+		errorMap: () => {
+			return {
+				message: 'Le statut doit être Active, En cours ou Résiliée',
+			};
+		},
+	}),
 	comments: z
 		.string({
 			invalid_type_error:

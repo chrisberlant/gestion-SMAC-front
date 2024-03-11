@@ -32,6 +32,7 @@ import displayLineCreationModal from '../../modals/lineCreationModal';
 import displayLineUpdateModal from '../../modals/lineUpdateModal';
 import displayLineDeleteModal from '../../modals/lineDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import { toast } from 'sonner';
 
 export default function Lines() {
 	const {
@@ -291,6 +292,21 @@ export default function Lines() {
 				return setValidationErrors(errors);
 			}
 
+			// Si la ligne existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.number === creationData.number.trim()
+					)
+			) {
+				toast.error('Une ligne avec ce numéro existe déjà');
+				return setValidationErrors({
+					number: ' ',
+				});
+			}
+
 			// Si aucun appareil fourni, pas de modale
 			if (!creationData.deviceId) {
 				createLine({ data: creationData });
@@ -364,6 +380,21 @@ export default function Lines() {
 					errors[item.path[0]] = item.message;
 				});
 				return setValidationErrors(errors);
+			}
+
+			// Si la ligne existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.number === updateData.number.trim()
+					)
+			) {
+				toast.error('Une ligne avec ce numéro existe déjà');
+				return setValidationErrors({
+					number: ' ',
+				});
 			}
 
 			const currentLineOwnerId = row.original.agentId ?? null;

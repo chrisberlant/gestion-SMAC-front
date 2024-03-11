@@ -86,8 +86,7 @@ export const deviceUpdateSchema = selectionSchema.extend({
 			invalid_type_error: "L'IMEI doit être une chaîne de caractères",
 		})
 		.trim()
-		.length(15, "L'IMEI fourni est incorrect")
-		.optional(),
+		.length(15, "L'IMEI fourni est incorrect"),
 	preparationDate: z
 		.string({
 			invalid_type_error:
@@ -110,32 +109,28 @@ export const deviceUpdateSchema = selectionSchema.extend({
 		.or(z.literal(''))
 		.nullable()
 		.optional(),
-	status: z
-		.enum(
-			[
-				'En stock',
-				'Attribué',
-				'Restitué',
-				'En attente de restitution',
-				'En prêt',
-				'En panne',
-				'Volé',
-			],
-			{
-				errorMap: () => {
-					return {
-						message:
-							'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
-					};
-				},
-			}
-		)
-		.optional(),
-	isNew: z
-		.boolean({
-			invalid_type_error: 'La valeur isNew doit être un booléen',
-		})
-		.optional(),
+	status: z.enum(
+		[
+			'En stock',
+			'Attribué',
+			'Restitué',
+			'En attente de restitution',
+			'En prêt',
+			'En panne',
+			'Volé',
+		],
+		{
+			errorMap: () => {
+				return {
+					message:
+						'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
+				};
+			},
+		}
+	),
+	isNew: z.boolean({
+		invalid_type_error: 'La valeur isNew doit être un booléen',
+	}),
 	comments: z
 		.string({
 			invalid_type_error:
@@ -157,6 +152,5 @@ export const deviceUpdateSchema = selectionSchema.extend({
 			invalid_type_error: "L'id du modèle doit être un nombre",
 		})
 		.int("L'id du modèle doit être un nombre entier")
-		.positive("L'id du modèle fourni est incorrect")
-		.optional(),
+		.positive("L'id du modèle fourni est incorrect"),
 });

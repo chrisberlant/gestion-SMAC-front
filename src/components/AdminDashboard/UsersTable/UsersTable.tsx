@@ -136,6 +136,25 @@ export default function UsersTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			// Si l'utilisateur existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.email.toLocaleLowerCase() ===
+							values.email.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error(
+					'Un utilisateur avec cette adresse mail existe déjà'
+				);
+				return setValidationErrors({
+					email: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			createUser(values);
 			exitCreatingMode();
@@ -143,7 +162,7 @@ export default function UsersTable() {
 
 	//UPDATE action
 	const handleSaveUser: MRT_TableOptions<UserType>['onEditingRowSave'] =
-		async ({ values, table, row }) => {
+		async ({ values, row }) => {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
 			values.id = row.original.id;
 			// Validation du format des données via un schéma Zod
@@ -155,6 +174,25 @@ export default function UsersTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			// Si l'utilisateur existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.email.toLocaleLowerCase() ===
+							values.email.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error(
+					'Un utilisateur avec cette adresse mail existe déjà'
+				);
+				return setValidationErrors({
+					email: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			updateUser(values);
 			table.setEditingRow(null);

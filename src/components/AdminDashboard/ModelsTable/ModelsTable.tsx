@@ -22,6 +22,7 @@ import { useMemo, useState } from 'react';
 import { ModelType } from '../../../types/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import { toast } from 'sonner';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -94,6 +95,28 @@ export default function ModelsTable() {
 				});
 				return setValidationErrors(errors);
 			}
+			// Si le modèle existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.brand.toLocaleLowerCase() ===
+								values.brand.toLocaleLowerCase().trim() &&
+							row.original.reference.toLocaleLowerCase() ===
+								values.reference.toLocaleLowerCase().trim() &&
+							row.original.storage?.toLocaleLowerCase() ===
+								values.storage?.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un modèle identique existe déjà');
+				return setValidationErrors({
+					brand: ' ',
+					reference: ' ',
+					storage: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			createModel(values);
 			exitCreatingMode();
@@ -101,7 +124,7 @@ export default function ModelsTable() {
 
 	//UPDATE action
 	const handleSaveModel: MRT_TableOptions<ModelType>['onEditingRowSave'] =
-		async ({ values, table, row }) => {
+		async ({ values, row }) => {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
 			values.id = row.original.id;
 			// Validation du format des données via un schéma Zod
@@ -113,6 +136,29 @@ export default function ModelsTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			// Si le modèle existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.brand.toLocaleLowerCase() ===
+								values.brand.toLocaleLowerCase().trim() &&
+							row.original.reference.toLocaleLowerCase() ===
+								values.reference.toLocaleLowerCase().trim() &&
+							row.original.storage?.toLocaleLowerCase() ===
+								values.storage?.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un modèle identique existe déjà');
+				return setValidationErrors({
+					brand: ' ',
+					reference: ' ',
+					storage: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			updateModel(values);
 			table.setEditingRow(null);

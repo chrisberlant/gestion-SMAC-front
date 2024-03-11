@@ -235,6 +235,22 @@ export default function AgentsTable() {
 				return setValidationErrors(errors);
 			}
 
+			// Si l'agent existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.email.toLocaleLowerCase() ===
+							data.email.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un agent avec cette adresse mail existe déjà');
+				return setValidationErrors({
+					email: ' ',
+				});
+			}
+
 			setValidationErrors({});
 			createAgent(data);
 			exitCreatingMode();
@@ -242,7 +258,7 @@ export default function AgentsTable() {
 
 	//UPDATE action
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
-		async ({ values, table, row }) => {
+		async ({ values, row }) => {
 			const { lastName, firstName, email } = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
@@ -263,6 +279,22 @@ export default function AgentsTable() {
 					errors[item.path[0]] = item.message;
 				});
 				return setValidationErrors(errors);
+			}
+
+			// Si l'agent existe déjà
+			if (
+				table
+					.getCoreRowModel()
+					.rows.some(
+						(row) =>
+							row.original.email.toLocaleLowerCase() ===
+							data.email.toLocaleLowerCase().trim()
+					)
+			) {
+				toast.error('Un agent avec cette adresse mail existe déjà');
+				return setValidationErrors({
+					email: ' ',
+				});
 			}
 
 			setValidationErrors({});
