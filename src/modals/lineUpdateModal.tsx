@@ -28,7 +28,7 @@ interface DisplayLineUpdateModalProps {
 	deviceCurrentOwnerId: number | null;
 	deviceCurrentOwnerFullName: string | null;
 	newDeviceId: number | null;
-	updateData: LineUpdateType;
+	data: LineUpdateType;
 }
 
 export default function displayLineUpdateModal({
@@ -45,7 +45,7 @@ export default function displayLineUpdateModal({
 	newDeviceId,
 	deviceCurrentOwnerId,
 	deviceCurrentOwnerFullName,
-	updateData,
+	data,
 }: DisplayLineUpdateModalProps) {
 	// Si l'appareil n'a pas été changé
 	if (newDeviceId && newDeviceId === currentDeviceId) {
@@ -75,7 +75,7 @@ export default function displayLineUpdateModal({
 					labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 					onCancel: modals.closeAll,
 					onConfirm: () => {
-						updateLine({ data: updateData, updateDevice: true });
+						updateLine({ data, updateDevice: true });
 						setValidationErrors({});
 						exitUpdatingMode();
 						modals.closeAll();
@@ -106,7 +106,7 @@ export default function displayLineUpdateModal({
 					labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 					onCancel: modals.closeAll,
 					onConfirm: () => {
-						updateLine({ data: updateData, updateDevice: true });
+						updateLine({ data, updateDevice: true });
 						setValidationErrors({});
 						exitUpdatingMode();
 						modals.closeAll();
@@ -141,7 +141,7 @@ export default function displayLineUpdateModal({
 				labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 				onCancel: modals.closeAll,
 				onConfirm: () => {
-					updateLine({ data: updateData, updateDevice: true });
+					updateLine({ data, updateDevice: true });
 					setValidationErrors({});
 					exitUpdatingMode();
 					modals.closeAll();
@@ -190,7 +190,7 @@ export default function displayLineUpdateModal({
 				labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 				onCancel: modals.closeAll,
 				onConfirm: () => {
-					updateLine({ data: updateData, updateOldLine: true });
+					updateLine({ data, updateOldLine: true });
 					setValidationErrors({});
 					exitUpdatingMode();
 					modals.closeAll();
@@ -245,7 +245,7 @@ export default function displayLineUpdateModal({
 			onCancel: modals.closeAll,
 			onConfirm: () => {
 				updateLine({
-					data: updateData,
+					data,
 					updateDevice: true,
 					updateOldLine: true,
 				});
@@ -283,8 +283,8 @@ export default function displayLineUpdateModal({
 							mt='lg'
 							mx='md'
 							onClick={() => {
-								updateData.agentId = deviceCurrentOwnerId;
-								updateLine({ data: updateData });
+								data.agentId = deviceCurrentOwnerId;
+								updateLine({ data });
 								setValidationErrors({});
 								exitUpdatingMode();
 								modals.closeAll();
@@ -298,7 +298,7 @@ export default function displayLineUpdateModal({
 							color='rgba(68, 145, 42, 1)'
 							onClick={() => {
 								updateLine({
-									data: updateData,
+									data,
 									updateDevice: true,
 								});
 								setValidationErrors({});
@@ -344,7 +344,7 @@ export default function displayLineUpdateModal({
 			onCancel: modals.closeAll,
 			onConfirm: () => {
 				updateLine({
-					data: updateData,
+					data,
 					updateDevice: true,
 					updateOldLine: true,
 				});
@@ -373,9 +373,9 @@ export default function displayLineUpdateModal({
 						mt='lg'
 						mx='md'
 						onClick={() => {
-							updateData.agentId = deviceCurrentOwnerId;
+							data.agentId = deviceCurrentOwnerId;
 							updateLine({
-								data: updateData,
+								data,
 								updateDevice: true,
 							});
 							setValidationErrors({});
@@ -391,7 +391,7 @@ export default function displayLineUpdateModal({
 						color='rgba(68, 145, 42, 1)'
 						onClick={() => {
 							updateLine({
-								data: updateData,
+								data,
 								updateDevice: true,
 							});
 							setValidationErrors({});

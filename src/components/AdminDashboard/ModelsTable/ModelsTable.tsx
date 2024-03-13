@@ -148,7 +148,8 @@ export default function ModelsTable() {
 							row.original.reference.toLocaleLowerCase() ===
 								values.reference.toLocaleLowerCase().trim() &&
 							row.original.storage?.toLocaleLowerCase() ===
-								values.storage?.toLocaleLowerCase().trim()
+								values.storage?.toLocaleLowerCase().trim() &&
+							row.original.id !== values.id
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');

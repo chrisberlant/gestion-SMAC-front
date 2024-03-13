@@ -357,7 +357,7 @@ export default function Lines() {
 				values;
 
 			// Formatage des informations nécessaires pour la validation du schéma
-			const updateData = {
+			const data = {
 				id: row.original.id,
 				number,
 				profile,
@@ -373,7 +373,7 @@ export default function Lines() {
 			} as LineUpdateType;
 
 			// Validation du format des données via un schéma Zod
-			const validation = lineUpdateSchema.safeParse(updateData);
+			const validation = lineUpdateSchema.safeParse(data);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -388,7 +388,8 @@ export default function Lines() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.number === updateData.number.trim()
+							row.original.number === data.number.trim() &&
+							row.original.id !== data.id
 					)
 			) {
 				toast.error('Une ligne avec ce numéro existe déjà');
@@ -398,9 +399,9 @@ export default function Lines() {
 			}
 
 			const currentLineOwnerId = row.original.agentId ?? null;
-			const newLineOwnerId = updateData.agentId ?? null;
+			const newLineOwnerId = data.agentId ?? null;
 			const newLineOwnerFullName: string | null = agentId ?? null;
-			const newDeviceId = updateData.deviceId ?? null;
+			const newDeviceId = data.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -430,7 +431,7 @@ export default function Lines() {
 				currentLineOwnerId === newLineOwnerId) ||
 			(!alreadyUsingDeviceLine && deviceCurrentOwnerId === newLineOwnerId)
 				? (setValidationErrors({}),
-				  updateLine({ data: updateData }),
+				  updateLine({ data }),
 				  table.setEditingRow(null))
 				: displayLineUpdateModal({
 						updateLine,
@@ -446,7 +447,7 @@ export default function Lines() {
 						deviceCurrentOwnerId,
 						deviceCurrentOwnerFullName,
 						newDeviceId,
-						updateData,
+						data,
 				  });
 		};
 

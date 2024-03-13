@@ -401,7 +401,10 @@ export default function DevicesTable() {
 			if (
 				table
 					.getCoreRowModel()
-					.rows.some((row) => row.original.imei === data.imei.trim())
+					.rows.some(
+						(row) => row.original.imei === data.imei.trim()
+					) &&
+				row.original.id !== data.id
 			) {
 				toast.error('Un appareil avec cet IMEI existe déjà');
 				return setValidationErrors({

@@ -107,7 +107,8 @@ export default function ServicesTable() {
 					.rows.some(
 						(row) =>
 							row.original.title.toLocaleLowerCase() ===
-							values.title.toLocaleLowerCase().trim()
+								values.title.toLocaleLowerCase().trim() &&
+							row.original.id !== values.id
 					)
 			) {
 				toast.error('Un service porte déjà ce nom');
