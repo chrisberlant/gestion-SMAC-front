@@ -166,14 +166,14 @@ export default function ServicesTable() {
 		},
 		paginationDisplayMode: 'pages',
 		mantineTableContainerProps: { style: { minWidth: '500px' } },
-		renderRowActions: ({ row, table }) => (
+		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
 				roleCheck={false}
 			/>
 		),
-		renderTopToolbarCustomActions: ({ table }) => (
+		renderTopToolbarCustomActions: () => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		mantineTableProps: {

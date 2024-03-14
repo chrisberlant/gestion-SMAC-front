@@ -28,8 +28,8 @@ import { useGetAllDevices } from '../../queries/deviceQueries';
 import { useGetAllModels } from '../../queries/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import displayLineCreationModal from '../../modals/lineCreationModal';
-import displayLineUpdateModal from '../../modals/lineUpdateModal';
+import displayLineCreationModal from '../../modals/lineCreationModals';
+import displayLineUpdateModal from '../../modals/lineUpdateModals';
 import displayLineDeleteModal from '../../modals/lineDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
@@ -490,15 +490,15 @@ export default function Lines() {
 			style: { minWidth: '300px' },
 			variant: 'default',
 		},
-		mantineTableContainerProps: { style: { maxHeight: '600px' } },
-		renderRowActions: ({ row, table }) => (
+		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
+		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
 		// TODO fix
-		renderTopToolbarCustomActions: ({ table }) => (
+		renderTopToolbarCustomActions: () => (
 			<>
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}

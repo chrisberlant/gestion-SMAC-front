@@ -483,14 +483,14 @@ export default function DevicesTable() {
 			style: { minWidth: '300px' },
 			variant: 'default',
 		},
-		mantineTableContainerProps: { style: { maxHeight: '600px' } },
-		renderRowActions: ({ row, table }) => (
+		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
+		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
-		renderTopToolbarCustomActions: ({ table }) => (
+		renderTopToolbarCustomActions: () => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		renderBottomToolbarCustomActions: () => (

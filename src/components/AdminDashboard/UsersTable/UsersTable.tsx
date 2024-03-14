@@ -1,15 +1,5 @@
-import {
-	ActionIcon,
-	Badge,
-	Button,
-	Flex,
-	Loader,
-	Text,
-	Tooltip,
-} from '@mantine/core';
+import { Badge, Loader, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconCopy, IconMail } from '@tabler/icons-react';
-import { sendEmail } from '@utils/functions';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -30,15 +20,21 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { UserPasswordIsResetType, UserType } from '../../../types/user';
+import { UserType } from '../../../types/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
+import {
+	displayResetUserPasswordModal,
+	displayResetUserPasswordSuccessModal,
+} from '../../../modals/resetUserPasswordModals';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
-	const { mutate: resetPassword } = useResetPassword(openConfirmationModal);
+	const { mutate: resetPassword } = useResetPassword(
+		displayResetUserPasswordSuccessModal
+	);
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -199,83 +195,6 @@ export default function UsersTable() {
 			table.setEditingRow(null);
 		};
 
-	//RESET PASSWORD action
-	const openResetPasswordConfirmModal = (row: MRT_Row<UserType>) =>
-		modals.openConfirmModal({
-			title: "Réinitialisation du mot de passe d'un utilisateur",
-			children: (
-				<Text>
-					Voulez-vous vraiment réinitialiser le mot de passe de
-					l'utilisateur{' '}
-					<span className='bold-text'>
-						{row.original.firstName} {row.original.lastName}
-					</span>{' '}
-					?
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Réinitialiser', cancel: 'Annuler' },
-			confirmProps: { color: 'orange' },
-			onConfirm: () => resetPassword({ id: row.original.id }),
-		});
-
-	// RESET PASSWORD modale de confirmation
-	function openConfirmationModal(user: UserPasswordIsResetType) {
-		modals.open({
-			title: 'Confirmation de la réinitialisation',
-			children: (
-				<>
-					<Text>
-						Le mot de passe de{' '}
-						<span className='bold-text'>{user.fullName}</span> a
-						bien été réinitialisé.
-					</Text>
-					<Text>Le nouveau mot de passe à fournir est : </Text>
-					<Flex gap='md' my='lg' justify='center' align='center'>
-						<Text>{user.generatedPassword}</Text>
-						<Tooltip label='Copier dans le presse-papiers'>
-							<ActionIcon
-								onClick={() => {
-									navigator.clipboard.writeText(
-										user.generatedPassword
-									);
-									toast.info(
-										'Mot de passe copié dans le presse-papiers'
-									);
-								}}
-							>
-								<IconCopy />
-							</ActionIcon>
-						</Tooltip>
-						<Tooltip label='Envoyer par e-mail'>
-							<ActionIcon
-								onClick={() =>
-									sendEmail(
-										user.email,
-										'Réinitialisation de votre mot de passe sur Gestion-SMAC',
-										`Bonjour ${user.fullName},\r\rVotre mot de passe a été réinitialisé.\r\rVous pouvez désormais vous connecter avec le nouveau : ${user.generatedPassword}\r\r`
-									)
-								}
-							>
-								<IconMail />
-							</ActionIcon>
-						</Tooltip>
-					</Flex>
-					<Button fullWidth onClick={() => modals.closeAll()}>
-						OK
-					</Button>
-				</>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-		});
-	}
-
 	//DELETE action
 	const openDeleteConfirmModal = (row: MRT_Row<UserType>) =>
 		modals.openConfirmModal({
@@ -322,16 +241,18 @@ export default function UsersTable() {
 		},
 		paginationDisplayMode: 'pages',
 		mantineTableContainerProps: { style: { minWidth: '900px' } },
-		renderRowActions: ({ row, table }) => (
+		renderRowActions: ({ row }) => (
 			<EditDeleteResetPasswordButtons
 				rowEmail={row.original.email}
 				rowId={row.original.id}
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => openDeleteConfirmModal(row)}
-				resetPasswordFunction={() => openResetPasswordConfirmModal(row)}
+				resetPasswordFunction={() =>
+					displayResetUserPasswordModal({ row, resetPassword })
+				}
 			/>
 		),
-		renderTopToolbarCustomActions: ({ table }) => (
+		renderTopToolbarCustomActions: () => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
 		mantineTableProps: {
