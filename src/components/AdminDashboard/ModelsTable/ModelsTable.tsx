@@ -1,6 +1,4 @@
-import { Loader, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
-
+import { Loader } from '@mantine/core';
 import {
 	useCreateModel,
 	useDeleteModel,
@@ -12,7 +10,6 @@ import {
 	modelUpdateSchema,
 } from '@validationSchemas/modelSchemas';
 import {
-	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -23,6 +20,7 @@ import { ModelType } from '../../../types/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
+import displayDeleteModelModal from '../../../modals/deledeModelModal';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -165,32 +163,6 @@ export default function ModelsTable() {
 			table.setEditingRow(null);
 		};
 
-	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<ModelType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'un modèle",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer le modèle{' '}
-					<span className='bold-text'>
-						{`${row.original.brand} ${row.original.reference} ${
-							row.original.storage
-								? `de stockage ${row.original.storage}`
-								: ''
-						}`}
-					</span>{' '}
-					? Cette action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteModel({ id: row.original.id }),
-		});
-
 	const table = useMantineReactTable({
 		columns,
 		data: models || [],
@@ -213,11 +185,13 @@ export default function ModelsTable() {
 			variant: 'default',
 		},
 		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '600px' } },
+		mantineTableContainerProps: { style: { minWidth: '40vw' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() => openDeleteConfirmModal(row)}
+				deleteFunction={() =>
+					displayDeleteModelModal({ row, deleteModel })
+				}
 				roleCheck={false}
 			/>
 		),

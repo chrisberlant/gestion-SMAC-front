@@ -240,7 +240,7 @@ export default function UsersTable() {
 			variant: 'default',
 		},
 		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '900px' } },
+		mantineTableContainerProps: { style: { minWidth: '60vw' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteResetPasswordButtons
 				rowEmail={row.original.email}

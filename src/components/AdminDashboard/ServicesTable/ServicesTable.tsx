@@ -165,7 +165,7 @@ export default function ServicesTable() {
 			variant: 'default',
 		},
 		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '500px' } },
+		mantineTableContainerProps: { style: { minWidth: '20vw' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
