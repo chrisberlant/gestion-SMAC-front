@@ -315,7 +315,13 @@ export default function UsersTable() {
 		onCreatingRowSave: handleCreateUser,
 		onEditingRowSave: handleSaveUser,
 		onEditingRowCancel: () => setValidationErrors({}),
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			// style: { minWidth: '100px' },
+			variant: 'default',
+		},
 		paginationDisplayMode: 'pages',
+		mantineTableContainerProps: { style: { minWidth: '900px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteResetPasswordButtons
 				rowEmail={row.original.email}

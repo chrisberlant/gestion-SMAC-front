@@ -159,7 +159,13 @@ export default function ServicesTable() {
 		onCreatingRowSave: handleCreateService,
 		onEditingRowSave: handleSaveService,
 		onEditingRowCancel: () => setValidationErrors({}),
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			// style: { minWidth: '100px' },
+			variant: 'default',
+		},
 		paginationDisplayMode: 'pages',
+		mantineTableContainerProps: { style: { minWidth: '500px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}

@@ -1,6 +1,6 @@
 import { ActionIcon, Flex, Loader, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { IconCopy, IconMail } from '@tabler/icons-react';
+import { IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -109,6 +109,7 @@ export default function AgentsTable() {
 							email: undefined,
 						}),
 				},
+				enableClickToCopy: true,
 				Cell: ({ cell, row }) => {
 					const agentEmail = cell.getValue() as string;
 					return (
@@ -118,21 +119,6 @@ export default function AgentsTable() {
 							>
 								{agentEmail}
 							</span>
-							<Tooltip label={`Copier ${agentEmail}`}>
-								<ActionIcon
-									size='xs'
-									onClick={() => {
-										navigator.clipboard.writeText(
-											agentEmail
-										);
-										toast.info(
-											'Adresse e-mail copiée dans le presse-papiers'
-										);
-									}}
-								>
-									<IconCopy />
-								</ActionIcon>
-							</Tooltip>
 							<Tooltip label={`E-mail à ${agentEmail}`}>
 								<ActionIcon
 									size='xs'
@@ -205,7 +191,8 @@ export default function AgentsTable() {
 				header: "Nb d'appareils",
 				id: 'devices',
 				enableEditing: false,
-				accessorFn: (row) => row.devices?.length,
+				accessorFn: (row) =>
+					row.devices.length > 0 ? row.devices.length : null,
 				size: 75,
 			},
 		],
@@ -345,6 +332,12 @@ export default function AgentsTable() {
 		onCreatingRowSave: handleCreateAgent,
 		onEditingRowSave: handleSaveAgent,
 		onEditingRowCancel: () => setValidationErrors({}),
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			style: { minWidth: '300px' },
+			variant: 'default',
+		},
+		mantineTableContainerProps: { style: { maxHeight: '600px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}

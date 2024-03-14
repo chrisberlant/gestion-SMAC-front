@@ -207,7 +207,13 @@ export default function ModelsTable() {
 		onCreatingRowSave: handleCreateModel,
 		onEditingRowSave: handleSaveModel,
 		onEditingRowCancel: () => setValidationErrors({}),
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			// style: { minWidth: '100px' },
+			variant: 'default',
+		},
 		paginationDisplayMode: 'pages',
+		mantineTableContainerProps: { style: { minWidth: '600px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}

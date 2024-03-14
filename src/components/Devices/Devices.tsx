@@ -478,6 +478,11 @@ export default function DevicesTable() {
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
 		onEditingRowCancel: () => setValidationErrors({}),
+		mantineSearchTextInputProps: {
+			placeholder: 'Rechercher',
+			style: { minWidth: '300px' },
+			variant: 'default',
+		},
 		mantineTableContainerProps: { style: { maxHeight: '600px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons

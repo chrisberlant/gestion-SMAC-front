@@ -485,12 +485,12 @@ export default function Lines() {
 		onCreatingRowSave: handleCreateLine,
 		onEditingRowSave: handleSaveLine,
 		onEditingRowCancel: () => setValidationErrors({}),
-		paginationDisplayMode: 'pages',
 		mantineSearchTextInputProps: {
 			placeholder: 'Rechercher',
 			style: { minWidth: '300px' },
 			variant: 'default',
 		},
+		mantineTableContainerProps: { style: { maxHeight: '600px' } },
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
