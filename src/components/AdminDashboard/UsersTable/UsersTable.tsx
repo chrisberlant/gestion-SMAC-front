@@ -1,5 +1,4 @@
-import { Badge, Loader, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
+import { Badge, Loader } from '@mantine/core';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -12,7 +11,6 @@ import {
 	userUpdateSchema,
 } from '@validationSchemas/userSchemas';
 import {
-	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -27,6 +25,7 @@ import {
 	displayResetUserPasswordModal,
 	displayResetUserPasswordSuccessModal,
 } from '../../../modals/resetUserPasswordModals';
+import displayDeleteUserModal from '../../../modals/deleteUserModal';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -195,28 +194,6 @@ export default function UsersTable() {
 			table.setEditingRow(null);
 		};
 
-	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<UserType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'un utilisateur",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer l'utilisateur{' '}
-					<span className='bold-text'>
-						{row.original.firstName} {row.original.lastName}
-					</span>{' '}
-					? Cette action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteUser({ id: row.original.id }),
-		});
-
 	const table = useMantineReactTable({
 		columns,
 		data: users || [],
@@ -246,7 +223,9 @@ export default function UsersTable() {
 				rowEmail={row.original.email}
 				rowId={row.original.id}
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() => openDeleteConfirmModal(row)}
+				deleteFunction={() =>
+					displayDeleteUserModal({ row, deleteUser })
+				}
 				resetPasswordFunction={() =>
 					displayResetUserPasswordModal({ row, resetPassword })
 				}

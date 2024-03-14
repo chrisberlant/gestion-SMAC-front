@@ -1,6 +1,4 @@
-import { Loader, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
-
+import { Loader } from '@mantine/core';
 import {
 	useCreateService,
 	useDeleteService,
@@ -12,7 +10,6 @@ import {
 	serviceUpdateSchema,
 } from '@validationSchemas/serviceSchemas';
 import {
-	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -23,6 +20,7 @@ import { ServiceType } from '../../../types/service';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
+import displayDeleteServiceModal from '../../../modals/deleteServiceModal';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -122,26 +120,6 @@ export default function ServicesTable() {
 			table.setEditingRow(null);
 		};
 
-	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<ServiceType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'un service",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer le service{' '}
-					<span className='bold-text'>{row.original.title}</span> ?
-					Cette action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteService({ id: row.original.id }),
-		});
-
 	const table = useMantineReactTable({
 		columns,
 		data: services || [],
@@ -169,7 +147,9 @@ export default function ServicesTable() {
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() => openDeleteConfirmModal(row)}
+				deleteFunction={() =>
+					displayDeleteServiceModal({ row, deleteService })
+				}
 				roleCheck={false}
 			/>
 		),
