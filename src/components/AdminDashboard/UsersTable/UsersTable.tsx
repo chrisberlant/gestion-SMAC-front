@@ -22,17 +22,17 @@ import { UserType } from '../../../types/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
 import {
-	displayResetUserPasswordModal,
-	displayResetUserPasswordSuccessModal,
-} from '../../../modals/resetUserPasswordModals';
-import displayDeleteUserModal from '../../../modals/deleteUserModal';
+	displayUserPasswordResetModal,
+	displayUserPasswordResetSuccessModal,
+} from '../../../modals/userPasswordResetModals';
+import displayDeleteUserModal from '../../../modals/userDeleteModal';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
 	const { mutate: resetPassword } = useResetPassword(
-		displayResetUserPasswordSuccessModal
+		displayUserPasswordResetSuccessModal
 	);
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<
@@ -227,7 +227,7 @@ export default function UsersTable() {
 					displayDeleteUserModal({ row, deleteUser })
 				}
 				resetPasswordFunction={() =>
-					displayResetUserPasswordModal({ row, resetPassword })
+					displayUserPasswordResetModal({ row, resetPassword })
 				}
 			/>
 		),

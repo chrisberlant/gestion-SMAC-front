@@ -1,6 +1,5 @@
-import { ActionIcon, Flex, Loader, Text, Tooltip } from '@mantine/core';
-import { modals } from '@mantine/modals';
-import { IconMail } from '@tabler/icons-react';
+import { ActionIcon, Flex, Loader, Tooltip } from '@mantine/core';
+import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -13,7 +12,6 @@ import {
 	agentUpdateSchema,
 } from '@validationSchemas/agentSchemas';
 import {
-	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -32,6 +30,7 @@ import { sendEmail } from '../../utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import displayAgentDeleteModal from '../../modals/agentDeleteModal';
 
 export default function AgentsTable() {
 	const {
@@ -109,7 +108,6 @@ export default function AgentsTable() {
 							email: undefined,
 						}),
 				},
-				enableClickToCopy: true,
 				Cell: ({ cell, row }) => {
 					const agentEmail = cell.getValue() as string;
 					return (
@@ -119,6 +117,21 @@ export default function AgentsTable() {
 							>
 								{agentEmail}
 							</span>
+							<Tooltip label={`Copier ${agentEmail}`}>
+								<ActionIcon
+									size='xs'
+									onClick={() => {
+										navigator.clipboard.writeText(
+											agentEmail
+										);
+										toast.info(
+											'Adresse e-mail copiée dans le presse-papiers'
+										);
+									}}
+								>
+									<IconCopy />
+								</ActionIcon>
+							</Tooltip>
 							<Tooltip label={`E-mail à ${agentEmail}`}>
 								<ActionIcon
 									size='xs'
@@ -191,8 +204,7 @@ export default function AgentsTable() {
 				header: "Nb d'appareils",
 				id: 'devices',
 				enableEditing: false,
-				accessorFn: (row) =>
-					row.devices.length > 0 ? row.devices.length : null,
+				accessorFn: (row) => row.devices?.length || 0,
 				size: 75,
 			},
 		],
@@ -290,28 +302,6 @@ export default function AgentsTable() {
 			table.setEditingRow(null);
 		};
 
-	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<AgentType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'un agent",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer l'agent{' '}
-					<span className='bold-text'>
-						{row.original.firstName} {row.original.lastName}
-					</span>{' '}
-					? Cette action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteAgent({ id: row.original.id! }),
-		});
-
 	const table = useMantineReactTable({
 		columns,
 		data: agents || [],
@@ -341,7 +331,9 @@ export default function AgentsTable() {
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() => openDeleteConfirmModal(row)}
+				deleteFunction={() =>
+					displayAgentDeleteModal({ row, deleteAgent })
+				}
 			/>
 		),
 		renderTopToolbarCustomActions: () => (

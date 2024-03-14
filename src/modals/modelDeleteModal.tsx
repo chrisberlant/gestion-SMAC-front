@@ -3,15 +3,15 @@ import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
 import { ModelType } from '../types/model';
 
-interface displayDeleteModelModalProps {
+interface DisplayModelDeleteModalProps {
 	row: MRT_Row<ModelType>;
-	deleteModel: ({ id }: { id: number }) => void;
+	deleteModel: (id: number) => void;
 }
 
-const displayDeleteModelModal = ({
+const DisplayModelDeleteModal = ({
 	row,
 	deleteModel,
-}: displayDeleteModelModalProps) =>
+}: DisplayModelDeleteModalProps) =>
 	modals.openConfirmModal({
 		title: "Suppression d'un modèle",
 		children: (
@@ -33,7 +33,7 @@ const displayDeleteModelModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteModel({ id: row.original.id }),
+		onConfirm: () => deleteModel(row.original.id),
 	});
 
-export default displayDeleteModelModal;
+export default DisplayModelDeleteModal;

@@ -20,7 +20,7 @@ import { ModelType } from '../../../types/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
-import displayDeleteModelModal from '../../../modals/deledeModelModal';
+import displayModelDeleteModal from '../../../modals/modelDeleteModal';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -190,7 +190,7 @@ export default function ModelsTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() =>
-					displayDeleteModelModal({ row, deleteModel })
+					displayModelDeleteModal({ row, deleteModel })
 				}
 				roleCheck={false}
 			/>

@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import fetchApi from '../utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType, LineCreationType, LineUpdateType } from '../types/line';
-import { IdSelectionType } from '../types';
 import { DeviceType } from '../types/device';
 
 export const useGetAllLines = () => {
@@ -164,17 +163,17 @@ export const useUpdateLine = () => {
 // Suppression de ligne
 export const useDeleteLine = () => {
 	return useMutation({
-		mutationFn: async (line: IdSelectionType) => {
-			return (await fetchApi('/deleteLine', 'DELETE', line)) as LineType;
+		mutationFn: async (lineId: number) => {
+			return await fetchApi('/deleteLine', 'DELETE', { id: lineId });
 		},
 
-		onMutate: async (lineToDelete) => {
+		onMutate: async (lineIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			const previousLines = queryClient.getQueryData(['lines']);
 			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-				lines?.filter((line) => line.id !== lineToDelete.id)
+				lines?.filter((line) => line.id !== lineIdToDelete)
 			);
-			return previousLines;
+			return previousLines as LineType[];
 		},
 		onSuccess: () => toast.success('Ligne supprimée avec succès'),
 		onError: (_, __, previousLines) =>

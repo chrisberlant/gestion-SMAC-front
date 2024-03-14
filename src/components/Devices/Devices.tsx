@@ -1,9 +1,7 @@
-import { Flex, Loader, Text } from '@mantine/core';
-import { modals } from '@mantine/modals';
+import { Flex, Loader } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
-	MRT_Row,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -38,6 +36,7 @@ import { useGetAllLines } from '../../queries/lineQueries';
 import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
+import displayDeviceDeleteModal from '../../modals/deviceDeleteModal';
 
 export default function DevicesTable() {
 	const {
@@ -438,26 +437,6 @@ export default function DevicesTable() {
 			}
 		};
 
-	//DELETE action
-	const openDeleteConfirmModal = (row: MRT_Row<DeviceType>) =>
-		modals.openConfirmModal({
-			title: "Suppression d'un device",
-			children: (
-				<Text>
-					Voulez-vous vraiment supprimer l'appareil{' '}
-					<span className='bold-text'>{row.original.id}</span> ? Cette
-					action est irréversible.
-				</Text>
-			),
-			centered: true,
-			overlayProps: {
-				blur: 3,
-			},
-			labels: { confirm: 'Supprimer', cancel: 'Annuler' },
-			confirmProps: { color: 'red' },
-			onConfirm: () => deleteDevice({ id: row.original.id }),
-		});
-
 	const table = useMantineReactTable({
 		columns,
 		data: devices || [],
@@ -487,7 +466,9 @@ export default function DevicesTable() {
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() => openDeleteConfirmModal(row)}
+				deleteFunction={() =>
+					displayDeviceDeleteModal({ row, deleteDevice })
+				}
 			/>
 		),
 		renderTopToolbarCustomActions: () => (

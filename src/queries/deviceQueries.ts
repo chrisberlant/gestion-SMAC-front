@@ -7,7 +7,6 @@ import {
 } from '../types/device';
 import fetchApi from '../utils/fetchApi';
 import queryClient from './queryClient';
-import { IdSelectionType } from '../types';
 import { LineType } from '../types/line';
 
 export const useGetAllDevices = () => {
@@ -112,19 +111,17 @@ export const useUpdateDevice = () => {
 
 export const useDeleteDevice = () => {
 	return useMutation({
-		mutationFn: async (device: IdSelectionType) => {
-			return (await fetchApi(
-				'/deleteDevice',
-				'DELETE',
-				device
-			)) as DeviceType;
+		mutationFn: async (deviceId: number) => {
+			return await fetchApi('/deleteDevice', 'DELETE', {
+				id: deviceId,
+			});
 		},
 
-		onMutate: async (deviceToDelete) => {
+		onMutate: async (deviceIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-				devices?.filter((device) => device.id !== deviceToDelete.id)
+				devices?.filter((device) => device.id !== deviceIdToDelete)
 			);
 			return previousDevices;
 		},

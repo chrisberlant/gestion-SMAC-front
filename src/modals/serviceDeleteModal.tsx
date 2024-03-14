@@ -3,15 +3,15 @@ import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
 import { ServiceType } from '../types/service';
 
-interface displayDeleteServiceModalProps {
+interface DisplayServiceDeleteModalProps {
 	row: MRT_Row<ServiceType>;
-	deleteService: ({ id }: { id: number }) => void;
+	deleteService: (id: number) => void;
 }
 
-const displayDeleteServiceModal = ({
+const displayServiceDeleteModal = ({
 	row,
 	deleteService,
-}: displayDeleteServiceModalProps) =>
+}: DisplayServiceDeleteModalProps) =>
 	modals.openConfirmModal({
 		title: "Suppression d'un service",
 		children: (
@@ -27,7 +27,7 @@ const displayDeleteServiceModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteService({ id: row.original.id }),
+		onConfirm: () => deleteService(row.original.id),
 	});
 
-export default displayDeleteServiceModal;
+export default displayServiceDeleteModal;

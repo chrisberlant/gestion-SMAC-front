@@ -5,7 +5,7 @@ interface DisplayLineDeleteModalProps {
 	id: number;
 	lineNumber: string;
 	currentOwnerFullName: string | null;
-	deleteLine: ({ id }: { id: number }) => void;
+	deleteLine: (id: number) => void;
 }
 
 export default function displayLineDeleteModal({
@@ -45,6 +45,6 @@ export default function displayLineDeleteModal({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteLine({ id }),
+		onConfirm: () => deleteLine(id),
 	});
 }

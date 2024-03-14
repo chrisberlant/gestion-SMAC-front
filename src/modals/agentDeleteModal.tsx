@@ -1,22 +1,22 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { UserType } from '../types/user';
+import { AgentType } from '../types/agent';
 
-interface displayDeleteUserModalProps {
-	row: MRT_Row<UserType>;
-	deleteUser: ({ id }: { id: number }) => void;
+interface DisplayAgentDeleteModalProps {
+	row: MRT_Row<AgentType>;
+	deleteAgent: (id: number) => void;
 }
 
-const displayDeleteUserModal = ({
+const displayAgentDeleteModal = ({
 	row,
-	deleteUser,
-}: displayDeleteUserModalProps) =>
+	deleteAgent,
+}: DisplayAgentDeleteModalProps) =>
 	modals.openConfirmModal({
-		title: "Suppression d'un utilisateur",
+		title: "Suppression d'un agent",
 		children: (
 			<Text>
-				Voulez-vous vraiment supprimer l'utilisateur{' '}
+				Voulez-vous vraiment supprimer l'agent{' '}
 				<span className='bold-text'>
 					{row.original.firstName} {row.original.lastName}
 				</span>{' '}
@@ -29,7 +29,7 @@ const displayDeleteUserModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteUser({ id: row.original.id }),
+		onConfirm: () => deleteAgent(row.original.id),
 	});
 
-export default displayDeleteUserModal;
+export default displayAgentDeleteModal;

@@ -3,7 +3,6 @@ import { ModelType, ModelCreationType, ModelUpdateType } from '../types/model';
 import fetchApi from '../utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
-import { IdSelectionType } from '../types';
 
 export const useGetAllModels = () => {
 	return useQuery({
@@ -76,20 +75,18 @@ export const useUpdateModel = () => {
 
 export const useDeleteModel = () => {
 	return useMutation({
-		mutationFn: async (model: IdSelectionType) => {
-			return (await fetchApi(
-				'/deleteModel',
-				'DELETE',
-				model
-			)) as ModelType;
+		mutationFn: async (modelId: number) => {
+			return (await fetchApi('/deleteModel', 'DELETE', {
+				id: modelId,
+			})) as ModelType;
 		},
 
-		onMutate: async (modelToDelete) => {
+		onMutate: async (modelIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
 				models?.filter(
-					(model: ModelType) => model.id !== modelToDelete.id
+					(model: ModelType) => model.id !== modelIdToDelete
 				)
 			);
 			return previousModels;

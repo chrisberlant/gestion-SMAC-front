@@ -3,7 +3,6 @@ import { toast } from 'sonner';
 import fetchApi from '../utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
-import { IdSelectionType } from '../types';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () => {
@@ -33,6 +32,7 @@ export const useCreateAgent = () => {
 				...agents,
 				{
 					...newAgent,
+					email: newAgent.email.toLowerCase(),
 				},
 			]);
 			return previousAgents;
@@ -40,7 +40,7 @@ export const useCreateAgent = () => {
 		onSuccess: (newAgent) => {
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((agent) =>
-					agent.email.toLowerCase() === newAgent.email
+					agent.email === newAgent.email
 						? { ...agent, id: newAgent.id }
 						: agent
 				)
@@ -84,16 +84,16 @@ export const useUpdateAgent = () => {
 // Supprimer un agent
 export const useDeleteAgent = () => {
 	return useMutation({
-		mutationFn: async (agent: IdSelectionType) => {
-			return await fetchApi('/deleteAgent', 'DELETE', agent);
+		mutationFn: async (agentId: number) => {
+			return await fetchApi('/deleteAgent', 'DELETE', { id: agentId });
 		},
 
-		onMutate: async (agentToDelete) => {
+		onMutate: async (agentIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.filter(
-					(agent: AgentType) => agent.id !== agentToDelete.id
+					(agent: AgentType) => agent.id !== agentIdToDelete
 				)
 			);
 			return previousAgents;

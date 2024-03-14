@@ -20,7 +20,7 @@ import { ServiceType } from '../../../types/service';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
-import displayDeleteServiceModal from '../../../modals/deleteServiceModal';
+import displayServiceDeleteModal from '../../../modals/serviceDeleteModal';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -148,7 +148,7 @@ export default function ServicesTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() =>
-					displayDeleteServiceModal({ row, deleteService })
+					displayServiceDeleteModal({ row, deleteService })
 				}
 				roleCheck={false}
 			/>

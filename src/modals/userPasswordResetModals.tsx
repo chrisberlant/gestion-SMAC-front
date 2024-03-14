@@ -7,16 +7,16 @@ import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
 import { sendEmail } from '../utils/functions';
 
-interface displayResetUserPasswordModalProps {
+interface DisplayUserPasswordResetModalProps {
 	row: MRT_Row<UserType>;
 	resetPassword: ({ id }: { id: number }) => void;
 }
 
 // Modale pour demander une confirmation à l'utilisateur
-export const displayResetUserPasswordModal = ({
+export const displayUserPasswordResetModal = ({
 	row,
 	resetPassword,
-}: displayResetUserPasswordModalProps) =>
+}: DisplayUserPasswordResetModalProps) =>
 	modals.openConfirmModal({
 		title: "Réinitialisation du mot de passe d'un utilisateur",
 		children: (
@@ -40,7 +40,7 @@ export const displayResetUserPasswordModal = ({
 	});
 
 // Modale pour indiquer le succès et permettre l'affichage et l'envoi du nouveau mot de passe
-export const displayResetUserPasswordSuccessModal = (
+export const displayUserPasswordResetSuccessModal = (
 	user: UserPasswordIsResetType
 ) =>
 	modals.open({

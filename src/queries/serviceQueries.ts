@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { IdSelectionType } from '../types';
 import {
 	ServiceType,
 	ServiceCreationType,
@@ -88,19 +87,21 @@ export const useUpdateService = () => {
 
 export const useDeleteService = () => {
 	return useMutation({
-		mutationFn: async (service: IdSelectionType) => {
-			return await fetchApi('/deleteService', 'DELETE', service);
+		mutationFn: async (serviceId: number) => {
+			return await fetchApi('/deleteService', 'DELETE', {
+				id: serviceId,
+			});
 		},
 
-		onMutate: async (serviceToDelete) => {
+		onMutate: async (serviceIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services?.filter(
-					(service: ServiceType) => service.id !== serviceToDelete.id
+					(service: ServiceType) => service.id !== serviceIdToDelete
 				)
 			);
-			return previousServices;
+			return previousServices as ServiceType[] | [];
 		},
 		onSuccess: () => toast.success('Service supprimé avec succès'),
 		onError: (_, __, previousServices) =>

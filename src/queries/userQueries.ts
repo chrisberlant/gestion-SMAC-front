@@ -8,7 +8,6 @@ import {
 	CurrentUserUpdateType,
 	LoggedUserType,
 	UserCreationType,
-	UserDeletionType,
 	UserLoginType,
 	UserPasswordIsResetType,
 	UserType,
@@ -156,6 +155,7 @@ export const useGetAllUsers = () => {
 	});
 };
 
+// Créer un utilisateur
 export const useCreateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserCreationType) => {
@@ -189,6 +189,7 @@ export const useCreateUser = () => {
 	});
 };
 
+// Mettre à jour un utilisateur
 export const useUpdateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserUpdateType) => {
@@ -211,6 +212,7 @@ export const useUpdateUser = () => {
 	});
 };
 
+// Réinitialiser le mot de passe d'un utilisateur
 export const useResetPassword = (
 	openConfirmationModal: (user: UserPasswordIsResetType) => void
 ) => {
@@ -224,17 +226,18 @@ export const useResetPassword = (
 	});
 };
 
+// Supprimer un utilisateur
 export const useDeleteUser = () => {
 	return useMutation({
-		mutationFn: async (user: UserDeletionType) => {
-			return await fetchApi('/deleteUser', 'DELETE', user);
+		mutationFn: async (userId: number) => {
+			return await fetchApi('/deleteUser', 'DELETE', { id: userId });
 		},
 
-		onMutate: async (userToDelete) => {
+		onMutate: async (userIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
-				users.filter((user: UserType) => user.id !== userToDelete.id)
+				users.filter((user: UserType) => user.id !== userIdToDelete)
 			);
 			return previousUsers;
 		},
