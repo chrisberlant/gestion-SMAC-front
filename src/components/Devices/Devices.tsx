@@ -128,6 +128,7 @@ export default function DevicesTable() {
 				header: 'Id',
 				accessorKey: 'id',
 				enableEditing: false,
+				enableHiding: false,
 			},
 			{
 				header: 'IMEI',
@@ -170,7 +171,8 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'État',
-				accessorKey: 'isNew',
+				id: 'isNew',
+				accessorFn: (row) => (row.isNew ? 'Neuf' : 'Occasion'),
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.isNew,
@@ -194,8 +196,6 @@ export default function DevicesTable() {
 						/>
 					);
 				},
-				Cell: ({ cell }) =>
-					cell.getValue() === false ? 'Occasion' : 'Neuf',
 			},
 			{
 				header: 'Modèle',
@@ -253,7 +253,8 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'Préparation',
-				accessorKey: 'preparationDate',
+				id: 'preparationDate',
+				accessorFn: (row) => dateFrFormatting(row.preparationDate),
 				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
@@ -262,10 +263,6 @@ export default function DevicesTable() {
 							...validationErrors,
 							preparationDate: undefined,
 						}),
-				},
-				Cell: ({ row }) => {
-					if (row.original.preparationDate)
-						return dateFrFormatting(row.original.preparationDate);
 				},
 				Edit: ({ row }) => (
 					<DateChoice
@@ -276,7 +273,8 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'Attribution',
-				accessorKey: 'attributionDate',
+				id: 'attributionDate',
+				accessorFn: (row) => dateFrFormatting(row.attributionDate),
 				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
@@ -285,10 +283,6 @@ export default function DevicesTable() {
 							...validationErrors,
 							attributionDate: undefined,
 						}),
-				},
-				Cell: ({ row }) => {
-					if (row.original.attributionDate)
-						return dateFrFormatting(row.original.attributionDate);
 				},
 				Edit: ({ row }) => (
 					<DateChoice
@@ -443,15 +437,11 @@ export default function DevicesTable() {
 		enablePagination: false,
 		enableRowVirtualization: true,
 		enableGlobalFilter: true,
-		enableColumnFilters: false,
 		enableColumnOrdering: true,
 		enableColumnActions: false,
 		createDisplayMode: 'row',
 		editDisplayMode: 'row',
 		enableEditing: true,
-		enableHiding: false,
-		sortDescFirst: true,
-		enableSortingRemoval: false,
 		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,

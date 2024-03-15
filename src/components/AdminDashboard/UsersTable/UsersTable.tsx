@@ -75,7 +75,7 @@ export default function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'role',
-				size: 150,
+				size: 130,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
@@ -96,7 +96,7 @@ export default function UsersTable() {
 							? 'blue'
 							: 'gray';
 					return (
-						<Badge color={roleColor} w={96} variant='light'>
+						<Badge color={roleColor} variant='light'>
 							{row.original.role}
 						</Badge>
 					);
