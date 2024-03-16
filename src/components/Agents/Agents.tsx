@@ -109,8 +109,8 @@ export default function AgentsTable() {
 							email: undefined,
 						}),
 				},
-				Cell: ({ cell, row }) => {
-					const agentEmail = cell.getValue() as string;
+				Cell: ({ row }) => {
+					const agentEmail = row.original.email;
 					return (
 						<Flex gap='xs' align='center'>
 							<span
@@ -149,9 +149,9 @@ export default function AgentsTable() {
 			},
 			{
 				header: 'VIP',
-				accessorKey: 'vip',
+				id: 'vip',
+				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
 				size: 20,
-				enableColumnFilter: false,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
 					onFocus: () =>
@@ -167,9 +167,9 @@ export default function AgentsTable() {
 						valueRef={vipRef}
 					/>
 				),
-				Cell: ({ cell }) => (
-					<span className={cell.getValue() ? 'vip-text' : ''}>
-						{cell.getValue() ? 'Oui' : 'Non'}
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{row.original.vip ? 'Oui' : 'Non'}
 					</span>
 				),
 			},
