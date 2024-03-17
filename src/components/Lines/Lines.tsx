@@ -223,7 +223,6 @@ export default function Lines() {
 				size: 90,
 				mantineEditSelectProps: {
 					data: formattedDevices?.map((device) => device.infos),
-					searchable: true,
 					clearable: true,
 					error: validationErrors?.deviceId,
 					onFocus: () =>

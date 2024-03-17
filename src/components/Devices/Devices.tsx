@@ -162,6 +162,8 @@ export default function DevicesTable() {
 					],
 					allowDeselect: false,
 					error: validationErrors?.status,
+					maxDropdownHeight: 234,
+					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
@@ -229,9 +231,9 @@ export default function DevicesTable() {
 						?.infos,
 				editVariant: 'select',
 				size: 100,
+				clearable: true,
 				mantineEditSelectProps: {
 					data: formattedAgents?.map((agent) => agent.infos),
-					allowDeselect: true,
 					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>

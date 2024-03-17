@@ -185,7 +185,6 @@ export default function AgentsTable() {
 					data: services?.map((service) => service.title),
 					allowDeselect: false,
 					error: validationErrors?.serviceId,
-					searchable: true,
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
