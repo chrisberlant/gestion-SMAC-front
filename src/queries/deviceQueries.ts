@@ -5,7 +5,7 @@ import {
 	DeviceCreationType,
 	DeviceUpdateType,
 } from '../types/device';
-import fetchApi from '../utils/fetchApi';
+import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '../types/line';
 

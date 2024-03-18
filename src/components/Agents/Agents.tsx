@@ -26,7 +26,7 @@ import {
 import { useGetAllServices } from '../../queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
-import { sendEmail } from '../../utils/functions';
+import { sendEmail } from '@utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';

@@ -27,7 +27,7 @@ import {
 	deviceUpdateSchema,
 } from '../../validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { dateFrFormatting } from '../../utils/functions';
+import { dateFrFormatting } from '@utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';

@@ -4,7 +4,7 @@ import {
 	ServiceCreationType,
 	ServiceUpdateType,
 } from '../types/service';
-import fetchApi from '../utils/fetchApi';
+import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 

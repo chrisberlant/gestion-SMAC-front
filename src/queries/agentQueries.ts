@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import fetchApi from '../utils/fetchApi';
+import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
 
