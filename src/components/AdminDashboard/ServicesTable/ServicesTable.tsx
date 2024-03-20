@@ -4,7 +4,7 @@ import {
 	useDeleteService,
 	useGetAllServices,
 	useUpdateService,
-} from '@/queries/serviceQueries';
+} from '@queries/serviceQueries';
 import {
 	serviceCreationSchema,
 	serviceUpdateSchema,
@@ -20,7 +20,7 @@ import { ServiceType } from '../../../types/service';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
-import displayServiceDeleteModal from '../../../modals/serviceDeleteModal';
+import displayServiceDeleteModal from '@modals/serviceDeleteModal';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();

@@ -4,7 +4,7 @@ import {
 	useDeleteModel,
 	useGetAllModels,
 	useUpdateModel,
-} from '@/queries/modelQueries';
+} from '@queries/modelQueries';
 import {
 	modelCreationSchema,
 	modelUpdateSchema,
@@ -20,7 +20,7 @@ import { ModelType } from '../../../types/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
-import displayModelDeleteModal from '../../../modals/modelDeleteModal';
+import displayModelDeleteModal from '@modals/modelDeleteModal';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();

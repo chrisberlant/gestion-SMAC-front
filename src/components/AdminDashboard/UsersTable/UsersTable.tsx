@@ -5,7 +5,7 @@ import {
 	useGetAllUsers,
 	useResetPassword,
 	useUpdateUser,
-} from '@/queries/userQueries';
+} from '@queries/userQueries';
 import {
 	userCreationSchema,
 	userUpdateSchema,
@@ -24,8 +24,8 @@ import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDelete
 import {
 	displayUserPasswordResetModal,
 	displayUserPasswordResetSuccessModal,
-} from '../../../modals/userPasswordResetModals';
-import displayDeleteUserModal from '../../../modals/userDeleteModal';
+} from '@modals/userPasswordResetModals';
+import displayDeleteUserModal from '@modals/userDeleteModal';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();

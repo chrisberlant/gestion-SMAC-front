@@ -14,7 +14,7 @@ import cx from 'clsx';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import FrenchFlag from '../../assets/french-flag.svg';
-import { useGetCurrentUser } from '../../queries/userQueries';
+import { useGetCurrentUser } from '@queries/userQueries';
 import AccountSettings from '../AccountSettings/AccountSettings';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';

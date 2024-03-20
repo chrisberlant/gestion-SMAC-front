@@ -1,6 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { Button, Flex, Loader } from '@mantine/core';
-import { useGetAllServices } from '@/queries/serviceQueries';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
@@ -21,16 +20,17 @@ import {
 	useExportLinesToCsv,
 	useGetAllLines,
 	useUpdateLine,
-} from '../../queries/lineQueries';
+} from '@queries/lineQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
-import { useGetAllAgents } from '../../queries/agentQueries';
-import { useGetAllDevices } from '../../queries/deviceQueries';
-import { useGetAllModels } from '../../queries/modelQueries';
+import { useGetAllAgents } from '@queries/agentQueries';
+import { useGetAllServices } from '@queries/serviceQueries';
+import { useGetAllDevices } from '@queries/deviceQueries';
+import { useGetAllModels } from '@queries/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import displayLineCreationModal from '../../modals/lineCreationModals';
-import displayLineUpdateModal from '../../modals/lineUpdateModals';
-import displayLineDeleteModal from '../../modals/lineDeleteModal';
+import displayLineCreationModal from '@modals/lineCreationModals';
+import displayLineUpdateModal from '@modals/lineUpdateModals';
+import displayLineDeleteModal from '@modals/lineDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
 

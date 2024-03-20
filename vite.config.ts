@@ -15,6 +15,8 @@ export default defineConfig({
 				'./src/validationSchemas'
 			),
 			'@types': path.resolve(__dirname, './src/types'),
+			'@queries': path.resolve(__dirname, './src/queries'),
+			'@modals': path.resolve(__dirname, './src/modals'),
 		},
 	},
 });

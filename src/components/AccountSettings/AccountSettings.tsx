@@ -2,11 +2,8 @@ import { Button, LoadingOverlay, Modal, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import {
-	useGetCurrentUser,
-	useUpdateCurrentUser,
-} from '../../queries/userQueries';
-import { currentUserUpdateSchema } from '../../validationSchemas/userSchemas';
+import { useGetCurrentUser, useUpdateCurrentUser } from '@queries/userQueries';
+import { currentUserUpdateSchema } from '@validationSchemas/userSchemas';
 import ChangePassword from './ChangePassword/ChangePassword';
 
 interface AccountSettingsProps {

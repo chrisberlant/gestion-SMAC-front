@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGetCurrentUser } from '../../queries/userQueries';
+import { useGetCurrentUser } from '@queries/userQueries';
 import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 import ModelsTable from './ModelsTable/ModelsTable';
 import ServicesTable from './ServicesTable/ServicesTable';

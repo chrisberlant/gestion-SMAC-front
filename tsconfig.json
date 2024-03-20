@@ -29,7 +29,9 @@
 			"@assets/*": ["./src/assets/*"],
 			"@utils/*": ["./src/utils/*"],
 			"@validationSchemas/*": ["./src/validationSchemas/*"],
-			"@types/*": ["./src/types/*"]
+			"@types/*": ["./src/types/*"],
+			"@queries/*": ["./src/queries/*"],
+			"@modals/*": ["./src/modals/*"]
 		}
 	},
 	"include": ["src"],

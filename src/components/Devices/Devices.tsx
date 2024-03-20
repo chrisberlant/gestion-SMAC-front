@@ -12,31 +12,31 @@ import {
 	DeviceType,
 	DeviceUpdateType,
 } from '../../types/device';
-import { useGetAllAgents } from '../../queries/agentQueries';
+import { useGetAllAgents } from '@queries/agentQueries';
 import {
 	useCreateDevice,
 	useDeleteDevice,
 	useExportDevicesToCsv,
 	useGetAllDevices,
 	useUpdateDevice,
-} from '../../queries/deviceQueries';
-import { useGetAllModels } from '../../queries/modelQueries';
-import { useGetAllServices } from '../../queries/serviceQueries';
+} from '@queries/deviceQueries';
+import { useGetAllModels } from '@queries/modelQueries';
+import { useGetAllServices } from '@queries/serviceQueries';
+import { useGetAllLines } from '@queries/lineQueries';
 import {
 	deviceCreationSchema,
 	deviceUpdateSchema,
-} from '../../validationSchemas/deviceSchemas';
+} from '@validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
 import { dateFrFormatting } from '@utils/functions';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import { useGetAllLines } from '../../queries/lineQueries';
-import displayDeviceOwnerChangeModal from '../../modals/deviceOwnerChangeModal';
+import displayDeviceOwnerChangeModal from '@modals/deviceOwnerChangeModal';
+import displayDeviceDeleteModal from '@modals/deviceDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
-import displayDeviceDeleteModal from '../../modals/deviceDeleteModal';
 
 export default function DevicesTable() {
 	const {

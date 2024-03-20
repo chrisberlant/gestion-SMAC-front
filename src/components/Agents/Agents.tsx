@@ -6,7 +6,7 @@ import {
 	useExportAgentsToCsv,
 	useGetAllAgents,
 	useUpdateAgent,
-} from '@/queries/agentQueries';
+} from '@queries/agentQueries';
 import {
 	agentCreationSchema,
 	agentUpdateSchema,
@@ -23,14 +23,15 @@ import {
 	AgentType,
 	AgentUpdateType,
 } from '../../types/agent';
-import { useGetAllServices } from '../../queries/serviceQueries';
+import { useGetAllServices } from '@queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
 import { sendEmail } from '@utils/functions';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
-import displayAgentDeleteModal from '../../modals/agentDeleteModal';
+import displayAgentDeleteModal from '@modals/agentDeleteModal';
+import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
 export default function AgentsTable() {
 	const {
@@ -151,7 +152,7 @@ export default function AgentsTable() {
 				header: 'VIP',
 				id: 'vip',
 				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
-				size: 20,
+				size: 50,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
 					onFocus: () =>
@@ -179,7 +180,7 @@ export default function AgentsTable() {
 				accessorFn: (row) =>
 					services?.find((service) => service.id === row.serviceId)
 						?.title,
-				size: 100,
+				size: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: services?.map((service) => service.title),
@@ -335,7 +336,12 @@ export default function AgentsTable() {
 			/>
 		),
 		renderTopToolbarCustomActions: () => (
-			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+			<>
+				<CreateButton
+					createFunction={() => table.setCreatingRow(true)}
+				/>
+				<CsvImportButton />
+			</>
 		),
 		renderBottomToolbarCustomActions: () => (
 			<Flex justify='end' flex={1}>
