@@ -4,18 +4,18 @@ import ImportAgentsModal from './ImportAgentsModal';
 
 export default function CsvImportButton() {
 	const [
-		openedAccountModal,
-		{ open: openAccountModal, close: closeAccountModal },
+		openedImportModal,
+		{ open: openImportModal, close: closeImportModal },
 	] = useDisclosure(false);
 
 	return (
 		<>
-			<Button color='green' onClick={openAccountModal}>
+			<Button color='green' onClick={openImportModal}>
 				Importer un CSV
 			</Button>
 			<ImportAgentsModal
-				openedAccountModal={openedAccountModal}
-				closeAccountModal={closeAccountModal}
+				openedImportModal={openedImportModal}
+				closeImportModal={closeImportModal}
 			/>
 		</>
 	);

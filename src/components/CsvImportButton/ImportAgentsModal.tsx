@@ -1,25 +1,25 @@
-import { Button, Input, LoadingOverlay, Modal, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/form';
+import { Button, FileInput, LoadingOverlay, Modal, rem } from '@mantine/core';
+import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
+import fileImportSchema from '../../validationSchemas/fileImportSchema';
+import { IconUpload } from '@tabler/icons-react';
 
 interface ImportAgentsModalProps {
-	openedAccountModal: boolean;
-	closeAccountModal: () => void;
+	openedImportModal: boolean;
+	closeImportModal: () => void;
 }
 
 export default function ImportAgentsModal({
-	openedAccountModal,
-	closeAccountModal,
+	openedImportModal,
+	closeImportModal,
 }: ImportAgentsModalProps) {
+	const iconUpload = <IconUpload style={{ height: 20 }} />;
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
+		validate: zodResolver(fileImportSchema),
 		initialValues: {
 			file: '',
-		},
-		validate: {
-			file: (value) =>
-				value === '' ? 'Le fichier doit être renseigné' : null,
 		},
 	});
 	// const { mutate: updateCurrentUser } = useUpdateCurrentUser(
@@ -28,7 +28,7 @@ export default function ImportAgentsModal({
 	// 	closeAccountModal
 	// );
 	const closeModal = () => {
-		closeAccountModal();
+		closeImportModal();
 		form.reset();
 		// Si des champs avaient été modifiés
 		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
@@ -37,7 +37,7 @@ export default function ImportAgentsModal({
 	return (
 		<div className='csv-import'>
 			<Modal
-				opened={openedAccountModal}
+				opened={openedImportModal}
 				onClose={closeModal}
 				title="Importer des agents à partir d'un fichier"
 				centered
@@ -45,20 +45,21 @@ export default function ImportAgentsModal({
 					blur: 3,
 				}}
 			>
-				<form onSubmit={form.onSubmit(() => console.log(form.values))}>
+				<form onSubmit={form.onSubmit(() => console.log('Upload ok'))}>
 					<LoadingOverlay
 						visible={visible}
 						zIndex={10}
 						overlayProps={{ radius: 'sm', blur: 2 }}
 					/>
-					<Input
-						aria-label='Fichier à importer'
-						type='file'
+					<FileInput
+						label='Sélectionner le fichier à importer'
+						leftSection={iconUpload}
+						placeholder='Fichier'
 						name='file'
-						{...form.getInputProps('file')}
 						accept='.csv'
 						mt='md'
 						mb='xl'
+						{...form.getInputProps('file')}
 					/>
 
 					<Button fullWidth mt='md' type='submit'>
@@ -68,7 +69,7 @@ export default function ImportAgentsModal({
 						fullWidth
 						mt='md'
 						color='grey'
-						onClick={closeAccountModal}
+						onClick={closeImportModal}
 					>
 						Annuler
 					</Button>
