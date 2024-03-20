@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
+import { UseFormReturnType } from '@mantine/form';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () => {
@@ -112,5 +113,36 @@ export const useExportAgentsToCsv = () => {
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
+	});
+};
+
+// Créer des agents à partir d'un CSV
+export const useImportMultipleAgents = (
+	toggleOverlay: () => void,
+	closeImportModal: () => void
+) => {
+	return useMutation({
+		mutationFn: async (importedAgents: AgentCreationType[]) => {
+			toggleOverlay();
+			return (await fetchApi(
+				'/importMultipleAgents',
+				'POST',
+				importedAgents
+			)) as AgentType[];
+		},
+
+		onMutate: async () => {
+			closeImportModal();
+			await queryClient.cancelQueries({ queryKey: ['agents'] });
+		},
+		onSuccess: (agents) => {
+			queryClient.invalidateQueries({ queryKey: ['agents'] });
+			// queryClient.setQueryData(['agents'], agents);
+			toast.success('Agents importés avec succès');
+		},
+		onError: () => {},
+		onSettled: () => {
+			toggleOverlay();
+		},
 	});
 };

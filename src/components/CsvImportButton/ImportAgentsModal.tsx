@@ -1,9 +1,13 @@
-import { Button, FileInput, LoadingOverlay, Modal, rem } from '@mantine/core';
+import { Button, FileInput, LoadingOverlay, Modal } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import fileImportSchema from '../../validationSchemas/fileImportSchema';
 import { IconUpload } from '@tabler/icons-react';
+import { useImportMultipleAgents } from '../../queries/agentQueries';
+import Papa from 'papaparse';
+import { AgentCreationType } from '../../types/agent';
+import { json } from 'react-router-dom';
 
 interface ImportAgentsModalProps {
 	openedImportModal: boolean;
@@ -22,16 +26,22 @@ export default function ImportAgentsModal({
 			file: '',
 		},
 	});
-	// const { mutate: updateCurrentUser } = useUpdateCurrentUser(
-	// 	form,
-	// 	toggleOverlay,
-	// 	closeAccountModal
-	// );
+	const { mutate: importAgents } = useImportMultipleAgents(
+		toggleOverlay,
+		closeImportModal
+	);
 	const closeModal = () => {
 		closeImportModal();
 		form.reset();
 		// Si des champs avaient été modifiés
 		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
+	};
+
+	const parseCsvToJson = (file: string, callback: (data: object) => void) => {
+		Papa.parse(file, {
+			header: true,
+			complete: (results) => callback(results.data),
+		});
 	};
 
 	return (
@@ -45,7 +55,12 @@ export default function ImportAgentsModal({
 					blur: 3,
 				}}
 			>
-				<form onSubmit={form.onSubmit(() => console.log('Upload ok'))}>
+				// TODO fix erreurs de type
+				<form
+					onSubmit={form.onSubmit(() => {
+						parseCsvToJson(form.values.file, importAgents);
+					})}
+				>
 					<LoadingOverlay
 						visible={visible}
 						zIndex={10}
