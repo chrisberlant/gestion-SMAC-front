@@ -40,6 +40,7 @@ export default async function fetchApi(
 			// Association du nom s'il est envoyé par l'API
 			fileName = matches[1].replace(/['"]/g, '');
 		}
+		// Lancer le téléchargement
 		const blob = await response.blob();
 		const url = window.URL.createObjectURL(new Blob([blob]));
 		const link = document.createElement('a');

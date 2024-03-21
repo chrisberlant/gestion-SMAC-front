@@ -3,7 +3,6 @@ import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
-import { UseFormReturnType } from '@mantine/form';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () => {
@@ -122,20 +121,18 @@ export const useImportMultipleAgents = (
 	closeImportModal: () => void
 ) => {
 	return useMutation({
-		mutationFn: async (importedAgents: AgentCreationType[]) => {
+		mutationFn: async (importedAgents: string) => {
 			toggleOverlay();
-			return (await fetchApi(
-				'/importMultipleAgents',
-				'POST',
-				importedAgents
-			)) as AgentType[];
+			return (await fetchApi('/importMultipleAgents', 'POST', {
+				importedAgents,
+			})) as AgentType[];
 		},
 
 		onMutate: async () => {
 			closeImportModal();
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 		},
-		onSuccess: (agents) => {
+		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['agents'] });
 			// queryClient.setQueryData(['agents'], agents);
 			toast.success('Agents importés avec succès');

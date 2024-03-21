@@ -5,9 +5,7 @@ import { toast } from 'sonner';
 import fileImportSchema from '../../validationSchemas/fileImportSchema';
 import { IconUpload } from '@tabler/icons-react';
 import { useImportMultipleAgents } from '../../queries/agentQueries';
-import Papa from 'papaparse';
-import { AgentCreationType } from '../../types/agent';
-import { json } from 'react-router-dom';
+import { parseCsvToJson } from '../../utils/functions';
 
 interface ImportAgentsModalProps {
 	openedImportModal: boolean;
@@ -37,13 +35,6 @@ export default function ImportAgentsModal({
 		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
 	};
 
-	const parseCsvToJson = (file: string, callback: (data: object) => void) => {
-		Papa.parse(file, {
-			header: true,
-			complete: (results) => callback(results.data),
-		});
-	};
-
 	return (
 		<div className='csv-import'>
 			<Modal
@@ -55,11 +46,10 @@ export default function ImportAgentsModal({
 					blur: 3,
 				}}
 			>
-				// TODO fix erreurs de type
 				<form
-					onSubmit={form.onSubmit(() => {
-						parseCsvToJson(form.values.file, importAgents);
-					})}
+					onSubmit={form.onSubmit(() =>
+						parseCsvToJson(form.values.file, importAgents)
+					)}
 				>
 					<LoadingOverlay
 						visible={visible}
