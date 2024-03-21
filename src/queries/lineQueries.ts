@@ -31,8 +31,10 @@ export const useCreateLine = () => {
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
 			// Snapshot du cache actuel
-			const previousLines = queryClient.getQueryData(['lines']);
-			const previousDevices = queryClient.getQueryData(['devices']);
+			const previousLines: LineType | undefined =
+				queryClient.getQueryData(['lines']);
+			const previousDevices: DeviceType[] | undefined =
+				queryClient.getQueryData(['devices']);
 
 			if (newLine.updateOldLine) {
 				// Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
@@ -80,7 +82,11 @@ export const useCreateLine = () => {
 			toast.success('Ligne créée avec succès');
 		},
 		onError: (_, { updateDevice }, previousValues) => {
-			queryClient.setQueryData(['lines'], previousValues?.previousLines);
+			if (previousValues?.previousLines)
+				queryClient.setQueryData(
+					['lines'],
+					previousValues?.previousLines
+				);
 			if (updateDevice)
 				queryClient.setQueryData(
 					['devices'],

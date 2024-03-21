@@ -26,7 +26,6 @@ export const useCreateService = () => {
 				service
 			)) as ServiceType;
 		},
-
 		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices: ServiceType[] | undefined =
@@ -70,7 +69,6 @@ export const useUpdateService = () => {
 				service
 			)) as ServiceType;
 		},
-
 		onMutate: async (updatedService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			// Sauvegarde des services actuels
@@ -97,7 +95,6 @@ export const useDeleteService = () => {
 				id: serviceId,
 			});
 		},
-
 		onMutate: async (serviceIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);

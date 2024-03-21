@@ -163,7 +163,6 @@ export const useCreateUser = () => {
 		mutationFn: async (user: UserCreationType) => {
 			return await fetchApi('/createUser', 'POST', user);
 		},
-
 		onMutate: async (newUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
@@ -197,7 +196,6 @@ export const useUpdateUser = () => {
 		mutationFn: async (user: UserUpdateType) => {
 			return await fetchApi('/updateUser', 'PATCH', user);
 		},
-
 		onMutate: async (updatedUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
@@ -222,7 +220,6 @@ export const useResetPassword = (
 		mutationFn: async (user: IdSelectionType) => {
 			return await fetchApi('/resetPassword', 'PATCH', user);
 		},
-
 		onSuccess: (user: UserPasswordIsResetType) =>
 			openConfirmationModal(user),
 	});
@@ -234,7 +231,6 @@ export const useDeleteUser = () => {
 		mutationFn: async (userId: number) => {
 			return await fetchApi('/deleteUser', 'DELETE', { id: userId });
 		},
-
 		onMutate: async (userIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);

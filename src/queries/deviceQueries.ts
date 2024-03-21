@@ -30,7 +30,8 @@ export const useCreateDevice = () => {
 
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
-			const previousDevices = queryClient.getQueryData(['devices']);
+			const previousDevices: DeviceType[] | undefined =
+				queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
 				...devices,
 				{
@@ -49,8 +50,10 @@ export const useCreateDevice = () => {
 			);
 			toast.success('Appareil créé avec succès');
 		},
-		onError: (_, __, previousDevices) =>
-			queryClient.setQueryData(['devices'], previousDevices),
+		onError: (_, __, previousDevices) => {
+			if (previousDevices)
+				queryClient.setQueryData(['devices'], previousDevices);
+		},
 	});
 };
 

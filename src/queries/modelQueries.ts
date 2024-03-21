@@ -18,10 +18,10 @@ export const useCreateModel = () => {
 		mutationFn: async (model: ModelCreationType) => {
 			return (await fetchApi('/createModel', 'POST', model)) as ModelType;
 		},
-
 		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
-			const previousModels = queryClient.getQueryData(['models']);
+			const previousModels: ModelType[] | undefined =
+				queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) => [
 				...models,
 				{
@@ -42,8 +42,10 @@ export const useCreateModel = () => {
 			);
 			toast.success('Modèle créé avec succès');
 		},
-		onError: (_, __, previousModels) =>
-			queryClient.setQueryData(['models'], previousModels),
+		onError: (_, __, previousModels) => {
+			if (previousModels)
+				queryClient.setQueryData(['models'], previousModels);
+		},
 	});
 };
 
@@ -56,7 +58,6 @@ export const useUpdateModel = () => {
 				model
 			)) as ModelType;
 		},
-
 		onMutate: async (updatedModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
@@ -80,7 +81,6 @@ export const useDeleteModel = () => {
 				id: modelId,
 			})) as ModelType;
 		},
-
 		onMutate: async (modelIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);

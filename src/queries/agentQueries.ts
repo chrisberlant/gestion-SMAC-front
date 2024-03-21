@@ -27,7 +27,8 @@ export const useCreateAgent = () => {
 
 		onMutate: async (newAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
-			const previousAgents = queryClient.getQueryData(['agents']);
+			const previousAgents: AgentType[] | undefined =
+				queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) => [
 				...agents,
 				{
@@ -47,8 +48,10 @@ export const useCreateAgent = () => {
 			);
 			toast.success('Agent créé avec succès');
 		},
-		onError: (_, __, previousAgents) =>
-			queryClient.setQueryData(['agents'], previousAgents),
+		onError: (_, __, previousAgents) => {
+			if (previousAgents)
+				queryClient.setQueryData(['agents'], previousAgents);
+		},
 	});
 };
 
@@ -62,7 +65,6 @@ export const useUpdateAgent = () => {
 				agent
 			)) as AgentType;
 		},
-
 		onMutate: async (updatedAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
@@ -87,7 +89,6 @@ export const useDeleteAgent = () => {
 		mutationFn: async (agentId: number) => {
 			return await fetchApi('/deleteAgent', 'DELETE', { id: agentId });
 		},
-
 		onMutate: async (agentIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
@@ -127,7 +128,6 @@ export const useImportMultipleAgents = (
 				importedAgents,
 			})) as AgentType[];
 		},
-
 		onMutate: async () => {
 			closeImportModal();
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
