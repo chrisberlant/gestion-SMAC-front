@@ -19,10 +19,10 @@ export const dateUsFormatting = (dateString: string | undefined) => {
 
 export const parseCsvToJson = (
 	file: string,
-	callbackFn: (data: string) => void
+	callbackFn: (data: object) => void
 ) => {
 	Papa.parse(file, {
 		header: true,
-		complete: () => callbackFn(file),
+		complete: (results) => callbackFn(results.data),
 	});
 };

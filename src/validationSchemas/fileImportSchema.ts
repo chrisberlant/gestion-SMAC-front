@@ -5,7 +5,7 @@ const fileImportSchema = z.strictObject({
 		.instanceof(File, { message: 'Aucun fichier renseigné' })
 		.refine(
 			(file) => file.type === 'text/csv',
-			'Le fichier doit être au format csv'
+			'Le fichier doit être au format CSV'
 		),
 });
 

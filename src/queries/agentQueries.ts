@@ -122,11 +122,13 @@ export const useImportMultipleAgents = (
 	closeImportModal: () => void
 ) => {
 	return useMutation({
-		mutationFn: async (importedAgents: string) => {
+		mutationFn: async (importedAgents: object) => {
 			toggleOverlay();
-			return (await fetchApi('/importMultipleAgents', 'POST', {
-				importedAgents,
-			})) as AgentType[];
+			return await fetchApi(
+				'/importMultipleAgents',
+				'POST',
+				importedAgents
+			);
 		},
 		onMutate: async () => {
 			closeImportModal();
