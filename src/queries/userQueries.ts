@@ -70,17 +70,16 @@ export const useCheckLoginStatus = () => {
 
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
-	form: UseFormReturnType<CurrentUserUpdateType>,
 	toggleOverlay: () => void,
 	closeAccountModal: () => void
 ) => {
 	return useMutation({
-		mutationFn: async () => {
+		mutationFn: async (data: CurrentUserUpdateType) => {
 			toggleOverlay();
 			return (await fetchApi(
 				'/updateCurrentUser',
 				'PATCH',
-				form.values
+				data
 			)) as UserInfosWithoutRoleType;
 		},
 		onSuccess: (updatedCurrentUser) => {
@@ -94,18 +93,21 @@ export const useUpdateCurrentUser = (
 					email: updatedCurrentUser?.email,
 				})
 			);
-			queryClient.setQueryData(['users'], (users: UserType[]) =>
-				users.map((user) =>
-					user.id === updatedCurrentUser?.id
-						? {
-								...user,
-								firstName: updatedCurrentUser?.firstName,
-								lastName: updatedCurrentUser?.lastName,
-								email: updatedCurrentUser?.email,
-						  }
-						: user
-				)
-			);
+			// Si les utilisateurs sont en cache, mise à jour
+			if (queryClient.getQueryData(['users'])) {
+				queryClient.setQueryData(['users'], (users: UserType[]) =>
+					users.map((user) =>
+						user.id === updatedCurrentUser?.id
+							? {
+									...user,
+									firstName: updatedCurrentUser?.firstName,
+									lastName: updatedCurrentUser?.lastName,
+									email: updatedCurrentUser?.email,
+							  }
+							: user
+					)
+				);
+			}
 			toast.success('Informations modifiées avec succès');
 		},
 		onSettled: () => {

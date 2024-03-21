@@ -23,7 +23,7 @@ export default function DevicesAmountPerModel() {
 
 			{data && (
 				<StatsTable
-					data={data!}
+					data={data}
 					titles={titles}
 					tableTitle="Nombre d'appareils par modèle"
 				/>

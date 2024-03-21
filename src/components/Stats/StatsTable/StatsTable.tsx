@@ -6,39 +6,47 @@ import Th from './TableHeader/TableHeader';
 import './statsTable.css';
 
 interface StatsTableProps {
-	data: StatsType[];
+	data: StatsType[] | [];
 	titles: string[];
 	tableTitle: string;
 }
 
+// Filtrer en fonction du champ de recherche
 const filterData = (data: StatsType[], search: string) => {
 	const query = search.toLowerCase().trim();
-	return data.filter((item) =>
+	return data?.filter((item) =>
 		keys(data[0]).some((key) => item[key]?.toLowerCase().includes(query))
 	);
 };
 
+// Ordre d'affichage
 const sortData = (
 	data: StatsType[],
 	payload: {
-		sortBy: keyof StatsType | null;
+		sortBy: string | null;
 		reversed: boolean;
 		search: string;
 	}
 ) => {
-	const { sortBy } = payload;
+	const { sortBy, reversed, search } = payload;
 
-	if (!sortBy) return filterData(data, payload.search);
+	// Si pas d'ordre par en-tête
+	if (!sortBy) return filterData(data, search);
 
 	return filterData(
 		[...data].sort((a, b) => {
-			if (payload.reversed) {
-				return b[sortBy].localeCompare(a[sortBy]);
+			// Ordre décroissant
+			if (reversed) {
+				return b[sortBy as keyof StatsType]?.localeCompare(
+					a[sortBy as keyof StatsType]
+				);
 			}
-
-			return a[sortBy].localeCompare(b[sortBy]);
+			// Ordre croissant
+			return a[sortBy as keyof StatsType]?.localeCompare(
+				b[sortBy as keyof StatsType]
+			);
 		}),
-		payload.search
+		search
 	);
 };
 
@@ -49,21 +57,21 @@ export default function StatsTable({
 }: StatsTableProps) {
 	const [search, setSearch] = useState('');
 	const [sortedData, setSortedData] = useState(data);
-	const [sortBy, setSortBy] = useState<keyof StatsType | null>(null);
+	const [sortBy, setSortBy] = useState<string | null>(null);
 	const [reverseSortDirection, setReverseSortDirection] = useState(false);
 
-	const setSorting = (field: keyof StatsType) => {
+	const setSorting = (field: string) => {
 		const reversed = field === sortBy ? !reverseSortDirection : false;
 		setReverseSortDirection(reversed);
 		setSortBy(field);
-		setSortedData(sortData(data!, { sortBy: field, reversed, search }));
+		setSortedData(sortData(data, { sortBy: field, reversed, search }));
 	};
 
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = event.currentTarget;
 		setSearch(value);
 		setSortedData(
-			sortData(data!, {
+			sortData(data, {
 				sortBy,
 				reversed: reverseSortDirection,
 				search: value,
@@ -71,13 +79,15 @@ export default function StatsTable({
 		);
 	};
 
+	// Si pas encore d'éléments à afficher, les en-têtes sont générés à partir des titres fournis
+	const headersValues = data.length > 0 ? Object.keys(data[0]) : titles;
 	// En-têtes du tableau
-	const headers = Object.keys(data[0]).map((header, index) => (
+	const headers = headersValues.map((header, index) => (
 		<Th
 			key={index}
 			sorted={sortBy === header}
 			reversed={reverseSortDirection}
-			onSort={() => setSorting(header as keyof StatsType)}
+			onSort={() => setSorting(header)}
 			title={titles[index]}
 		/>
 	));

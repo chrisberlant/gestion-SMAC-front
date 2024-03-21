@@ -32,7 +32,6 @@ export default function AccountSettings({
 		},
 	});
 	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
-		form,
 		toggleOverlay,
 		closeAccountModal
 	);
@@ -55,7 +54,11 @@ export default function AccountSettings({
 					blur: 3,
 				}}
 			>
-				<form onSubmit={form.onSubmit(() => updateCurrentUser())}>
+				<form
+					onSubmit={form.onSubmit(() =>
+						updateCurrentUser(form.values)
+					)}
+				>
 					<LoadingOverlay
 						visible={visible}
 						zIndex={10}

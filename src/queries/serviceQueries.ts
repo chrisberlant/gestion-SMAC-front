@@ -29,7 +29,8 @@ export const useCreateService = () => {
 
 		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
-			const previousServices = queryClient.getQueryData(['services']);
+			const previousServices: ServiceType[] | undefined =
+				queryClient.getQueryData(['services']);
 			queryClient.setQueryData(
 				['services'],
 				(services: ServiceType[]) => [
@@ -42,17 +43,21 @@ export const useCreateService = () => {
 			return previousServices;
 		},
 		onSuccess: (newService) => {
-			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
-				services.map((service) =>
-					service.title === newService.title
-						? { ...service, id: newService.id }
-						: service
-				)
+			queryClient.setQueryData(
+				['services'],
+				(services: ServiceType[] | undefined) =>
+					services?.map((service) =>
+						service.title === newService.title
+							? { ...service, id: newService.id }
+							: service
+					)
 			);
 			toast.success('Service créé avec succès');
 		},
-		onError: (_, __, previousServices) =>
-			queryClient.setQueryData(['services'], previousServices),
+		onError: (_, __, previousServices) => {
+			if (previousServices)
+				queryClient.setQueryData(['services'], previousServices);
+		},
 	});
 };
 
