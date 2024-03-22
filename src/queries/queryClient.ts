@@ -1,6 +1,5 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import displayAlreadyExistingEmailsOnImportModal from '../modals/alreadyExistingEmailsOnImportModal';
 
 // Gestion du comportement par défaut des requêtes
 const queryClient = new QueryClient({
@@ -43,6 +42,7 @@ const queryClient = new QueryClient({
 				localStorage.removeItem('smac_token');
 				return (window.location.href = '/');
 			}
+			// Si erreur lors de l'import, pas de message d'erreur
 			if (mutation.options.meta?.importAgentsMutation) return true;
 			toast.error(error.message);
 		},

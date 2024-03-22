@@ -1,9 +1,17 @@
-import { Button, FileInput, LoadingOverlay, Modal } from '@mantine/core';
+import {
+	Text,
+	Button,
+	FileInput,
+	Group,
+	HoverCard,
+	LoadingOverlay,
+	Modal,
+} from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import fileImportSchema from '../../validationSchemas/fileImportSchema';
-import { IconUpload } from '@tabler/icons-react';
+import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
 import { useImportMultipleAgents } from '../../queries/agentQueries';
 import { parseCsvToJson } from '../../utils/functions';
 
@@ -12,11 +20,31 @@ interface ImportAgentsModalProps {
 	closeImportModal: () => void;
 }
 
+// Modale permettant d'importer des agents depuis un CSV, ouverte depuis le composant CsvImportButton
 export default function ImportAgentsModal({
 	openedImportModal,
 	closeImportModal,
 }: ImportAgentsModalProps) {
 	const iconUpload = <IconUpload style={{ height: 20 }} />;
+	// Infos sur le format du fichier CSV à joindre
+	const iconToolTip = (
+		<Group justify='center'>
+			<HoverCard width={280} shadow='md'>
+				<HoverCard.Target>
+					<IconQuestionMark style={{ height: 20 }} />
+				</HoverCard.Target>
+				<HoverCard.Dropdown>
+					<Text>
+						Le fichier doit contenir les en-têtes, en respectant les
+						accents et majuscules :{' '}
+						<span className='bold-text'>
+							Email Nom Prenom VIP Service
+						</span>
+					</Text>
+				</HoverCard.Dropdown>
+			</HoverCard>
+		</Group>
+	);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
 		validate: zodResolver(fileImportSchema),
@@ -59,15 +87,16 @@ export default function ImportAgentsModal({
 					<FileInput
 						label='Sélectionner le fichier à importer'
 						leftSection={iconUpload}
-						placeholder='Fichier'
+						rightSection={iconToolTip}
+						placeholder='Sélectionner le fichier à importer'
 						name='file'
 						accept='.csv'
 						mt='md'
 						mb='xl'
+						leftSectionPointerEvents='none'
 						{...form.getInputProps('file')}
 					/>
-
-					<Button fullWidth mt='md' type='submit'>
+					<Button fullWidth mt='xl' type='submit'>
 						Importer
 					</Button>
 					<Button
