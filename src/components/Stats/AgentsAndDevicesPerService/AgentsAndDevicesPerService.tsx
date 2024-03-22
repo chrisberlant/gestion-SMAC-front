@@ -23,7 +23,7 @@ export default function AgentsAndDevicesPerService() {
 
 			{data && (
 				<StatsTable
-					data={data!}
+					data={data}
 					titles={titles}
 					tableTitle="Nombre d'agents et appareils par service"
 				/>

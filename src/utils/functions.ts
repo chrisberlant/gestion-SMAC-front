@@ -17,6 +17,7 @@ export const dateUsFormatting = (dateString: string | undefined) => {
 	return dateString ? dayjs(dateString).format('YYYY-MM-DD') : '';
 };
 
+// Conversion d'un fichier CSV en json en ignorant les lignes vides
 export const parseCsvToJson = (
 	file: string,
 	callbackFn: (data: object[]) => void

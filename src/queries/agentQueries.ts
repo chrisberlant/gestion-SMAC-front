@@ -3,6 +3,8 @@ import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
+import { error } from 'console';
+import displayAlreadyExistingEmailsOnImportModal from '../modals/alreadyExistingEmailsOnImportModal';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () => {
@@ -130,6 +132,9 @@ export const useImportMultipleAgents = (
 				importedAgents
 			);
 		},
+		meta: {
+			importAgentsMutation: 'true',
+		},
 		onMutate: async () => {
 			closeImportModal();
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
@@ -139,7 +144,15 @@ export const useImportMultipleAgents = (
 			// queryClient.setQueryData(['agents'], agents);
 			toast.success('Agents importés avec succès');
 		},
-		onError: () => {},
+		onError: (error) => {
+			// Si Zod renvoie un message indiquant que les en-têtes du CSV sont incorrects
+			if (error.message.includes('Unrecognized key(s)'))
+				return toast.error('Format du CSV incorrect');
+			// Si une ou plusieurs adresses mails sont déjà existantes
+			displayAlreadyExistingEmailsOnImportModal({
+				emails: error.message,
+			});
+		},
 		onSettled: () => {
 			toggleOverlay();
 		},

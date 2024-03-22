@@ -1,6 +1,8 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import displayAlreadyExistingEmailsOnImportModal from '../modals/alreadyExistingEmailsOnImportModal';
 
+// Gestion du comportement par défaut des requêtes
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
@@ -12,35 +14,37 @@ const queryClient = new QueryClient({
 
 	queryCache: new QueryCache({
 		onError: (error, query) => {
-			// Erreur générée uniquement s'il ne s'agit pas de la vérification du token sur la page de connexion
-			if (!query.meta?.loginStatusQuery) {
-				if (error.message === 'Failed to fetch') {
-					return toast.error('Impossible de joindre le serveur');
-				} else {
-					toast.error(error.message);
-					if (error.message.toLowerCase().includes('token')) {
-						// Redirection vers l'index si problème de token
-						localStorage.removeItem('smac_token');
-						window.location.href = '/';
-					}
-				}
+			// Si serveur injoignable
+			if (error.message === 'Failed to fetch')
+				return toast.error('Impossible de joindre le serveur');
+			// S'il s'agit d'un problème de token
+			if (error.message.toLowerCase().includes('token')) {
+				// Redirection vers l'index si problème de token
+				localStorage.removeItem('smac_token');
+				return (window.location.href = '/');
 			}
+			// S'il s'agit de la vérification du statut de connexion
+			if (query.meta?.loginStatusQuery) return true;
+			// Dans tous les autres cas, notification contenant le message d'erreur
+			toast.error(error.message);
 		},
 		onSuccess: () => {},
 	}),
 
 	mutationCache: new MutationCache({
-		onError: (error) => {
+		onError: (error, _, __, mutation) => {
+			// Si serveur injoignable
 			if (error.message === 'Failed to fetch') {
-				toast.error('Impossible de joindre le serveur');
-			} else {
-				toast.error(error.message);
-				if (error.message.toLowerCase().includes('token')) {
-					// Redirection vers l'index si problème de token
-					localStorage.removeItem('smac_token');
-					window.location.href = '/';
-				}
+				return toast.error('Impossible de joindre le serveur');
 			}
+			// S'il s'agit d'un problème de token
+			if (error.message.toLowerCase().includes('token')) {
+				// Redirection vers l'index si problème de token
+				localStorage.removeItem('smac_token');
+				return (window.location.href = '/');
+			}
+			if (mutation.options.meta?.importAgentsMutation) return true;
+			toast.error(error.message);
 		},
 	}),
 });
