@@ -16,14 +16,13 @@ const queryClient = new QueryClient({
 			// Si serveur injoignable
 			if (error.message === 'Failed to fetch')
 				return toast.error('Impossible de joindre le serveur');
-			// S'il s'agit d'un problème de token
+			if (query.meta?.loginStatusQuery) return true;
 			if (error.message.toLowerCase().includes('token')) {
 				// Redirection vers l'index si problème de token
 				localStorage.removeItem('smac_token');
 				return (window.location.href = '/');
 			}
 			// S'il s'agit de la vérification du statut de connexion
-			if (query.meta?.loginStatusQuery) return true;
 			// Dans tous les autres cas, notification contenant le message d'erreur
 			toast.error(error.message);
 		},

@@ -145,13 +145,13 @@ export const useImportMultipleAgents = (
 			toast.success('Agents importés avec succès');
 		},
 		onError: (error) => {
-			// Si Zod renvoie un message indiquant que les en-têtes du CSV sont incorrects
-			if (error.message.includes('Unrecognized key(s)'))
-				return toast.error('Format du CSV incorrect');
-			// Si une ou plusieurs adresses mails sont déjà existantes
-			displayAlreadyExistingEmailsOnImportModal({
-				emails: error.message,
-			});
+			// Si adresses mail déjà existantes, l'API renvoie celles concernées
+			if (error.message.includes('@'))
+				return displayAlreadyExistingEmailsOnImportModal({
+					emails: error.message,
+				});
+			// Si Zod renvoie un message indiquant un problème dans le format du CSV
+			return toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
 			toggleOverlay();

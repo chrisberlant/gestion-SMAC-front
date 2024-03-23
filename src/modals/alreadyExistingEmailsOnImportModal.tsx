@@ -36,7 +36,7 @@ const displayAlreadyExistingEmailsOnImportModal = ({
 						mx='md'
 						onClick={() => {
 							modals.closeAll();
-							toast.warning('CSV non importé');
+							toast.warning("Aucun import n'a été effectué");
 						}}
 					>
 						Valider
