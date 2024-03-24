@@ -4,10 +4,10 @@ import {
 	DeviceType,
 	DeviceCreationType,
 	DeviceUpdateType,
-} from '../types/device';
+} from '@customTypes/device';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { LineType } from '../types/line';
+import { LineType } from '@customTypes/line';
 
 export const useGetAllDevices = () => {
 	return useQuery({

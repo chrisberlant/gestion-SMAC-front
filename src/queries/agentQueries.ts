@@ -2,8 +2,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { AgentCreationType, AgentType, AgentUpdateType } from '../types/agent';
-import { error } from 'console';
+import {
+	AgentCreationType,
+	AgentType,
+	AgentUpdateType,
+} from '@customTypes/agent';
 import displayAlreadyExistingEmailsOnImportModal from '../modals/alreadyExistingEmailsOnImportModal';
 
 // Récupérer tous les agents
@@ -136,12 +139,10 @@ export const useImportMultipleAgents = (
 			importAgentsMutation: 'true',
 		},
 		onMutate: async () => {
-			closeImportModal();
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['agents'] });
-			// queryClient.setQueryData(['agents'], agents);
 			toast.success('Agents importés avec succès');
 		},
 		onError: (error) => {
@@ -151,10 +152,11 @@ export const useImportMultipleAgents = (
 					emails: error.message,
 				});
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
-			return toast.error('Format du CSV incorrect');
+			toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
 			toggleOverlay();
+			closeImportModal();
 		},
 	});
 };

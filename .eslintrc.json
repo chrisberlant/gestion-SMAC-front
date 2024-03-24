@@ -21,7 +21,7 @@
 					["@assets", "./src/assets"],
 					["@utils", "./src/utils"],
 					["@validationSchemas", "./src/validationSchemas"],
-					["@types", "./src/types"],
+					["@customTypes", "./src/types"],
 					["@queries", "./src/queries"],
 					["@modals", "./src/modals"]
 				]

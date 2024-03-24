@@ -11,7 +11,7 @@ import {
 	DeviceCreationType,
 	DeviceType,
 	DeviceUpdateType,
-} from '../../types/device';
+} from '@customTypes/device';
 import { useGetAllAgents } from '@queries/agentQueries';
 import {
 	useCreateDevice,
@@ -28,7 +28,7 @@ import {
 	deviceUpdateSchema,
 } from '@validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { dateFrFormatting } from '@utils/functions';
+import { dateFrFormatting } from '@/utils';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';

@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import fileImportSchema from '../../validationSchemas/fileImportSchema';
 import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
 import { useImportMultipleAgents } from '../../queries/agentQueries';
-import { parseCsvToJson } from '../../utils/functions';
+import { parseCsvToJson } from '../../utils';
 
 interface ImportAgentsModalProps {
 	openedImportModal: boolean;

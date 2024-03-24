@@ -13,7 +13,7 @@ import {
 	MRT_TableInstance,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { LineCreationType, LineType, LineUpdateType } from '../../types/line';
+import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
 import {
 	useCreateLine,
 	useDeleteLine,

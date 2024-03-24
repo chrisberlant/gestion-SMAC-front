@@ -12,10 +12,10 @@ import {
 	UserPasswordIsResetType,
 	UserType,
 	UserUpdateType,
-} from '../types/user';
+} from '@customTypes/user';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { IdSelectionType } from '../types';
+import { IdSelectionType } from '@customTypes/index';
 
 // Connexion
 export const useLogin = (

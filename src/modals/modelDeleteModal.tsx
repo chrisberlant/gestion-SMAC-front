@@ -1,7 +1,7 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { ModelType } from '../types/model';
+import { ModelType } from '@customTypes/model';
 
 interface DisplayModelDeleteModalProps {
 	row: MRT_Row<ModelType>;

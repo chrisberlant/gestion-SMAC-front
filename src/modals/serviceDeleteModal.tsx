@@ -1,7 +1,7 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { ServiceType } from '../types/service';
+import { ServiceType } from '@customTypes/service';
 
 interface DisplayServiceDeleteModalProps {
 	row: MRT_Row<ServiceType>;

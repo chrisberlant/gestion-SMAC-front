@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { LineCreationType, LineType } from '../types/line';
+import { LineCreationType, LineType } from '@customTypes/line';
 
 interface CreateLineProps {
 	data: LineCreationType;

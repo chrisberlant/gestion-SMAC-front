@@ -14,7 +14,7 @@ export default defineConfig({
 				__dirname,
 				'./src/validationSchemas'
 			),
-			'@types': path.resolve(__dirname, './src/types'),
+			'@customTypes': path.resolve(__dirname, './src/types'),
 			'@queries': path.resolve(__dirname, './src/queries'),
 			'@modals': path.resolve(__dirname, './src/modals'),
 		},

@@ -1,7 +1,7 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { UserType } from '../types/user';
+import { UserType } from '@customTypes/user';
 
 interface DisplayUserDeleteModalProps {
 	row: MRT_Row<UserType>;

@@ -3,8 +3,8 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { LineType, LineCreationType, LineUpdateType } from '../types/line';
-import { DeviceType } from '../types/device';
+import { LineType, LineCreationType, LineUpdateType } from '@customTypes/line';
+import { DeviceType } from '@customTypes/device';
 
 export const useGetAllLines = () => {
 	return useQuery({

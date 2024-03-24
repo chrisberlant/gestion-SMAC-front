@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import Papa from 'papaparse';
 
+// Envoi d'email
 export const sendEmail = (sendTo: string, subject: string, content: string) => {
 	const emailSubject = encodeURIComponent(subject);
 	const emailContent = encodeURIComponent(content);
@@ -9,15 +10,15 @@ export const sendEmail = (sendTo: string, subject: string, content: string) => {
 	window.location.href = mailtoLink;
 };
 
+// Formatage des dates
 export const dateFrFormatting = (dateString: string | undefined) => {
 	return dateString ? dayjs(dateString).format('DD/MM/YYYY') : '';
 };
-
 export const dateUsFormatting = (dateString: string | undefined) => {
 	return dateString ? dayjs(dateString).format('YYYY-MM-DD') : '';
 };
 
-// Conversion d'un fichier CSV en json en ignorant les lignes vides
+// Conversion d'un fichier CSV en json en ignorant les lignes vides, la fonction passée en callback est ensuite appelée
 export const parseCsvToJson = (
 	file: string,
 	callbackFn: (data: object[]) => void

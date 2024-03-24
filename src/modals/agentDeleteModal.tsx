@@ -1,7 +1,7 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { AgentType } from '../types/agent';
+import { AgentType } from '@customTypes/agent';
 
 interface DisplayAgentDeleteModalProps {
 	row: MRT_Row<AgentType>;

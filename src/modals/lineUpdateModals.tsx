@@ -1,6 +1,6 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { LineUpdateType, LineType } from '../types/line';
+import { LineUpdateType, LineType } from '@customTypes/line';
 
 interface UpdateLineProps {
 	data: LineUpdateType;

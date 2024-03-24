@@ -1,7 +1,7 @@
 import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
-import { DeviceType } from '../types/device';
+import { DeviceType } from '@customTypes/device';
 
 interface DisplayDeviceDeleteModalProps {
 	row: MRT_Row<DeviceType>;
