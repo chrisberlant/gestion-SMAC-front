@@ -114,7 +114,7 @@ export const useDeleteAgent = () => {
 export const useExportAgentsToCsv = () => {
 	return useQuery({
 		queryKey: ['agentsCsv'],
-		queryFn: async () => await fetchApi('/generateAgentsCsvFile'),
+		queryFn: async () => await fetchApi('/exportAgentsCsvFile'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
@@ -159,5 +159,16 @@ export const useImportMultipleAgents = (
 			toggleOverlay();
 			closeImportModal();
 		},
+	});
+};
+
+// Générer le template CSV
+export const useGetAgentsCsvTemplate = () => {
+	return useQuery({
+		queryKey: ['agentsCsv'],
+		queryFn: async () => await fetchApi('/generateEmptyAgentsCsvFile'),
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
 	});
 };

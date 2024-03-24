@@ -12,10 +12,20 @@ import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import fileImportSchema from '../../validationSchemas/fileImportSchema';
 import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
-import { useImportMultipleAgents } from '../../queries/agentQueries';
+import {
+	useGetAgentsCsvTemplate,
+	useImportMultipleAgents,
+} from '../../queries/agentQueries';
 import { parseCsvToJson } from '../../utils';
-import { UseMutateFunction } from '@tanstack/react-query';
-import { useImportMultipleDevices } from '../../queries/deviceQueries';
+import {
+	QueryObserverResult,
+	UseMutateFunction,
+	UseQueryResult,
+} from '@tanstack/react-query';
+import {
+	useGetDevicesCsvTemplate,
+	useImportMultipleDevices,
+} from '../../queries/deviceQueries';
 
 interface ImportModalProps {
 	model: string;
@@ -46,6 +56,7 @@ export default function ImportModal({
 		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
 	};
 
+	// Import de fichier
 	const { mutate: importAgents } = useImportMultipleAgents(
 		toggleOverlay,
 		closeImportModal
@@ -55,10 +66,15 @@ export default function ImportModal({
 		closeImportModal
 	);
 
+	// Génération de template
+	const { refetch: generateAgentsCsvTemplate } = useGetAgentsCsvTemplate();
+	const { refetch: generateDevicesCsvTemplate } = useGetDevicesCsvTemplate();
+
 	let title = '';
 	let requiredCsvHeaders = '';
 	let mutationFn: UseMutateFunction<unknown, Error, object[], void> = () =>
 		null;
+	let templateGenerationFn: () => void = () => null;
 
 	// Selon le modèle fourni, les requêtes et informations de la modale seront différentes
 	switch (model) {
@@ -66,12 +82,14 @@ export default function ImportModal({
 			title = "Importer des agents à partir d'un fichier";
 			requiredCsvHeaders = 'Email Nom Prénom VIP Service';
 			mutationFn = importAgents;
+			templateGenerationFn = generateAgentsCsvTemplate;
 			break;
 		case 'devices':
 			title = "Importer des appareils à partir d'un fichier";
 			requiredCsvHeaders =
 				'IMEI Statut État Modèle Propriétaire Préparation Attribution Commentaires';
 			mutationFn = importDevices;
+			templateGenerationFn = generateDevicesCsvTemplate;
 			break;
 	}
 
@@ -128,6 +146,14 @@ export default function ImportModal({
 					/>
 					<Button fullWidth mt='xl' type='submit'>
 						Importer
+					</Button>
+					<Button
+						color='orange'
+						fullWidth
+						mt='md'
+						onClick={templateGenerationFn}
+					>
+						Télécharger un template vierge
 					</Button>
 					<Button
 						fullWidth

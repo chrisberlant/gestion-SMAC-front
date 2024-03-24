@@ -139,7 +139,7 @@ export const useDeleteDevice = () => {
 export const useExportDevicesToCsv = () => {
 	return useQuery({
 		queryKey: ['devicesCsv'],
-		queryFn: async () => await fetchApi('/generateDevicesCsvFile'),
+		queryFn: async () => await fetchApi('/exportDevicesCsvFile'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
@@ -184,5 +184,16 @@ export const useImportMultipleDevices = (
 			toggleOverlay();
 			closeImportModal();
 		},
+	});
+};
+
+// Générer le template CSV
+export const useGetDevicesCsvTemplate = () => {
+	return useQuery({
+		queryKey: ['devicesCsv'],
+		queryFn: async () => await fetchApi('/generateEmptyDevicesCsvFile'),
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
 	});
 };
