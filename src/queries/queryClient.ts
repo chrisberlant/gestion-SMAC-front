@@ -42,7 +42,7 @@ const queryClient = new QueryClient({
 				return (window.location.href = '/');
 			}
 			// Si erreur lors de l'import, pas de message d'erreur
-			if (mutation.options.meta?.importAgentsMutation) return true;
+			if (mutation.options.meta?.importMutation) return true;
 			toast.error(error.message);
 		},
 	}),

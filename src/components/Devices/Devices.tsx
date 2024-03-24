@@ -37,6 +37,7 @@ import displayDeviceOwnerChangeModal from '@modals/deviceOwnerChangeModal';
 import displayDeviceDeleteModal from '@modals/deviceDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
+import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
 export default function DevicesTable() {
 	const {
@@ -464,7 +465,12 @@ export default function DevicesTable() {
 			/>
 		),
 		renderTopToolbarCustomActions: () => (
-			<CreateButton createFunction={() => table.setCreatingRow(true)} />
+			<>
+				<CreateButton
+					createFunction={() => table.setCreatingRow(true)}
+				/>
+				<CsvImportButton model='devices' />
+			</>
 		),
 		renderBottomToolbarCustomActions: () => (
 			<Flex justify='end' flex={1}>

@@ -14,18 +14,67 @@ import fileImportSchema from '../../validationSchemas/fileImportSchema';
 import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
 import { useImportMultipleAgents } from '../../queries/agentQueries';
 import { parseCsvToJson } from '../../utils';
+import { UseMutateFunction } from '@tanstack/react-query';
+import { useImportMultipleDevices } from '../../queries/deviceQueries';
 
-interface ImportAgentsModalProps {
+interface ImportModalProps {
+	model: string;
 	openedImportModal: boolean;
 	closeImportModal: () => void;
 }
 
 // Modale permettant d'importer des agents depuis un CSV, ouverte depuis le composant CsvImportButton
-export default function ImportAgentsModal({
+export default function ImportModal({
+	model,
 	openedImportModal,
 	closeImportModal,
-}: ImportAgentsModalProps) {
+}: ImportModalProps) {
 	const iconUpload = <IconUpload style={{ height: 20 }} />;
+
+	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
+	const form = useForm({
+		validate: zodResolver(fileImportSchema),
+		initialValues: {
+			file: '',
+		},
+	});
+
+	const closeModal = () => {
+		closeImportModal();
+		form.reset();
+		// Si des champs avaient été modifiés
+		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
+	};
+
+	const { mutate: importAgents } = useImportMultipleAgents(
+		toggleOverlay,
+		closeImportModal
+	);
+	const { mutate: importDevices } = useImportMultipleDevices(
+		toggleOverlay,
+		closeImportModal
+	);
+
+	let title = '';
+	let requiredCsvHeaders = '';
+	let mutationFn: UseMutateFunction<unknown, Error, object[], void> = () =>
+		null;
+
+	// Selon le modèle fourni, les requêtes et informations de la modale seront différentes
+	switch (model) {
+		case 'agents':
+			title = "Importer des agents à partir d'un fichier";
+			requiredCsvHeaders = 'Email Nom Prénom VIP Service';
+			mutationFn = importAgents;
+			break;
+		case 'devices':
+			title = "Importer des appareils à partir d'un fichier";
+			requiredCsvHeaders =
+				'IMEI Statut État Modèle Propriétaire Préparation Attribution Commentaires';
+			mutationFn = importDevices;
+			break;
+	}
+
 	// Infos sur le format du fichier CSV à joindre
 	const iconToolTip = (
 		<Group justify='center'>
@@ -35,40 +84,21 @@ export default function ImportAgentsModal({
 				</HoverCard.Target>
 				<HoverCard.Dropdown>
 					<Text>
-						Le fichier doit contenir les en-têtes, en respectant les
-						accents et majuscules :{' '}
-						<span className='bold-text'>
-							Email Nom Prenom VIP Service
-						</span>
+						Le fichier doit être au format UTF-8 et contenir les
+						en-têtes, en respectant les accents et majuscules :{' '}
+						<span className='bold-text'>{requiredCsvHeaders}</span>
 					</Text>
 				</HoverCard.Dropdown>
 			</HoverCard>
 		</Group>
 	);
-	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const form = useForm({
-		validate: zodResolver(fileImportSchema),
-		initialValues: {
-			file: '',
-		},
-	});
-	const { mutate: importAgents } = useImportMultipleAgents(
-		toggleOverlay,
-		closeImportModal
-	);
-	const closeModal = () => {
-		closeImportModal();
-		form.reset();
-		// Si des champs avaient été modifiés
-		if (form.isDirty()) toast.warning("Aucun import n'a été effectué");
-	};
 
 	return (
 		<div className='csv-import'>
 			<Modal
 				opened={openedImportModal}
 				onClose={closeModal}
-				title="Importer des agents à partir d'un fichier"
+				title={title}
 				centered
 				overlayProps={{
 					blur: 3,
@@ -76,7 +106,7 @@ export default function ImportAgentsModal({
 			>
 				<form
 					onSubmit={form.onSubmit(() =>
-						parseCsvToJson(form.values.file, importAgents)
+						parseCsvToJson(form.values.file, mutationFn)
 					)}
 				>
 					<LoadingOverlay

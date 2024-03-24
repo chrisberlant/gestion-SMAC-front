@@ -1,9 +1,14 @@
 import { Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import ImportAgentsModal from './ImportAgentsModal';
+import ImportModal from './ImportModal';
+
+// Le modèle détermine la bonne modale à afficher
+interface CsvImportButtonProps {
+	model: string;
+}
 
 // Bouton permettant d'ouvrir la modale d'import de fichier
-export default function CsvImportButton() {
+export default function CsvImportButton({ model }: CsvImportButtonProps) {
 	const [
 		openedImportModal,
 		{ open: openImportModal, close: closeImportModal },
@@ -14,7 +19,8 @@ export default function CsvImportButton() {
 			<Button color='green' onClick={openImportModal}>
 				Importer un CSV
 			</Button>
-			<ImportAgentsModal
+			<ImportModal
+				model={model}
 				openedImportModal={openedImportModal}
 				closeImportModal={closeImportModal}
 			/>

@@ -7,7 +7,7 @@ import {
 	AgentType,
 	AgentUpdateType,
 } from '@customTypes/agent';
-import displayAlreadyExistingEmailsOnImportModal from '../modals/alreadyExistingEmailsOnImportModal';
+import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () => {
@@ -136,7 +136,7 @@ export const useImportMultipleAgents = (
 			);
 		},
 		meta: {
-			importAgentsMutation: 'true',
+			importMutation: 'true',
 		},
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
@@ -148,8 +148,9 @@ export const useImportMultipleAgents = (
 		onError: (error) => {
 			// Si adresses mail déjà existantes, l'API renvoie celles concernées
 			if (error.message.includes('@'))
-				return displayAlreadyExistingEmailsOnImportModal({
-					emails: error.message,
+				return displayAlreadyExistingValuesOnImportModal({
+					values: error.message,
+					text: 'Certaines adresses mail fournies sont déjà existantes :',
 				});
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
 			toast.error('Format du CSV incorrect');

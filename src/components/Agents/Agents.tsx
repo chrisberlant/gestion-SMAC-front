@@ -340,7 +340,7 @@ export default function AgentsTable() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<CsvImportButton />
+				<CsvImportButton model='agents' />
 			</>
 		),
 		renderBottomToolbarCustomActions: () => (

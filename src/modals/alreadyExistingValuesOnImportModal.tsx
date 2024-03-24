@@ -2,14 +2,16 @@ import { modals } from '@mantine/modals';
 import { Button, Flex, Text } from '@mantine/core';
 import { toast } from 'sonner';
 
-interface DisplayAlreadyExistingEmailsOnImportModalProps {
-	emails: string;
+interface displayAlreadyExistingValuesOnImportModalProps {
+	text: string;
+	values: string;
 }
 
-const displayAlreadyExistingEmailsOnImportModal = ({
-	emails,
-}: DisplayAlreadyExistingEmailsOnImportModalProps) => {
-	const emailsArray = emails.split(',');
+const displayAlreadyExistingValuesOnImportModal = ({
+	text,
+	values,
+}: displayAlreadyExistingValuesOnImportModalProps) => {
+	const valuesArray = values.split(',');
 
 	return modals.open({
 		title: "Impossible d'importer le fichier CSV",
@@ -17,12 +19,10 @@ const displayAlreadyExistingEmailsOnImportModal = ({
 		centered: true,
 		children: (
 			<>
-				<Text mb='xs'>
-					Certaines adresses mail fournies sont déjà existantes :
-				</Text>
+				<Text mb='xs'>{text}</Text>
 				<Flex align='center' direction='column'>
-					{emailsArray.map((email) => (
-						<Text key={email}>{email}</Text>
+					{valuesArray.map((value) => (
+						<Text key={value}>{value}</Text>
 					))}
 				</Flex>
 				<Text mt='lg'>
@@ -47,4 +47,4 @@ const displayAlreadyExistingEmailsOnImportModal = ({
 	});
 };
 
-export default displayAlreadyExistingEmailsOnImportModal;
+export default displayAlreadyExistingValuesOnImportModal;

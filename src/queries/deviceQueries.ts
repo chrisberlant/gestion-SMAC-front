@@ -8,6 +8,7 @@ import {
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '@customTypes/line';
+import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 export const useGetAllDevices = () => {
 	return useQuery({
@@ -142,5 +143,46 @@ export const useExportDevicesToCsv = () => {
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
+	});
+};
+
+// Créer des appareils à partir d'un CSV
+export const useImportMultipleDevices = (
+	toggleOverlay: () => void,
+	closeImportModal: () => void
+) => {
+	return useMutation({
+		mutationFn: async (importedDevices: object[]) => {
+			toggleOverlay();
+			return await fetchApi(
+				'/importMultipleDevices',
+				'POST',
+				importedDevices
+			);
+		},
+		meta: {
+			importMutation: 'true',
+		},
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ['devices'] });
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['devices'] });
+			toast.success('Appareils importés avec succès');
+		},
+		onError: (error) => {
+			// Si IMEI déjà existants, l'API renvoie ceux concernés
+			if (/\d+/.test(error.message))
+				return displayAlreadyExistingValuesOnImportModal({
+					values: error.message,
+					text: 'Certains IMEI fournis sont déjà existants :',
+				});
+			// Si Zod renvoie un message indiquant un problème dans le format du CSV
+			toast.error('Format du CSV incorrect');
+		},
+		onSettled: () => {
+			toggleOverlay();
+			closeImportModal();
+		},
 	});
 };
