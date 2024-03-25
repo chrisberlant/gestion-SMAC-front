@@ -91,20 +91,18 @@ export default function ImportModal({
 
 	// Infos sur le format du fichier CSV à joindre
 	const iconToolTip = (
-		<Group justify='center'>
-			<HoverCard width={280} shadow='md'>
-				<HoverCard.Target>
-					<IconQuestionMark style={{ height: 20 }} />
-				</HoverCard.Target>
-				<HoverCard.Dropdown>
-					<Text>
-						Le fichier doit être au format UTF-8 et contenir les
-						en-têtes, en respectant les accents et majuscules :{' '}
-						<span className='bold-text'>{requiredCsvHeaders}</span>
-					</Text>
-				</HoverCard.Dropdown>
-			</HoverCard>
-		</Group>
+		<HoverCard width={400} shadow='md'>
+			<HoverCard.Target>
+				<IconQuestionMark style={{ height: 20 }} />
+			</HoverCard.Target>
+			<HoverCard.Dropdown>
+				<Text>
+					Le fichier doit être au format UTF-8 et contenir les
+					en-têtes, en respectant les accents et majuscules :{' '}
+					<span className='bold-text'>{requiredCsvHeaders}</span>
+				</Text>
+			</HoverCard.Dropdown>
+		</HoverCard>
 	);
 
 	return (

@@ -11,7 +11,7 @@ export interface AgentType {
 	lastName: string;
 	vip: boolean;
 	serviceId: number;
-	devices: { id: number }[];
+	devices: { id: number; imei: string }[];
 }
 
 export type AgentCreationType = z.infer<typeof agentCreationSchema>;

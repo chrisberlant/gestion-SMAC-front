@@ -1,5 +1,13 @@
-import { ActionIcon, Flex, Loader, Tooltip } from '@mantine/core';
-import { IconCopy, IconMail } from '@tabler/icons-react';
+import {
+	ActionIcon,
+	Flex,
+	Group,
+	HoverCard,
+	Loader,
+	Tooltip,
+	Text,
+} from '@mantine/core';
+import { IconCopy, IconMail, IconQuestionMark } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -207,6 +215,23 @@ export default function AgentsTable() {
 				enableEditing: false,
 				accessorFn: (row) => row.devices?.length || 0,
 				size: 75,
+				// Affichage des IMEI au survol s'il y a des appareils à afficher
+				Cell: ({ row, cell }) => {
+					const devicesAmount = cell.getValue() as string;
+					if (Number(devicesAmount) === 0) return devicesAmount;
+					return (
+						<HoverCard width={170} shadow='md' openDelay={400}>
+							<HoverCard.Target>
+								<span>{devicesAmount}</span>
+							</HoverCard.Target>
+							<HoverCard.Dropdown>
+								{row.original.devices.map((device) => (
+									<Text key={device.id}>{device.imei}</Text>
+								))}
+							</HoverCard.Dropdown>
+						</HoverCard>
+					);
+				},
 			},
 		],
 		[services, validationErrors]
