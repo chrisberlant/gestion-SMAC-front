@@ -1,13 +1,12 @@
 import {
 	ActionIcon,
 	Flex,
-	Group,
 	HoverCard,
 	Loader,
 	Tooltip,
 	Text,
 } from '@mantine/core';
-import { IconCopy, IconMail, IconQuestionMark } from '@tabler/icons-react';
+import { IconCopy, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,

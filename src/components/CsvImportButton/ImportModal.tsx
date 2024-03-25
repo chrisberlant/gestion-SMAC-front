@@ -2,7 +2,6 @@ import {
 	Text,
 	Button,
 	FileInput,
-	Group,
 	HoverCard,
 	LoadingOverlay,
 	Modal,
