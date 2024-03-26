@@ -33,6 +33,7 @@ import displayLineUpdateModal from '@modals/lineUpdateModals';
 import displayLineDeleteModal from '@modals/lineDeleteModal';
 import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
 import { toast } from 'sonner';
+import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
 export default function Lines() {
 	const {
@@ -500,7 +501,8 @@ export default function Lines() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
+				<CsvImportButton model='lines' />
+				{/* <Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
 					<Button color='green' onClick={() => console.log(null)}>
 						Toutes les lignes
 					</Button>
@@ -519,7 +521,7 @@ export default function Lines() {
 					>
 						Résiliées
 					</Button>
-				</Flex>
+				</Flex> */}
 			</>
 		),
 		renderBottomToolbarCustomActions: () => (

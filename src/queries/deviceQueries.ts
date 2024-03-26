@@ -171,11 +171,11 @@ export const useImportMultipleDevices = (
 			toast.success('Appareils importés avec succès');
 		},
 		onError: (error) => {
-			// Si IMEI déjà existants, l'API renvoie ceux concernés
-			if (/\d+/.test(error.message))
+			// Si IMEI déjà existants, la modale est affichée
+			if (/\d{15}/.test(error.message))
 				return displayAlreadyExistingValuesOnImportModal({
-					values: error.message,
 					text: 'Certains IMEI fournis sont déjà existants :',
+					values: error.message.split(','),
 				});
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
 			toast.error('Format du CSV incorrect');

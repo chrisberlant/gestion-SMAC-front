@@ -146,11 +146,11 @@ export const useImportMultipleAgents = (
 			toast.success('Agents importés avec succès');
 		},
 		onError: (error) => {
-			// Si adresses mail déjà existantes, l'API renvoie celles concernées
+			// Si adresses mail déjà existantes, la modale est affichée
 			if (error.message.includes('@'))
 				return displayAlreadyExistingValuesOnImportModal({
-					values: error.message,
 					text: 'Certaines adresses mail fournies sont déjà existantes :',
+					values: error.message.split(','),
 				});
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
 			toast.error('Format du CSV incorrect');

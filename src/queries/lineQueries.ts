@@ -5,6 +5,7 @@ import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType, LineCreationType, LineUpdateType } from '@customTypes/line';
 import { DeviceType } from '@customTypes/device';
+import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 export const useGetAllLines = () => {
 	return useQuery({
@@ -192,6 +193,77 @@ export const useExportLinesToCsv = () => {
 	return useQuery({
 		queryKey: ['linesCsv'],
 		queryFn: async () => await fetchApi('/generateLinesCsvFile'),
+		enabled: false,
+		staleTime: 0,
+		gcTime: 0,
+	});
+};
+
+// Créer des lignes à partir d'un CSV
+export const useImportMultipleLines = (
+	toggleOverlay: () => void,
+	closeImportModal: () => void
+) => {
+	return useMutation({
+		mutationFn: async (importedLines: object[]) => {
+			toggleOverlay();
+			return await fetchApi(
+				'/importMultipleLines',
+				'POST',
+				importedLines
+			);
+		},
+		meta: {
+			importMutation: 'true',
+		},
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: ['lines'] });
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['lines'] });
+			toast.success('Lignes importées avec succès');
+		},
+		onError: (error) => {
+			// Tableau contenant tous les éléments retournés
+			const alreadyExistingItems = error.message.split(',');
+			const alreadyExistingNumbers: string[] = [];
+			const alreadyExistingImeis: string[] = [];
+
+			// Séparation de chaque type d'élement dans un tableau différent
+			alreadyExistingItems.forEach((item) => {
+				if (/\d{15}/.test(item)) return alreadyExistingImeis.push(item);
+				if (/\d{10}/.test(item))
+					return alreadyExistingNumbers.push(item);
+			});
+
+			// Si des numéros déjà existants ou appareils déjà affectés, la modale est affichée
+			if (
+				alreadyExistingNumbers.length > 0 ||
+				alreadyExistingImeis.length > 0
+			) {
+				return displayAlreadyExistingValuesOnImportModal({
+					text: 'Certains numéros de ligne fournis sont déjà existants :',
+					values: alreadyExistingNumbers,
+					secondaryText:
+						'Certains IMEI fournis sont déjà existants :',
+					secondaryValues: alreadyExistingImeis,
+				});
+			}
+			// Si Zod renvoie un message indiquant un problème dans le format du CSV
+			toast.error('Format du CSV incorrect');
+		},
+		onSettled: () => {
+			toggleOverlay();
+			closeImportModal();
+		},
+	});
+};
+
+// Générer le template CSV
+export const useGetLinesCsvTemplate = () => {
+	return useQuery({
+		queryKey: ['linesCsv'],
+		queryFn: async () => await fetchApi('/generateEmptyLinesCsvFile'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,

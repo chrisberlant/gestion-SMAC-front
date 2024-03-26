@@ -9,18 +9,22 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import fileImportSchema from '../../validationSchemas/fileImportSchema';
+import fileImportSchema from '@validationSchemas/fileImportSchema';
 import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
 import {
 	useGetAgentsCsvTemplate,
 	useImportMultipleAgents,
-} from '../../queries/agentQueries';
-import { parseCsvToJson } from '../../utils';
+} from '@queries/agentQueries';
+import { parseCsvToJson } from '@utils/index';
 import { UseMutateFunction } from '@tanstack/react-query';
 import {
 	useGetDevicesCsvTemplate,
 	useImportMultipleDevices,
-} from '../../queries/deviceQueries';
+} from '@queries/deviceQueries';
+import {
+	useGetLinesCsvTemplate,
+	useImportMultipleLines,
+} from '@queries/lineQueries';
 
 interface ImportModalProps {
 	model: string;
@@ -60,16 +64,29 @@ export default function ImportModal({
 		toggleOverlay,
 		closeImportModal
 	);
+	const { mutate: importLines } = useImportMultipleLines(
+		toggleOverlay,
+		closeImportModal
+	);
 
 	// Génération de template
 	const { refetch: generateAgentsCsvTemplate } = useGetAgentsCsvTemplate();
 	const { refetch: generateDevicesCsvTemplate } = useGetDevicesCsvTemplate();
+	const { refetch: generateLinesCsvTemplate } = useGetLinesCsvTemplate();
 
-	let title = '';
-	let requiredCsvHeaders = '';
-	let mutationFn: UseMutateFunction<unknown, Error, object[], void> = () =>
-		null;
-	let templateGenerationFn: () => void = () => null;
+	const options: {
+		title: string;
+		requiredCsvHeaders: string;
+		mutationFn: UseMutateFunction<unknown, Error, object[], void>;
+		templateGenerationFn: () => void;
+	} = {
+		title: '',
+		requiredCsvHeaders: '',
+		mutationFn: () => null,
+		templateGenerationFn: () => null,
+	};
+	let { title, requiredCsvHeaders, mutationFn, templateGenerationFn } =
+		options;
 
 	// Selon le modèle fourni, les requêtes et informations de la modale seront différentes
 	switch (model) {
@@ -86,10 +103,16 @@ export default function ImportModal({
 			mutationFn = importDevices;
 			templateGenerationFn = generateDevicesCsvTemplate;
 			break;
+		case 'lines':
+			title = "Importer des lignes à partir d'un fichier";
+			requiredCsvHeaders =
+				'Numéro Profil Statut Propriétaire Appareil Commentaires';
+			mutationFn = importLines;
+			templateGenerationFn = generateLinesCsvTemplate;
 	}
 
 	// Infos sur le format du fichier CSV à joindre
-	const iconToolTip = (
+	const tooltipIcon = (
 		<HoverCard width={400} shadow='md'>
 			<HoverCard.Target>
 				<IconQuestionMark style={{ height: 20 }} />
@@ -128,7 +151,7 @@ export default function ImportModal({
 					<FileInput
 						label='Sélectionner le fichier à importer'
 						leftSection={iconUpload}
-						rightSection={iconToolTip}
+						rightSection={tooltipIcon}
 						placeholder='Sélectionner le fichier à importer'
 						name='file'
 						accept='.csv'
