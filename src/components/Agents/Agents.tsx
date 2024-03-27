@@ -265,8 +265,8 @@ export default function AgentsTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.email.toLocaleLowerCase() ===
-							data.email.toLocaleLowerCase().trim()
+							row.original.email.toLowerCase() ===
+							data.email.toLowerCase().trim()
 					)
 			) {
 				toast.error('Un agent avec cette adresse mail existe déjà');
@@ -311,8 +311,8 @@ export default function AgentsTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.email.toLocaleLowerCase() ===
-								data.email.toLocaleLowerCase().trim() &&
+							row.original.email.toLowerCase() ===
+								data.email.toLowerCase().trim() &&
 							row.original.id !== data.id
 					)
 			) {

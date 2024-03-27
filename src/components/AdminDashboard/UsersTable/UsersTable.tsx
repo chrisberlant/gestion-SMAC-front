@@ -138,8 +138,8 @@ export default function UsersTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.email.toLocaleLowerCase() ===
-							values.email.toLocaleLowerCase().trim()
+							row.original.email.toLowerCase() ===
+							values.email.toLowerCase().trim()
 					)
 			) {
 				toast.error(
@@ -176,8 +176,8 @@ export default function UsersTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.email.toLocaleLowerCase() ===
-								values.email.toLocaleLowerCase().trim() &&
+							row.original.email.toLowerCase() ===
+								values.email.toLowerCase().trim() &&
 							row.original.id !== values.id
 					)
 			) {

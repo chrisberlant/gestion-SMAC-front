@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Button, Flex, Loader } from '@mantine/core';
+import { Flex, Loader } from '@mantine/core';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,

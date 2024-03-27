@@ -99,12 +99,12 @@ export default function ModelsTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.brand.toLocaleLowerCase() ===
-								values.brand.toLocaleLowerCase().trim() &&
-							row.original.reference.toLocaleLowerCase() ===
-								values.reference.toLocaleLowerCase().trim() &&
-							row.original.storage?.toLocaleLowerCase() ===
-								values.storage?.toLocaleLowerCase().trim()
+							row.original.brand.toLowerCase() ===
+								values.brand.toLowerCase().trim() &&
+							row.original.reference.toLowerCase() ===
+								values.reference.toLowerCase().trim() &&
+							row.original.storage?.toLowerCase() ===
+								values.storage?.toLowerCase().trim()
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');
@@ -141,12 +141,12 @@ export default function ModelsTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.brand.toLocaleLowerCase() ===
-								values.brand.toLocaleLowerCase().trim() &&
-							row.original.reference.toLocaleLowerCase() ===
-								values.reference.toLocaleLowerCase().trim() &&
-							row.original.storage?.toLocaleLowerCase() ===
-								values.storage?.toLocaleLowerCase().trim() &&
+							row.original.brand.toLowerCase() ===
+								values.brand.toLowerCase().trim() &&
+							row.original.reference.toLowerCase() ===
+								values.reference.toLowerCase().trim() &&
+							row.original.storage?.toLowerCase() ===
+								values.storage?.toLowerCase().trim() &&
 							row.original.id !== values.id
 					)
 			) {

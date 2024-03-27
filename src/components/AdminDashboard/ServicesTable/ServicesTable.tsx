@@ -70,8 +70,8 @@ export default function ServicesTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.title.toLocaleLowerCase() ===
-							values.title.toLocaleLowerCase().trim()
+							row.original.title.toLowerCase() ===
+							values.title.toLowerCase().trim()
 					)
 			) {
 				toast.error('Un service porte déjà ce nom');
@@ -104,8 +104,8 @@ export default function ServicesTable() {
 					.getCoreRowModel()
 					.rows.some(
 						(row) =>
-							row.original.title.toLocaleLowerCase() ===
-								values.title.toLocaleLowerCase().trim() &&
+							row.original.title.toLowerCase() ===
+								values.title.toLowerCase().trim() &&
 							row.original.id !== values.id
 					)
 			) {
