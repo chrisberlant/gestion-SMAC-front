@@ -3,17 +3,13 @@ import { useGetCurrentUser } from '@queries/userQueries';
 
 interface CreateButtonProps {
 	createFunction: () => void;
-	checkRole?: boolean;
 }
 
-export default function CreateButton({
-	createFunction,
-	checkRole = true,
-}: CreateButtonProps) {
+export default function CreateButton({ createFunction }: CreateButtonProps) {
 	const { data: currentUser } = useGetCurrentUser();
 
 	if (currentUser)
-		return checkRole && currentUser.role === 'Consultant' ? (
+		return currentUser.role === 'Consultant' ? (
 			<Button
 				mr='auto'
 				ml='xs'

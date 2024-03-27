@@ -35,7 +35,7 @@ import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDele
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayDeviceOwnerChangeModal from '@modals/deviceOwnerChangeModal';
 import displayDeviceDeleteModal from '@modals/deviceDeleteModal';
-import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
@@ -474,7 +474,7 @@ export default function DevicesTable() {
 		),
 		renderBottomToolbarCustomActions: () => (
 			<Flex justify='end' flex={1}>
-				<ExportToCsvButton request={exportsDevicesToCsv} />
+				<CsvExportButton request={exportsDevicesToCsv} />
 			</Flex>
 		),
 		mantineTableProps: {

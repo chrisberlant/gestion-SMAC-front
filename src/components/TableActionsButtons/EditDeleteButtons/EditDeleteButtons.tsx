@@ -27,28 +27,25 @@ export default function EditDeleteButtons({
 		return roleCheck && currentUser.role === 'Consultant' ? (
 			// Si on demande à vérifier le rôle et que l'utilisateur actuel est un consultant, il n'a pas accès aux boutons
 			<Flex gap='md'>
-				<Tooltip label='Non autorisé'>
-					<ActionIcon
-						style={{
-							cursor: 'not-allowed',
-						}}
-						color='#B2B2B2'
-						size='sm'
-					>
-						<IconEditOff />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Non autorisé'>
-					<ActionIcon
-						style={{
-							cursor: 'not-allowed',
-						}}
-						color='#B2B2B2'
-						size='sm'
-					>
-						<IconTrashOff />
-					</ActionIcon>
-				</Tooltip>
+				<ActionIcon
+					style={{
+						cursor: 'not-allowed',
+					}}
+					color='#B2B2B2'
+					size='sm'
+				>
+					<IconEditOff />
+				</ActionIcon>
+
+				<ActionIcon
+					style={{
+						cursor: 'not-allowed',
+					}}
+					color='#B2B2B2'
+					size='sm'
+				>
+					<IconTrashOff />
+				</ActionIcon>
 			</Flex>
 		) : (
 			<Flex gap='md'>

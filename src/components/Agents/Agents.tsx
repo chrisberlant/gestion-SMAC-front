@@ -36,7 +36,7 @@ import { toast } from 'sonner';
 import { sendEmail } from '@utils/index';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import displayAgentDeleteModal from '@modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
@@ -369,7 +369,7 @@ export default function AgentsTable() {
 		),
 		renderBottomToolbarCustomActions: () => (
 			<Flex justify='end' flex={1}>
-				<ExportToCsvButton request={exportsAgentsToCsv} />
+				<CsvExportButton request={exportsAgentsToCsv} />
 			</Flex>
 		),
 		mantineTableProps: {

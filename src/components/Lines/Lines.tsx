@@ -31,7 +31,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayLineCreationModal from '@modals/lineCreationModals';
 import displayLineUpdateModal from '@modals/lineUpdateModals';
 import displayLineDeleteModal from '@modals/lineDeleteModal';
-import ExportToCsvButton from '../ExportToCsvButton/ExportToCsvButton';
+import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 
@@ -526,7 +526,7 @@ export default function Lines() {
 		),
 		renderBottomToolbarCustomActions: () => (
 			<Flex justify='end' flex={1}>
-				<ExportToCsvButton request={exportsLinesToCsv} />
+				<CsvExportButton request={exportsLinesToCsv} />
 			</Flex>
 		),
 		mantineTableProps: {
