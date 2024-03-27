@@ -226,21 +226,19 @@ export const useImportMultipleLines = (
 		onError: (error) => {
 			// Tableau contenant tous les éléments retournés
 			const alreadyExistingItems = error.message.split(',');
-			const alreadyExistingNumbers: string[] = [];
-			const alreadyExistingImeis: string[] = [];
-
 			// Séparation de chaque type d'élement dans un tableau différent
-			alreadyExistingItems.forEach((item) => {
-				if (/\d{15}/.test(item)) return alreadyExistingImeis.push(item);
-				if (/\d{10}/.test(item))
-					return alreadyExistingNumbers.push(item);
-			});
+			const alreadyExistingNumbers = alreadyExistingItems.filter((item) =>
+				/^\d{10}$/.test(item)
+			);
+			const alreadyExistingImeis = alreadyExistingItems.filter((item) =>
+				/^\d{15}$/.test(item)
+			);
 
-			// Si des numéros déjà existants ou appareils déjà affectés, la modale est affichée
+			// Si des numéros déjà existants et appareils déjà affectés
 			if (
-				alreadyExistingNumbers.length > 0 ||
+				alreadyExistingNumbers.length > 0 &&
 				alreadyExistingImeis.length > 0
-			) {
+			)
 				return displayAlreadyExistingValuesOnImportModal({
 					text: 'Certains numéros de ligne fournis sont déjà existants :',
 					values: alreadyExistingNumbers,
@@ -248,8 +246,26 @@ export const useImportMultipleLines = (
 						'Certains IMEI fournis sont déjà existants :',
 					secondaryValues: alreadyExistingImeis,
 				});
-			}
-			// Si Zod renvoie un message indiquant un problème dans le format du CSV
+			// Si des numéros déjà existants mais pas d'appareils déjà affectés
+			if (
+				alreadyExistingNumbers.length > 0 &&
+				alreadyExistingImeis.length === 0
+			)
+				return displayAlreadyExistingValuesOnImportModal({
+					text: 'Certains numéros de ligne fournis sont déjà existants :',
+					values: alreadyExistingNumbers,
+				});
+			// Si des appareils déjà affectés mais pas de numéros déjà existants
+			if (
+				alreadyExistingImeis.length > 0 &&
+				alreadyExistingNumbers.length === 0
+			)
+				return displayAlreadyExistingValuesOnImportModal({
+					text: 'Certains IMEI fournis sont déjà existants :',
+					values: alreadyExistingImeis,
+				});
+
+			// Si pas d'appareil/numéro déjà affecté mais que Zod renvoie un message indiquant un problème dans le format du CSV
 			toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
