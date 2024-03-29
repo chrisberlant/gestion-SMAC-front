@@ -8,7 +8,7 @@ import { sendEmail } from '@/utils';
 
 interface DisplayUserPasswordResetModalProps {
 	row: MRT_Row<UserType>;
-	resetPassword: ({ id }: { id: number }) => void;
+	resetPassword: (id: number) => void;
 }
 
 // Modale pour demander une confirmation à l'utilisateur
@@ -35,7 +35,7 @@ export const displayUserPasswordResetModal = ({
 		labels: { confirm: 'Réinitialiser', cancel: 'Annuler' },
 		confirmProps: { color: 'orange' },
 		// Appel API
-		onConfirm: () => resetPassword({ id: row.original.id }),
+		onConfirm: () => resetPassword(row.original.id),
 	});
 
 // Modale pour indiquer le succès et permettre l'affichage et l'envoi du nouveau mot de passe

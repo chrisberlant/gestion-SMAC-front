@@ -7,11 +7,7 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useMemo, useRef, useState } from 'react';
-import {
-	DeviceCreationType,
-	DeviceType,
-	DeviceUpdateType,
-} from '@customTypes/device';
+import { DeviceCreationType, DeviceType } from '@customTypes/device';
 import { useGetAllAgents } from '@queries/agentQueries';
 import {
 	useCreateDevice,
@@ -367,7 +363,6 @@ export default function DevicesTable() {
 
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
-				id: row.original.id,
 				imei,
 				status,
 				isNew: isNewRef.current,
@@ -381,7 +376,7 @@ export default function DevicesTable() {
 					? formattedAgents?.find((agent) => agent.infos === agentId)
 							?.id
 					: null,
-			} as DeviceUpdateType;
+			} as DeviceType;
 
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
@@ -392,6 +387,8 @@ export default function DevicesTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			data.id = row.original.id;
 
 			// Si l'appareil existe déjà
 			if (

@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-	modelCreationSchema,
-	modelUpdateSchema,
-} from '../validationSchemas/modelSchemas';
+import { modelCreationSchema } from '../validationSchemas/modelSchemas';
 
 export type ModelType = {
 	id: number;
@@ -12,5 +9,3 @@ export type ModelType = {
 };
 
 export type ModelCreationType = z.infer<typeof modelCreationSchema>;
-
-export type ModelUpdateType = z.infer<typeof modelUpdateSchema>;

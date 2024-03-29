@@ -11,7 +11,7 @@ export const useGetDevicesAmountPerModel = () => {
 		queryKey: ['devicesAmountPerModel'],
 		queryFn: async () => {
 			return (await fetchApi(
-				'/getDevicesAmountPerModel'
+				'/stats/devices-per-model'
 			)) as DevicesAmountPerModelType[];
 		},
 		staleTime: 0,
@@ -25,7 +25,7 @@ export const useGetAgentsAndDevicesPerService = () => {
 		queryKey: ['agentsAndDevicesPerService'],
 		queryFn: async () => {
 			return (await fetchApi(
-				'/getAgentsAndDevicesPerService'
+				'/stats/agents-devices-per-service'
 			)) as AgentsAndDevicesPerServiceType[];
 		},
 		staleTime: 0,

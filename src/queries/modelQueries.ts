@@ -1,9 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-	ModelType,
-	ModelCreationType,
-	ModelUpdateType,
-} from '@customTypes/model';
+import { ModelCreationType, ModelType } from '@customTypes/model';
 import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
@@ -12,7 +8,7 @@ export const useGetAllModels = () => {
 	return useQuery({
 		queryKey: ['models'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllModels')) as ModelType[];
+			return (await fetchApi('/models')) as ModelType[];
 		},
 	});
 };
@@ -20,7 +16,7 @@ export const useGetAllModels = () => {
 export const useCreateModel = () => {
 	return useMutation({
 		mutationFn: async (model: ModelCreationType) => {
-			return (await fetchApi('/createModel', 'POST', model)) as ModelType;
+			return (await fetchApi('/model', 'POST', model)) as ModelType;
 		},
 		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
@@ -55,11 +51,12 @@ export const useCreateModel = () => {
 
 export const useUpdateModel = () => {
 	return useMutation({
-		mutationFn: async (model: ModelUpdateType) => {
+		mutationFn: async (model: ModelType) => {
+			const { id, ...infos } = model;
 			return (await fetchApi(
-				'/updateModel',
+				`/model/${id}`,
 				'PATCH',
-				model
+				infos
 			)) as ModelType;
 		},
 		onMutate: async (updatedModel) => {
@@ -81,9 +78,7 @@ export const useUpdateModel = () => {
 export const useDeleteModel = () => {
 	return useMutation({
 		mutationFn: async (modelId: number) => {
-			return (await fetchApi('/deleteModel', 'DELETE', {
-				id: modelId,
-			})) as ModelType;
+			return (await fetchApi(`/model/${modelId}`, 'DELETE')) as ModelType;
 		},
 		onMutate: async (modelIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });

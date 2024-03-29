@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-	deviceCreationSchema,
-	deviceUpdateSchema,
-} from '../validationSchemas/deviceSchemas';
+import { deviceCreationSchema } from '../validationSchemas/deviceSchemas';
 
 export type DeviceType = {
 	id: number;
@@ -24,5 +21,3 @@ export type DeviceType = {
 };
 
 export type DeviceCreationType = z.infer<typeof deviceCreationSchema>;
-
-export type DeviceUpdateType = z.infer<typeof deviceUpdateSchema>;

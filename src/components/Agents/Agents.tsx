@@ -25,11 +25,7 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useRef, useState } from 'react';
-import {
-	AgentCreationType,
-	AgentType,
-	AgentUpdateType,
-} from '@customTypes/agent';
+import { AgentCreationType, AgentType } from '@customTypes/agent';
 import { useGetAllServices } from '@queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
@@ -286,7 +282,6 @@ export default function AgentsTable() {
 			const { lastName, firstName, email } = values;
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
-				id: row.original.id,
 				lastName,
 				firstName,
 				email,
@@ -294,7 +289,7 @@ export default function AgentsTable() {
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
-			} as AgentUpdateType;
+			} as AgentType;
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -304,6 +299,8 @@ export default function AgentsTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			data.id = row.original.id;
 
 			// Si l'agent existe déjà
 			if (

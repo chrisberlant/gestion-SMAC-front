@@ -2,11 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import {
-	AgentCreationType,
-	AgentType,
-	AgentUpdateType,
-} from '@customTypes/agent';
+import { AgentCreationType, AgentType } from '@customTypes/agent';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 // Récupérer tous les agents
@@ -14,7 +10,7 @@ export const useGetAllAgents = () => {
 	return useQuery({
 		queryKey: ['agents'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllAgents')) as AgentType[];
+			return (await fetchApi('/agents')) as AgentType[];
 		},
 	});
 };
@@ -23,11 +19,7 @@ export const useGetAllAgents = () => {
 export const useCreateAgent = () => {
 	return useMutation({
 		mutationFn: async (newAgent: AgentCreationType) => {
-			return (await fetchApi(
-				'/createAgent',
-				'POST',
-				newAgent
-			)) as AgentType;
+			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
 		},
 
 		onMutate: async (newAgent) => {
@@ -63,11 +55,12 @@ export const useCreateAgent = () => {
 // Mettre à jour un agent
 export const useUpdateAgent = () => {
 	return useMutation({
-		mutationFn: async (agent: AgentUpdateType) => {
+		mutationFn: async (agent: AgentType) => {
+			const { id, ...infos } = agent;
 			return (await fetchApi(
-				'/updateAgent',
+				`/agent/${id}`,
 				'PATCH',
-				agent
+				infos
 			)) as AgentType;
 		},
 		onMutate: async (updatedAgent) => {
@@ -92,7 +85,7 @@ export const useUpdateAgent = () => {
 export const useDeleteAgent = () => {
 	return useMutation({
 		mutationFn: async (agentId: number) => {
-			return await fetchApi('/deleteAgent', 'DELETE', { id: agentId });
+			return await fetchApi(`/agent/${agentId}`, 'DELETE');
 		},
 		onMutate: async (agentIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
@@ -114,7 +107,7 @@ export const useDeleteAgent = () => {
 export const useExportAgentsToCsv = () => {
 	return useQuery({
 		queryKey: ['agentsCsv'],
-		queryFn: async () => await fetchApi('/exportAgentsCsvFile'),
+		queryFn: async () => await fetchApi('/agents/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
@@ -129,11 +122,7 @@ export const useImportMultipleAgents = (
 	return useMutation({
 		mutationFn: async (importedAgents: object[]) => {
 			toggleOverlay();
-			return await fetchApi(
-				'/importMultipleAgents',
-				'POST',
-				importedAgents
-			);
+			return await fetchApi('/agents/csv', 'POST', importedAgents);
 		},
 		meta: {
 			importMutation: 'true',
@@ -166,7 +155,7 @@ export const useImportMultipleAgents = (
 export const useGetAgentsCsvTemplate = () => {
 	return useQuery({
 		queryKey: ['agentsCsv'],
-		queryFn: async () => await fetchApi('/generateEmptyAgentsCsvFile'),
+		queryFn: async () => await fetchApi('/agents/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,

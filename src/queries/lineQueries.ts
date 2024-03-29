@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { LineType, LineCreationType, LineUpdateType } from '@customTypes/line';
+import { LineType, LineCreationType } from '@customTypes/line';
 import { DeviceType } from '@customTypes/device';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
@@ -11,7 +11,7 @@ export const useGetAllLines = () => {
 	return useQuery({
 		queryKey: ['lines'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllLines')) as LineType[];
+			return (await fetchApi('/lines')) as LineType[];
 		},
 	});
 };
@@ -26,7 +26,7 @@ export const useCreateLine = () => {
 			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
 			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
 		}) => {
-			return (await fetchApi('/createLine', 'POST', data)) as LineType;
+			return (await fetchApi('/line', 'POST', data)) as LineType;
 		},
 
 		onMutate: async (newLine) => {
@@ -103,11 +103,12 @@ export const useUpdateLine = () => {
 		mutationFn: async ({
 			data,
 		}: {
-			data: LineUpdateType;
+			data: LineType;
 			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
 			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
 		}) => {
-			return (await fetchApi('/updateLine', 'PATCH', data)) as LineType;
+			const { id, ...infos } = data;
+			return (await fetchApi(`/line/${id}`, 'PATCH', infos)) as LineType;
 		},
 
 		onMutate: async (updatedLine) => {
@@ -171,7 +172,7 @@ export const useUpdateLine = () => {
 export const useDeleteLine = () => {
 	return useMutation({
 		mutationFn: async (lineId: number) => {
-			return await fetchApi('/deleteLine', 'DELETE', { id: lineId });
+			return await fetchApi('/line', 'DELETE', { id: lineId });
 		},
 
 		onMutate: async (lineIdToDelete) => {
@@ -192,7 +193,7 @@ export const useDeleteLine = () => {
 export const useExportLinesToCsv = () => {
 	return useQuery({
 		queryKey: ['linesCsv'],
-		queryFn: async () => await fetchApi('/generateLinesCsvFile'),
+		queryFn: async () => await fetchApi('/lines/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
@@ -207,11 +208,7 @@ export const useImportMultipleLines = (
 	return useMutation({
 		mutationFn: async (importedLines: object[]) => {
 			toggleOverlay();
-			return await fetchApi(
-				'/importMultipleLines',
-				'POST',
-				importedLines
-			);
+			return await fetchApi('/lines/csv', 'POST', importedLines);
 		},
 		meta: {
 			importMutation: 'true',
@@ -279,7 +276,7 @@ export const useImportMultipleLines = (
 export const useGetLinesCsvTemplate = () => {
 	return useQuery({
 		queryKey: ['linesCsv'],
-		queryFn: async () => await fetchApi('/generateEmptyLinesCsvFile'),
+		queryFn: async () => await fetchApi('/lines/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,

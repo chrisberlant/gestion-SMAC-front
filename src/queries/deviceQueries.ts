@@ -1,10 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import {
-	DeviceType,
-	DeviceCreationType,
-	DeviceUpdateType,
-} from '@customTypes/device';
+import { DeviceType, DeviceCreationType } from '@customTypes/device';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '@customTypes/line';
@@ -14,7 +10,7 @@ export const useGetAllDevices = () => {
 	return useQuery({
 		queryKey: ['devices'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllDevices')) as DeviceType[];
+			return (await fetchApi('/devices')) as DeviceType[];
 		},
 	});
 };
@@ -22,11 +18,7 @@ export const useGetAllDevices = () => {
 export const useCreateDevice = () => {
 	return useMutation({
 		mutationFn: async (device: DeviceCreationType) => {
-			return (await fetchApi(
-				'/createDevice',
-				'POST',
-				device
-			)) as DeviceType;
+			return (await fetchApi('/device', 'POST', device)) as DeviceType;
 		},
 
 		onMutate: async (newDevice) => {
@@ -63,13 +55,14 @@ export const useUpdateDevice = () => {
 		mutationFn: async ({
 			data,
 		}: {
-			data: DeviceUpdateType;
+			data: DeviceType;
 			updateLine?: boolean;
 		}) => {
+			const { id, ...infos } = data;
 			return (await fetchApi(
-				'/updateDevice',
+				`/device/${id}`,
 				'PATCH',
-				data
+				infos
 			)) as DeviceType;
 		},
 
@@ -116,9 +109,7 @@ export const useUpdateDevice = () => {
 export const useDeleteDevice = () => {
 	return useMutation({
 		mutationFn: async (deviceId: number) => {
-			return await fetchApi('/deleteDevice', 'DELETE', {
-				id: deviceId,
-			});
+			return await fetchApi(`/device/${deviceId}`, 'DELETE');
 		},
 
 		onMutate: async (deviceIdToDelete) => {
@@ -139,7 +130,7 @@ export const useDeleteDevice = () => {
 export const useExportDevicesToCsv = () => {
 	return useQuery({
 		queryKey: ['devicesCsv'],
-		queryFn: async () => await fetchApi('/exportDevicesCsvFile'),
+		queryFn: async () => await fetchApi('/devices/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
@@ -154,11 +145,7 @@ export const useImportMultipleDevices = (
 	return useMutation({
 		mutationFn: async (importedDevices: object[]) => {
 			toggleOverlay();
-			return await fetchApi(
-				'/importMultipleDevices',
-				'POST',
-				importedDevices
-			);
+			return await fetchApi('/devices/csv', 'POST', importedDevices);
 		},
 		meta: {
 			importMutation: 'true',
@@ -191,7 +178,7 @@ export const useImportMultipleDevices = (
 export const useGetDevicesCsvTemplate = () => {
 	return useQuery({
 		queryKey: ['devicesCsv'],
-		queryFn: async () => await fetchApi('/generateEmptyDevicesCsvFile'),
+		queryFn: async () => await fetchApi('/devices/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,

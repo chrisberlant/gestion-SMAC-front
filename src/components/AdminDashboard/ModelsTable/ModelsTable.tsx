@@ -123,8 +123,6 @@ export default function ModelsTable() {
 	//UPDATE action
 	const handleSaveModel: MRT_TableOptions<ModelType>['onEditingRowSave'] =
 		async ({ values, row }) => {
-			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
-			values.id = row.original.id;
 			// Validation du format des données via un schéma Zod
 			const validation = modelUpdateSchema.safeParse(values);
 			if (!validation.success) {
@@ -135,6 +133,8 @@ export default function ModelsTable() {
 				return setValidationErrors(errors);
 			}
 
+			// Récupérer l'id dans les colonnes cachées
+			values.id = row.original.id;
 			// Si le modèle existe déjà
 			if (
 				table

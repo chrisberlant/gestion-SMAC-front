@@ -19,12 +19,13 @@ export default async function fetchApi(
 		},
 		credentials: 'include',
 	};
-	if (method && method !== 'GET') {
-		if (!infos)
-			throw new Error(
-				"Les informations n'ont pas été fournies dans la requête"
-			);
-		options.body = JSON.stringify(infos); // Ajouter un body si la méthode est fournie et différente de GET
+
+	if (method && method !== 'GET' && method !== 'DELETE') {
+		// if (!infos)
+		// 	throw new Error(
+		// 		"Les informations n'ont pas été fournies dans la requête"
+		// 	);
+		options.body = JSON.stringify(infos); // Ajouter un body si la méthode est fournie et différente de GET et DELETE
 	}
 
 	const response = await fetch(baseUrl + route, options);

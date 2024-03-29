@@ -1,9 +1,9 @@
 import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { DeviceUpdateType } from '@customTypes/device';
+import { DeviceType } from '@customTypes/device';
 
 interface UpdateDeviceProps {
-	data: DeviceUpdateType;
+	data: DeviceType;
 	updateLine?: boolean;
 }
 
@@ -13,7 +13,7 @@ interface DisplayDeviceOwnerChangeModalProps {
 		value: React.SetStateAction<Record<string, string | undefined>>
 	) => void;
 	closeEditing: () => void;
-	data: DeviceUpdateType;
+	data: DeviceType;
 	lineUsingDevice: string;
 	lineOwnerFullName: string | null;
 	imei: string;

@@ -1,8 +1,3 @@
-import { z } from 'zod';
-import selectionSchema from '../validationSchemas';
-
-export type IdSelectionType = z.infer<typeof selectionSchema>;
-
 export type AgentsAndDevicesPerServiceType = {
 	service: string;
 	agentsAmount: string;

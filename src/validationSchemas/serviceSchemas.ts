@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import selectionSchema from '.';
 
 export const serviceCreationSchema = z.strictObject({
 	title: z
@@ -11,7 +10,7 @@ export const serviceCreationSchema = z.strictObject({
 		.min(1, 'Le titre doit être renseigné'),
 });
 
-export const serviceUpdateSchema = selectionSchema.extend({
+export const serviceUpdateSchema = z.strictObject({
 	title: z
 		.string({
 			required_error: 'Le titre doit être renseigné',

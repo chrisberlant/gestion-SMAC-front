@@ -1,8 +1,5 @@
 import { z } from 'zod';
-import {
-	agentCreationSchema,
-	agentUpdateSchema,
-} from '../validationSchemas/agentSchemas';
+import { agentCreationSchema } from '../validationSchemas/agentSchemas';
 
 export interface AgentType {
 	id: number;
@@ -15,5 +12,3 @@ export interface AgentType {
 }
 
 export type AgentCreationType = z.infer<typeof agentCreationSchema>;
-
-export type AgentUpdateType = z.infer<typeof agentUpdateSchema>;

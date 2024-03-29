@@ -13,7 +13,7 @@ import {
 	MRT_TableInstance,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
+import { LineCreationType, LineType } from '@customTypes/line';
 import {
 	useCreateLine,
 	useDeleteLine,
@@ -359,7 +359,6 @@ export default function Lines() {
 
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
-				id: row.original.id,
 				number,
 				profile,
 				status,
@@ -371,7 +370,7 @@ export default function Lines() {
 					formattedDevices?.find(
 						(device) => device.infos === deviceId
 					)?.id || null,
-			} as LineUpdateType;
+			} as LineType;
 
 			// Validation du format des données via un schéma Zod
 			const validation = lineUpdateSchema.safeParse(data);
@@ -382,6 +381,8 @@ export default function Lines() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			data.id = row.original.id;
 
 			// Si la ligne existe déjà
 			if (

@@ -11,11 +11,9 @@ import {
 	UserLoginType,
 	UserPasswordIsResetType,
 	UserType,
-	UserUpdateType,
 } from '@customTypes/user';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { IdSelectionType } from '@customTypes/index';
 
 // Connexion
 export const useLogin = (
@@ -48,7 +46,7 @@ export const useGetCurrentUser = () => {
 	return useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
+			return (await fetchApi('/me')) as LoggedUserType;
 		},
 		gcTime: Infinity,
 	});
@@ -77,7 +75,7 @@ export const useUpdateCurrentUser = (
 		mutationFn: async (data: CurrentUserUpdateType) => {
 			toggleOverlay();
 			return (await fetchApi(
-				'/updateCurrentUser',
+				'/me',
 				'PATCH',
 				data
 			)) as UserInfosWithoutRoleType;
@@ -125,7 +123,7 @@ export const useUpdateCurrentUserPassword = (
 	return useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			await fetchApi('/updateCurrentUserPassword', 'PATCH', form.values);
+			await fetchApi('/my-password', 'PATCH', form.values);
 		},
 		onSuccess: async () => {
 			closePasswordModal();
@@ -152,7 +150,7 @@ export const useGetAllUsers = () => {
 	return useQuery({
 		queryKey: ['users'],
 		queryFn: async () => {
-			return (await fetchApi('/getAllUsers')) as UserType[];
+			return (await fetchApi('/users')) as UserType[];
 		},
 	});
 };
@@ -161,7 +159,7 @@ export const useGetAllUsers = () => {
 export const useCreateUser = () => {
 	return useMutation({
 		mutationFn: async (user: UserCreationType) => {
-			return await fetchApi('/createUser', 'POST', user);
+			return await fetchApi('/user', 'POST', user);
 		},
 		onMutate: async (newUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
@@ -193,8 +191,9 @@ export const useCreateUser = () => {
 // Mettre à jour un utilisateur
 export const useUpdateUser = () => {
 	return useMutation({
-		mutationFn: async (user: UserUpdateType) => {
-			return await fetchApi('/updateUser', 'PATCH', user);
+		mutationFn: async (user: UserType) => {
+			const { id, ...infos } = user;
+			return await fetchApi(`/user/${id}`, 'PATCH', infos);
 		},
 		onMutate: async (updatedUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
@@ -217,8 +216,8 @@ export const useResetPassword = (
 	openConfirmationModal: (user: UserPasswordIsResetType) => void
 ) => {
 	return useMutation({
-		mutationFn: async (user: IdSelectionType) => {
-			return await fetchApi('/resetPassword', 'PATCH', user);
+		mutationFn: async (userId: number) => {
+			return await fetchApi(`/user/password/${userId}`, 'PATCH');
 		},
 		onSuccess: (user: UserPasswordIsResetType) =>
 			openConfirmationModal(user),
@@ -229,7 +228,7 @@ export const useResetPassword = (
 export const useDeleteUser = () => {
 	return useMutation({
 		mutationFn: async (userId: number) => {
-			return await fetchApi('/deleteUser', 'DELETE', { id: userId });
+			return await fetchApi(`/user/${userId}`, 'DELETE');
 		},
 		onMutate: async (userIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
