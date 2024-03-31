@@ -199,14 +199,9 @@ export default function DevicesTable() {
 			{
 				header: 'Modèle',
 				id: 'modelId',
-				accessorFn: (row) => {
-					const currentModel = models?.find(
-						(model) => model.id === row.modelId
-					);
-					return `${currentModel?.brand} ${currentModel?.reference}${
-						currentModel?.storage ? ` ${currentModel.storage}` : ''
-					}`;
-				},
+				accessorFn: (row) =>
+					formattedModels?.find((model) => model.id === row.modelId)
+						?.infos,
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
@@ -304,7 +299,7 @@ export default function DevicesTable() {
 				},
 			},
 		],
-		[validationErrors, formattedModels, formattedAgents, models]
+		[validationErrors, formattedModels, formattedAgents]
 	);
 
 	//CREATE action

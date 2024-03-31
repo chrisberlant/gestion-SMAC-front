@@ -26,6 +26,7 @@ const tabs = {
 	Appareils: '/devices',
 	Agents: '/agents',
 	Statistiques: '/stats',
+	Historique: '/history',
 } as Record<string, string>;
 
 export default function Header() {

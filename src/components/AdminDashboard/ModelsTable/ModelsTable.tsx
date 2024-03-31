@@ -226,14 +226,6 @@ export default function ModelsTable() {
 		},
 	});
 
-	if (isLoading) {
-		return (
-			<div className='loader-box'>
-				<Loader size='xl' />
-			</div>
-		);
-	}
-
 	return (
 		<div className='models-table'>
 			<h2>Modèles d'appareils</h2>

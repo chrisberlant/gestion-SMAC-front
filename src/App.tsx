@@ -11,6 +11,7 @@ import PageNotFound from './components/PageNotFound/PageNotFound';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 import Stats from './components/Stats/Stats';
 import Lines from './components/Lines/Lines';
+import History from './components/History/History';
 
 function AppRoutes() {
 	return (
@@ -22,6 +23,7 @@ function AppRoutes() {
 				<Route element={<Devices />} path='/devices' />
 				<Route element={<AgentsTable />} path='/agents' />
 				<Route element={<Stats />} path='/stats' />
+				<Route element={<History />} path='/history' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />
 			</Route>
 			<Route element={<PageNotFound />} path='*' />
