@@ -11,12 +11,13 @@ export const sendEmail = (sendTo: string, subject: string, content: string) => {
 };
 
 // Formatage des dates
-export const dateFrFormatting = (dateString: string | undefined) => {
-	return dateString ? dayjs(dateString).format('DD/MM/YYYY') : '';
-};
-export const dateUsFormatting = (dateString: string | undefined) => {
-	return dateString ? dayjs(dateString).format('YYYY-MM-DD') : '';
-};
+export const dateFrFormatting = (dateString: string | undefined) =>
+	dateString ? dayjs(dateString).format('DD/MM/YYYY') : '';
+
+export const dateUsFormatting = (dateString: string | undefined) =>
+	dateString ? dayjs(dateString).format('YYYY-MM-DD') : '';
+export const dateTimeToStringFormatting = (dateToFormat: Date | undefined) =>
+	dateToFormat ? dayjs(dateToFormat).format('DD/MM/YYYY - HH:mm') : '';
 
 // Conversion d'un fichier CSV en json en ignorant les lignes vides, la fonction passée en callback est ensuite appelée
 export const parseCsvToJson = (

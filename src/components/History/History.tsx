@@ -8,6 +8,8 @@ import { useGetAllHistory } from '../../queries/historyQueries';
 import { HistoryType } from '../../types/history';
 import { Loader } from '@mantine/core';
 import { useGetAllUsers } from '../../queries/userQueries';
+import { dateTimeToStringFormatting } from '../../utils';
+import DeleteHistoryButton from '../TableActionsButtons/DeleHistoryButton/DeleteHistoryButton';
 
 export default function History() {
 	const {
@@ -20,7 +22,6 @@ export default function History() {
 		isLoading: isUsersLoading,
 		isError: isUsersError,
 	} = useGetAllUsers();
-	console.log(history);
 
 	const formattedUsers = useMemo(
 		() =>
@@ -40,17 +41,16 @@ export default function History() {
 			{
 				header: 'Opération',
 				accessorKey: 'operation',
+				size: 50,
 			},
 			{
 				header: 'Élément concerné',
 				accessorKey: 'table',
 			},
 			{
-				header: 'Date',
+				header: 'Date/heure',
 				id: 'createdAt',
-				accessorFn: (row) => {
-					return console.log(row.createdAt);
-				},
+				accessorFn: (row) => dateTimeToStringFormatting(row.createdAt),
 			},
 			{ header: 'Action', accessorKey: 'content' },
 			{
@@ -68,11 +68,16 @@ export default function History() {
 	const table = useMantineReactTable({
 		columns,
 		data: history || [],
+		enableRowSelection: true,
+		getRowId: (originalRow) => String(originalRow.id),
+		mantineSelectCheckboxProps: {
+			color: 'red',
+		},
+		mantineSelectAllCheckboxProps: {
+			color: 'red',
+		},
 		enableGlobalFilter: true,
 		enableColumnActions: true,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
 		enableHiding: false,
 		sortDescFirst: true,
 		enableSortingRemoval: false,
@@ -82,19 +87,21 @@ export default function History() {
 			// style: { minWidth: '100px' },
 			variant: 'default',
 		},
+		mantineTableBodyRowProps: ({ row }) => ({
+			onClick: row.getToggleSelectedHandler(),
+			sx: { cursor: 'pointer' },
+		}),
 		paginationDisplayMode: 'pages',
 		mantineTableContainerProps: { style: { minWidth: '40vw' } },
-		// renderRowActions: ({ row, table }) => (
-		// 	<EditDeleteButtons
-		// 		editFunction={() => table.setEditingRow(row)}
-		// 		deleteFunction={() =>
-		// 			displayModelDeleteModal({ row, deleteModel })
-		// 		}
-		// 		roleCheck={false}
-		// 	/>
-		// ),
 		mantineTableProps: {
 			striped: true,
+		},
+		renderTopToolbarCustomActions: () => {
+			// Conversion en tableau de nombre de l'objet contenant les lignes sélectionnées
+			const entriesToDelete = Object.keys(
+				table.getState().rowSelection
+			).map(Number);
+			return <DeleteHistoryButton entriesToDelete={entriesToDelete} />;
 		},
 		mantineTopToolbarProps: {
 			mt: 'xs',
@@ -138,7 +145,7 @@ export default function History() {
 				</span>
 			)}
 
-			{history && <MantineReactTable table={table} />}
+			{history && users && <MantineReactTable table={table} />}
 		</div>
 	);
 }

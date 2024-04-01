@@ -106,12 +106,10 @@ export const useUpdateDevice = () => {
 	});
 };
 
-export const useDeleteDevice = () => {
-	return useMutation({
-		mutationFn: async (deviceId: number) => {
-			return await fetchApi(`/device/${deviceId}`, 'DELETE');
-		},
-
+export const useDeleteDevice = () =>
+	useMutation({
+		mutationFn: async (deviceId: number) =>
+			await fetchApi(`/device/${deviceId}`, 'DELETE'),
 		onMutate: async (deviceIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -124,18 +122,16 @@ export const useDeleteDevice = () => {
 		onError: (_, __, previousDevices) =>
 			queryClient.setQueryData(['devices'], previousDevices),
 	});
-};
 
 // Exporter les appareils en CSV
-export const useExportDevicesToCsv = () => {
-	return useQuery({
+export const useExportDevicesToCsv = () =>
+	useQuery({
 		queryKey: ['devicesCsv'],
 		queryFn: async () => await fetchApi('/devices/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};
 
 // Créer des appareils à partir d'un CSV
 export const useImportMultipleDevices = (
@@ -175,12 +171,11 @@ export const useImportMultipleDevices = (
 };
 
 // Générer le template CSV
-export const useGetDevicesCsvTemplate = () => {
-	return useQuery({
+export const useGetDevicesCsvTemplate = () =>
+	useQuery({
 		queryKey: ['devicesCsv'],
 		queryFn: async () => await fetchApi('/devices/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};

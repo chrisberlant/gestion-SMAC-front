@@ -3,6 +3,6 @@ export interface HistoryType {
 	operation: 'Create' | 'Update' | 'Delete';
 	table: 'agent' | 'device' | 'line' | 'model' | 'service' | 'user';
 	content: string;
-	createdAt: string;
+	createdAt: Date;
 	userId: number;
 }
