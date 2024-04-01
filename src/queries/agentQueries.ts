@@ -6,22 +6,20 @@ import { AgentCreationType, AgentType } from '@customTypes/agent';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 // Récupérer tous les agents
-export const useGetAllAgents = () => {
-	return useQuery({
+export const useGetAllAgents = () =>
+	useQuery({
 		queryKey: ['agents'],
 		queryFn: async () => {
 			return (await fetchApi('/agents')) as AgentType[];
 		},
 	});
-};
 
 // Créer un agent
-export const useCreateAgent = () => {
-	return useMutation({
+export const useCreateAgent = () =>
+	useMutation({
 		mutationFn: async (newAgent: AgentCreationType) => {
 			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
 		},
-
 		onMutate: async (newAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents: AgentType[] | undefined =
@@ -50,11 +48,10 @@ export const useCreateAgent = () => {
 				queryClient.setQueryData(['agents'], previousAgents);
 		},
 	});
-};
 
 // Mettre à jour un agent
-export const useUpdateAgent = () => {
-	return useMutation({
+export const useUpdateAgent = () =>
+	useMutation({
 		mutationFn: async (agent: AgentType) => {
 			const { id, ...infos } = agent;
 			return (await fetchApi(
@@ -79,14 +76,12 @@ export const useUpdateAgent = () => {
 		onError: (_, __, previousAgents) =>
 			queryClient.setQueryData(['agents'], previousAgents),
 	});
-};
 
 // Supprimer un agent
-export const useDeleteAgent = () => {
-	return useMutation({
-		mutationFn: async (agentId: number) => {
-			return await fetchApi(`/agent/${agentId}`, 'DELETE');
-		},
+export const useDeleteAgent = () =>
+	useMutation({
+		mutationFn: async (agentId: number) =>
+			await fetchApi(`/agent/${agentId}`, 'DELETE'),
 		onMutate: async (agentIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents = queryClient.getQueryData(['agents']);
@@ -101,7 +96,6 @@ export const useDeleteAgent = () => {
 		onError: (_, __, previousAgents) =>
 			queryClient.setQueryData(['agents'], previousAgents),
 	});
-};
 
 // Exporter les agents en CSV
 export const useExportAgentsToCsv = () => {
@@ -118,8 +112,8 @@ export const useExportAgentsToCsv = () => {
 export const useImportMultipleAgents = (
 	toggleOverlay: () => void,
 	closeImportModal: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async (importedAgents: object[]) => {
 			toggleOverlay();
 			return await fetchApi('/agents/csv', 'POST', importedAgents);
@@ -149,15 +143,13 @@ export const useImportMultipleAgents = (
 			closeImportModal();
 		},
 	});
-};
 
 // Générer le template CSV
-export const useGetAgentsCsvTemplate = () => {
-	return useQuery({
+export const useGetAgentsCsvTemplate = () =>
+	useQuery({
 		queryKey: ['agentsCsv'],
 		queryFn: async () => await fetchApi('/agents/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};

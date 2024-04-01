@@ -6,8 +6,8 @@ import {
 import fetchApi from '@utils/fetchApi';
 
 // Nombre d'appareils par modèle
-export const useGetDevicesAmountPerModel = () => {
-	return useQuery({
+export const useGetDevicesAmountPerModel = () =>
+	useQuery({
 		queryKey: ['devicesAmountPerModel'],
 		queryFn: async () => {
 			return (await fetchApi(
@@ -17,11 +17,10 @@ export const useGetDevicesAmountPerModel = () => {
 		staleTime: 0,
 		gcTime: 0,
 	});
-};
 
 // Nombre d'agents et d'appareils par service
-export const useGetAgentsAndDevicesPerService = () => {
-	return useQuery({
+export const useGetAgentsAndDevicesPerService = () =>
+	useQuery({
 		queryKey: ['agentsAndDevicesPerService'],
 		queryFn: async () => {
 			return (await fetchApi(
@@ -31,4 +30,3 @@ export const useGetAgentsAndDevicesPerService = () => {
 		staleTime: 0,
 		gcTime: 0,
 	});
-};

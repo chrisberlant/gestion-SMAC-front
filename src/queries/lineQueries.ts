@@ -7,27 +7,24 @@ import { LineType, LineCreationType } from '@customTypes/line';
 import { DeviceType } from '@customTypes/device';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
-export const useGetAllLines = () => {
-	return useQuery({
+export const useGetAllLines = () =>
+	useQuery({
 		queryKey: ['lines'],
 		queryFn: async () => {
 			return (await fetchApi('/lines')) as LineType[];
 		},
 	});
-};
 
 // Création de ligne
-export const useCreateLine = () => {
-	return useMutation({
+export const useCreateLine = () =>
+	useMutation({
 		mutationFn: async ({
 			data,
 		}: {
 			data: LineCreationType;
 			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
 			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
-		}) => {
-			return (await fetchApi('/line', 'POST', data)) as LineType;
-		},
+		}) => (await fetchApi('/line', 'POST', data)) as LineType,
 
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
@@ -95,11 +92,10 @@ export const useCreateLine = () => {
 				);
 		},
 	});
-};
 
 // Modification de ligne
-export const useUpdateLine = () => {
-	return useMutation({
+export const useUpdateLine = () =>
+	useMutation({
 		mutationFn: async ({
 			data,
 		}: {
@@ -166,15 +162,12 @@ export const useUpdateLine = () => {
 				);
 		},
 	});
-};
 
 // Suppression de ligne
-export const useDeleteLine = () => {
-	return useMutation({
-		mutationFn: async (lineId: number) => {
-			return await fetchApi('/line', 'DELETE', { id: lineId });
-		},
-
+export const useDeleteLine = () =>
+	useMutation({
+		mutationFn: async (lineId: number) =>
+			await fetchApi(`/line/${lineId}`, 'DELETE'),
 		onMutate: async (lineIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			const previousLines = queryClient.getQueryData(['lines']);
@@ -187,25 +180,23 @@ export const useDeleteLine = () => {
 		onError: (_, __, previousLines) =>
 			queryClient.setQueryData(['lines'], previousLines),
 	});
-};
 
 // Exporter les appareils en CSV
-export const useExportLinesToCsv = () => {
-	return useQuery({
+export const useExportLinesToCsv = () =>
+	useQuery({
 		queryKey: ['linesCsv'],
 		queryFn: async () => await fetchApi('/lines/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};
 
 // Créer des lignes à partir d'un CSV
 export const useImportMultipleLines = (
 	toggleOverlay: () => void,
 	closeImportModal: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async (importedLines: object[]) => {
 			toggleOverlay();
 			return await fetchApi('/lines/csv', 'POST', importedLines);
@@ -270,15 +261,13 @@ export const useImportMultipleLines = (
 			closeImportModal();
 		},
 	});
-};
 
 // Générer le template CSV
-export const useGetLinesCsvTemplate = () => {
-	return useQuery({
+export const useGetLinesCsvTemplate = () =>
+	useQuery({
 		queryKey: ['linesCsv'],
 		queryFn: async () => await fetchApi('/lines/csv-template'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};

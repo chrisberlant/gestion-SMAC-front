@@ -1,9 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-	ServiceType,
-	ServiceCreationType,
-	ServiceUpdateType,
-} from '@customTypes/service';
+import { ServiceType, ServiceCreationType } from '@customTypes/service';
 import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
@@ -56,13 +52,14 @@ export const useCreateService = () => {
 	});
 };
 
-export const useUpdateService = () => {
-	return useMutation({
-		mutationFn: async (service: ServiceUpdateType) => {
+export const useUpdateService = () =>
+	useMutation({
+		mutationFn: async (service: ServiceType) => {
+			const { id, ...title } = service;
 			return (await fetchApi(
-				'/service',
+				`/service/${id}`,
 				'PATCH',
-				service
+				title
 			)) as ServiceType;
 		},
 		onMutate: async (updatedService) => {
@@ -82,15 +79,11 @@ export const useUpdateService = () => {
 			// Si erreur, rollback du cache
 			queryClient.setQueryData(['services'], previousServices),
 	});
-};
 
-export const useDeleteService = () => {
-	return useMutation({
-		mutationFn: async (serviceId: number) => {
-			return await fetchApi('/service', 'DELETE', {
-				id: serviceId,
-			});
-		},
+export const useDeleteService = () =>
+	useMutation({
+		mutationFn: async (serviceId: number) =>
+			await fetchApi(`/service/${serviceId}`, 'DELETE'),
 		onMutate: async (serviceIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);
@@ -105,4 +98,3 @@ export const useDeleteService = () => {
 		onError: (_, __, previousServices) =>
 			queryClient.setQueryData(['services'], previousServices),
 	});
-};

@@ -4,20 +4,16 @@ import { HistoryType } from '../types/history';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 
-export const useGetAllHistory = () => {
-	return useQuery({
+export const useGetAllHistory = () =>
+	useQuery({
 		queryKey: ['history'],
-		queryFn: async () => {
-			return (await fetchApi('/history')) as HistoryType[];
-		},
+		queryFn: async () => (await fetchApi('/history')) as HistoryType[],
 	});
-};
 
-export const useDeleteHistory = () => {
-	return useMutation({
+export const useDeleteHistory = () =>
+	useMutation({
 		mutationFn: async (data: number[]) =>
 			await fetchApi('/history', 'DELETE', data),
-
 		onMutate: async (idsToDelete: number[]) => {
 			await queryClient.cancelQueries({ queryKey: ['history'] });
 			const previousHistory = queryClient.getQueryData(['history']);
@@ -30,4 +26,3 @@ export const useDeleteHistory = () => {
 		onError: (_, __, previousHistory) =>
 			queryClient.setQueryData(['history'], previousHistory),
 	});
-};

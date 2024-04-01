@@ -4,20 +4,18 @@ import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 
-export const useGetAllModels = () => {
-	return useQuery({
+export const useGetAllModels = () =>
+	useQuery({
 		queryKey: ['models'],
 		queryFn: async () => {
 			return (await fetchApi('/models')) as ModelType[];
 		},
 	});
-};
 
-export const useCreateModel = () => {
-	return useMutation({
-		mutationFn: async (model: ModelCreationType) => {
-			return (await fetchApi('/model', 'POST', model)) as ModelType;
-		},
+export const useCreateModel = () =>
+	useMutation({
+		mutationFn: async (model: ModelCreationType) =>
+			(await fetchApi('/model', 'POST', model)) as ModelType,
 		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels: ModelType[] | undefined =
@@ -47,10 +45,9 @@ export const useCreateModel = () => {
 				queryClient.setQueryData(['models'], previousModels);
 		},
 	});
-};
 
-export const useUpdateModel = () => {
-	return useMutation({
+export const useUpdateModel = () =>
+	useMutation({
 		mutationFn: async (model: ModelType) => {
 			const { id, ...infos } = model;
 			return (await fetchApi(
@@ -73,13 +70,11 @@ export const useUpdateModel = () => {
 		onError: (_, __, previousModels) =>
 			queryClient.setQueryData(['models'], previousModels),
 	});
-};
 
-export const useDeleteModel = () => {
-	return useMutation({
-		mutationFn: async (modelId: number) => {
-			return (await fetchApi(`/model/${modelId}`, 'DELETE')) as ModelType;
-		},
+export const useDeleteModel = () =>
+	useMutation({
+		mutationFn: async (modelId: number) =>
+			(await fetchApi(`/model/${modelId}`, 'DELETE')) as ModelType,
 		onMutate: async (modelIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
@@ -94,4 +89,3 @@ export const useDeleteModel = () => {
 		onError: (_, __, previousModels) =>
 			queryClient.setQueryData(['models'], previousModels),
 	});
-};

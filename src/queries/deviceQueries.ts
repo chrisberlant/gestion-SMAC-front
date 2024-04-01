@@ -17,10 +17,8 @@ export const useGetAllDevices = () => {
 
 export const useCreateDevice = () => {
 	return useMutation({
-		mutationFn: async (device: DeviceCreationType) => {
-			return (await fetchApi('/device', 'POST', device)) as DeviceType;
-		},
-
+		mutationFn: async (device: DeviceCreationType) =>
+			(await fetchApi('/device', 'POST', device)) as DeviceType,
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices: DeviceType[] | undefined =
@@ -50,8 +48,8 @@ export const useCreateDevice = () => {
 	});
 };
 
-export const useUpdateDevice = () => {
-	return useMutation({
+export const useUpdateDevice = () =>
+	useMutation({
 		mutationFn: async ({
 			data,
 		}: {
@@ -65,7 +63,6 @@ export const useUpdateDevice = () => {
 				infos
 			)) as DeviceType;
 		},
-
 		onMutate: async (updatedDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -104,7 +101,6 @@ export const useUpdateDevice = () => {
 				);
 		},
 	});
-};
 
 export const useDeleteDevice = () =>
 	useMutation({
@@ -137,8 +133,8 @@ export const useExportDevicesToCsv = () =>
 export const useImportMultipleDevices = (
 	toggleOverlay: () => void,
 	closeImportModal: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async (importedDevices: object[]) => {
 			toggleOverlay();
 			return await fetchApi('/devices/csv', 'POST', importedDevices);
@@ -168,7 +164,6 @@ export const useImportMultipleDevices = (
 			closeImportModal();
 		},
 	});
-};
 
 // Générer le template CSV
 export const useGetDevicesCsvTemplate = () =>

@@ -89,7 +89,6 @@ export default function ServicesTable() {
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
 			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
-			values.id = row.original.id;
 			// Validation du format des données via un schéma Zod
 			const validation = serviceUpdateSchema.safeParse(values);
 			if (!validation.success) {
@@ -97,6 +96,8 @@ export default function ServicesTable() {
 					title: validation.error.issues[0].message,
 				});
 			}
+
+			values.id = row.original.id;
 
 			// Si le service existe déjà
 			if (

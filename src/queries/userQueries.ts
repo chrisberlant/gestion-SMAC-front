@@ -19,8 +19,8 @@ import queryClient from './queryClient';
 export const useLogin = (
 	form: UseFormReturnType<UserLoginType>,
 	toggleOverlay: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
 			return (await fetchApi('/login', 'POST', form.values)) as {
@@ -39,22 +39,20 @@ export const useLogin = (
 			form.setErrors({ email: ' ', password: ' ' });
 		},
 	});
-};
 
 // Récupérer les infos utilisateur
-export const useGetCurrentUser = () => {
-	return useQuery({
+export const useGetCurrentUser = () =>
+	useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
 			return (await fetchApi('/me')) as LoggedUserType;
 		},
 		gcTime: Infinity,
 	});
-};
 
 // Vérifier si l'utilisateur a déjà un token lorsqu'il est sur la page de connexion
-export const useCheckLoginStatus = () => {
-	return useQuery({
+export const useCheckLoginStatus = () =>
+	useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
 			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
@@ -64,14 +62,13 @@ export const useCheckLoginStatus = () => {
 		},
 		gcTime: Infinity,
 	});
-};
 
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
 	toggleOverlay: () => void,
 	closeAccountModal: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async (data: CurrentUserUpdateType) => {
 			toggleOverlay();
 			return (await fetchApi(
@@ -112,15 +109,14 @@ export const useUpdateCurrentUser = (
 			toggleOverlay();
 		},
 	});
-};
 
 // Modifier le mot de passe utilisateur actuel
 export const useUpdateCurrentUserPassword = (
 	form: UseFormReturnType<CurrentUserPasswordUpdateType>,
 	toggleOverlay: () => void,
 	closePasswordModal: () => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
 			await fetchApi('/my-password', 'PATCH', form.values);
@@ -143,24 +139,19 @@ export const useUpdateCurrentUserPassword = (
 			toggleOverlay();
 		},
 	});
-};
 
 // Récupérer tous les utilisateurs
-export const useGetAllUsers = () => {
-	return useQuery({
+export const useGetAllUsers = () =>
+	useQuery({
 		queryKey: ['users'],
-		queryFn: async () => {
-			return (await fetchApi('/users')) as UserType[];
-		},
+		queryFn: async () => (await fetchApi('/users')) as UserType[],
 	});
-};
 
 // Créer un utilisateur
-export const useCreateUser = () => {
-	return useMutation({
-		mutationFn: async (user: UserCreationType) => {
-			return await fetchApi('/user', 'POST', user);
-		},
+export const useCreateUser = () =>
+	useMutation({
+		mutationFn: async (user: UserCreationType) =>
+			await fetchApi('/user', 'POST', user),
 		onMutate: async (newUser) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);
@@ -186,11 +177,10 @@ export const useCreateUser = () => {
 		onError: (_, __, previousUsers) =>
 			queryClient.setQueryData(['users'], previousUsers),
 	});
-};
 
 // Mettre à jour un utilisateur
-export const useUpdateUser = () => {
-	return useMutation({
+export const useUpdateUser = () =>
+	useMutation({
 		mutationFn: async (user: UserType) => {
 			const { id, ...infos } = user;
 			return await fetchApi(`/user/${id}`, 'PATCH', infos);
@@ -209,24 +199,22 @@ export const useUpdateUser = () => {
 		onError: (_, __, previousUsers) =>
 			queryClient.setQueryData(['users'], previousUsers),
 	});
-};
 
 // Réinitialiser le mot de passe d'un utilisateur
 export const useResetPassword = (
 	openConfirmationModal: (user: UserPasswordIsResetType) => void
-) => {
-	return useMutation({
+) =>
+	useMutation({
 		mutationFn: async (userId: number) => {
 			return await fetchApi(`/user/password/${userId}`, 'PATCH');
 		},
 		onSuccess: (user: UserPasswordIsResetType) =>
 			openConfirmationModal(user),
 	});
-};
 
 // Supprimer un utilisateur
-export const useDeleteUser = () => {
-	return useMutation({
+export const useDeleteUser = () =>
+	useMutation({
 		mutationFn: async (userId: number) => {
 			return await fetchApi(`/user/${userId}`, 'DELETE');
 		},
@@ -242,4 +230,3 @@ export const useDeleteUser = () => {
 		onError: (_, __, previousUsers) =>
 			queryClient.setQueryData(['users'], previousUsers),
 	});
-};
