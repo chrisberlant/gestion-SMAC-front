@@ -89,7 +89,6 @@ export default function History() {
 		},
 		mantineTableBodyRowProps: ({ row }) => ({
 			onClick: row.getToggleSelectedHandler(),
-			sx: { cursor: 'pointer' },
 		}),
 		paginationDisplayMode: 'pages',
 		mantineTableContainerProps: { style: { minWidth: '40vw' } },
@@ -97,7 +96,7 @@ export default function History() {
 			striped: true,
 		},
 		renderTopToolbarCustomActions: () => {
-			// Conversion en tableau de nombre de l'objet contenant les lignes sélectionnées
+			// Conversion de l'objet contenant les lignes sélectionnées en tableau des nombre
 			const entriesToDelete = Object.keys(
 				table.getState().rowSelection
 			).map(Number);

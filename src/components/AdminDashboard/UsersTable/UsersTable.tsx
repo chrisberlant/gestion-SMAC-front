@@ -26,6 +26,7 @@ import {
 	displayUserPasswordResetSuccessModal,
 } from '@modals/userPasswordResetModals';
 import displayDeleteUserModal from '@modals/userDeleteModal';
+import { objectIncludesObject } from '../../../utils';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -158,8 +159,13 @@ export default function UsersTable() {
 	//UPDATE action
 	const handleSaveUser: MRT_TableOptions<UserType>['onEditingRowSave'] =
 		async ({ values, row }) => {
-			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
-			values.id = row.original.id;
+			// Si aucune modification des données
+			if (objectIncludesObject(row.original, values)) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
 			// Validation du format des données via un schéma Zod
 			const validation = userUpdateSchema.safeParse(values);
 			if (!validation.success) {
@@ -169,6 +175,9 @@ export default function UsersTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
+			// Récupérer l'id dans les colonnes cachées
+			values.id = row.original.id;
 
 			// Si l'utilisateur existe déjà
 			if (

@@ -29,7 +29,7 @@ import { AgentCreationType, AgentType } from '@customTypes/agent';
 import { useGetAllServices } from '@queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
-import { sendEmail } from '@utils/index';
+import { objectIncludesObject, sendEmail } from '@utils/index';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
@@ -280,6 +280,7 @@ export default function AgentsTable() {
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { lastName, firstName, email } = values;
+
 			// Formatage des informations nécessaires pour la validation du schéma
 			const data = {
 				lastName,
@@ -290,6 +291,16 @@ export default function AgentsTable() {
 					(service) => service.title === values.serviceId
 				)?.id,
 			} as AgentType;
+
+			const { id, devices, ...originalData } = row.original;
+
+			// Si aucune modification des données
+			if (objectIncludesObject(originalData, data)) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -300,7 +311,8 @@ export default function AgentsTable() {
 				return setValidationErrors(errors);
 			}
 
-			data.id = row.original.id;
+			// Récupérer l'id dans les colonnes cachées
+			data.id = id;
 
 			// Si l'agent existe déjà
 			if (

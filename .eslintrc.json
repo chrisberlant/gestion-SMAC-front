@@ -39,6 +39,7 @@
 			{ "allowConstantExport": true }
 		],
 		"@typescript-eslint/no-unused-vars": "warn",
+		"ignoreRestSiblings": true,
 		"import/no-unresolved": "error",
 		"import/extensions": [
 			"error",

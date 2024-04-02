@@ -34,6 +34,7 @@ import displayLineDeleteModal from '@modals/lineDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
+import { objectIncludesObject } from '../../utils';
 
 export default function Lines() {
 	const {
@@ -372,6 +373,13 @@ export default function Lines() {
 					)?.id || null,
 			} as LineType;
 
+			// Si aucune modification des données
+			if (objectIncludesObject(row.original, data)) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
 			// Validation du format des données via un schéma Zod
 			const validation = lineUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -382,6 +390,7 @@ export default function Lines() {
 				return setValidationErrors(errors);
 			}
 
+			// Récupérer l'id dans les colonnes cachées
 			data.id = row.original.id;
 
 			// Si la ligne existe déjà

@@ -88,7 +88,13 @@ export default function ServicesTable() {
 	//UPDATE action
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
-			// Récupérer l'id dans les colonnes cachées et l'ajouter aux données à valider
+			// Si aucune modification des données
+			if (values.title === row.original.title) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
 			// Validation du format des données via un schéma Zod
 			const validation = serviceUpdateSchema.safeParse(values);
 			if (!validation.success) {
@@ -97,6 +103,7 @@ export default function ServicesTable() {
 				});
 			}
 
+			// Récupérer l'id dans les colonnes cachées
 			values.id = row.original.id;
 
 			// Si le service existe déjà

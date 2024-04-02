@@ -8,6 +8,8 @@ export const useGetAllHistory = () =>
 	useQuery({
 		queryKey: ['history'],
 		queryFn: async () => (await fetchApi('/history')) as HistoryType[],
+		staleTime: 0,
+		gcTime: 0,
 	});
 
 export const useDeleteHistory = () =>

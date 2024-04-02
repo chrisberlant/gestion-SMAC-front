@@ -24,7 +24,7 @@ import {
 	deviceUpdateSchema,
 } from '@validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { dateFrFormatting } from '@/utils';
+import { dateFrFormatting, objectIncludesObject } from '@/utils';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
@@ -373,6 +373,13 @@ export default function DevicesTable() {
 					: null,
 			} as DeviceType;
 
+			// Si aucune modification des données
+			if (objectIncludesObject(row.original, data)) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
 			// Validation du format des données via un schéma Zod
 			const validation = deviceUpdateSchema.safeParse(data);
 			if (!validation.success) {
@@ -383,6 +390,7 @@ export default function DevicesTable() {
 				return setValidationErrors(errors);
 			}
 
+			// Récupérer l'id dans les colonnes cachées
 			data.id = row.original.id;
 
 			// Si l'appareil existe déjà

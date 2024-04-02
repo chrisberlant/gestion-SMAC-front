@@ -30,3 +30,16 @@ export const parseCsvToJson = (
 		complete: (results) => callbackFn(results.data as object[]),
 	});
 };
+
+// Comparaison entre deux objets pour savoir si le plus petit est inclus dans le plus gros
+export const objectIncludesObject = <
+	T extends Record<string, string | number | boolean | object | null>
+>(
+	bigObject: T,
+	smallObject: Partial<T>
+) =>
+	Object.entries(smallObject).every(
+		([key, value]) =>
+			Object.prototype.hasOwnProperty.call(bigObject, key) &&
+			bigObject[key] === value
+	);
