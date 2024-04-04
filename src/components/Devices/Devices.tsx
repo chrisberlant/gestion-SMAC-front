@@ -7,7 +7,11 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useMemo, useRef, useState } from 'react';
-import { DeviceCreationType, DeviceType } from '@customTypes/device';
+import {
+	DeviceCreationType,
+	DeviceType,
+	DeviceUpdateType,
+} from '@customTypes/device';
 import { useGetAllAgents } from '@queries/agentQueries';
 import {
 	useCreateDevice,
@@ -24,7 +28,7 @@ import {
 	deviceUpdateSchema,
 } from '@validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { dateFrFormatting, objectIncludesObject } from '@/utils';
+import { dateFrFormatting, objectIncludesObject, optimizeData } from '@/utils';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
@@ -356,8 +360,8 @@ export default function DevicesTable() {
 		async ({ values, row }) => {
 			const { imei, status, comments, modelId, agentId } = values;
 
-			// Formatage des informations nécessaires pour la validation du schéma
-			const data = {
+			// Formatage des données
+			const newData = {
 				imei,
 				status,
 				isNew: isNewRef.current,
@@ -373,15 +377,25 @@ export default function DevicesTable() {
 					: null,
 			} as DeviceType;
 
+			const { ...originalData } = row.original;
+
 			// Si aucune modification des données
-			if (objectIncludesObject(row.original, data)) {
+			if (objectIncludesObject(originalData, newData)) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newOptimizedData = optimizeData(
+				originalData,
+				newData
+			) as DeviceUpdateType;
+			// Récupérer l'id dans les colonnes cachées
+			newOptimizedData.id = row.original.id;
+
 			// Validation du format des données via un schéma Zod
-			const validation = deviceUpdateSchema.safeParse(data);
+			const validation = deviceUpdateSchema.safeParse(newOptimizedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -390,26 +404,28 @@ export default function DevicesTable() {
 				return setValidationErrors(errors);
 			}
 
-			// Récupérer l'id dans les colonnes cachées
-			data.id = row.original.id;
-
-			// Si l'appareil existe déjà
-			if (
-				table
-					.getCoreRowModel()
-					.rows.some(
-						(row) => row.original.imei === data.imei.trim()
-					) &&
-				row.original.id !== data.id
-			) {
-				toast.error('Un appareil avec cet IMEI existe déjà');
-				return setValidationErrors({
-					imei: ' ',
-				});
+			// Si un IMEI est fourni, vérification s'il n'est pas déjà utilisé
+			if (newOptimizedData.imei) {
+				if (
+					table
+						.getCoreRowModel()
+						.rows.some(
+							(row) =>
+								row.original.imei ===
+									newData.imei.toLowerCase().trim() &&
+								row.original.id !== newOptimizedData.id
+						)
+				) {
+					toast.error('Un appareil avec cet IMEI existe déjà');
+					return setValidationErrors({
+						imei: ' ',
+					});
+				}
 			}
 
 			const lineUsingDevice =
-				lines?.find((line) => line.deviceId === data.id) || null;
+				lines?.find((line) => line.deviceId === newOptimizedData.id) ||
+				null;
 			const lineOwnerFullName =
 				formattedAgents?.find(
 					(agent) => agent.id === lineUsingDevice?.agentId
@@ -417,21 +433,21 @@ export default function DevicesTable() {
 
 			// Si le propriétaire a changé et qu'une ligne utilise l'appareil,
 			// le cache des lignes est mis à jour
-			if (row.original.agentId !== data.agentId && lineUsingDevice) {
-				displayDeviceOwnerChangeModal({
+			if (newOptimizedData.agentId && lineUsingDevice) {
+				return displayDeviceOwnerChangeModal({
 					updateDevice,
 					setValidationErrors,
 					closeEditing: () => table.setEditingRow(null),
-					data,
+					data: newOptimizedData,
 					lineUsingDevice: lineUsingDevice.number,
 					lineOwnerFullName,
 					imei,
 				});
-			} else {
-				updateDevice({ data });
-				setValidationErrors({});
-				table.setEditingRow(null);
 			}
+
+			updateDevice({ data: newOptimizedData });
+			table.setEditingRow(null);
+			return setValidationErrors({});
 		};
 
 	const table = useMantineReactTable({

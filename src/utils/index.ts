@@ -32,6 +32,7 @@ export const parseCsvToJson = (
 };
 
 // Comparaison entre deux objets pour savoir si le plus petit est inclus dans le plus gros
+// Renvoie un booléen
 export const objectIncludesObject = <
 	T extends Record<string, string | number | boolean | object | null>
 >(
@@ -43,3 +44,23 @@ export const objectIncludesObject = <
 			Object.prototype.hasOwnProperty.call(bigObject, key) &&
 			bigObject[key] === value
 	);
+
+// Utilisé pour les appels API de mise à jour, comparaison entre deux objets pour supprimer les valeurs identiques,
+//permettant ensuited 'envoyer uniquement les données à modifier, retourne l'objet modifié
+export const optimizeData = <
+	T extends Record<string, string | number | boolean | object | null>
+>(
+	originalData: T,
+	newData: Partial<T>
+) => {
+	const newOptimizedData: Partial<T> = { ...newData };
+	Object.entries(newData).forEach(([key, value]) => {
+		if (
+			Object.prototype.hasOwnProperty.call(originalData, key) &&
+			originalData[key] === value
+		) {
+			delete newOptimizedData[key];
+		}
+	});
+	return newOptimizedData;
+};

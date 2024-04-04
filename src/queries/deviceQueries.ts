@@ -1,6 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { DeviceType, DeviceCreationType } from '@customTypes/device';
+import {
+	DeviceType,
+	DeviceCreationType,
+	DeviceUpdateType,
+} from '@customTypes/device';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '@customTypes/line';
@@ -53,7 +57,7 @@ export const useUpdateDevice = () =>
 		mutationFn: async ({
 			data,
 		}: {
-			data: DeviceType;
+			data: DeviceUpdateType;
 			updateLine?: boolean;
 		}) => {
 			const { id, ...infos } = data;
@@ -70,7 +74,7 @@ export const useUpdateDevice = () =>
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices.map((device) =>
 					device.id === updatedDevice.data.id
-						? updatedDevice.data
+						? { ...device, ...updatedDevice.data }
 						: device
 				)
 			);

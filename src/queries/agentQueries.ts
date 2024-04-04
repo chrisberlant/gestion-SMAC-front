@@ -2,7 +2,11 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { AgentCreationType, AgentType } from '@customTypes/agent';
+import {
+	AgentCreationType,
+	AgentType,
+	AgentUpdateType,
+} from '@customTypes/agent';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
 // Récupérer tous les agents
@@ -52,7 +56,7 @@ export const useCreateAgent = () =>
 // Mettre à jour un agent
 export const useUpdateAgent = () =>
 	useMutation({
-		mutationFn: async (agent: AgentType) => {
+		mutationFn: async (agent: AgentUpdateType) => {
 			const { id, ...infos } = agent;
 			return (await fetchApi(
 				`/agent/${id}`,
@@ -66,7 +70,7 @@ export const useUpdateAgent = () =>
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((agent) =>
 					agent.id === updatedAgent.id
-						? { ...updatedAgent, devices: agent.devices }
+						? { ...agent, ...updatedAgent, devices: agent.devices }
 						: agent
 				)
 			);

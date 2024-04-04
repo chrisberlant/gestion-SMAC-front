@@ -80,12 +80,20 @@ export const deviceCreationSchema = z.strictObject({
 });
 
 export const deviceUpdateSchema = z.strictObject({
+	id: z
+		.number({
+			required_error: "L'id doit être renseigné",
+			invalid_type_error: "L'id doit être un nombre",
+		})
+		.int("L'id doit être un nombre entier")
+		.positive("L'id fourni est incorrect"),
 	imei: z
 		.string({
 			invalid_type_error: "L'IMEI doit être une chaîne de caractères",
 		})
 		.trim()
-		.length(15, "L'IMEI fourni est incorrect"),
+		.length(15, "L'IMEI fourni est incorrect")
+		.optional(),
 	preparationDate: z
 		.string({
 			invalid_type_error:
@@ -108,28 +116,32 @@ export const deviceUpdateSchema = z.strictObject({
 		.or(z.literal(''))
 		.nullable()
 		.optional(),
-	status: z.enum(
-		[
-			'En stock',
-			'Attribué',
-			'Restitué',
-			'En attente de restitution',
-			'En prêt',
-			'En panne',
-			'Volé',
-		],
-		{
-			errorMap: () => {
-				return {
-					message:
-						'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
-				};
-			},
-		}
-	),
-	isNew: z.boolean({
-		invalid_type_error: 'La valeur isNew doit être un booléen',
-	}),
+	status: z
+		.enum(
+			[
+				'En stock',
+				'Attribué',
+				'Restitué',
+				'En attente de restitution',
+				'En prêt',
+				'En panne',
+				'Volé',
+			],
+			{
+				errorMap: () => {
+					return {
+						message:
+							'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
+					};
+				},
+			}
+		)
+		.optional(),
+	isNew: z
+		.boolean({
+			invalid_type_error: 'La valeur isNew doit être un booléen',
+		})
+		.optional(),
 	comments: z
 		.string({
 			invalid_type_error:
@@ -151,5 +163,6 @@ export const deviceUpdateSchema = z.strictObject({
 			invalid_type_error: "L'id du modèle doit être un nombre",
 		})
 		.int("L'id du modèle doit être un nombre entier")
-		.positive("L'id du modèle fourni est incorrect"),
+		.positive("L'id du modèle fourni est incorrect")
+		.optional(),
 });
