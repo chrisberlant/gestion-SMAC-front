@@ -3,8 +3,8 @@ import {
 	currentUserPasswordUpdateSchema,
 	currentUserUpdateSchema,
 	userCreationSchema,
-	userDeletionSchema,
 	userLoginSchema,
+	userUpdateSchema,
 } from '../validationSchemas/userSchemas';
 
 export type UserType = {
@@ -28,8 +28,7 @@ export type CurrentUserPasswordUpdateType = z.infer<
 >;
 
 export type UserCreationType = z.infer<typeof userCreationSchema>;
-
-export type UserDeletionType = z.infer<typeof userDeletionSchema>;
+export type UserUpdateType = z.infer<typeof userUpdateSchema>;
 
 export type UserPasswordIsResetType = {
 	fullName: string;

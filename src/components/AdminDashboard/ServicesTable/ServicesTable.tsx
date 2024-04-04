@@ -88,23 +88,32 @@ export default function ServicesTable() {
 	//UPDATE action
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
+			const { title } = values;
+
+			// Formatage des données
+			const newData = {
+				title,
+			} as ServiceType;
+
+			const { ...originalData } = row.original;
+
 			// Si aucune modification des données
-			if (values.title === row.original.title) {
+			if (newData.title === originalData.title) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
+			// Récupérer l'id dans les colonnes cachées
+			newData.id = originalData.id;
+
 			// Validation du format des données via un schéma Zod
-			const validation = serviceUpdateSchema.safeParse(values);
+			const validation = serviceUpdateSchema.safeParse(newData);
 			if (!validation.success) {
 				return setValidationErrors({
 					title: validation.error.issues[0].message,
 				});
 			}
-
-			// Récupérer l'id dans les colonnes cachées
-			values.id = row.original.id;
 
 			// Si le service existe déjà
 			if (
@@ -113,8 +122,8 @@ export default function ServicesTable() {
 					.rows.some(
 						(row) =>
 							row.original.title.toLowerCase() ===
-								values.title.toLowerCase().trim() &&
-							row.original.id !== values.id
+								newData.title.toLowerCase().trim() &&
+							row.original.id !== newData.id
 					)
 			) {
 				toast.error('Un service porte déjà ce nom');
@@ -123,9 +132,9 @@ export default function ServicesTable() {
 				});
 			}
 
-			setValidationErrors({});
-			updateService(values);
+			updateService(newData);
 			table.setEditingRow(null);
+			return setValidationErrors({});
 		};
 
 	const table = useMantineReactTable({

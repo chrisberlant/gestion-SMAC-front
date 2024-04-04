@@ -311,7 +311,7 @@ export default function AgentsTable() {
 				newData
 			) as AgentUpdateType;
 			// Récupérer l'id dans les colonnes cachées
-			newOptimizedData.id = row.original.id;
+			newOptimizedData.id = originalData.id;
 
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(newOptimizedData);
@@ -330,7 +330,7 @@ export default function AgentsTable() {
 						.getCoreRowModel()
 						.rows.some(
 							(row) =>
-								row.original.email ===
+								row.original.email.toLowerCase() ===
 									newData.email.toLowerCase().trim() &&
 								row.original.id !== newOptimizedData.id
 						)

@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
-import { LineType, LineCreationType } from '@customTypes/line';
+import { LineType, LineCreationType, LineUpdateType } from '@customTypes/line';
 import { DeviceType } from '@customTypes/device';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
 
@@ -99,7 +99,7 @@ export const useUpdateLine = () =>
 		mutationFn: async ({
 			data,
 		}: {
-			data: LineType;
+			data: LineUpdateType;
 			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
 			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
 		}) => {
@@ -133,7 +133,7 @@ export const useUpdateLine = () =>
 				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 					lines.map((line) =>
 						line.id === updatedLine.data.id
-							? updatedLine.data
+							? { ...line, ...updatedLine.data }
 							: line
 					)
 				);

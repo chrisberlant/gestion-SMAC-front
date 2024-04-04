@@ -11,6 +11,7 @@ import {
 	UserLoginType,
 	UserPasswordIsResetType,
 	UserType,
+	UserUpdateType,
 } from '@customTypes/user';
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
@@ -181,7 +182,7 @@ export const useCreateUser = () =>
 // Mettre à jour un utilisateur
 export const useUpdateUser = () =>
 	useMutation({
-		mutationFn: async (user: UserType) => {
+		mutationFn: async (user: UserUpdateType) => {
 			const { id, ...infos } = user;
 			return await fetchApi(`/user/${id}`, 'PATCH', infos);
 		},
@@ -190,7 +191,9 @@ export const useUpdateUser = () =>
 			const previousUsers = queryClient.getQueryData(['users']);
 			queryClient.setQueryData(['users'], (users: UserType[]) =>
 				users.map((prevUser) =>
-					prevUser.id === updatedUser.id ? updatedUser : prevUser
+					prevUser.id === updatedUser.id
+						? { ...prevUser, ...updatedUser }
+						: prevUser
 				)
 			);
 			return previousUsers;

@@ -1,9 +1,9 @@
 import { Button, Flex, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { LineType } from '@customTypes/line';
+import { LineType, LineUpdateType } from '@customTypes/line';
 
 interface UpdateLineProps {
-	data: LineType;
+	data: LineUpdateType;
 	updateDevice?: boolean;
 	updateOldLine?: boolean;
 }
@@ -28,7 +28,7 @@ interface DisplayLineUpdateModalProps {
 	deviceCurrentOwnerId: number | null;
 	deviceCurrentOwnerFullName: string | null;
 	newDeviceId: number | null;
-	data: LineType;
+	data: LineUpdateType;
 }
 
 export default function displayLineUpdateModal({

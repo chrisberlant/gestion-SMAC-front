@@ -1,5 +1,8 @@
 import { z } from 'zod';
-import { lineCreationSchema } from '../validationSchemas/lineSchemas';
+import {
+	lineCreationSchema,
+	lineUpdateSchema,
+} from '../validationSchemas/lineSchemas';
 
 export type LineType = {
 	id: number;
@@ -12,3 +15,4 @@ export type LineType = {
 };
 
 export type LineCreationType = z.infer<typeof lineCreationSchema>;
+export type LineUpdateType = z.infer<typeof lineUpdateSchema>;

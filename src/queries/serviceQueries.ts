@@ -69,7 +69,9 @@ export const useUpdateService = () =>
 			// Mise à jour du cache avant l'appel API pour màj instantée de l'UI
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>
-					service.id === updatedService.id ? updatedService : service
+					service.id === updatedService.id
+						? { ...service, updatedService }
+						: service
 				)
 			);
 			return previousServices;

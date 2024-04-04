@@ -13,7 +13,7 @@ import {
 	MRT_TableInstance,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { LineCreationType, LineType } from '@customTypes/line';
+import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
 import {
 	useCreateLine,
 	useDeleteLine,
@@ -34,7 +34,7 @@ import displayLineDeleteModal from '@modals/lineDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
-import { objectIncludesObject } from '../../utils';
+import { objectIncludesObject, optimizeData } from '../../utils';
 
 export default function Lines() {
 	const {
@@ -359,7 +359,7 @@ export default function Lines() {
 				values;
 
 			// Formatage des informations nécessaires pour la validation du schéma
-			const data = {
+			const newData = {
 				number,
 				profile,
 				status,
@@ -373,15 +373,25 @@ export default function Lines() {
 					)?.id || null,
 			} as LineType;
 
+			const { ...originalData } = row.original;
+
 			// Si aucune modification des données
-			if (objectIncludesObject(row.original, data)) {
+			if (objectIncludesObject(originalData, newData)) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newOptimizedData = optimizeData(
+				originalData,
+				newData
+			) as LineUpdateType;
+			// Récupérer l'id dans les colonnes cachées
+			newOptimizedData.id = originalData.id;
+
 			// Validation du format des données via un schéma Zod
-			const validation = lineUpdateSchema.safeParse(data);
+			const validation = lineUpdateSchema.safeParse(newOptimizedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -390,29 +400,28 @@ export default function Lines() {
 				return setValidationErrors(errors);
 			}
 
-			// Récupérer l'id dans les colonnes cachées
-			data.id = row.original.id;
-
-			// Si la ligne existe déjà
-			if (
-				table
-					.getCoreRowModel()
-					.rows.some(
-						(row) =>
-							row.original.number === data.number.trim() &&
-							row.original.id !== data.id
-					)
-			) {
-				toast.error('Une ligne avec ce numéro existe déjà');
-				return setValidationErrors({
-					number: ' ',
-				});
+			// Si un numéro estfourni, vérification s'il n'est pas déjà utilisé
+			if (newOptimizedData.number) {
+				if (
+					table
+						.getCoreRowModel()
+						.rows.some(
+							(row) =>
+								row.original.number === newData.number.trim() &&
+								row.original.id !== newOptimizedData.id
+						)
+				) {
+					toast.error('Une ligne avec ce numéro existe déjà');
+					return setValidationErrors({
+						number: ' ',
+					});
+				}
 			}
 
 			const currentLineOwnerId = row.original.agentId ?? null;
-			const newLineOwnerId = data.agentId ?? null;
+			const newLineOwnerId = newOptimizedData.agentId ?? null;
 			const newLineOwnerFullName: string | null = agentId ?? null;
-			const newDeviceId = data.deviceId ?? null;
+			const newDeviceId = newOptimizedData.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -421,7 +430,7 @@ export default function Lines() {
 				formattedAgents?.find(
 					(agent) => agent.id === deviceCurrentOwnerId
 				)?.infos ?? null;
-			const currentDeviceId = row.original.deviceId || null;
+			const currentDeviceId = originalData.deviceId || null;
 			const deviceFullName: string | null = deviceId ?? null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
@@ -442,7 +451,7 @@ export default function Lines() {
 				currentLineOwnerId === newLineOwnerId) ||
 			(!alreadyUsingDeviceLine && deviceCurrentOwnerId === newLineOwnerId)
 				? (setValidationErrors({}),
-				  updateLine({ data }),
+				  updateLine({ data: newData }),
 				  table.setEditingRow(null))
 				: displayLineUpdateModal({
 						updateLine,
@@ -458,7 +467,7 @@ export default function Lines() {
 						deviceCurrentOwnerId,
 						deviceCurrentOwnerFullName,
 						newDeviceId,
-						data,
+						data: newOptimizedData,
 				  });
 		};
 

@@ -18,7 +18,7 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { UserType } from '@customTypes/user';
+import { UserType, UserUpdateType } from '@customTypes/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
 import {
@@ -26,7 +26,7 @@ import {
 	displayUserPasswordResetSuccessModal,
 } from '@modals/userPasswordResetModals';
 import displayDeleteUserModal from '@modals/userDeleteModal';
-import { objectIncludesObject } from '../../../utils';
+import { objectIncludesObject, optimizeData } from '../../../utils';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -159,15 +159,35 @@ export default function UsersTable() {
 	//UPDATE action
 	const handleSaveUser: MRT_TableOptions<UserType>['onEditingRowSave'] =
 		async ({ values, row }) => {
+			const { lastName, firstName, email, role } = values;
+
+			// Formatage des données
+			const newData = {
+				lastName,
+				firstName,
+				email,
+				role,
+			} as UserType;
+
+			const { ...originalData } = row.original;
+
 			// Si aucune modification des données
-			if (objectIncludesObject(row.original, values)) {
+			if (objectIncludesObject(originalData, values)) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newOptimizedData = optimizeData(
+				originalData,
+				newData
+			) as UserUpdateType;
+			// Récupérer l'id dans les colonnes cachées
+			newOptimizedData.id = originalData.id;
+
 			// Validation du format des données via un schéma Zod
-			const validation = userUpdateSchema.safeParse(values);
+			const validation = userUpdateSchema.safeParse(newOptimizedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -175,32 +195,31 @@ export default function UsersTable() {
 				});
 				return setValidationErrors(errors);
 			}
-
-			// Récupérer l'id dans les colonnes cachées
-			values.id = row.original.id;
-
-			// Si l'utilisateur existe déjà
-			if (
-				table
-					.getCoreRowModel()
-					.rows.some(
-						(row) =>
-							row.original.email.toLowerCase() ===
-								values.email.toLowerCase().trim() &&
-							row.original.id !== values.id
-					)
-			) {
-				toast.error(
-					'Un utilisateur avec cette adresse mail existe déjà'
-				);
-				return setValidationErrors({
-					email: ' ',
-				});
+			// Si une adresse mail est fournie, vérification si elle n'est pas déjà utilisée
+			if (newOptimizedData.email) {
+				// Si l'utilisateur existe déjà
+				if (
+					table
+						.getCoreRowModel()
+						.rows.some(
+							(row) =>
+								row.original.email.toLowerCase() ===
+									newData.email.toLowerCase().trim() &&
+								row.original.id !== newOptimizedData.id
+						)
+				) {
+					toast.error(
+						'Un utilisateur avec cette adresse mail existe déjà'
+					);
+					return setValidationErrors({
+						email: ' ',
+					});
+				}
 			}
 
-			setValidationErrors({});
-			updateUser(values);
+			updateUser(newOptimizedData);
 			table.setEditingRow(null);
+			return setValidationErrors({});
 		};
 
 	const table = useMantineReactTable({

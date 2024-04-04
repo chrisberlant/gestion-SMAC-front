@@ -1,5 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ModelCreationType, ModelType } from '@customTypes/model';
+import {
+	ModelCreationType,
+	ModelType,
+	ModelUpdateType,
+} from '@customTypes/model';
 import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
@@ -48,7 +52,7 @@ export const useCreateModel = () =>
 
 export const useUpdateModel = () =>
 	useMutation({
-		mutationFn: async (model: ModelType) => {
+		mutationFn: async (model: ModelUpdateType) => {
 			const { id, ...infos } = model;
 			return (await fetchApi(
 				`/model/${id}`,
@@ -61,7 +65,9 @@ export const useUpdateModel = () =>
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
 				models.map((model) =>
-					model.id === updatedModel.id ? updatedModel : model
+					model.id === updatedModel.id
+						? { ...model, ...updatedModel }
+						: model
 				)
 			);
 			return previousModels;

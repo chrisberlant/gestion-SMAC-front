@@ -16,11 +16,12 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ModelType } from '@customTypes/model';
+import { ModelType, ModelUpdateType } from '@customTypes/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
 import displayModelDeleteModal from '@modals/modelDeleteModal';
+import { objectIncludesObject, optimizeData } from '../../../utils';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -123,8 +124,34 @@ export default function ModelsTable() {
 	//UPDATE action
 	const handleSaveModel: MRT_TableOptions<ModelType>['onEditingRowSave'] =
 		async ({ values, row }) => {
+			const { brand, reference, storage } = values;
+
+			// Formatage des données
+			const newData = {
+				brand,
+				reference,
+				storage,
+			} as ModelType;
+
+			const { ...originalData } = row.original;
+
+			// Si aucune modification des données
+			if (objectIncludesObject(originalData, newData)) {
+				toast.warning('Aucune modification effectuée');
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newOptimizedData = optimizeData(
+				originalData,
+				newData
+			) as ModelUpdateType;
+			// Récupérer l'id dans les colonnes cachées
+			newOptimizedData.id = originalData.id;
+
 			// Validation du format des données via un schéma Zod
-			const validation = modelUpdateSchema.safeParse(values);
+			const validation = modelUpdateSchema.safeParse(newOptimizedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -133,8 +160,6 @@ export default function ModelsTable() {
 				return setValidationErrors(errors);
 			}
 
-			// Récupérer l'id dans les colonnes cachées
-			values.id = row.original.id;
 			// Si le modèle existe déjà
 			if (
 				table
@@ -142,12 +167,12 @@ export default function ModelsTable() {
 					.rows.some(
 						(row) =>
 							row.original.brand.toLowerCase() ===
-								values.brand.toLowerCase().trim() &&
+								newData.brand.toLowerCase().trim() &&
 							row.original.reference.toLowerCase() ===
-								values.reference.toLowerCase().trim() &&
+								newData.reference.toLowerCase().trim() &&
 							row.original.storage?.toLowerCase() ===
-								values.storage?.toLowerCase().trim() &&
-							row.original.id !== values.id
+								newData.storage?.toLowerCase().trim() &&
+							row.original.id !== newOptimizedData.id
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');
@@ -158,9 +183,9 @@ export default function ModelsTable() {
 				});
 			}
 
-			setValidationErrors({});
-			updateModel(values);
+			updateModel(newOptimizedData);
 			table.setEditingRow(null);
+			return setValidationErrors({});
 		};
 
 	const table = useMantineReactTable({
