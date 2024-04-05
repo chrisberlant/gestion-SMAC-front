@@ -121,11 +121,11 @@ export const useUpdateLine = () =>
 							line.id !== updatedLine.data.id
 						) {
 							return { ...line, deviceId: null };
-						} else if (line.id === updatedLine.data.id) {
-							return updatedLine.data;
-						} else {
-							return line;
 						}
+						if (line.id === updatedLine.data.id) {
+							return updatedLine.data;
+						}
+						return line;
 					})
 				);
 			} else {

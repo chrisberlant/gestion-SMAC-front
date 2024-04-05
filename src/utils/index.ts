@@ -31,23 +31,9 @@ export const parseCsvToJson = (
 	});
 };
 
-// Comparaison entre deux objets pour savoir si le plus petit est inclus dans le plus gros
-// Renvoie un booléen
-export const objectIncludesObject = <
-	T extends Record<string, string | number | boolean | object | null>
->(
-	bigObject: T,
-	smallObject: Partial<T>
-) =>
-	Object.entries(smallObject).every(
-		([key, value]) =>
-			Object.prototype.hasOwnProperty.call(bigObject, key) &&
-			bigObject[key] === value
-	);
-
-// Utilisé pour les appels API de mise à jour, comparaison entre deux objets pour supprimer les valeurs identiques,
-//permettant ensuited 'envoyer uniquement les données à modifier, retourne l'objet modifié
-export const optimizeData = <
+// Utilisé pour les appels API de mise à jour, comparaison entre deux objets pour récupérer
+// uniquement l'id et les valeurs qui ont changé, retourne un nouvel objet
+export const getModifiedValues = <
 	T extends Record<string, string | number | boolean | object | null>
 >(
 	originalData: T,
@@ -57,7 +43,8 @@ export const optimizeData = <
 	Object.entries(newData).forEach(([key, value]) => {
 		if (
 			Object.prototype.hasOwnProperty.call(originalData, key) &&
-			originalData[key] === value
+			originalData[key] === value &&
+			key !== 'id'
 		) {
 			delete newOptimizedData[key];
 		}

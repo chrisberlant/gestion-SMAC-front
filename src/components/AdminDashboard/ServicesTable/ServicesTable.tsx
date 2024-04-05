@@ -89,13 +89,13 @@ export default function ServicesTable() {
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
 			const { title } = values;
+			const { ...originalData } = row.original;
 
 			// Formatage des données
 			const newData = {
+				id: originalData.id,
 				title,
 			} as ServiceType;
-
-			const { ...originalData } = row.original;
 
 			// Si aucune modification des données
 			if (newData.title === originalData.title) {
@@ -103,9 +103,6 @@ export default function ServicesTable() {
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
-
-			// Récupérer l'id dans les colonnes cachées
-			newData.id = originalData.id;
 
 			// Validation du format des données via un schéma Zod
 			const validation = serviceUpdateSchema.safeParse(newData);

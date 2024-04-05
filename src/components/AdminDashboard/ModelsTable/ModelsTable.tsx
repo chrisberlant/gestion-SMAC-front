@@ -21,7 +21,7 @@ import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
 import displayModelDeleteModal from '@modals/modelDeleteModal';
-import { objectIncludesObject, optimizeData } from '../../../utils';
+import { getModifiedValues } from '@utils/index';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -125,33 +125,31 @@ export default function ModelsTable() {
 	const handleSaveModel: MRT_TableOptions<ModelType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { brand, reference, storage } = values;
+			const { ...originalData } = row.original;
 
 			// Formatage des données
 			const newData = {
+				id: originalData.id,
 				brand,
 				reference,
 				storage,
 			} as ModelType;
 
-			const { ...originalData } = row.original;
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newModifiedData = getModifiedValues(
+				originalData,
+				newData
+			) as ModelUpdateType;
 
 			// Si aucune modification des données
-			if (objectIncludesObject(originalData, newData)) {
+			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
-			// Optimisation pour envoyer uniquement les données modifiées
-			const newOptimizedData = optimizeData(
-				originalData,
-				newData
-			) as ModelUpdateType;
-			// Récupérer l'id dans les colonnes cachées
-			newOptimizedData.id = originalData.id;
-
 			// Validation du format des données via un schéma Zod
-			const validation = modelUpdateSchema.safeParse(newOptimizedData);
+			const validation = modelUpdateSchema.safeParse(newModifiedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -172,7 +170,7 @@ export default function ModelsTable() {
 								newData.reference.toLowerCase().trim() &&
 							row.original.storage?.toLowerCase() ===
 								newData.storage?.toLowerCase().trim() &&
-							row.original.id !== newOptimizedData.id
+							row.original.id !== newData.id
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');
@@ -183,7 +181,7 @@ export default function ModelsTable() {
 				});
 			}
 
-			updateModel(newOptimizedData);
+			updateModel(newModifiedData);
 			table.setEditingRow(null);
 			return setValidationErrors({});
 		};

@@ -33,7 +33,7 @@ import {
 import { useGetAllServices } from '@queries/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
-import { objectIncludesObject, optimizeData, sendEmail } from '@utils/index';
+import { getModifiedValues, sendEmail } from '@utils/index';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
@@ -284,9 +284,11 @@ export default function AgentsTable() {
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { lastName, firstName, email } = values;
+			const { devices, ...originalData } = row.original;
 
 			// Formatage des données
 			const newData = {
+				id: originalData.id,
 				lastName,
 				firstName,
 				email,
@@ -296,25 +298,21 @@ export default function AgentsTable() {
 				)?.id,
 			} as AgentType;
 
-			const { devices, ...originalData } = row.original;
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newModifiedData = getModifiedValues(
+				originalData,
+				newData
+			) as AgentUpdateType;
 
 			// Si aucune modification des données
-			if (objectIncludesObject(originalData, newData)) {
+			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
-			// Optimisation pour envoyer uniquement les données modifiées
-			const newOptimizedData = optimizeData(
-				originalData,
-				newData
-			) as AgentUpdateType;
-			// Récupérer l'id dans les colonnes cachées
-			newOptimizedData.id = originalData.id;
-
 			// Validation du format des données via un schéma Zod
-			const validation = agentUpdateSchema.safeParse(newOptimizedData);
+			const validation = agentUpdateSchema.safeParse(newModifiedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -324,7 +322,7 @@ export default function AgentsTable() {
 			}
 
 			// Si une adresse mail est fournie, vérification si elle n'est pas déjà utilisée
-			if (newOptimizedData.email) {
+			if (newModifiedData.email) {
 				if (
 					table
 						.getCoreRowModel()
@@ -332,7 +330,7 @@ export default function AgentsTable() {
 							(row) =>
 								row.original.email.toLowerCase() ===
 									newData.email.toLowerCase().trim() &&
-								row.original.id !== newOptimizedData.id
+								row.original.id !== newModifiedData.id
 						)
 				) {
 					toast.error('Un agent avec cette adresse mail existe déjà');
@@ -342,9 +340,9 @@ export default function AgentsTable() {
 				}
 			}
 
-			setValidationErrors({});
-			updateAgent(newOptimizedData);
+			updateAgent(newModifiedData);
 			table.setEditingRow(null);
+			return setValidationErrors({});
 		};
 
 	const table = useMantineReactTable({

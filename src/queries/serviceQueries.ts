@@ -70,7 +70,7 @@ export const useUpdateService = () =>
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>
 					service.id === updatedService.id
-						? { ...service, updatedService }
+						? { ...updatedService }
 						: service
 				)
 			);

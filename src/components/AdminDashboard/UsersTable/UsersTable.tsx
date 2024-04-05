@@ -26,7 +26,7 @@ import {
 	displayUserPasswordResetSuccessModal,
 } from '@modals/userPasswordResetModals';
 import displayDeleteUserModal from '@modals/userDeleteModal';
-import { objectIncludesObject, optimizeData } from '../../../utils';
+import { getModifiedValues } from '@utils/index';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -160,34 +160,32 @@ export default function UsersTable() {
 	const handleSaveUser: MRT_TableOptions<UserType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { lastName, firstName, email, role } = values;
+			const { ...originalData } = row.original;
 
 			// Formatage des données
 			const newData = {
+				id: originalData.id,
 				lastName,
 				firstName,
 				email,
 				role,
 			} as UserType;
 
-			const { ...originalData } = row.original;
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newModifiedData = getModifiedValues(
+				originalData,
+				newData
+			) as UserUpdateType;
 
 			// Si aucune modification des données
-			if (objectIncludesObject(originalData, values)) {
+			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
-			// Optimisation pour envoyer uniquement les données modifiées
-			const newOptimizedData = optimizeData(
-				originalData,
-				newData
-			) as UserUpdateType;
-			// Récupérer l'id dans les colonnes cachées
-			newOptimizedData.id = originalData.id;
-
 			// Validation du format des données via un schéma Zod
-			const validation = userUpdateSchema.safeParse(newOptimizedData);
+			const validation = userUpdateSchema.safeParse(newModifiedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -195,8 +193,9 @@ export default function UsersTable() {
 				});
 				return setValidationErrors(errors);
 			}
+
 			// Si une adresse mail est fournie, vérification si elle n'est pas déjà utilisée
-			if (newOptimizedData.email) {
+			if (newModifiedData.email) {
 				// Si l'utilisateur existe déjà
 				if (
 					table
@@ -205,7 +204,7 @@ export default function UsersTable() {
 							(row) =>
 								row.original.email.toLowerCase() ===
 									newData.email.toLowerCase().trim() &&
-								row.original.id !== newOptimizedData.id
+								row.original.id !== newData.id
 						)
 				) {
 					toast.error(
@@ -217,7 +216,7 @@ export default function UsersTable() {
 				}
 			}
 
-			updateUser(newOptimizedData);
+			updateUser(newModifiedData);
 			table.setEditingRow(null);
 			return setValidationErrors({});
 		};

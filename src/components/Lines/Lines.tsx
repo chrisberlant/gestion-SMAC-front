@@ -34,7 +34,7 @@ import displayLineDeleteModal from '@modals/lineDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
-import { objectIncludesObject, optimizeData } from '../../utils';
+import { getModifiedValues } from '@utils/index';
 
 export default function Lines() {
 	const {
@@ -357,9 +357,11 @@ export default function Lines() {
 		async ({ values, row }) => {
 			const { number, profile, status, comments, deviceId, agentId } =
 				values;
+			const { ...originalData } = row.original;
 
 			// Formatage des informations nécessaires pour la validation du schéma
 			const newData = {
+				id: originalData.id,
 				number,
 				profile,
 				status,
@@ -373,25 +375,25 @@ export default function Lines() {
 					)?.id || null,
 			} as LineType;
 
-			const { ...originalData } = row.original;
+			console.log(newData);
+
+			// Optimisation pour envoyer uniquement les données modifiées
+			const newModifiedData = getModifiedValues(
+				originalData,
+				newData
+			) as LineUpdateType;
+
+			console.log(newModifiedData);
 
 			// Si aucune modification des données
-			if (objectIncludesObject(originalData, newData)) {
+			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
-			// Optimisation pour envoyer uniquement les données modifiées
-			const newOptimizedData = optimizeData(
-				originalData,
-				newData
-			) as LineUpdateType;
-			// Récupérer l'id dans les colonnes cachées
-			newOptimizedData.id = originalData.id;
-
 			// Validation du format des données via un schéma Zod
-			const validation = lineUpdateSchema.safeParse(newOptimizedData);
+			const validation = lineUpdateSchema.safeParse(newModifiedData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {
@@ -401,14 +403,14 @@ export default function Lines() {
 			}
 
 			// Si un numéro estfourni, vérification s'il n'est pas déjà utilisé
-			if (newOptimizedData.number) {
+			if (newModifiedData.number) {
 				if (
 					table
 						.getCoreRowModel()
 						.rows.some(
 							(row) =>
 								row.original.number === newData.number.trim() &&
-								row.original.id !== newOptimizedData.id
+								row.original.id !== newModifiedData.id
 						)
 				) {
 					toast.error('Une ligne avec ce numéro existe déjà');
@@ -418,10 +420,10 @@ export default function Lines() {
 				}
 			}
 
-			const currentLineOwnerId = row.original.agentId ?? null;
-			const newLineOwnerId = newOptimizedData.agentId ?? null;
+			const currentLineOwnerId = originalData.agentId ?? null;
+			const newLineOwnerId = newData.agentId ?? null;
 			const newLineOwnerFullName: string | null = agentId ?? null;
-			const newDeviceId = newOptimizedData.deviceId ?? null;
+			const newDeviceId = newData.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -446,29 +448,34 @@ export default function Lines() {
 			// Si aucun nouvel appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
 			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
-			!newDeviceId ||
-			(currentDeviceId === newDeviceId &&
-				currentLineOwnerId === newLineOwnerId) ||
-			(!alreadyUsingDeviceLine && deviceCurrentOwnerId === newLineOwnerId)
-				? (setValidationErrors({}),
-				  updateLine({ data: newData }),
-				  table.setEditingRow(null))
-				: displayLineUpdateModal({
-						updateLine,
-						exitUpdatingMode: () => table.setEditingRow(null),
-						setValidationErrors,
-						alreadyUsingDeviceLine,
-						alreadyUsingDeviceLineOwnerFullName,
-						deviceFullName,
-						currentLineOwnerId,
-						newLineOwnerFullName,
-						newLineOwnerId,
-						currentDeviceId,
-						deviceCurrentOwnerId,
-						deviceCurrentOwnerFullName,
-						newDeviceId,
-						data: newOptimizedData,
-				  });
+			if (
+				!newModifiedData.deviceId ||
+				(!newModifiedData.deviceId && !newModifiedData.agentId) ||
+				(!alreadyUsingDeviceLine &&
+					deviceCurrentOwnerId === newLineOwnerId)
+			) {
+				updateLine({ data: newModifiedData });
+				table.setEditingRow(null);
+				return setValidationErrors({});
+			}
+
+			// Sinon afficher modale
+			displayLineUpdateModal({
+				updateLine,
+				exitUpdatingMode: () => table.setEditingRow(null),
+				setValidationErrors,
+				alreadyUsingDeviceLine,
+				alreadyUsingDeviceLineOwnerFullName,
+				deviceFullName,
+				currentLineOwnerId,
+				newLineOwnerFullName,
+				newLineOwnerId,
+				currentDeviceId,
+				deviceCurrentOwnerId,
+				deviceCurrentOwnerFullName,
+				newDeviceId,
+				data: newModifiedData,
+			});
 		};
 
 	//DELETE action
