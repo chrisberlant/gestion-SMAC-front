@@ -383,8 +383,6 @@ export default function Lines() {
 				newData
 			) as LineUpdateType;
 
-			console.log(newModifiedData);
-
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
@@ -449,8 +447,9 @@ export default function Lines() {
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
 			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
 			if (
-				!newModifiedData.deviceId ||
-				(!newModifiedData.deviceId && !newModifiedData.agentId) ||
+				!newDeviceId ||
+				(currentDeviceId === newDeviceId &&
+					currentLineOwnerId === newLineOwnerId) ||
 				(!alreadyUsingDeviceLine &&
 					deviceCurrentOwnerId === newLineOwnerId)
 			) {
@@ -459,7 +458,7 @@ export default function Lines() {
 				return setValidationErrors({});
 			}
 
-			// Sinon afficher modale
+			// Sinon affichage de la modale en fonction du contexte
 			displayLineUpdateModal({
 				updateLine,
 				exitUpdatingMode: () => table.setEditingRow(null),
@@ -474,7 +473,7 @@ export default function Lines() {
 				deviceCurrentOwnerId,
 				deviceCurrentOwnerFullName,
 				newDeviceId,
-				data: newModifiedData,
+				data: newData,
 			});
 		};
 
