@@ -9,6 +9,7 @@ import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '@customTypes/line';
 import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
+import { AgentType } from '../types/agent';
 
 export const useGetAllDevices = () => {
 	return useQuery({
@@ -43,6 +44,25 @@ export const useCreateDevice = () => {
 						: device
 				)
 			);
+			// Si un agent est associé mise à jour de sa liste d'appareils
+			if (newDevice.agentId) {
+				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+					agents.map((agent) =>
+						agent.id === newDevice.id
+							? {
+									...agent,
+									devices: [
+										agent.devices,
+										{
+											id: newDevice.id,
+											imei: newDevice.imei,
+										},
+									],
+							  }
+							: agent
+					)
+				);
+			}
 			toast.success('Appareil créé avec succès');
 		},
 		onError: (_, __, previousDevices) => {
@@ -92,6 +112,7 @@ export const useUpdateDevice = () =>
 
 			return { previousDevices, previousLines };
 		},
+		// TODO mettre à jour les appareils des agents
 		onSuccess: () => toast.success('Appareil modifié avec succès'),
 		onError: (_, { updateLine }, previousValues) => {
 			queryClient.setQueryData(
@@ -118,7 +139,25 @@ export const useDeleteDevice = () =>
 			);
 			return previousDevices;
 		},
-		onSuccess: () => toast.success('Appareil supprimé avec succès'),
+		onSuccess: (deletedDeviceId: number) => {
+			// Suppression de l'appareil de la liste des appareils de son propriétaire
+			// TODO Fix
+			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+				agents.map((agent) => {
+					agent.devices.some(
+						(device) => device.id === deletedDeviceId
+					)
+						? {
+								...agent,
+								devices: agent.devices.filter(
+									(device) => device.id !== deletedDeviceId
+								),
+						  }
+						: agent;
+				})
+			);
+			toast.success('Appareil supprimé avec succès');
+		},
 		onError: (_, __, previousDevices) =>
 			queryClient.setQueryData(['devices'], previousDevices),
 	});

@@ -89,8 +89,8 @@ export default function DevicesTable() {
 	>({});
 
 	// Ref permettant de récupérer les valeurs des enfants
-	const preparationDateRef = useRef<string>('');
-	const attributionDateRef = useRef<string>('');
+	const preparationDateRef = useRef<string | null>(null);
+	const attributionDateRef = useRef<string | null>(null);
 	const isNewRef = useRef<boolean>(true);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
@@ -174,8 +174,7 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'État',
-				id: 'isNew',
-				accessorFn: (row) => (row.isNew ? 'Neuf' : 'Occasion'),
+				accessorKey: 'isNew',
 				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.isNew,
@@ -185,20 +184,21 @@ export default function DevicesTable() {
 							isNew: undefined,
 						}),
 				},
-				Edit: ({ row }) => {
+				Cell: ({ cell }) => (
+					<span>{cell.getValue() ? 'Neuf' : 'Occasion'}</span>
+				),
+				Edit: ({ cell, row }) => (
 					// Bouton sur "Neuf" par défaut lors de la création (donc imei vide)
-					const defaultValue =
-						row.original.isNew || !row.original.imei ? true : false;
-					return (
-						<SwitchButton
-							size='lg'
-							defaultValue={defaultValue}
-							valueRef={isNewRef}
-							onLabel='Neuf'
-							offLabel='Occasion'
-						/>
-					);
-				},
+					<SwitchButton
+						size='lg'
+						defaultValue={
+							!row.original.imei || cell.getValue() ? true : false
+						}
+						valueRef={isNewRef}
+						onLabel='Neuf'
+						offLabel='Occasion'
+					/>
+				),
 			},
 			{
 				header: 'Modèle',
@@ -251,8 +251,7 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'Préparation',
-				id: 'preparationDate',
-				accessorFn: (row) => dateFrFormatting(row.preparationDate),
+				accessorKey: 'preparationDate',
 				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
@@ -262,6 +261,8 @@ export default function DevicesTable() {
 							preparationDate: undefined,
 						}),
 				},
+				Cell: ({ row }) =>
+					dateFrFormatting(row.original.preparationDate),
 				Edit: ({ row }) => (
 					<DateChoice
 						defaultValue={row.original.preparationDate}
@@ -271,8 +272,7 @@ export default function DevicesTable() {
 			},
 			{
 				header: 'Attribution',
-				id: 'attributionDate',
-				accessorFn: (row) => dateFrFormatting(row.attributionDate),
+				accessorKey: 'attributionDate',
 				size: 90,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
@@ -282,6 +282,8 @@ export default function DevicesTable() {
 							attributionDate: undefined,
 						}),
 				},
+				Cell: ({ row }) =>
+					dateFrFormatting(row.original.attributionDate) || null,
 				Edit: ({ row }) => (
 					<DateChoice
 						defaultValue={row.original.attributionDate}

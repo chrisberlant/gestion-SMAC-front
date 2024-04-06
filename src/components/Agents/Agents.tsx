@@ -6,7 +6,7 @@ import {
 	Tooltip,
 	Text,
 } from '@mantine/core';
-import { IconCopy, IconMail } from '@tabler/icons-react';
+import { IconCopy, IconDeviceMobile, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
 	useDeleteAgent,
@@ -157,8 +157,7 @@ export default function AgentsTable() {
 			},
 			{
 				header: 'VIP',
-				id: 'vip',
-				accessorFn: (row) => (row.vip ? 'Oui' : 'Non'),
+				accessorKey: 'vip',
 				size: 50,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
@@ -168,17 +167,17 @@ export default function AgentsTable() {
 							vip: undefined,
 						}),
 				},
+				Cell: ({ cell }) => (
+					<span className={cell.getValue() ? 'vip-text' : ''}>
+						{cell.getValue() ? 'Oui' : 'Non'}
+					</span>
+				),
 				Edit: ({ cell }) => (
 					<SwitchButton
 						size='sm'
 						defaultValue={cell.getValue() ? true : false}
 						valueRef={vipRef}
 					/>
-				),
-				Cell: ({ row }) => (
-					<span className={row.original.vip ? 'vip-text' : ''}>
-						{row.original.vip ? 'Oui' : 'Non'}
-					</span>
 				),
 			},
 			{
@@ -209,23 +208,26 @@ export default function AgentsTable() {
 				},
 			},
 			{
-				header: "Nb d'appareils",
+				header: 'Appareils affectés',
 				id: 'devices',
 				enableEditing: false,
 				accessorFn: (row) => row.devices?.length || 0,
 				size: 75,
 				// Affichage des IMEI au survol s'il y a des appareils à afficher
 				Cell: ({ row, cell }) => {
-					const devicesAmount = cell.getValue() as string;
-					if (Number(devicesAmount) === 0) return devicesAmount;
+					const devicesAmount = cell.getValue() as number;
+					if (devicesAmount === 0) return 0;
 					return (
-						<HoverCard width={170} shadow='md' openDelay={400}>
+						<HoverCard width={200} shadow='md' openDelay={400}>
 							<HoverCard.Target>
 								<span>{devicesAmount}</span>
 							</HoverCard.Target>
 							<HoverCard.Dropdown>
 								{row.original.devices.map((device) => (
-									<Text key={device.id}>{device.imei}</Text>
+									<Flex gap={5} key={device.id}>
+										<IconDeviceMobile />
+										<Text>{device.imei}</Text>
+									</Flex>
 								))}
 							</HoverCard.Dropdown>
 						</HoverCard>

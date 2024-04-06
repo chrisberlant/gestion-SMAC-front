@@ -18,7 +18,7 @@ export default function DateChoice({ defaultValue, dateRef }: DateChoiceProps) {
 
 	useEffect(() => {
 		// Valeur utilisée au format string dans la ref du composant parent
-		if (!value) dateRef.current = '';
+		if (!value) dateRef.current = null;
 		else dateRef.current = dateUsFormatting(value.toISOString());
 	}, [dateRef, value]);
 
