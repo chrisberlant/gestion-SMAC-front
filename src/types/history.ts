@@ -1,6 +1,6 @@
 export interface HistoryType {
 	id: number;
-	operation: 'Create' | 'Update' | 'Delete';
+	operation: 'Création' | 'Modification' | 'Suppression';
 	table: 'agent' | 'device' | 'line' | 'model' | 'service' | 'user';
 	content: string;
 	createdAt: Date;

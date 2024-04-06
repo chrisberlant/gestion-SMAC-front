@@ -46,20 +46,41 @@ export default function History() {
 			{
 				header: 'Élément concerné',
 				accessorKey: 'table',
+				Cell: ({ row }) => {
+					let value = '';
+					switch (row.original.table) {
+						case 'user':
+							return (value = 'Utilisateur');
+						case 'agent':
+							return (value = 'Agent');
+						case 'service':
+							return (value = 'Service');
+						case 'model':
+							return (value = 'Modèle');
+						case 'device':
+							return (value = 'Appareil');
+						case 'line':
+							return (value = 'Ligne');
+						default:
+							return value;
+					}
+				},
 			},
 			{
 				header: 'Date/heure',
-				id: 'createdAt',
-				accessorFn: (row) => dateTimeToStringFormatting(row.createdAt),
+				accessorKey: 'createdAt',
+				Cell: ({ row }) =>
+					dateTimeToStringFormatting(row.original.createdAt),
 			},
 			{ header: 'Action', accessorKey: 'content' },
 			{
 				header: 'Auteur',
-				id: 'userId',
+				accessorKey: 'userId',
 				size: 150,
-				accessorFn: (row) =>
-					formattedUsers?.find((user) => user.id === row.userId)
-						?.fullName,
+				Cell: ({ row }) =>
+					formattedUsers?.find(
+						(user) => user.id === row.original.userId
+					)?.fullName,
 			},
 		],
 		[formattedUsers]
