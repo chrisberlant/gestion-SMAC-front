@@ -415,16 +415,13 @@ export default function AgentsTable() {
 	return (
 		<div className='agents-table'>
 			<h2>Liste des agents</h2>
-			{(servicesLoading || agentsLoading) && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{(servicesLoading || agentsLoading) && <Loader size='xl' />}
 			{(servicesError || agentsError) && (
 				<span>
 					Impossible de récupérer les agents depuis le serveur
 				</span>
 			)}
+
 			{agents && services && <MantineReactTable table={table} />}
 		</div>
 	);

@@ -1,17 +1,22 @@
 import '@mantine/core/styles.css';
 import 'mantine-react-table/styles.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { lazy } from 'react';
 import { Toaster } from 'sonner';
 import './App.css';
-import AdminDashboard from './components/AdminDashboard/AdminDashboard';
-import AgentsTable from './components/Agents/Agents';
-import Devices from './components/Devices/Devices';
 import Login from './components/Login/Login';
-import PageNotFound from './components/PageNotFound/PageNotFound';
 import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
-import Stats from './components/Stats/Stats';
-import Lines from './components/Lines/Lines';
-import History from './components/History/History';
+const AdminDashboard = lazy(
+	() => import('./components/AdminDashboard/AdminDashboard')
+);
+const AgentsTable = lazy(() => import('./components/Agents/Agents'));
+const Devices = lazy(() => import('./components/Devices/Devices'));
+const PageNotFound = lazy(
+	() => import('./components/PageNotFound/PageNotFound')
+);
+const Stats = lazy(() => import('./components/Stats/Stats'));
+const Lines = lazy(() => import('./components/Lines/Lines'));
+const History = lazy(() => import('./components/History/History'));
 
 function AppRoutes() {
 	return (

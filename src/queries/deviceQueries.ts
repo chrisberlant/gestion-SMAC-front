@@ -142,20 +142,20 @@ export const useDeleteDevice = () =>
 		onSuccess: (deletedDeviceId: number) => {
 			// Suppression de l'appareil de la liste des appareils de son propriétaire
 			// TODO Fix
-			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
-				agents.map((agent) => {
-					agent.devices.some(
-						(device) => device.id === deletedDeviceId
-					)
-						? {
-								...agent,
-								devices: agent.devices.filter(
-									(device) => device.id !== deletedDeviceId
-								),
-						  }
-						: agent;
-				})
-			);
+			// queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+			// 	agents.map((agent) => {
+			// 		agent.devices.some(
+			// 			(device) => device.id === deletedDeviceId
+			// 		)
+			// 			? {
+			// 					...agent,
+			// 					devices: agent.devices.filter(
+			// 						(device) => device.id !== deletedDeviceId
+			// 					),
+			// 			  }
+			// 			: agent;
+			// 	})
+			// );
 			toast.success('Appareil supprimé avec succès');
 		},
 		onError: (_, __, previousDevices) =>

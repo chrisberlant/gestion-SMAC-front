@@ -293,11 +293,7 @@ export default function UsersTable() {
 		<div className='users-table'>
 			<h2>Utilisateurs et droits</h2>
 
-			{isLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isLoading && <Loader size='xl' />}
 
 			{isError && (
 				<span>

@@ -152,11 +152,7 @@ export default function History() {
 		<div className='models-table'>
 			<h2>Historique des actions</h2>
 
-			{isHistoryLoading && isUsersLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isHistoryLoading && isUsersLoading && <Loader size='xl' />}
 
 			{isHistoryError && isUsersError && (
 				<span>

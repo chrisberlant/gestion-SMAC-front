@@ -253,11 +253,7 @@ export default function ModelsTable() {
 		<div className='models-table'>
 			<h2>Modèles d'appareils</h2>
 
-			{isLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isLoading && <Loader size='xl' />}
 
 			{isError && (
 				<span>

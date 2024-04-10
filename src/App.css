@@ -6,11 +6,11 @@ main {
 	padding: 0 16px 16px 16px;
 }
 
-.loader-box {
+/* .loader-box {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
+} */
 
 .bold-text,
 .mantine-Modal-title {

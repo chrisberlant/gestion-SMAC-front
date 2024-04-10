@@ -202,11 +202,7 @@ export default function ServicesTable() {
 		<div className='services-table'>
 			<h2>Services</h2>
 
-			{isLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isLoading && <Loader size='xl' />}
 
 			{isError && (
 				<span>

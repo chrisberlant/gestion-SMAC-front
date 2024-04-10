@@ -8,11 +8,7 @@ export default function AgentsAndDevicesPerService() {
 
 	return (
 		<>
-			{isLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isLoading && <Loader size='xl' />}
 
 			{isError && (
 				<div>

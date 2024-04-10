@@ -8,11 +8,7 @@ export default function DevicesAmountPerModel() {
 
 	return (
 		<>
-			{isLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{isLoading && <Loader size='xl' />}
 
 			{isError && (
 				<div>

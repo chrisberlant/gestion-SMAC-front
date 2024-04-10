@@ -516,11 +516,7 @@ export default function DevicesTable() {
 		<div className='devices-table'>
 			<h2>Liste des appareils</h2>
 
-			{anyLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+			{anyLoading && <Loader size='xl' />}
 
 			{anyError && (
 				<span>

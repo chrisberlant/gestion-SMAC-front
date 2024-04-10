@@ -12,7 +12,7 @@ import {
 	type MRT_ColumnDef,
 	MRT_TableInstance,
 } from 'mantine-react-table';
-import { useMemo, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
 import {
 	useCreateLine,
@@ -576,21 +576,19 @@ export default function Lines() {
 
 	return (
 		<ZoomableComponent>
-			<h2>Liste des lignes</h2>
+			<Suspense fallback={<Loader size='xl' />}>
+				<h2>Liste des lignes</h2>
 
-			{anyLoading && (
-				<div className='loader-box'>
-					<Loader size='xl' />
-				</div>
-			)}
+				{anyLoading && <Loader size='xl' />}
 
-			{anyError && (
-				<span>
-					Impossible de récupérer les appareils depuis le serveur
-				</span>
-			)}
+				{anyError && (
+					<span>
+						Impossible de récupérer les appareils depuis le serveur
+					</span>
+				)}
 
-			{allData && <MantineReactTable table={table} />}
+				{allData && <MantineReactTable table={table} />}
+			</Suspense>
 		</ZoomableComponent>
 	);
 }
