@@ -2,24 +2,44 @@ import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { DeviceType } from '@customTypes/device';
+import { LineType } from '../types/line';
+
+interface DeleteDeviceProps {
+	deviceId: number;
+	lineUsingDeviceId: number | undefined;
+}
 
 interface DisplayDeviceDeleteModalProps {
 	row: MRT_Row<DeviceType>;
-	deleteDevice: (id: number) => void;
+	lineUsingDevice: LineType | null;
+	deleteDevice: ({ deviceId, lineUsingDeviceId }: DeleteDeviceProps) => void;
 }
 
 export default function displayDeviceDeleteModal({
 	row,
+	lineUsingDevice,
 	deleteDevice,
 }: DisplayDeviceDeleteModalProps) {
+	const { id: deviceId, imei } = row.original;
 	return modals.openConfirmModal({
-		title: "Suppression d'un device",
+		title: "Suppression d'un appareil",
+		size: 'lg',
 		children: (
-			<Text>
-				Voulez-vous vraiment supprimer l'appareil{' '}
-				<span className='bold-text'>{row.original.imei}</span> ? Cette
-				action est irréversible.
-			</Text>
+			<>
+				<Text mb={lineUsingDevice ? 'xs' : 'xl'}>
+					Voulez-vous vraiment supprimer l'appareil IMEI
+					<span className='bold-text'> {imei}</span> ?
+				</Text>
+				{lineUsingDevice && (
+					<Text mb='xl'>
+						Celui-ci sera également supprimé de la ligne{' '}
+						<span className='bold-text'>
+							{lineUsingDevice.number}
+						</span>{' '}
+						à laquelle il est affecté.
+					</Text>
+				)}
+			</>
 		),
 		centered: true,
 		overlayProps: {
@@ -27,6 +47,10 @@ export default function displayDeviceDeleteModal({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteDevice(row.original.id),
+		onConfirm: () =>
+			deleteDevice({
+				deviceId,
+				lineUsingDeviceId: lineUsingDevice?.id,
+			}),
 	});
 }

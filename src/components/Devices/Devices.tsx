@@ -98,14 +98,14 @@ export default function DevicesTable() {
 		() =>
 			agents?.map((agent) => {
 				const serviceTitle = services?.find(
-					(service) => service.id === agent.serviceId
+					(service) => service.id === agent?.serviceId
 				)?.title;
 
 				return {
-					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
-					vip: agent.vip,
-					email: agent.email,
-					id: agent.id,
+					infos: `${agent?.lastName} ${agent?.firstName} - ${serviceTitle}`,
+					vip: agent?.vip,
+					email: agent?.email,
+					id: agent?.id,
 				};
 			}),
 		[agents, services]
@@ -475,9 +475,18 @@ export default function DevicesTable() {
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() =>
-					displayDeviceDeleteModal({ row, deleteDevice })
-				}
+				deleteFunction={() => {
+					// Vérification si l'appareil est associé à une ligne
+					const lineUsingDevice =
+						lines?.find(
+							(line) => line.deviceId === row.original.id
+						) || null;
+					displayDeviceDeleteModal({
+						row,
+						lineUsingDevice,
+						deleteDevice,
+					});
+				}}
 			/>
 		),
 		renderTopToolbarCustomActions: () => (

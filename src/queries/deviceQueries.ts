@@ -129,37 +129,53 @@ export const useUpdateDevice = () =>
 
 export const useDeleteDevice = () =>
 	useMutation({
-		mutationFn: async (deviceId: number) =>
-			await fetchApi(`/device/${deviceId}`, 'DELETE'),
-		onMutate: async (deviceIdToDelete) => {
+		mutationFn: async ({
+			deviceId,
+		}: {
+			deviceId: number;
+			lineUsingDeviceId: number | undefined;
+		}) => await fetchApi(`/device/${deviceId}`, 'DELETE'),
+		onMutate: async (data) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
+			const previousAgents = queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
-				devices?.filter((device) => device.id !== deviceIdToDelete)
+				devices?.filter((device) => device.id !== data.deviceId)
 			);
-			return previousDevices;
-		},
-		onSuccess: (deletedDeviceId: number) => {
+
 			// Suppression de l'appareil de la liste des appareils de son propriétaire
-			// TODO Fix
-			// queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
-			// 	agents.map((agent) => {
-			// 		agent.devices.some(
-			// 			(device) => device.id === deletedDeviceId
-			// 		)
-			// 			? {
-			// 					...agent,
-			// 					devices: agent.devices.filter(
-			// 						(device) => device.id !== deletedDeviceId
-			// 					),
-			// 			  }
-			// 			: agent;
-			// 	})
-			// );
-			toast.success('Appareil supprimé avec succès');
+			if (data.lineUsingDeviceId) {
+				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+					agents.map((agent) => {
+						agent.devices.some(
+							(device) => device.id === data.deviceId
+						)
+							? {
+									...agent,
+									devices: agent.devices.filter(
+										(device) => device.id !== data.deviceId
+									),
+							  }
+							: agent;
+					})
+				);
+			}
+
+			return { previousDevices, previousAgents };
 		},
-		onError: (_, __, previousDevices) =>
-			queryClient.setQueryData(['devices'], previousDevices),
+		onSuccess: () => toast.success('Appareil supprimé avec succès'),
+		onError: (_, { lineUsingDeviceId }, previousValues) => {
+			// Rollback des données
+			queryClient.setQueryData(
+				['devices'],
+				previousValues?.previousDevices
+			);
+			if (lineUsingDeviceId)
+				queryClient.setQueryData(
+					['agents'],
+					previousValues?.previousAgents
+				);
+		},
 	});
 
 // Exporter les appareils en CSV
