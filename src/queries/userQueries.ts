@@ -218,9 +218,8 @@ export const useResetPassword = (
 // Supprimer un utilisateur
 export const useDeleteUser = () =>
 	useMutation({
-		mutationFn: async (userId: number) => {
-			return await fetchApi(`/user/${userId}`, 'DELETE');
-		},
+		mutationFn: async (userId: number) =>
+			await fetchApi(`/user/${userId}`, 'DELETE'),
 		onMutate: async (userIdToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['users'] });
 			const previousUsers = queryClient.getQueryData(['users']);

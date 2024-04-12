@@ -102,15 +102,14 @@ export const useDeleteAgent = () =>
 	});
 
 // Exporter les agents en CSV
-export const useExportAgentsToCsv = () => {
-	return useQuery({
+export const useExportAgentsToCsv = () =>
+	useQuery({
 		queryKey: ['agentsCsv'],
 		queryFn: async () => await fetchApi('/agents/csv'),
 		enabled: false,
 		staleTime: 0,
 		gcTime: 0,
 	});
-};
 
 // Créer des agents à partir d'un CSV
 export const useImportMultipleAgents = (
@@ -125,9 +124,8 @@ export const useImportMultipleAgents = (
 		meta: {
 			importMutation: 'true',
 		},
-		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey: ['agents'] });
-		},
+		onMutate: async () =>
+			await queryClient.cancelQueries({ queryKey: ['agents'] }),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['agents'] });
 			toast.success('Agents importés avec succès');

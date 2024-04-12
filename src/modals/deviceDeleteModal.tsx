@@ -4,16 +4,10 @@ import { MRT_Row } from 'mantine-react-table';
 import { DeviceType } from '@customTypes/device';
 import { LineType } from '../types/line';
 
-interface DeleteDeviceProps {
-	deviceId: number;
-	ownerId: number | null;
-	lineUsingDeviceId: number | undefined;
-}
-
 interface DisplayDeviceDeleteModalProps {
 	row: MRT_Row<DeviceType>;
 	lineUsingDevice: LineType | null;
-	deleteDevice: ({ deviceId, lineUsingDeviceId }: DeleteDeviceProps) => void;
+	deleteDevice: (deviceId: number) => void;
 }
 
 export default function displayDeviceDeleteModal({
@@ -49,11 +43,6 @@ export default function displayDeviceDeleteModal({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () =>
-			deleteDevice({
-				deviceId,
-				ownerId: row.original.agentId,
-				lineUsingDeviceId: lineUsingDevice?.id,
-			}),
+		onConfirm: () => deleteDevice(deviceId),
 	});
 }

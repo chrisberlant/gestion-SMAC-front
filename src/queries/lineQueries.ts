@@ -10,9 +10,7 @@ import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExisting
 export const useGetAllLines = () =>
 	useQuery({
 		queryKey: ['lines'],
-		queryFn: async () => {
-			return (await fetchApi('/lines')) as LineType[];
-		},
+		queryFn: async () => (await fetchApi('/lines')) as LineType[],
 	});
 
 // Création de ligne
@@ -29,10 +27,7 @@ export const useCreateLine = () =>
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
 			// Snapshot du cache actuel
-			const previousLines: LineType | undefined =
-				queryClient.getQueryData(['lines']);
-			const previousDevices: DeviceType[] | undefined =
-				queryClient.getQueryData(['devices']);
+			const previousLines = queryClient.getQueryData(['lines']);
 
 			if (newLine.updateOldLine) {
 				// Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
@@ -56,41 +51,30 @@ export const useCreateLine = () =>
 				]);
 			}
 
-			if (newLine.updateDevice) {
-				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
+			return previousLines;
+		},
+		onSuccess: (receivedData, sentData) => {
+			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+				lines.map((line) =>
+					line.number === receivedData.number
+						? { ...line, id: receivedData.id }
+						: line
+				)
+			);
+			if (sentData.updateDevice) {
+				// Si nécessaire, mise à jour de l'appareil pour changer le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>
-						device.id === newLine.data.deviceId
-							? { ...device, agentId: newLine.data.agentId }
+						device.id === receivedData.deviceId
+							? { ...device, agentId: receivedData.agentId }
 							: device
 					)
 				);
 			}
-
-			return { previousLines, previousDevices };
-		},
-		onSuccess: (newLine) => {
-			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-				lines.map((line) =>
-					line.number === newLine.number
-						? { ...line, id: newLine.id }
-						: line
-				)
-			);
 			toast.success('Ligne créée avec succès');
 		},
-		onError: (_, { updateDevice }, previousValues) => {
-			if (previousValues?.previousLines)
-				queryClient.setQueryData(
-					['lines'],
-					previousValues?.previousLines
-				);
-			if (updateDevice)
-				queryClient.setQueryData(
-					['devices'],
-					previousValues?.previousDevices
-				);
-		},
+		onError: (_, __, previousLines) =>
+			queryClient.setQueryData(['lines'], previousLines),
 	});
 
 // TODO mise à jour de la liste des appareils des agents
@@ -111,7 +95,6 @@ export const useUpdateLine = () =>
 		onMutate: async (updatedLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
 			const previousLines = queryClient.getQueryData(['lines']);
-			const previousDevices = queryClient.getQueryData(['devices']);
 
 			// Mises à jour de la ligne éditée et de l'ancienne ligne pour retirer l'appareil
 			if (updatedLine.updateOldLine) {
@@ -140,28 +123,23 @@ export const useUpdateLine = () =>
 				);
 			}
 
-			if (updatedLine.updateDevice) {
+			return previousLines;
+		},
+		onSuccess: (receivedData, sentData) => {
+			if (sentData.updateDevice) {
 				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>
-						device.id === updatedLine.data.deviceId
-							? { ...device, agentId: updatedLine.data.agentId }
+						device.id === receivedData.deviceId
+							? { ...device, agentId: receivedData.agentId }
 							: device
 					)
 				);
 			}
-
-			return { previousLines, previousDevices };
+			toast.success('Ligne modifiée avec succès');
 		},
-		onSuccess: () => toast.success('Appareil modifié avec succès'),
-		onError: (_, { updateDevice }, previousValues) => {
-			queryClient.setQueryData(['lines'], previousValues?.previousLines);
-			if (updateDevice)
-				queryClient.setQueryData(
-					['devices'],
-					previousValues?.previousDevices
-				);
-		},
+		onError: (_, __, previousLines) =>
+			queryClient.setQueryData(['lines'], previousLines),
 	});
 
 // Suppression de ligne
@@ -175,7 +153,7 @@ export const useDeleteLine = () =>
 			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 				lines?.filter((line) => line.id !== lineIdToDelete)
 			);
-			return previousLines as LineType[];
+			return previousLines;
 		},
 		onSuccess: () => toast.success('Ligne supprimée avec succès'),
 		onError: (_, __, previousLines) =>

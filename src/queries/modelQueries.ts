@@ -11,9 +11,7 @@ import queryClient from './queryClient';
 export const useGetAllModels = () =>
 	useQuery({
 		queryKey: ['models'],
-		queryFn: async () => {
-			return (await fetchApi('/models')) as ModelType[];
-		},
+		queryFn: async () => (await fetchApi('/models')) as ModelType[],
 	});
 
 export const useCreateModel = () =>
@@ -22,8 +20,7 @@ export const useCreateModel = () =>
 			(await fetchApi('/model', 'POST', model)) as ModelType,
 		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
-			const previousModels: ModelType[] | undefined =
-				queryClient.getQueryData(['models']);
+			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) => [
 				...models,
 				{
@@ -37,17 +34,16 @@ export const useCreateModel = () =>
 				models.map((model) =>
 					model.brand === newModel.brand &&
 					model.reference === newModel.reference &&
-					(!model.storage || model.storage === newModel.storage)
+					(model?.storage === newModel?.storage ||
+						(!model.storage && !newModel.storage))
 						? { ...model, id: newModel.id }
 						: model
 				)
 			);
 			toast.success('Modèle créé avec succès');
 		},
-		onError: (_, __, previousModels) => {
-			if (previousModels)
-				queryClient.setQueryData(['models'], previousModels);
-		},
+		onError: (_, __, previousModels) =>
+			queryClient.setQueryData(['models'], previousModels),
 	});
 
 export const useUpdateModel = () =>

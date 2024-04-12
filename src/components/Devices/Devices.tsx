@@ -320,7 +320,7 @@ export default function DevicesTable() {
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: preparationDateRef.current,
-				comments: comments.trim(),
+				comments: comments?.trim(),
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)?.id,
@@ -371,7 +371,7 @@ export default function DevicesTable() {
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: attributionDateRef.current,
-				comments: comments.trim(),
+				comments: comments?.trim(),
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)!.id,

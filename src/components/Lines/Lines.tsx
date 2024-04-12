@@ -272,7 +272,7 @@ export default function Lines() {
 				number: number.trim(),
 				profile,
 				status,
-				comments: comments.trim(),
+				comments: comments?.trim(),
 				agentId: agentId
 					? formattedAgents?.find((agent) => agent.infos === agentId)
 							?.id
@@ -364,7 +364,7 @@ export default function Lines() {
 				number: number.trim(),
 				profile,
 				status,
-				comments: comments.trim(),
+				comments: comments?.trim(),
 				agentId:
 					formattedAgents?.find((agent) => agent.infos === agentId)
 						?.id || null,

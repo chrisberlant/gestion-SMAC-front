@@ -39,6 +39,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import displayAgentDeleteModal from '@modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
+import { useGetAllDevices } from '../../queries/deviceQueries';
 
 export default function AgentsTable() {
 	const {
@@ -51,15 +52,38 @@ export default function AgentsTable() {
 		isLoading: agentsLoading,
 		isError: agentsError,
 	} = useGetAllAgents();
+	const {
+		data: devices,
+		isLoading: devicesLoading,
+		isError: devicesError,
+	} = useGetAllDevices();
 	const { mutate: createAgent } = useCreateAgent();
 	const { mutate: updateAgent } = useUpdateAgent();
 	const { mutate: deleteAgent } = useDeleteAgent();
 	const { refetch: exportsAgentsToCsv } = useExportAgentsToCsv();
 
+	const anyLoading = servicesLoading || devicesLoading || agentsLoading;
+	const anyError = servicesError || devicesError || agentsError;
+	const allData = services && agents && devices;
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
 	const vipRef = useRef<boolean>(true);
+
+	// Pour chaque agent, récupérer sa liste d'appareils
+	const formattedDevicesList = useMemo(() => {
+		const devicesList: Record<number, string[]> = {};
+		devices?.forEach((device) => {
+			if (device.agentId) {
+				if (!devicesList[device.agentId]) {
+					devicesList[device.agentId] = [];
+				}
+				devicesList[device.agentId].push(device.imei);
+			}
+		});
+		return devicesList;
+	}, [devices]);
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -211,22 +235,24 @@ export default function AgentsTable() {
 				header: 'Appareils affectés',
 				id: 'devices',
 				enableEditing: false,
-				accessorFn: (row) => row.devices?.length || 0,
+				accessorFn: (row) => formattedDevicesList[row.id]?.length || 0,
 				size: 75,
-				// Affichage des IMEI au survol s'il y a des appareils à afficher
-				Cell: ({ row, cell }) => {
-					const devicesAmount = cell.getValue() as number;
-					if (devicesAmount === 0) return 0;
+				// Affichage des IMEI au survol s'il y a des appareils affectés
+				Cell: ({ row }) => {
+					const agentDevicesList =
+						formattedDevicesList[row.original.id];
+					const devicesAmount = agentDevicesList?.length || 0;
+					if (!devicesAmount) return 0;
 					return (
 						<HoverCard width={200} shadow='md' openDelay={400}>
 							<HoverCard.Target>
 								<span>{devicesAmount}</span>
 							</HoverCard.Target>
 							<HoverCard.Dropdown>
-								{row.original.devices.map((device) => (
-									<Flex gap={5} key={device.id}>
+								{agentDevicesList?.map((device) => (
+									<Flex gap={5} key={device}>
 										<IconDeviceMobile />
-										<Text>{device.imei}</Text>
+										<Text>{device}</Text>
 									</Flex>
 								))}
 							</HoverCard.Dropdown>
@@ -235,7 +261,7 @@ export default function AgentsTable() {
 				},
 			},
 		],
-		[validationErrors]
+		[validationErrors, formattedDevicesList]
 	);
 
 	//CREATE action
@@ -413,14 +439,14 @@ export default function AgentsTable() {
 	return (
 		<div className='agents-table'>
 			<h2>Liste des agents</h2>
-			{(servicesLoading || agentsLoading) && <Loader size='xl' />}
-			{(servicesError || agentsError) && (
+			{anyLoading && <Loader size='xl' />}
+			{anyError && (
 				<span>
 					Impossible de récupérer les agents depuis le serveur
 				</span>
 			)}
 
-			{agents && services && <MantineReactTable table={table} />}
+			{allData && <MantineReactTable table={table} />}
 		</div>
 	);
 }

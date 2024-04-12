@@ -4,24 +4,19 @@ import fetchApi from '@utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 
-export const useGetAllServices = () => {
-	return useQuery({
+export const useGetAllServices = () =>
+	useQuery({
 		queryKey: ['services'],
-		queryFn: async () => {
-			return (await fetchApi('/services')) as ServiceType[];
-		},
+		queryFn: async () => (await fetchApi('/services')) as ServiceType[],
 	});
-};
 
-export const useCreateService = () => {
-	return useMutation({
-		mutationFn: async (service: ServiceCreationType) => {
-			return (await fetchApi('/service', 'POST', service)) as ServiceType;
-		},
+export const useCreateService = () =>
+	useMutation({
+		mutationFn: async (service: ServiceCreationType) =>
+			(await fetchApi('/service', 'POST', service)) as ServiceType,
 		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
-			const previousServices: ServiceType[] | undefined =
-				queryClient.getQueryData(['services']);
+			const previousServices = queryClient.getQueryData(['services']);
 			queryClient.setQueryData(
 				['services'],
 				(services: ServiceType[]) => [
@@ -45,12 +40,9 @@ export const useCreateService = () => {
 			);
 			toast.success('Service créé avec succès');
 		},
-		onError: (_, __, previousServices) => {
-			if (previousServices)
-				queryClient.setQueryData(['services'], previousServices);
-		},
+		onError: (_, __, previousServices) =>
+			queryClient.setQueryData(['services'], previousServices),
 	});
-};
 
 export const useUpdateService = () =>
 	useMutation({
@@ -94,7 +86,7 @@ export const useDeleteService = () =>
 					(service: ServiceType) => service.id !== serviceIdToDelete
 				)
 			);
-			return previousServices as ServiceType[] | [];
+			return previousServices;
 		},
 		onSuccess: () => toast.success('Service supprimé avec succès'),
 		onError: (_, __, previousServices) =>
