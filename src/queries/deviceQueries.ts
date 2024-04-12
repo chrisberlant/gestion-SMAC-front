@@ -26,8 +26,7 @@ export const useCreateDevice = () => {
 			(await fetchApi('/device', 'POST', device)) as DeviceType,
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
-			const previousDevices: DeviceType[] | undefined =
-				queryClient.getQueryData(['devices']);
+			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
 				...devices,
 				{
@@ -48,11 +47,11 @@ export const useCreateDevice = () => {
 			if (newDevice.agentId) {
 				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 					agents.map((agent) =>
-						agent.id === newDevice.id
+						agent.id === newDevice.agentId
 							? {
 									...agent,
 									devices: [
-										agent.devices,
+										...agent.devices,
 										{
 											id: newDevice.id,
 											imei: newDevice.imei,
@@ -65,10 +64,8 @@ export const useCreateDevice = () => {
 			}
 			toast.success('Appareil créé avec succès');
 		},
-		onError: (_, __, previousDevices) => {
-			if (previousDevices)
-				queryClient.setQueryData(['devices'], previousDevices);
-		},
+		onError: (_, __, previousDevices) =>
+			queryClient.setQueryData(['devices'], previousDevices),
 	});
 };
 
@@ -133,48 +130,53 @@ export const useDeleteDevice = () =>
 			deviceId,
 		}: {
 			deviceId: number;
+			ownerId: number | null;
 			lineUsingDeviceId: number | undefined;
 		}) => await fetchApi(`/device/${deviceId}`, 'DELETE'),
 		onMutate: async (data) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
-			const previousAgents = queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices?.filter((device) => device.id !== data.deviceId)
 			);
-
-			// Suppression de l'appareil de la liste des appareils de son propriétaire
-			if (data.lineUsingDeviceId) {
+			return previousDevices;
+		},
+		onSuccess: (_, sentData) => {
+			// Suppression de l'appareil de la liste des appareils de son propriétaire s'il existe
+			if (sentData.ownerId)
 				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
-					agents.map((agent) => {
-						agent.devices.some(
-							(device) => device.id === data.deviceId
-						)
+					agents.map((agent) =>
+						agent.id === sentData.ownerId
 							? {
 									...agent,
 									devices: agent.devices.filter(
-										(device) => device.id !== data.deviceId
+										(device) =>
+											device.id !== sentData.deviceId
 									),
 							  }
-							: agent;
-					})
+							: agent
+					)
 				);
-			}
-
-			return { previousDevices, previousAgents };
+			// Suppression de l'appareil de la ligne à laquelle il est affecté
+			if (
+				sentData.lineUsingDeviceId &&
+				queryClient.getQueryData(['lines'])
+			)
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) =>
+						line.id === sentData.lineUsingDeviceId
+							? {
+									...line,
+									deviceId: null,
+							  }
+							: line
+					)
+				);
+			toast.success('Appareil supprimé avec succès');
 		},
-		onSuccess: () => toast.success('Appareil supprimé avec succès'),
-		onError: (_, { lineUsingDeviceId }, previousValues) => {
+		onError: (_, __, previousDevices) => {
 			// Rollback des données
-			queryClient.setQueryData(
-				['devices'],
-				previousValues?.previousDevices
-			);
-			if (lineUsingDeviceId)
-				queryClient.setQueryData(
-					['agents'],
-					previousValues?.previousAgents
-				);
+			queryClient.setQueryData(['devices'], previousDevices);
 		},
 	});
 

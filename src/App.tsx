@@ -9,7 +9,7 @@ import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
 const AdminDashboard = lazy(
 	() => import('./components/AdminDashboard/AdminDashboard')
 );
-const AgentsTable = lazy(() => import('./components/Agents/Agents'));
+const Agents = lazy(() => import('./components/Agents/Agents'));
 const Devices = lazy(() => import('./components/Devices/Devices'));
 const PageNotFound = lazy(
 	() => import('./components/PageNotFound/PageNotFound')
@@ -26,7 +26,7 @@ function AppRoutes() {
 			<Route element={<PrivateRoutes />}>
 				<Route element={<Lines />} path='/lines' />
 				<Route element={<Devices />} path='/devices' />
-				<Route element={<AgentsTable />} path='/agents' />
+				<Route element={<Agents />} path='/agents' />
 				<Route element={<Stats />} path='/stats' />
 				<Route element={<History />} path='/history' />
 				<Route element={<AdminDashboard />} path='/admin-dashboard' />

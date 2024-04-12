@@ -6,6 +6,7 @@ import { LineType } from '../types/line';
 
 interface DeleteDeviceProps {
 	deviceId: number;
+	ownerId: number | null;
 	lineUsingDeviceId: number | undefined;
 }
 
@@ -50,6 +51,7 @@ export default function displayDeviceDeleteModal({
 		onConfirm: () =>
 			deleteDevice({
 				deviceId,
+				ownerId: row.original.agentId,
 				lineUsingDeviceId: lineUsingDevice?.id,
 			}),
 	});

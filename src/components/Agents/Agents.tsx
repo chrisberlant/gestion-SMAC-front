@@ -235,7 +235,7 @@ export default function AgentsTable() {
 				},
 			},
 		],
-		[services, validationErrors]
+		[validationErrors]
 	);
 
 	//CREATE action
