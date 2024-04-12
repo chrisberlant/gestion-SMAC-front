@@ -160,7 +160,7 @@ export const useCreateUser = () =>
 				...users,
 				{
 					...newUser,
-					email: newUser.email.toLowerCase(),
+					email: newUser.email,
 				},
 			]);
 			return previousUsers;

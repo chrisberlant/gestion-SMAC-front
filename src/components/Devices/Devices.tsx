@@ -314,13 +314,13 @@ export default function DevicesTable() {
 			const { imei, status, comments, modelId, agentId } = values;
 
 			// Formatage des informations nécessaires pour la validation du schéma
-			const data = {
-				imei,
+			const creationData = {
+				imei: imei.trim(),
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: preparationDateRef.current,
-				comments,
+				comments: comments.trim(),
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)?.id,
@@ -330,7 +330,7 @@ export default function DevicesTable() {
 					: null,
 			} as DeviceCreationType;
 
-			const validation = deviceCreationSchema.safeParse(data);
+			const validation = deviceCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -344,7 +344,7 @@ export default function DevicesTable() {
 			if (
 				table
 					.getCoreRowModel()
-					.rows.some((row) => row.original.imei === data.imei.trim())
+					.rows.some((row) => row.original.imei === creationData.imei)
 			) {
 				toast.error('Un appareil avec cet IMEI existe déjà');
 				return setValidationErrors({
@@ -353,7 +353,7 @@ export default function DevicesTable() {
 			}
 
 			setValidationErrors({});
-			createDevice(data);
+			createDevice(creationData);
 			exitCreatingMode();
 		};
 
@@ -364,14 +364,14 @@ export default function DevicesTable() {
 			const { ...originalData } = row.original;
 
 			// Formatage des données
-			const newData = {
+			const updateData = {
 				id: originalData.id,
 				imei: imei.trim(),
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: attributionDateRef.current,
-				comments,
+				comments: comments.trim(),
 				modelId: formattedModels?.find(
 					(model) => model.infos === modelId
 				)!.id,
@@ -384,10 +384,9 @@ export default function DevicesTable() {
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
-				newData
+				updateData
 			) as DeviceUpdateType;
 
-			console.log(newModifiedData);
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
@@ -412,9 +411,8 @@ export default function DevicesTable() {
 						.getCoreRowModel()
 						.rows.some(
 							(row) =>
-								row.original.imei ===
-									newData.imei.toLowerCase().trim() &&
-								row.original.id !== newData.id
+								row.original.imei === updateData.imei &&
+								row.original.id !== updateData.id
 						)
 				) {
 					toast.error('Un appareil avec cet IMEI existe déjà');

@@ -242,16 +242,17 @@ export default function AgentsTable() {
 	const handleCreateAgent: MRT_TableOptions<AgentType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
 			const { lastName, firstName, email } = values;
-			const data = {
-				lastName,
-				firstName,
-				email,
+			const creationData = {
+				lastName: lastName.trim(),
+				firstName: firstName.trim(),
+				email: email.trim().toLowerCase(),
 				vip: vipRef.current,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
 				)?.id,
 			} as AgentCreationType;
-			const validation = agentCreationSchema.safeParse(data);
+
+			const validation = agentCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -266,9 +267,7 @@ export default function AgentsTable() {
 				table
 					.getCoreRowModel()
 					.rows.some(
-						(row) =>
-							row.original.email.toLowerCase() ===
-							data.email.toLowerCase().trim()
+						(row) => row.original.email === creationData.email
 					)
 			) {
 				toast.error('Un agent avec cette adresse mail existe déjà');
@@ -278,7 +277,7 @@ export default function AgentsTable() {
 			}
 
 			setValidationErrors({});
-			createAgent(data);
+			createAgent(creationData);
 			exitCreatingMode();
 		};
 
@@ -289,11 +288,11 @@ export default function AgentsTable() {
 			const { devices, ...originalData } = row.original;
 
 			// Formatage des données
-			const newData = {
+			const updateData = {
 				id: originalData.id,
-				lastName,
-				firstName,
-				email,
+				lastName: lastName.trim(),
+				firstName: firstName.trim(),
+				email: email.trim().toLowerCase(),
 				vip: vipRef.current,
 				serviceId: services?.find(
 					(service) => service.title === values.serviceId
@@ -303,7 +302,7 @@ export default function AgentsTable() {
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
-				newData
+				updateData
 			) as AgentUpdateType;
 
 			// Si aucune modification des données
@@ -330,8 +329,7 @@ export default function AgentsTable() {
 						.getCoreRowModel()
 						.rows.some(
 							(row) =>
-								row.original.email.toLowerCase() ===
-									newData.email.toLowerCase().trim() &&
+								row.original.email === newModifiedData.email &&
 								row.original.id !== newModifiedData.id
 						)
 				) {

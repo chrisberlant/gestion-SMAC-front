@@ -16,7 +16,7 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ServiceType } from '@customTypes/service';
+import { ServiceCreationType, ServiceType } from '@customTypes/service';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
@@ -57,7 +57,12 @@ export default function ServicesTable() {
 	//CREATE action
 	const handleCreateService: MRT_TableOptions<ServiceType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const validation = serviceCreationSchema.safeParse(values);
+			// Formatage des données
+			const creationData = {
+				title: values.title.trim(),
+			} as ServiceCreationType;
+
+			const validation = serviceCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				return setValidationErrors({
 					title: validation.error.issues[0].message,
@@ -71,7 +76,7 @@ export default function ServicesTable() {
 					.rows.some(
 						(row) =>
 							row.original.title.toLowerCase() ===
-							values.title.toLowerCase().trim()
+							creationData.title.toLowerCase()
 					)
 			) {
 				toast.error('Un service porte déjà ce nom');
@@ -88,24 +93,23 @@ export default function ServicesTable() {
 	//UPDATE action
 	const handleSaveService: MRT_TableOptions<ServiceType>['onEditingRowSave'] =
 		async ({ values, table, row }) => {
-			const { title } = values;
 			const { ...originalData } = row.original;
 
 			// Formatage des données
-			const newData = {
+			const updateData = {
 				id: originalData.id,
-				title,
+				title: values.title.trim(),
 			} as ServiceType;
 
 			// Si aucune modification des données
-			if (newData.title === originalData.title) {
+			if (updateData.title === originalData.title) {
 				toast.warning('Aucune modification effectuée');
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
 
 			// Validation du format des données via un schéma Zod
-			const validation = serviceUpdateSchema.safeParse(newData);
+			const validation = serviceUpdateSchema.safeParse(updateData);
 			if (!validation.success) {
 				return setValidationErrors({
 					title: validation.error.issues[0].message,
@@ -119,8 +123,8 @@ export default function ServicesTable() {
 					.rows.some(
 						(row) =>
 							row.original.title.toLowerCase() ===
-								newData.title.toLowerCase().trim() &&
-							row.original.id !== newData.id
+								updateData.title.toLowerCase() &&
+							row.original.id !== updateData.id
 					)
 			) {
 				toast.error('Un service porte déjà ce nom');
@@ -129,7 +133,7 @@ export default function ServicesTable() {
 				});
 			}
 
-			updateService(newData);
+			updateService(updateData);
 			table.setEditingRow(null);
 			return setValidationErrors({});
 		};

@@ -269,10 +269,10 @@ export default function Lines() {
 
 			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
 			const creationData = {
-				number,
+				number: number.trim(),
 				profile,
 				status,
-				comments,
+				comments: comments.trim(),
 				agentId: agentId
 					? formattedAgents?.find((agent) => agent.infos === agentId)
 							?.id
@@ -299,8 +299,7 @@ export default function Lines() {
 				table
 					.getCoreRowModel()
 					.rows.some(
-						(row) =>
-							row.original.number === creationData.number.trim()
+						(row) => row.original.number === creationData.number
 					)
 			) {
 				toast.error('Une ligne avec ce numéro existe déjà');
@@ -360,12 +359,12 @@ export default function Lines() {
 			const { ...originalData } = row.original;
 
 			// Formatage des informations nécessaires pour la validation du schéma
-			const newData = {
+			const updateData = {
 				id: originalData.id,
-				number,
+				number: number.trim(),
 				profile,
 				status,
-				comments,
+				comments: comments.trim(),
 				agentId:
 					formattedAgents?.find((agent) => agent.infos === agentId)
 						?.id || null,
@@ -375,12 +374,10 @@ export default function Lines() {
 					)?.id || null,
 			} as LineType;
 
-			console.log(newData);
-
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
-				newData
+				updateData
 			) as LineUpdateType;
 
 			// Si aucune modification des données
@@ -400,15 +397,15 @@ export default function Lines() {
 				return setValidationErrors(errors);
 			}
 
-			// Si un numéro estfourni, vérification s'il n'est pas déjà utilisé
+			// Si un numéro est fourni, vérification s'il n'est pas déjà utilisé
 			if (newModifiedData.number) {
 				if (
 					table
 						.getCoreRowModel()
 						.rows.some(
 							(row) =>
-								row.original.number === newData.number.trim() &&
-								row.original.id !== newModifiedData.id
+								row.original.number === updateData.number &&
+								row.original.id !== updateData.id
 						)
 				) {
 					toast.error('Une ligne avec ce numéro existe déjà');
@@ -419,9 +416,9 @@ export default function Lines() {
 			}
 
 			const currentLineOwnerId = originalData.agentId ?? null;
-			const newLineOwnerId = newData.agentId ?? null;
+			const newLineOwnerId = updateData.agentId ?? null;
 			const newLineOwnerFullName: string | null = agentId ?? null;
-			const newDeviceId = newData.deviceId ?? null;
+			const newDeviceId = updateData.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -473,7 +470,7 @@ export default function Lines() {
 				deviceCurrentOwnerId,
 				deviceCurrentOwnerFullName,
 				newDeviceId,
-				data: newData,
+				data: updateData,
 			});
 		};
 

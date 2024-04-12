@@ -18,7 +18,7 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { UserType, UserUpdateType } from '@customTypes/user';
+import { UserCreationType, UserType, UserUpdateType } from '@customTypes/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
 import {
@@ -123,7 +123,17 @@ export default function UsersTable() {
 	//CREATE action
 	const handleCreateUser: MRT_TableOptions<UserType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const validation = userCreationSchema.safeParse(values);
+			const { lastName, firstName, email, role } = values;
+
+			// Formatage des données
+			const creationData = {
+				lastName: lastName.trim(),
+				firstName: firstName.trim(),
+				email: email.trim().toLowerCase(),
+				role,
+			} as UserCreationType;
+
+			const validation = userCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -138,9 +148,7 @@ export default function UsersTable() {
 				table
 					.getCoreRowModel()
 					.rows.some(
-						(row) =>
-							row.original.email.toLowerCase() ===
-							values.email.toLowerCase().trim()
+						(row) => row.original.email === creationData.email
 					)
 			) {
 				toast.error(
@@ -163,18 +171,18 @@ export default function UsersTable() {
 			const { ...originalData } = row.original;
 
 			// Formatage des données
-			const newData = {
+			const updateData = {
 				id: originalData.id,
-				lastName,
-				firstName,
-				email,
+				lastName: lastName.trim(),
+				firstName: firstName.trim(),
+				email: email.trim().toLowerCase(),
 				role,
 			} as UserType;
 
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
-				newData
+				updateData
 			) as UserUpdateType;
 
 			// Si aucune modification des données
@@ -203,8 +211,8 @@ export default function UsersTable() {
 						.rows.some(
 							(row) =>
 								row.original.email.toLowerCase() ===
-									newData.email.toLowerCase().trim() &&
-								row.original.id !== newData.id
+									updateData.email &&
+								row.original.id !== updateData.id
 						)
 				) {
 					toast.error(

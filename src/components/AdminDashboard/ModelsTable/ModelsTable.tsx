@@ -16,7 +16,11 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ModelType, ModelUpdateType } from '@customTypes/model';
+import {
+	ModelCreationType,
+	ModelType,
+	ModelUpdateType,
+} from '@customTypes/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
@@ -85,7 +89,16 @@ export default function ModelsTable() {
 	//CREATE action
 	const handleCreateModel: MRT_TableOptions<ModelType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const validation = modelCreationSchema.safeParse(values);
+			const { brand, reference, storage } = values;
+
+			// Formatage des données
+			const creationData = {
+				brand: brand.trim(),
+				reference: reference.trim(),
+				storage: storage.trim(),
+			} as ModelCreationType;
+
+			const validation = modelCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				// Conversion du tableau d'objets retourné par Zod en objet simple
@@ -101,11 +114,11 @@ export default function ModelsTable() {
 					.rows.some(
 						(row) =>
 							row.original.brand.toLowerCase() ===
-								values.brand.toLowerCase().trim() &&
+								creationData.brand.toLowerCase() &&
 							row.original.reference.toLowerCase() ===
-								values.reference.toLowerCase().trim() &&
+								creationData.reference.toLowerCase() &&
 							row.original.storage?.toLowerCase() ===
-								values.storage?.toLowerCase().trim()
+								creationData.storage?.toLowerCase()
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');
@@ -128,17 +141,17 @@ export default function ModelsTable() {
 			const { ...originalData } = row.original;
 
 			// Formatage des données
-			const newData = {
+			const updateData = {
 				id: originalData.id,
-				brand,
-				reference,
-				storage,
+				brand: brand.trim(),
+				reference: reference.trim(),
+				storage: storage.trim(),
 			} as ModelType;
 
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
-				newData
+				updateData
 			) as ModelUpdateType;
 
 			// Si aucune modification des données
@@ -165,12 +178,12 @@ export default function ModelsTable() {
 					.rows.some(
 						(row) =>
 							row.original.brand.toLowerCase() ===
-								newData.brand.toLowerCase().trim() &&
+								updateData.brand.toLowerCase() &&
 							row.original.reference.toLowerCase() ===
-								newData.reference.toLowerCase().trim() &&
+								updateData.reference.toLowerCase() &&
 							row.original.storage?.toLowerCase() ===
-								newData.storage?.toLowerCase().trim() &&
-							row.original.id !== newData.id
+								updateData.storage?.toLowerCase() &&
+							row.original.id !== updateData.id
 					)
 			) {
 				toast.error('Un modèle identique existe déjà');

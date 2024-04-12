@@ -32,7 +32,7 @@ export const useCreateAgent = () =>
 				...agents,
 				{
 					...newAgent,
-					email: newAgent.email.toLowerCase(),
+					email: newAgent.email,
 				},
 			]);
 			return previousAgents;
