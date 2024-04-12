@@ -71,12 +71,7 @@ export const useCreateDevice = () => {
 
 export const useUpdateDevice = () =>
 	useMutation({
-		mutationFn: async ({
-			data,
-		}: {
-			data: DeviceUpdateType;
-			updateLine?: boolean;
-		}) => {
+		mutationFn: async (data: DeviceUpdateType) => {
 			const { id, ...infos } = data;
 			return (await fetchApi(
 				`/device/${id}`,
@@ -84,43 +79,91 @@ export const useUpdateDevice = () =>
 				infos
 			)) as DeviceType;
 		},
-		onMutate: async (updatedDevice) => {
+		onMutate: async (deviceToUpdate) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
-			const previousLines = queryClient.getQueryData(['lines']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices.map((device) =>
-					device.id === updatedDevice.data.id
-						? { ...device, ...updatedDevice.data }
+					device.id === deviceToUpdate.id
+						? { ...device, ...deviceToUpdate }
 						: device
 				)
 			);
-
-			// Mise à jour du propriétaire de la ligne si l'appareil y est affecté
-			if (updatedDevice.updateLine) {
-				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-					lines.map((line) =>
-						line.deviceId === updatedDevice.data.id
-							? { ...line, agentId: updatedDevice.data.agentId }
-							: line
+			return previousDevices;
+		},
+		onSuccess: (receivedData, sentData) => {
+			// Mise à jour de l'IMEI de l'appareil dans la liste du propriétaire si celui-ci est le même
+			if (sentData.imei && !sentData.agentId)
+				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+					agents.map((agent) =>
+						agent.devices.some(
+							(device) => device.id === sentData.id
+						)
+							? {
+									...agent,
+									devices: agent.devices.map((device) =>
+										device.id === sentData.id
+											? {
+													...device,
+													imei: sentData.imei,
+											  }
+											: device
+									),
+							  }
+							: agent
 					)
 				);
+
+			// Mise à jour des appareils dans les listes des agents si le propriétaire a changé
+			if (sentData.agentId) {
+				queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
+					agents.map((agent) => {
+						if (
+							agent.id !== sentData.agentId &&
+							agent.devices.some(
+								(device) => device.id === sentData.id
+							)
+						) {
+							// Retrait de la liste de l'ancien propriétaire
+							return {
+								...agent,
+								devices: agent.devices.filter(
+									(device) => device.id !== receivedData.id
+								),
+							};
+						}
+						if (agent.id === sentData.agentId) {
+							return {
+								// Ajout à la liste du nouveau propriétaire
+								...agent,
+								devices: [
+									...agent.devices,
+									{
+										id: receivedData.id,
+										imei: receivedData.imei,
+									},
+								],
+							};
+						}
+						return agent;
+					})
+				);
+
+				// Mise à jour du cache des lignes s'il existe
+				if (queryClient.getQueryData(['lines']))
+					queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+						lines.map((line) =>
+							line.deviceId === sentData.id
+								? { ...line, agentId: receivedData.agentId }
+								: line
+						)
+					);
 			}
 
-			return { previousDevices, previousLines };
+			toast.success('Appareil modifié avec succès');
 		},
-		// TODO mettre à jour les appareils des agents
-		onSuccess: () => toast.success('Appareil modifié avec succès'),
-		onError: (_, { updateLine }, previousValues) => {
-			queryClient.setQueryData(
-				['devices'],
-				previousValues?.previousDevices
-			);
-			if (updateLine)
-				queryClient.setQueryData(
-					['lines'],
-					previousValues?.previousLines
-				);
+		onError: (_, __, previousDevices) => {
+			queryClient.setQueryData(['devices'], previousDevices);
 		},
 	});
 

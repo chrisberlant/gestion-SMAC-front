@@ -366,7 +366,7 @@ export default function DevicesTable() {
 			// Formatage des données
 			const newData = {
 				id: originalData.id,
-				imei,
+				imei: imei.trim(),
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
@@ -387,6 +387,7 @@ export default function DevicesTable() {
 				newData
 			) as DeviceUpdateType;
 
+			console.log(newModifiedData);
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
 				toast.warning('Aucune modification effectuée');
@@ -445,7 +446,7 @@ export default function DevicesTable() {
 				});
 			}
 
-			updateDevice({ data: newModifiedData });
+			updateDevice(newModifiedData);
 			table.setEditingRow(null);
 			return setValidationErrors({});
 		};

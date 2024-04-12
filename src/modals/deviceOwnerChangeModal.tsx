@@ -2,13 +2,8 @@ import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { DeviceUpdateType } from '@customTypes/device';
 
-interface UpdateDeviceProps {
-	data: DeviceUpdateType;
-	updateLine?: boolean;
-}
-
 interface DisplayDeviceOwnerChangeModalProps {
-	updateDevice: ({ data, updateLine }: UpdateDeviceProps) => void;
+	updateDevice: (data: DeviceUpdateType) => void;
 	setValidationErrors: (
 		value: React.SetStateAction<Record<string, string | undefined>>
 	) => void;
@@ -59,10 +54,7 @@ export default function displayDeviceOwnerChangeModal({
 		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
 		onCancel: modals.closeAll,
 		onConfirm: () => {
-			updateDevice({
-				data,
-				updateLine: true,
-			});
+			updateDevice(data);
 			setValidationErrors({});
 			closeEditing();
 			modals.closeAll();

@@ -37,7 +37,8 @@ export default function displayDeviceDeleteModal({
 						<span className='bold-text'>
 							{lineUsingDevice.number}
 						</span>{' '}
-						à laquelle il est affecté.
+						à laquelle il est affecté. Le propriétaire de la ligne
+						sera inchangé.
 					</Text>
 				)}
 			</>
