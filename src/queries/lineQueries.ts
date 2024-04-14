@@ -76,52 +76,47 @@ export const useCreateLine = () =>
 // Modification de ligne
 export const useUpdateLine = () =>
 	useMutation({
-		mutationFn: async ({
-			data,
-		}: {
-			data: LineUpdateType;
-			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
-			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
-		}) => {
+		mutationFn: async (data: LineUpdateType) => {
 			const { id, ...infos } = data;
 			return (await fetchApi(`/line/${id}`, 'PATCH', infos)) as LineType;
 		},
 
 		onMutate: async (updatedLine) => {
-			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
+			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			const previousLines = queryClient.getQueryData(['lines']);
 
 			// Mises à jour de la ligne éditée et de l'ancienne ligne pour retirer l'appareil
-			if (updatedLine.updateOldLine) {
+			// Si suppression de l'appareil affecté ou aucune modification de celui-ci
+			if (!updatedLine.deviceId) {
+				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+					lines.map((line) =>
+						line.id === updatedLine.id
+							? { ...line, ...updatedLine }
+							: line
+					)
+				);
+			} else {
+				// Si modification de l'appareil affecté (non nul)
 				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 					lines.map((line) => {
+						if (line.id === updatedLine.id) {
+							return { ...line, ...updatedLine };
+						}
 						if (
-							line.deviceId === updatedLine.data.deviceId &&
-							line.id !== updatedLine.data.id
+							line.deviceId === updatedLine.deviceId &&
+							line.id !== updatedLine.id
 						) {
 							return { ...line, deviceId: null };
 						}
-						if (line.id === updatedLine.data.id) {
-							return updatedLine.data;
-						}
 						return line;
 					})
-				);
-			} else {
-				// Si pas d'ancienne ligne, uniquement mise à jour de la ligne éditée
-				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-					lines.map((line) =>
-						line.id === updatedLine.data.id
-							? { ...line, ...updatedLine.data }
-							: line
-					)
 				);
 			}
 
 			return previousLines;
 		},
 		onSuccess: (receivedData, sentData) => {
-			if (sentData.updateDevice) {
+			if (sentData.deviceId) {
 				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>

@@ -314,7 +314,7 @@ export default function Lines() {
 				setValidationErrors({});
 				return exitCreatingMode();
 			}
-
+			// TODO simplifier
 			// Si un appareil a été défini lors de la création, des vérifications sont à effectuer
 			// Vérification de la présence de l'appareil dans les autres lignes et de son propriétaire actuel
 			const newOwnerId = creationData.agentId ?? null;
@@ -450,7 +450,7 @@ export default function Lines() {
 				(!alreadyUsingDeviceLine &&
 					deviceCurrentOwnerId === newLineOwnerId)
 			) {
-				updateLine({ data: newModifiedData });
+				updateLine(newModifiedData);
 				table.setEditingRow(null);
 				return setValidationErrors({});
 			}
@@ -470,7 +470,7 @@ export default function Lines() {
 				deviceCurrentOwnerId,
 				deviceCurrentOwnerFullName,
 				newDeviceId,
-				data: newModifiedData,
+				updateData: newModifiedData,
 			});
 		};
 
