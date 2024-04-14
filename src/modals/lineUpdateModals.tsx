@@ -54,7 +54,7 @@ export default function displayLineUpdateModal({
 			// Si un nouveau propriétaire mais pas d'ancien
 			if (!currentLineOwnerId) {
 				return modals.openConfirmModal({
-					title: "Changement de propriétaire de l'appareil",
+					title: "Affectation d'un propriétaire à l'appareil",
 					size: 'lg',
 					centered: true,
 					children: (
@@ -356,61 +356,36 @@ export default function displayLineUpdateModal({
 	}
 
 	// Si propriétaire de l'appareil et propriétaire de la ligne définis
-	return modals.open({
-		title: 'Appareil affecté à un agent',
-		size: 'xl',
+	return modals.openConfirmModal({
+		title: "Changement du propriétaire de l'appareil",
+		size: 'lg',
 		centered: true,
 		children: (
 			<>
 				<Text mb='xs'>
 					L'appareil {deviceFullName} est actuellement affecté à
-					l'agent {deviceCurrentOwnerFullName}, mais n'est affecté à
-					aucune ligne.
+					l'agent{' '}
+					<span className='bold-text'>
+						{deviceCurrentOwnerFullName}
+					</span>
+					, mais n'est affecté à aucune ligne.
 				</Text>
-				<Text mb='xs'>A qui souhaitez-vous affecter la ligne ?</Text>
-				<Flex align='center'>
-					<Button
-						mt='lg'
-						mx='md'
-						onClick={() => {
-							data.agentId = deviceCurrentOwnerId;
-							updateLine({
-								data,
-								updateDevice: true,
-							});
-							setValidationErrors({});
-							exitUpdatingMode();
-							modals.closeAll();
-						}}
-					>
-						À {deviceCurrentOwnerFullName}
-					</Button>
-					<Button
-						mt='lg'
-						mx='md'
-						color='rgba(68, 145, 42, 1)'
-						onClick={() => {
-							updateLine({
-								data,
-								updateDevice: true,
-							});
-							setValidationErrors({});
-							exitUpdatingMode();
-							modals.closeAll();
-						}}
-					>
-						À {newLineOwnerFullName}
-					</Button>
-				</Flex>
-				<Button
-					fullWidth
-					mt='xl'
-					variant='default'
-					onClick={() => modals.closeAll()}
-				>
-					Annuler
-				</Button>
+				<Text mb='xl'>
+					Si vous continuez, il sera affecté à l'agent{' '}
+					<span className='bold-text'>{newLineOwnerFullName}</span>.
+				</Text>
 			</>
 		),
+		labels: { confirm: 'Confirmer', cancel: 'Annuler' },
+		onCancel: modals.closeAll,
+		onConfirm: () => {
+			updateLine({
+				data,
+				updateDevice: true,
+			});
+			setValidationErrors({});
+			exitUpdatingMode();
+			modals.closeAll();
+		},
 	});
 }

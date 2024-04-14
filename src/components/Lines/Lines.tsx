@@ -470,7 +470,7 @@ export default function Lines() {
 				deviceCurrentOwnerId,
 				deviceCurrentOwnerFullName,
 				newDeviceId,
-				data: updateData,
+				data: newModifiedData,
 			});
 		};
 

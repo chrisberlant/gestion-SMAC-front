@@ -77,7 +77,6 @@ export const useCreateLine = () =>
 			queryClient.setQueryData(['lines'], previousLines),
 	});
 
-// TODO mise à jour de la liste des appareils des agents
 // Modification de ligne
 export const useUpdateLine = () =>
 	useMutation({
