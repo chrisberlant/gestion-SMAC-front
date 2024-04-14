@@ -16,40 +16,33 @@ export const useGetAllLines = () =>
 // Création de ligne
 export const useCreateLine = () =>
 	useMutation({
-		mutationFn: async ({
-			data,
-		}: {
-			data: LineCreationType;
-			updateDevice?: boolean; // Si une mise à jour d'appareil est nécessaire (changement de propriétaire)
-			updateOldLine?: boolean; // Si une mise à jour d'une autre ligne est nécessaire
-		}) => (await fetchApi('/line', 'POST', data)) as LineType,
+		mutationFn: async (data: LineCreationType) =>
+			(await fetchApi('/line', 'POST', data)) as LineType,
 
 		onMutate: async (newLine) => {
-			await queryClient.cancelQueries({ queryKey: ['lines', 'models'] });
+			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
 
-			if (newLine.updateOldLine) {
-				// Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
-				queryClient.setQueryData(['lines'], (lines: LineType[]) => [
-					...lines.map((line) =>
-						line.deviceId === newLine.data.deviceId
-							? { ...line, deviceId: null }
-							: line
-					),
-					{
-						...newLine.data,
-					},
-				]);
-			} else {
-				// Si pas d'ancienne ligne, uniquement ajout dans le tableau
-				queryClient.setQueryData(['lines'], (lines: LineType[]) => [
-					...lines,
-					{
-						...newLine.data,
-					},
-				]);
-			}
+			newLine.deviceId
+				? // Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
+				  queryClient.setQueryData(['lines'], (lines: LineType[]) => [
+						...lines.map((line) =>
+							line.deviceId === newLine.deviceId
+								? { ...line, deviceId: null }
+								: line
+						),
+						{
+							...newLine,
+						},
+				  ])
+				: // Si pas d'appareil fourni, uniquement ajout de la nouvelle ligne dans le tableau
+				  queryClient.setQueryData(['lines'], (lines: LineType[]) => [
+						...lines,
+						{
+							...newLine,
+						},
+				  ]);
 
 			return previousLines;
 		},
@@ -61,7 +54,10 @@ export const useCreateLine = () =>
 						: line
 				)
 			);
-			if (sentData.updateDevice) {
+			if (
+				sentData.deviceId &&
+				sentData.agentId !== receivedData.agentId
+			) {
 				// Si nécessaire, mise à jour de l'appareil pour changer le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>

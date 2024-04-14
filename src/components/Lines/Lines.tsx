@@ -310,7 +310,7 @@ export default function Lines() {
 
 			// Si aucun appareil fourni, pas de modale
 			if (!creationData.deviceId) {
-				createLine({ data: creationData });
+				createLine(creationData);
 				setValidationErrors({});
 				return exitCreatingMode();
 			}
@@ -334,7 +334,7 @@ export default function Lines() {
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
 			!newDeviceId ||
 			(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
-				? (createLine({ data: creationData }),
+				? (createLine(creationData),
 				  setValidationErrors({}),
 				  exitCreatingMode())
 				: displayLineCreationModal({
