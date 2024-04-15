@@ -1,4 +1,3 @@
-import { Loader } from '@mantine/core';
 import {
 	useCreateModel,
 	useDeleteModel,
@@ -26,6 +25,7 @@ import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditD
 import { toast } from 'sonner';
 import displayModelDeleteModal from '@modals/modelDeleteModal';
 import { getModifiedValues } from '@utils/index';
+import Loading from '../../Loading/Loading';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -228,7 +228,6 @@ export default function ModelsTable() {
 				deleteFunction={() =>
 					displayModelDeleteModal({ row, deleteModel })
 				}
-				roleCheck={false}
 			/>
 		),
 		renderTopToolbarCustomActions: ({ table }) => (
@@ -266,7 +265,7 @@ export default function ModelsTable() {
 		<div className='models-table'>
 			<h2>Modèles d'appareils</h2>
 
-			{isLoading && <Loader size='xl' />}
+			{isLoading && <Loading />}
 
 			{isError && (
 				<span>

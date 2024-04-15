@@ -56,7 +56,7 @@ export const useCheckLoginStatus = () =>
 	useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => {
-			return (await fetchApi('/getCurrentUser')) as LoggedUserType;
+			return (await fetchApi('/me')) as LoggedUserType;
 		},
 		meta: {
 			loginStatusQuery: 'true',

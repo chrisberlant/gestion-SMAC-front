@@ -16,6 +16,7 @@ export default function displayLineDeleteModal({
 }: DisplayLineDeleteModalProps) {
 	return modals.openConfirmModal({
 		title: "Suppression d'une ligne",
+		size: 'lg',
 		children: (
 			<>
 				<Text mb='xs'>

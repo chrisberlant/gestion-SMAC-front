@@ -21,13 +21,8 @@ export default async function fetchApi(
 	};
 
 	// Ajouter un body si la méthode est fournie et différente de GET, et que des données sont fournies
-	if (method && method !== 'GET' && infos) {
-		// if (!infos)
-		// 	throw new Error(
-		// 		"Les informations n'ont pas été fournies dans la requête"
-		// 	);
+	if (method && method !== 'GET' && infos)
 		options.body = JSON.stringify(infos);
-	}
 
 	const response = await fetch(baseUrl + route, options);
 

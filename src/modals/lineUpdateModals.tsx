@@ -215,7 +215,7 @@ export default function displayLineUpdateModal({
 	if (!newLineOwnerId) {
 		return modals.open({
 			title: 'Appareil affecté à un agent',
-			size: 'xl',
+			size: 'lg',
 			centered: true,
 			children: (
 				<>

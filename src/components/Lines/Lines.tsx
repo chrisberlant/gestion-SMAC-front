@@ -35,6 +35,7 @@ import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { getModifiedValues } from '@utils/index';
+import tableConfig from '../../utils/tableConfig';
 
 export default function Lines() {
 	const {
@@ -489,28 +490,13 @@ export default function Lines() {
 	};
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
+		...tableConfig,
 		columns,
 		data: lines || [],
-		enablePagination: false,
-		enableRowVirtualization: true,
-		enableGlobalFilter: true,
-		enableColumnFilters: true,
-		enableColumnOrdering: true,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateLine,
 		onEditingRowSave: handleSaveLine,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			style: { minWidth: '300px' },
-			variant: 'default',
-		},
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
@@ -551,24 +537,6 @@ export default function Lines() {
 				<CsvExportButton request={exportsLinesToCsv} />
 			</Flex>
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			columnVisibility: {
-				id: false,
-			},
-		},
 	});
 
 	return (

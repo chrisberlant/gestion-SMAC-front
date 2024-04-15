@@ -30,7 +30,8 @@ export default function displayDeviceOwnerChangeModal({
 		children: (
 			<>
 				<Text mb='xs'>
-					L'appareil {imei} est actuellement affecté à la ligne{' '}
+					L'appareil <span className='bold-text'>{imei}</span> est
+					actuellement affecté à la ligne{' '}
 					<span className='bold-text'>{lineUsingDevice}</span>
 					{lineOwnerFullName ? (
 						<>

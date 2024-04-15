@@ -1,4 +1,4 @@
-import { Badge, Loader } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -27,6 +27,7 @@ import {
 } from '@modals/userPasswordResetModals';
 import displayDeleteUserModal from '@modals/userDeleteModal';
 import { getModifiedValues } from '@utils/index';
+import Loading from '../../Loading/Loading';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -301,7 +302,7 @@ export default function UsersTable() {
 		<div className='users-table'>
 			<h2>Utilisateurs et droits</h2>
 
-			{isLoading && <Loader size='xl' />}
+			{isLoading && <Loading />}
 
 			{isError && (
 				<span>

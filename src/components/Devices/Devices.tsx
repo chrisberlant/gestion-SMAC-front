@@ -1,4 +1,4 @@
-import { Flex, Loader } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -38,6 +38,8 @@ import displayDeviceDeleteModal from '@modals/deviceDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
+import Loading from '../Loading/Loading';
+import tableConfig from '../../utils/tableConfig';
 
 export default function DevicesTable() {
 	const {
@@ -450,39 +452,25 @@ export default function DevicesTable() {
 		};
 
 	const table = useMantineReactTable({
+		...tableConfig,
 		columns,
 		data: devices || [],
-		enablePagination: false,
-		enableRowVirtualization: true,
-		enableGlobalFilter: true,
-		enableColumnOrdering: true,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			style: { minWidth: '300px' },
-			variant: 'default',
-		},
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => {
 					// Vérification si l'appareil est associé à une ligne
-					const lineUsingDevice =
-						lines?.find(
-							(line) => line.deviceId === row.original.id
-						) || null;
+					const affectedLineNumber =
+						lines?.find((line) => line.deviceId === row.original.id)
+							?.number || null;
 					displayDeviceDeleteModal({
-						row,
-						lineUsingDevice,
+						deviceId: row.original.id,
+						imei: row.original.imei,
+						affectedLineNumber,
 						deleteDevice,
 					});
 				}}
@@ -501,30 +489,13 @@ export default function DevicesTable() {
 				<CsvExportButton request={exportsDevicesToCsv} />
 			</Flex>
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'xs',
-			mb: 'xs',
-		},
-		initialState: {
-			density: 'xs',
-			columnVisibility: {
-				id: false,
-			},
-		},
 	});
 
 	return (
 		<div className='devices-table'>
 			<h2>Liste des appareils</h2>
 
-			{anyLoading && <Loader size='xl' />}
+			{anyLoading && <Loading />}
 
 			{anyError && (
 				<span>

@@ -1,11 +1,4 @@
-import {
-	ActionIcon,
-	Flex,
-	HoverCard,
-	Loader,
-	Tooltip,
-	Text,
-} from '@mantine/core';
+import { ActionIcon, Flex, HoverCard, Tooltip, Text } from '@mantine/core';
 import { IconCopy, IconDeviceMobile, IconMail } from '@tabler/icons-react';
 import {
 	useCreateAgent,
@@ -40,6 +33,8 @@ import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import displayAgentDeleteModal from '@modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { useGetAllDevices } from '../../queries/deviceQueries';
+import Loading from '../Loading/Loading';
+import tableConfig from '../../utils/tableConfig';
 
 export default function AgentsTable() {
 	const {
@@ -311,7 +306,7 @@ export default function AgentsTable() {
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, row }) => {
 			const { lastName, firstName, email } = values;
-			const { devices, ...originalData } = row.original;
+			const { ...originalData } = row.original;
 
 			// Formatage des données
 			const updateData = {
@@ -372,35 +367,24 @@ export default function AgentsTable() {
 		};
 
 	const table = useMantineReactTable({
+		...tableConfig,
 		columns,
 		data: agents || [],
-		enablePagination: false,
-		enableRowVirtualization: true,
-		enableGlobalFilter: true,
-		enableColumnFilters: true,
-		enableColumnOrdering: true,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableHiding: true,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateAgent,
 		onEditingRowSave: handleSaveAgent,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			style: { minWidth: '300px' },
-			variant: 'default',
-		},
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
-				deleteFunction={() =>
-					displayAgentDeleteModal({ row, deleteAgent })
-				}
+				deleteFunction={() => {
+					const { id, firstName, lastName } = row.original;
+					return displayAgentDeleteModal({
+						agentId: id,
+						agentFullName: `${firstName} ${lastName}`,
+						deleteAgent,
+					});
+				}}
 			/>
 		),
 		renderTopToolbarCustomActions: () => (
@@ -416,30 +400,12 @@ export default function AgentsTable() {
 				<CsvExportButton request={exportsAgentsToCsv} />
 			</Flex>
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			columnVisibility: {
-				id: false,
-			},
-		},
 	});
 
 	return (
 		<div className='agents-table'>
 			<h2>Liste des agents</h2>
-			{anyLoading && <Loader size='xl' />}
+			{anyLoading && <Loading />}
 			{anyError && (
 				<span>
 					Impossible de récupérer les agents depuis le serveur

@@ -1,6 +1,6 @@
 import { useGetDevicesAmountPerModel } from '@queries/statsQueries';
-import { Loader } from '@mantine/core';
 import StatsTable from '../StatsTable/StatsTable';
+import Loading from '../../Loading/Loading';
 
 export default function DevicesAmountPerModel() {
 	const { data, isLoading, isError } = useGetDevicesAmountPerModel();
@@ -8,7 +8,7 @@ export default function DevicesAmountPerModel() {
 
 	return (
 		<>
-			{isLoading && <Loader size='xl' />}
+			{isLoading && <Loading />}
 
 			{isError && (
 				<div>

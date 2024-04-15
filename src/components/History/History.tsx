@@ -6,10 +6,10 @@ import {
 import { useMemo } from 'react';
 import { useGetAllHistory } from '../../queries/historyQueries';
 import { HistoryType } from '../../types/history';
-import { Loader } from '@mantine/core';
 import { useGetAllUsers } from '../../queries/userQueries';
 import { dateTimeToStringFormatting } from '../../utils';
 import DeleteHistoryButton from '../TableActionsButtons/DeleHistoryButton/DeleteHistoryButton';
+import Loading from '../Loading/Loading';
 
 export default function History() {
 	const {
@@ -152,7 +152,7 @@ export default function History() {
 		<div className='models-table'>
 			<h2>Historique des actions</h2>
 
-			{isHistoryLoading && isUsersLoading && <Loader size='xl' />}
+			{(isHistoryLoading || isUsersLoading) && <Loading />}
 
 			{isHistoryError && isUsersError && (
 				<span>

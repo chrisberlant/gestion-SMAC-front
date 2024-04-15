@@ -1,6 +1,6 @@
 import { useGetAgentsAndDevicesPerService } from '@queries/statsQueries';
-import { Loader } from '@mantine/core';
 import StatsTable from '../StatsTable/StatsTable';
+import Loading from '../../Loading/Loading';
 
 export default function AgentsAndDevicesPerService() {
 	const { data, isLoading, isError } = useGetAgentsAndDevicesPerService();
@@ -8,7 +8,7 @@ export default function AgentsAndDevicesPerService() {
 
 	return (
 		<>
-			{isLoading && <Loader size='xl' />}
+			{isLoading && <Loading />}
 
 			{isError && (
 				<div>

@@ -1,27 +1,28 @@
 import { modals } from '@mantine/modals';
-import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { AgentType } from '@customTypes/agent';
 
 interface DisplayAgentDeleteModalProps {
-	row: MRT_Row<AgentType>;
+	agentId: number;
+	agentFullName: string;
 	deleteAgent: (id: number) => void;
 }
 
 const displayAgentDeleteModal = ({
-	row,
+	agentId,
+	agentFullName,
 	deleteAgent,
 }: DisplayAgentDeleteModalProps) =>
 	modals.openConfirmModal({
 		title: "Suppression d'un agent",
+		size: 'lg',
 		children: (
-			<Text>
-				Voulez-vous vraiment supprimer l'agent{' '}
-				<span className='bold-text'>
-					{row.original.firstName} {row.original.lastName}
-				</span>{' '}
-				? Cette action est irréversible.
-			</Text>
+			<>
+				<Text mb='xs'>
+					Voulez-vous vraiment supprimer l'agent{' '}
+					<span className='bold-text'>{agentFullName}</span> ?
+				</Text>
+				<Text mb='xs'>Cette action est irréversible.</Text>
+			</>
 		),
 		centered: true,
 		overlayProps: {
@@ -29,7 +30,7 @@ const displayAgentDeleteModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteAgent(row.original.id),
+		onConfirm: () => deleteAgent(agentId),
 	});
 
 export default displayAgentDeleteModal;

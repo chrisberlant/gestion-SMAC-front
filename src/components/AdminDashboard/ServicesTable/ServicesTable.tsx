@@ -1,4 +1,3 @@
-import { Loader } from '@mantine/core';
 import {
 	useCreateService,
 	useDeleteService,
@@ -21,6 +20,7 @@ import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditD
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
 import displayServiceDeleteModal from '@modals/serviceDeleteModal';
+import Loading from '../../Loading/Loading';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -168,7 +168,6 @@ export default function ServicesTable() {
 				deleteFunction={() =>
 					displayServiceDeleteModal({ row, deleteService })
 				}
-				roleCheck={false}
 			/>
 		),
 		renderTopToolbarCustomActions: () => (
@@ -206,7 +205,7 @@ export default function ServicesTable() {
 		<div className='services-table'>
 			<h2>Services</h2>
 
-			{isLoading && <Loader size='xl' />}
+			{isLoading && <Loading />}
 
 			{isError && (
 				<span>

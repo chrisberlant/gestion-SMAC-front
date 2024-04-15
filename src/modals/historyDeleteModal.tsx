@@ -10,11 +10,15 @@ export default function displayHistoryDeleteModal(
 	if (entriesToDelete.length > 0)
 		return modals.openConfirmModal({
 			title: "Suppression de l'historique",
+			size: 'lg',
 			children: (
-				<Text>
-					Voulez-vous vraiment supprimer l'ensemble de l'historique
-					sélectionné ?
-				</Text>
+				<>
+					<Text mb='xs'>
+						Voulez-vous vraiment supprimer l'ensemble de
+						l'historique sélectionné ?
+					</Text>
+					<Text mb='xs'>Cette action est irréversible.</Text>
+				</>
 			),
 			centered: true,
 			overlayProps: {

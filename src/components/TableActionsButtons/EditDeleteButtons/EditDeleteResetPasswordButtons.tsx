@@ -1,4 +1,4 @@
-import { Flex, Tooltip, ActionIcon, Loader } from '@mantine/core';
+import { Flex, Tooltip, ActionIcon } from '@mantine/core';
 import {
 	IconEdit,
 	IconTrash,
@@ -25,63 +25,60 @@ export default function EditDeleteResetPasswordButtons({
 	rowEmail,
 	rowId,
 }: EditDeleteResetPasswordButtonsProps) {
-	const { data: currentUser, isLoading } = useGetCurrentUser();
+	const { data: currentUser } = useGetCurrentUser();
 
-	if (isLoading) return <Loader />;
-
-	if (currentUser)
-		return currentUser.email === rowEmail || rowId === 1 ? (
-			// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
-			<Flex gap='md'>
+	return currentUser?.email === rowEmail || rowId === 1 ? (
+		// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
+		<Flex gap='md'>
+			<ActionIcon
+				style={{
+					cursor: 'not-allowed',
+				}}
+				color='#B2B2B2'
+				size='sm'
+			>
+				<IconEditOff />
+			</ActionIcon>
+			<ActionIcon
+				style={{
+					cursor: 'not-allowed',
+				}}
+				color='#B2B2B2'
+				size='sm'
+			>
+				<IconKeyOff />
+			</ActionIcon>
+			<ActionIcon
+				style={{
+					cursor: 'not-allowed',
+				}}
+				color='#B2B2B2'
+				size='sm'
+			>
+				<IconTrashOff />
+			</ActionIcon>
+		</Flex>
+	) : (
+		<Flex gap='md'>
+			<Tooltip label='Modifier'>
+				<ActionIcon onClick={editFunction} size='sm'>
+					<IconEdit />
+				</ActionIcon>
+			</Tooltip>
+			<Tooltip label='Réinitialiser le mot de passe'>
 				<ActionIcon
-					style={{
-						cursor: 'not-allowed',
-					}}
-					color='#B2B2B2'
+					color='orange'
+					onClick={resetPasswordFunction}
 					size='sm'
 				>
-					<IconEditOff />
+					<IconKey />
 				</ActionIcon>
-				<ActionIcon
-					style={{
-						cursor: 'not-allowed',
-					}}
-					color='#B2B2B2'
-					size='sm'
-				>
-					<IconKeyOff />
+			</Tooltip>
+			<Tooltip label='Supprimer'>
+				<ActionIcon color='red' onClick={deleteFunction} size='sm'>
+					<IconTrash />
 				</ActionIcon>
-				<ActionIcon
-					style={{
-						cursor: 'not-allowed',
-					}}
-					color='#B2B2B2'
-					size='sm'
-				>
-					<IconTrashOff />
-				</ActionIcon>
-			</Flex>
-		) : (
-			<Flex gap='md'>
-				<Tooltip label='Modifier'>
-					<ActionIcon onClick={editFunction} size='sm'>
-						<IconEdit />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Réinitialiser le mot de passe'>
-					<ActionIcon
-						color='orange'
-						onClick={resetPasswordFunction}
-						size='sm'
-					>
-						<IconKey />
-					</ActionIcon>
-				</Tooltip>
-				<Tooltip label='Supprimer'>
-					<ActionIcon color='red' onClick={deleteFunction} size='sm'>
-						<IconTrash />
-					</ActionIcon>
-				</Tooltip>
-			</Flex>
-		);
+			</Tooltip>
+		</Flex>
+	);
 }
