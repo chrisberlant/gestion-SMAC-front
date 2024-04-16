@@ -2,6 +2,7 @@ import { Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import ImportModal from './ImportModal';
 import { useGetCurrentUser } from '@queries/userQueries';
+import { IconUpload } from '@tabler/icons-react';
 
 // Bouton permettant d'ouvrir la modale d'import de fichier, model permet de déterminer le type de modale à afficher
 export default function CsvImportButton({ model }: { model: string }) {
@@ -15,7 +16,11 @@ export default function CsvImportButton({ model }: { model: string }) {
 		<Button disabled>Importer un CSV</Button>
 	) : (
 		<>
-			<Button color='green' onClick={openImportModal}>
+			<Button
+				leftSection={<IconUpload size={20} />}
+				color='green'
+				onClick={openImportModal}
+			>
 				Importer un CSV
 			</Button>
 			<ImportModal
