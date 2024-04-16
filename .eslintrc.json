@@ -9,7 +9,7 @@
 	"ignorePatterns": ["dist", ".eslintrc.cjs"],
 	"settings": {
 		"node": {
-			"paths": ["src"],
+			"paths": ["src", "tests"],
 			"extensions": [".js", ".ts", ".d.ts", ".tsx"]
 		},
 		"import/parsers": {
@@ -23,7 +23,9 @@
 					["@validationSchemas", "./src/validationSchemas"],
 					["@customTypes", "./src/types"],
 					["@queries", "./src/queries"],
-					["@modals", "./src/modals"]
+					["@modals", "./src/modals"],
+					["@components", "./src/components"],
+					["@tests-utils", "./tests/utils/index.ts"]
 				]
 			},
 			"typescript": {
@@ -39,7 +41,7 @@
 			{ "allowConstantExport": true }
 		],
 		"@typescript-eslint/no-unused-vars": "warn",
-		"ignoreRestSiblings": true,
+		"ignoreRestSiblings": 0,
 		"import/no-unresolved": "error",
 		"import/extensions": [
 			"error",

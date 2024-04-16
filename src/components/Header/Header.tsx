@@ -39,8 +39,8 @@ export default function Header() {
 	if (currentUser) {
 		if (currentUser.role === 'Admin') {
 			// Onglets accessibles uniquement par les admins
-			tabs.Administration = 'admin-dashboard';
 			tabs.Historique = 'history';
+			tabs.Administration = 'admin-dashboard';
 		}
 
 		// Création des onglets et détection de celui actif

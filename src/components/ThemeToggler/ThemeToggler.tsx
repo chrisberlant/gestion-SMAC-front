@@ -23,7 +23,9 @@ export default function ThemeToggler() {
 				}
 				variant='subtle'
 				size='30'
-				aria-label='Changer le thème'
+				aria-label={`Passer en thème ${
+					computedColorScheme === 'light' ? 'dark' : 'light'
+				}`}
 			>
 				<IconSun
 					className={cx(classes.icon, classes.dark)}

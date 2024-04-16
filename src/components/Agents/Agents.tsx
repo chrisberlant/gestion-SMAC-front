@@ -256,7 +256,7 @@ export default function AgentsTable() {
 				},
 			},
 		],
-		[validationErrors, formattedDevicesList]
+		[validationErrors, services, formattedDevicesList]
 	);
 
 	//CREATE action

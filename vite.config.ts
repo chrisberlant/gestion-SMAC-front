@@ -17,6 +17,8 @@ export default defineConfig({
 			'@customTypes': path.resolve(__dirname, './src/types'),
 			'@queries': path.resolve(__dirname, './src/queries'),
 			'@modals': path.resolve(__dirname, './src/modals'),
+			'@components': path.resolve(__dirname, './src/components'),
+			'@tests-utils': path.resolve(__dirname, './tests/utils/index.ts'),
 		},
 	},
 });

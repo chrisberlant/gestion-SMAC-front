@@ -35,9 +35,11 @@
 			"@validationSchemas/*": ["./src/validationSchemas/*"],
 			"@customTypes/*": ["./src/types/*"],
 			"@queries/*": ["./src/queries/*"],
-			"@modals/*": ["./src/modals/*"]
+			"@modals/*": ["./src/modals/*"],
+			"@components/*": ["./src/components/*"],
+			"@tests-utils": ["./tests/utils/index.ts"]
 		}
 	},
-	"include": ["src"],
+	"include": ["src", "tests"],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }
