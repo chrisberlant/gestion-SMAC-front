@@ -39,7 +39,7 @@ import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import Loading from '../Loading/Loading';
-import tableConfig from '../../utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function DevicesTable() {
 	const {
@@ -452,7 +452,7 @@ export default function DevicesTable() {
 		};
 
 	const table = useMantineReactTable({
-		...tableConfig,
+		...virtualizedTableConfig,
 		columns,
 		data: devices || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

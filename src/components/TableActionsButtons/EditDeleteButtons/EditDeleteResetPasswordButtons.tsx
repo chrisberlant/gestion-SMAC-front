@@ -30,31 +30,13 @@ export default function EditDeleteResetPasswordButtons({
 	return currentUser?.email === rowEmail || rowId === 1 ? (
 		// Les options d'édition sont grisées pour l'utilisateur actuel et l'utilisateur root
 		<Flex gap='md'>
-			<ActionIcon
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-				size='sm'
-			>
+			<ActionIcon disabled size='sm'>
 				<IconEditOff />
 			</ActionIcon>
-			<ActionIcon
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-				size='sm'
-			>
+			<ActionIcon disabled size='sm'>
 				<IconKeyOff />
 			</ActionIcon>
-			<ActionIcon
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-				size='sm'
-			>
+			<ActionIcon disabled size='sm'>
 				<IconTrashOff />
 			</ActionIcon>
 		</Flex>

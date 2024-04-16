@@ -4,12 +4,13 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useMemo } from 'react';
-import { useGetAllHistory } from '../../queries/historyQueries';
-import { HistoryType } from '../../types/history';
-import { useGetAllUsers } from '../../queries/userQueries';
-import { dateTimeToStringFormatting } from '../../utils';
+import { useGetAllHistory } from '@queries/historyQueries';
+import { HistoryType } from '@customTypes/history';
+import { useGetAllUsers } from '@queries/userQueries';
+import { dateTimeToStringFormatting } from '@utils/index';
 import DeleteHistoryButton from '../TableActionsButtons/DeleHistoryButton/DeleteHistoryButton';
 import Loading from '../Loading/Loading';
+import { paginatedTableConfig } from '@utils/tableConfig';
 
 export default function History() {
 	const {
@@ -87,6 +88,8 @@ export default function History() {
 	);
 
 	const table = useMantineReactTable({
+		...paginatedTableConfig,
+		enableEditing: false,
 		columns,
 		data: history || [],
 		enableRowSelection: true,
@@ -97,54 +100,15 @@ export default function History() {
 		mantineSelectAllCheckboxProps: {
 			color: 'red',
 		},
-		enableGlobalFilter: true,
-		enableColumnActions: true,
-		enableHiding: false,
-		sortDescFirst: true,
-		enableSortingRemoval: false,
-		enableDensityToggle: false,
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			// style: { minWidth: '100px' },
-			variant: 'default',
-		},
 		mantineTableBodyRowProps: ({ row }) => ({
 			onClick: row.getToggleSelectedHandler(),
 		}),
-		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '40vw' } },
-		mantineTableProps: {
-			striped: true,
-		},
 		renderTopToolbarCustomActions: () => {
-			// Conversion de l'objet contenant les lignes sélectionnées en tableau des nombre
+			// Conversion de l'objet contenant les lignes sélectionnées en tableau de nombres
 			const entriesToDelete = Object.keys(
 				table.getState().rowSelection
 			).map(Number);
 			return <DeleteHistoryButton entriesToDelete={entriesToDelete} />;
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 10, // rows per page
-			},
-			columnVisibility: {
-				id: false,
-			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['10', '30', '50', '100', '200'],
-			withEdges: true,
 		},
 	});
 

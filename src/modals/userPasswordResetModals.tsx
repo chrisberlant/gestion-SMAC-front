@@ -4,7 +4,7 @@ import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core';
 import { UserType, UserPasswordIsResetType } from '@customTypes/user';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
-import { sendEmail } from '@/utils';
+import { sendEmail } from '@utils/index';
 
 interface DisplayUserPasswordResetModalProps {
 	row: MRT_Row<UserType>;

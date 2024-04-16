@@ -12,7 +12,7 @@ import {
 	type MRT_ColumnDef,
 	MRT_TableInstance,
 } from 'mantine-react-table';
-import { Suspense, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
 import {
 	useCreateLine,
@@ -35,7 +35,7 @@ import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { getModifiedValues } from '@utils/index';
-import tableConfig from '../../utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function Lines() {
 	const {
@@ -490,7 +490,7 @@ export default function Lines() {
 	};
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
-		...tableConfig,
+		...virtualizedTableConfig,
 		columns,
 		data: lines || [],
 		onCreatingRowCancel: () => setValidationErrors({}),
@@ -541,19 +541,17 @@ export default function Lines() {
 
 	return (
 		<ZoomableComponent>
-			<Suspense fallback={<Loader size='xl' />}>
-				<h2>Liste des lignes</h2>
+			<h2>Liste des lignes</h2>
 
-				{anyLoading && <Loader size='xl' />}
+			{anyLoading && <Loader size='xl' />}
 
-				{anyError && (
-					<span>
-						Impossible de récupérer les appareils depuis le serveur
-					</span>
-				)}
+			{anyError && (
+				<span>
+					Impossible de récupérer les appareils depuis le serveur
+				</span>
+			)}
 
-				{allData && <MantineReactTable table={table} />}
-			</Suspense>
+			{allData && <MantineReactTable table={table} />}
 		</ZoomableComponent>
 	);
 }

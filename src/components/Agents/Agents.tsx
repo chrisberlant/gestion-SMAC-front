@@ -34,7 +34,7 @@ import displayAgentDeleteModal from '@modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { useGetAllDevices } from '../../queries/deviceQueries';
 import Loading from '../Loading/Loading';
-import tableConfig from '../../utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function AgentsTable() {
 	const {
@@ -367,7 +367,7 @@ export default function AgentsTable() {
 		};
 
 	const table = useMantineReactTable({
-		...tableConfig,
+		...virtualizedTableConfig,
 		columns,
 		data: agents || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

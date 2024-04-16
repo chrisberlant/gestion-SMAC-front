@@ -28,6 +28,7 @@ import {
 import displayDeleteUserModal from '@modals/userDeleteModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
+import { paginatedTableConfig } from '@utils/tableConfig';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -231,29 +232,14 @@ export default function UsersTable() {
 		};
 
 	const table = useMantineReactTable({
+		...paginatedTableConfig,
 		columns,
 		data: users || [],
-		enableGlobalFilter: true,
-		enableColumnFilters: false,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableHiding: false,
-		sortDescFirst: true,
-		enableSortingRemoval: false,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateUser,
 		onEditingRowSave: handleSaveUser,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			// style: { minWidth: '100px' },
-			variant: 'default',
-		},
-		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '60vw' } },
+		// mantineTableContainerProps: { style: { minWidth: '60vw' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteResetPasswordButtons
 				rowEmail={row.original.email}
@@ -270,32 +256,6 @@ export default function UsersTable() {
 		renderTopToolbarCustomActions: () => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 5, // rows per page
-			},
-			columnVisibility: {
-				id: false,
-			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['5', '10', '20', '30'],
-			withEdges: true,
-		},
 	});
 
 	return (

@@ -11,26 +11,18 @@ export default function CsvImportButton({ model }: { model: string }) {
 		{ open: openImportModal, close: closeImportModal },
 	] = useDisclosure(false);
 
-	if (currentUser)
-		return currentUser.role === 'Consultant' ? (
-			<Button
-				color='#B2B2B2'
-				style={{
-					cursor: 'not-allowed',
-				}}
-			>
+	return currentUser?.role === 'Consultant' ? (
+		<Button disabled>Importer un CSV</Button>
+	) : (
+		<>
+			<Button color='green' onClick={openImportModal}>
 				Importer un CSV
 			</Button>
-		) : (
-			<>
-				<Button color='green' onClick={openImportModal}>
-					Importer un CSV
-				</Button>
-				<ImportModal
-					model={model}
-					openedImportModal={openedImportModal}
-					closeImportModal={closeImportModal}
-				/>
-			</>
-		);
+			<ImportModal
+				model={model}
+				openedImportModal={openedImportModal}
+				closeImportModal={closeImportModal}
+			/>
+		</>
+	);
 }

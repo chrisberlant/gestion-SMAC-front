@@ -26,7 +26,6 @@ const tabs = {
 	Appareils: '/devices',
 	Agents: '/agents',
 	Statistiques: '/stats',
-	Historique: '/history',
 } as Record<string, string>;
 
 export default function Header() {
@@ -38,10 +37,14 @@ export default function Header() {
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 
 	if (currentUser) {
-		if (currentUser.role === 'Admin')
+		if (currentUser.role === 'Admin') {
+			// Onglets accessibles uniquement par les admins
 			tabs.Administration = 'admin-dashboard';
+			tabs.Historique = 'history';
+		}
 
-		const items = Object.entries(tabs).map(([title, path]) => (
+		// Création des onglets et détection de celui actif
+		const tabsItems = Object.entries(tabs).map(([title, path]) => (
 			<NavLink to={path} key={title}>
 				{({ isActive }) => (
 					<Tabs.Tab
@@ -152,7 +155,7 @@ export default function Header() {
 								tab: classes.tab,
 							}}
 						>
-							<Tabs.List>{items}</Tabs.List>
+							<Tabs.List>{tabsItems}</Tabs.List>
 						</Tabs>
 					</Flex>
 				</nav>

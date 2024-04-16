@@ -21,23 +21,11 @@ export default function EditDeleteButtons({
 
 	return currentUser?.role === 'Consultant' ? (
 		<Flex gap='md'>
-			<ActionIcon
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-				size='sm'
-			>
+			<ActionIcon disabled size='sm'>
 				<IconEditOff />
 			</ActionIcon>
 
-			<ActionIcon
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-				size='sm'
-			>
+			<ActionIcon disabled color='#B2B2B2' size='sm'>
 				<IconTrashOff />
 			</ActionIcon>
 		</Flex>

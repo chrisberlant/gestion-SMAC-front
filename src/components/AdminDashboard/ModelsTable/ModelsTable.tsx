@@ -26,6 +26,7 @@ import { toast } from 'sonner';
 import displayModelDeleteModal from '@modals/modelDeleteModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
+import { paginatedTableConfig } from '@utils/tableConfig';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -200,28 +201,14 @@ export default function ModelsTable() {
 		};
 
 	const table = useMantineReactTable({
+		...paginatedTableConfig,
 		columns,
 		data: models || [],
-		enableGlobalFilter: true,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableHiding: false,
-		sortDescFirst: true,
-		enableSortingRemoval: false,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateModel,
 		onEditingRowSave: handleSaveModel,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			// style: { minWidth: '100px' },
-			variant: 'default',
-		},
-		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '40vw' } },
+
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
@@ -233,32 +220,6 @@ export default function ModelsTable() {
 		renderTopToolbarCustomActions: ({ table }) => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 10, // rows per page
-			},
-			columnVisibility: {
-				id: false,
-			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['5', '10', '20', '30'],
-			withEdges: true,
-		},
 	});
 
 	return (

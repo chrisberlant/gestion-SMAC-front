@@ -21,6 +21,7 @@ import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
 import displayServiceDeleteModal from '@modals/serviceDeleteModal';
 import Loading from '../../Loading/Loading';
+import { paginatedTableConfig } from '@utils/tableConfig';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -139,29 +140,14 @@ export default function ServicesTable() {
 		};
 
 	const table = useMantineReactTable({
+		...paginatedTableConfig,
 		columns,
 		data: services || [],
-		enableGlobalFilter: true,
 		enableColumnFilters: false,
-		enableColumnActions: false,
-		createDisplayMode: 'row',
-		editDisplayMode: 'row',
-		enableEditing: true,
-		enableHiding: false,
-		sortDescFirst: true,
-		enableSortingRemoval: false,
-		enableDensityToggle: false,
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateService,
 		onEditingRowSave: handleSaveService,
 		onEditingRowCancel: () => setValidationErrors({}),
-		mantineSearchTextInputProps: {
-			placeholder: 'Rechercher',
-			// style: { minWidth: '100px' },
-			variant: 'default',
-		},
-		paginationDisplayMode: 'pages',
-		mantineTableContainerProps: { style: { minWidth: '20vw' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
@@ -173,32 +159,6 @@ export default function ServicesTable() {
 		renderTopToolbarCustomActions: () => (
 			<CreateButton createFunction={() => table.setCreatingRow(true)} />
 		),
-		mantineTableProps: {
-			striped: true,
-		},
-		mantineTopToolbarProps: {
-			mt: 'xs',
-			mr: 'xs',
-		},
-		mantineBottomToolbarProps: {
-			mt: 'sm',
-			mb: 'xs',
-			mx: 'xl',
-		},
-		initialState: {
-			density: 'xs',
-			pagination: {
-				pageIndex: 0, // page start
-				pageSize: 10, // rows per page
-			},
-			columnVisibility: {
-				id: false,
-			},
-		},
-		mantinePaginationProps: {
-			rowsPerPageOptions: ['5', '10', '20', '30'],
-			withEdges: true,
-		},
 	});
 
 	return (
