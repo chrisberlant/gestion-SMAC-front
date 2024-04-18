@@ -13,9 +13,7 @@ import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExisting
 export const useGetAllDevices = () =>
 	useQuery({
 		queryKey: ['devices'],
-		queryFn: async () => {
-			return (await fetchApi('/devices')) as DeviceType[];
-		},
+		queryFn: async () => (await fetchApi('/devices')) as DeviceType[],
 	});
 
 export const useCreateDevice = () =>

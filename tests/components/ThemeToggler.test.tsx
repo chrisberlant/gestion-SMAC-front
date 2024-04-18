@@ -7,7 +7,11 @@ describe('ThemeToggler', () => {
 		render(<ThemeToggler />);
 
 		const button = screen.getByRole('button');
-		expect(button).toHaveAttribute('aria-label', 'Passer en thème dark');
+
+		expect(button).toHaveAttribute(
+			'aria-label',
+			expect.stringMatching('thème sombre')
+		);
 	});
 
 	it('should change the button to switch to light theme if it has been clicked', async () => {
@@ -16,6 +20,10 @@ describe('ThemeToggler', () => {
 		const button = screen.getByRole('button');
 		const user = userEvent.setup();
 		await user.click(button);
-		expect(button).toHaveAttribute('aria-label', 'Passer en thème light');
+
+		expect(button).toHaveAttribute(
+			'aria-label',
+			expect.stringMatching('thème clair')
+		);
 	});
 });

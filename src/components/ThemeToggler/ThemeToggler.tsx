@@ -24,7 +24,7 @@ export default function ThemeToggler() {
 				variant='subtle'
 				size='30'
 				aria-label={`Passer en thème ${
-					computedColorScheme === 'light' ? 'dark' : 'light'
+					computedColorScheme === 'light' ? 'sombre' : 'clair'
 				}`}
 			>
 				<IconSun
