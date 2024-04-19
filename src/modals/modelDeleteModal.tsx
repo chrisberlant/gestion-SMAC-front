@@ -1,15 +1,15 @@
 import { modals } from '@mantine/modals';
-import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { ModelType } from '@customTypes/model';
 
 interface DisplayModelDeleteModalProps {
-	row: MRT_Row<ModelType>;
+	modelId: number;
+	modelFullName: string;
 	deleteModel: (id: number) => void;
 }
 
 const DisplayModelDeleteModal = ({
-	row,
+	modelId,
+	modelFullName,
 	deleteModel,
 }: DisplayModelDeleteModalProps) =>
 	modals.openConfirmModal({
@@ -17,14 +17,8 @@ const DisplayModelDeleteModal = ({
 		children: (
 			<Text>
 				Voulez-vous vraiment supprimer le modèle{' '}
-				<span className='bold-text'>
-					{`${row.original.brand} ${row.original.reference} ${
-						row.original.storage
-							? `de stockage ${row.original.storage}`
-							: ''
-					}`}
-				</span>{' '}
-				? Cette action est irréversible.
+				<span className='bold-text'>{modelFullName}</span> ? Cette
+				action est irréversible.
 			</Text>
 		),
 		centered: true,
@@ -33,7 +27,7 @@ const DisplayModelDeleteModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteModel(row.original.id),
+		onConfirm: () => deleteModel(modelId),
 	});
 
 export default DisplayModelDeleteModal;

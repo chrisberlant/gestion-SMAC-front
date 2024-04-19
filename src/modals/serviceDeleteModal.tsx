@@ -1,15 +1,15 @@
 import { modals } from '@mantine/modals';
-import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { ServiceType } from '@customTypes/service';
 
 interface DisplayServiceDeleteModalProps {
-	row: MRT_Row<ServiceType>;
+	serviceId: number;
+	serviceTitle: string;
 	deleteService: (id: number) => void;
 }
 
 const displayServiceDeleteModal = ({
-	row,
+	serviceId,
+	serviceTitle,
 	deleteService,
 }: DisplayServiceDeleteModalProps) =>
 	modals.openConfirmModal({
@@ -17,8 +17,8 @@ const displayServiceDeleteModal = ({
 		children: (
 			<Text>
 				Voulez-vous vraiment supprimer le service{' '}
-				<span className='bold-text'>{row.original.title}</span> ? Cette
-				action est irréversible.
+				<span className='bold-text'>{serviceTitle}</span> ? Cette action
+				est irréversible.
 			</Text>
 		),
 		centered: true,
@@ -27,7 +27,7 @@ const displayServiceDeleteModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteService(row.original.id),
+		onConfirm: () => deleteService(serviceId),
 	});
 
 export default displayServiceDeleteModal;

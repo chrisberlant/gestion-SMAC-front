@@ -152,7 +152,11 @@ export default function ServicesTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() =>
-					displayServiceDeleteModal({ row, deleteService })
+					displayServiceDeleteModal({
+						serviceId: row.original.id,
+						serviceTitle: row.original.title,
+						deleteService,
+					})
 				}
 			/>
 		),

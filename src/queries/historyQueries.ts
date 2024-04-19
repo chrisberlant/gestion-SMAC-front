@@ -24,7 +24,8 @@ export const useDeleteHistory = () =>
 			);
 			return previousHistory;
 		},
-		onSuccess: () => toast.success('Historique supprimé avec succès'),
+		onSuccess: () =>
+			toast.success('Historique sélectionné supprimé avec succès'),
 		onError: (_, __, previousHistory) =>
 			queryClient.setQueryData(['history'], previousHistory),
 	});

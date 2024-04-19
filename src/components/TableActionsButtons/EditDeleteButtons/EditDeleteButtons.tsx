@@ -24,19 +24,24 @@ export default function EditDeleteButtons({
 			<ActionIcon disabled size='sm'>
 				<IconEditOff />
 			</ActionIcon>
-
 			<ActionIcon disabled color='#B2B2B2' size='sm'>
 				<IconTrashOff />
 			</ActionIcon>
 		</Flex>
 	) : (
 		<Flex gap='md'>
-			<Tooltip label='Modifier'>
+			<Tooltip
+				label='Modifier'
+				events={{ hover: true, focus: true, touch: false }}
+			>
 				<ActionIcon onClick={editFunction} size='sm'>
 					<IconEdit />
 				</ActionIcon>
 			</Tooltip>
-			<Tooltip label='Supprimer'>
+			<Tooltip
+				label='Supprimer'
+				events={{ hover: true, focus: true, touch: false }}
+			>
 				<ActionIcon color='red' onClick={deleteFunction} size='sm'>
 					<IconTrash />
 				</ActionIcon>

@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
+import { setupServer } from 'msw/node';
+import handlers from './mockHandlers';
 
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
@@ -26,3 +28,9 @@ class ResizeObserver {
 }
 
 window.ResizeObserver = ResizeObserver;
+
+const server = setupServer(...handlers);
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+afterEach(() => server.resetHandlers());

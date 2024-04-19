@@ -1,15 +1,15 @@
 import { modals } from '@mantine/modals';
-import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { UserType } from '@customTypes/user';
 
 interface DisplayUserDeleteModalProps {
-	row: MRT_Row<UserType>;
+	userId: number;
+	userFullName: string;
 	deleteUser: (id: number) => void;
 }
 
 const displayUserDeleteModal = ({
-	row,
+	userId,
+	userFullName,
 	deleteUser,
 }: DisplayUserDeleteModalProps) =>
 	modals.openConfirmModal({
@@ -17,10 +17,8 @@ const displayUserDeleteModal = ({
 		children: (
 			<Text>
 				Voulez-vous vraiment supprimer l'utilisateur{' '}
-				<span className='bold-text'>
-					{row.original.firstName} {row.original.lastName}
-				</span>{' '}
-				? Cette action est irréversible.
+				<span className='bold-text'>{userFullName}</span> ? Cette action
+				est irréversible.
 			</Text>
 		),
 		centered: true,
@@ -29,7 +27,7 @@ const displayUserDeleteModal = ({
 		},
 		labels: { confirm: 'Supprimer', cancel: 'Annuler' },
 		confirmProps: { color: 'red' },
-		onConfirm: () => deleteUser(row.original.id),
+		onConfirm: () => deleteUser(userId),
 	});
 
 export default displayUserDeleteModal;

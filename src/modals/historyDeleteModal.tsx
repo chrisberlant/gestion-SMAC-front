@@ -3,8 +3,8 @@ import { modals } from '@mantine/modals';
 import { UseMutateFunction } from '@tanstack/react-query';
 
 export default function displayHistoryDeleteModal(
-	deleteHistory: UseMutateFunction<unknown, Error, number[], unknown>,
-	entriesToDelete: number[]
+	entriesToDelete: number[],
+	deleteHistory: UseMutateFunction<unknown, Error, number[], unknown>
 ) {
 	// Affichage uniquement si des lignes sont sélectionnées
 	if (entriesToDelete.length > 0)

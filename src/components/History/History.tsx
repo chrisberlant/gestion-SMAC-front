@@ -103,12 +103,17 @@ export default function History() {
 		mantineTableBodyRowProps: ({ row }) => ({
 			onClick: row.getToggleSelectedHandler(),
 		}),
-		renderTopToolbarCustomActions: () => {
+		renderTopToolbarCustomActions: ({ table }) => {
 			// Conversion de l'objet contenant les lignes sélectionnées en tableau de nombres
 			const entriesToDelete = Object.keys(
 				table.getState().rowSelection
 			).map(Number);
-			return <DeleteHistoryButton entriesToDelete={entriesToDelete} />;
+			return (
+				<DeleteHistoryButton
+					enabledButton={table.getIsSomeRowsSelected()}
+					entriesToDelete={entriesToDelete}
+				/>
+			);
 		},
 	});
 

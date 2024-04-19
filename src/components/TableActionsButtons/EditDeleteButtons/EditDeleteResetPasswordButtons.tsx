@@ -42,12 +42,18 @@ export default function EditDeleteResetPasswordButtons({
 		</Flex>
 	) : (
 		<Flex gap='md'>
-			<Tooltip label='Modifier'>
+			<Tooltip
+				label='Modifier'
+				events={{ hover: true, focus: true, touch: false }}
+			>
 				<ActionIcon onClick={editFunction} size='sm'>
 					<IconEdit />
 				</ActionIcon>
 			</Tooltip>
-			<Tooltip label='Réinitialiser le mot de passe'>
+			<Tooltip
+				label='Réinitialiser le mot de passe'
+				events={{ hover: true, focus: true, touch: false }}
+			>
 				<ActionIcon
 					color='orange'
 					onClick={resetPasswordFunction}
@@ -56,7 +62,10 @@ export default function EditDeleteResetPasswordButtons({
 					<IconKey />
 				</ActionIcon>
 			</Tooltip>
-			<Tooltip label='Supprimer'>
+			<Tooltip
+				label='Supprimer'
+				events={{ hover: true, focus: true, touch: false }}
+			>
 				<ActionIcon color='red' onClick={deleteFunction} size='sm'>
 					<IconTrash />
 				</ActionIcon>

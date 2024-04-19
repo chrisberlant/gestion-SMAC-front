@@ -246,7 +246,11 @@ export default function UsersTable() {
 				rowId={row.original.id}
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() =>
-					displayDeleteUserModal({ row, deleteUser })
+					displayDeleteUserModal({
+						userId: row.original.id,
+						userFullName: `${row.original.firstName} ${row.original.lastName}`,
+						deleteUser,
+					})
 				}
 				resetPasswordFunction={() =>
 					displayUserPasswordResetModal({ row, resetPassword })

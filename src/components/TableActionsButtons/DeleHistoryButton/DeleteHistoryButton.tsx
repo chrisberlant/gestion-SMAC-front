@@ -5,30 +5,26 @@ import { useDeleteHistory } from '../../../queries/historyQueries';
 
 interface DeleteHistoryButtonProps {
 	entriesToDelete: number[];
+	enabledButton: boolean;
 }
 
 export default function DeleteHistoryButton({
 	entriesToDelete,
+	enabledButton,
 }: DeleteHistoryButtonProps) {
 	const { data: currentUser } = useGetCurrentUser();
 	const { mutate: deleteHistory } = useDeleteHistory();
 
 	if (currentUser)
 		return currentUser.role !== 'Admin' ? (
-			<Button
-				mr='auto'
-				ml='xs'
-				style={{
-					cursor: 'not-allowed',
-				}}
-				color='#B2B2B2'
-			>
-				Effacer
+			<Button disabled mr='auto' ml='xs'>
+				Effacer les entrées
 			</Button>
 		) : (
 			<Button
+				disabled={!enabledButton}
 				onClick={() =>
-					displayHistoryDeleteModal(deleteHistory, entriesToDelete)
+					displayHistoryDeleteModal(entriesToDelete, deleteHistory)
 				}
 				mr='auto'
 				ml='xs'

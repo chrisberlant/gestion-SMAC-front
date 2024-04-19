@@ -213,7 +213,17 @@ export default function ModelsTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() =>
-					displayModelDeleteModal({ row, deleteModel })
+					displayModelDeleteModal({
+						modelId: row.original.id,
+						modelFullName: `${row.original.brand} ${
+							row.original.reference
+						} ${
+							row.original.storage
+								? `de stockage ${row.original.storage}`
+								: ''
+						}`,
+						deleteModel,
+					})
 				}
 			/>
 		),
