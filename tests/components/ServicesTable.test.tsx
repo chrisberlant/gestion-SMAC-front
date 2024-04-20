@@ -2,7 +2,13 @@ import { render, screen, waitFor } from '@tests-utils';
 import ServicesTable from '@components/AdminDashboard/ServicesTable/ServicesTable';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			retry: false,
+		},
+	},
+});
 
 describe('Devices', () => {
 	it('should render the services table title', () => {
@@ -24,12 +30,13 @@ describe('Devices', () => {
 			</QueryClientProvider>
 		);
 
-		await waitFor(() => screen.findByText(/first-service/i));
-		expect(
-			screen.getByText(/first-service/i, {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
+		await waitFor(() =>
+			expect(
+				screen.getByText(/first-service/i, {
+					selector: 'td',
+				})
+			).toBeInTheDocument()
+		);
 		expect(
 			screen.getByText(/second-service/i, {
 				selector: 'td',

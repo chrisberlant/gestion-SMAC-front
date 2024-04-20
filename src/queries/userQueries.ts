@@ -55,9 +55,7 @@ export const useGetCurrentUser = () =>
 export const useCheckLoginStatus = () =>
 	useQuery({
 		queryKey: ['currentUser'],
-		queryFn: async () => {
-			return (await fetchApi('/me')) as LoggedUserType;
-		},
+		queryFn: async () => (await fetchApi('/me')) as LoggedUserType,
 		meta: {
 			loginStatusQuery: 'true',
 		},
@@ -120,7 +118,7 @@ export const useUpdateCurrentUserPassword = (
 	useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			await fetchApi('/my-password', 'PATCH', form.values);
+			return await fetchApi('/my-password', 'PATCH', form.values);
 		},
 		onSuccess: async () => {
 			closePasswordModal();

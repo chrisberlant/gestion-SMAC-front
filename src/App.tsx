@@ -18,23 +18,21 @@ const Stats = lazy(() => import('./components/Stats/Stats'));
 const Lines = lazy(() => import('./components/Lines/Lines'));
 const History = lazy(() => import('./components/History/History'));
 
-function AppRoutes() {
-	return (
-		<Routes>
-			<Route element={<Login />} path='/' />
-			{/* Routes protégées, la connexion est nécessaire */}
-			<Route element={<PrivateRoutes />}>
-				<Route element={<Lines />} path='/lines' />
-				<Route element={<Devices />} path='/devices' />
-				<Route element={<Agents />} path='/agents' />
-				<Route element={<Stats />} path='/stats' />
-				<Route element={<History />} path='/history' />
-				<Route element={<AdminDashboard />} path='/admin-dashboard' />
-			</Route>
-			<Route element={<PageNotFound />} path='*' />
-		</Routes>
-	);
-}
+const AppRoutes = () => (
+	<Routes>
+		<Route element={<Login />} path='/' />
+		{/* Routes protégées, la connexion est nécessaire */}
+		<Route element={<PrivateRoutes />}>
+			<Route element={<Lines />} path='/lines' />
+			<Route element={<Devices />} path='/devices' />
+			<Route element={<Agents />} path='/agents' />
+			<Route element={<Stats />} path='/stats' />
+			<Route element={<History />} path='/history' />
+			<Route element={<AdminDashboard />} path='/admin-dashboard' />
+		</Route>
+		<Route element={<PageNotFound />} path='*' />
+	</Routes>
+);
 
 export default function App() {
 	return (
