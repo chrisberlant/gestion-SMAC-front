@@ -3,6 +3,19 @@ import { http, HttpResponse } from 'msw';
 export const apiUrl = process.env.VITE_API_URL;
 
 export const handlers = [
+	http.get(apiUrl + '/me', () =>
+		HttpResponse.json(
+			[
+				{
+					email: 'chuck.norris@gmail.com',
+					firstName: 'Chuck',
+					lastName: 'Norris',
+					role: 'Admin',
+				},
+			],
+			{ status: 200 }
+		)
+	),
 	http.get(apiUrl + '/services', () =>
 		HttpResponse.json(
 			[
@@ -12,14 +25,97 @@ export const handlers = [
 			{ status: 200 }
 		)
 	),
-	http.get(apiUrl + '/me', () =>
+	http.get(apiUrl + '/devices', () =>
 		HttpResponse.json(
 			[
 				{
-					email: 'chuck.norris@gmail.com',
-					firstName: 'Chuck',
-					lastName: 'Norris',
-					role: 'Admin',
+					id: 1,
+					imei: '123321456654780',
+					preparationDate: null,
+					attributionDate: null,
+					status: 'En stock',
+					isNew: true,
+					comments: null,
+					agentId: 2,
+					modelId: 1,
+				},
+				{
+					id: 2,
+					imei: '123321456654779',
+					preparationDate: '2023-01-07',
+					attributionDate: '2023-01-22',
+					status: 'Attribué',
+					isNew: false,
+					comments: 'commentaire appareil 2',
+					agentId: 1,
+					modelId: 2,
+				},
+			],
+			{ status: 200 }
+		)
+	),
+	http.get(apiUrl + '/agents', () =>
+		HttpResponse.json(
+			[
+				{
+					id: 1,
+					email: 'john.smith@gmail.com',
+					firstName: 'John',
+					lastName: 'Smith',
+					vip: false,
+					serviceId: 2,
+				},
+				{
+					id: 2,
+					email: 'karen.taylor@gmail.com',
+					firstName: 'Karen',
+					lastName: 'Taylor',
+					vip: true,
+					serviceId: 1,
+				},
+			],
+			{ status: 200 }
+		)
+	),
+	http.get(apiUrl + '/models', () =>
+		HttpResponse.json(
+			[
+				{
+					id: 1,
+					brand: 'Apple',
+					reference: 'iPhone 15',
+					storage: '256GB',
+				},
+				{
+					id: 2,
+					brand: 'Samsung',
+					reference: 'S24',
+					storage: null,
+				},
+			],
+			{ status: 200 }
+		)
+	),
+	http.get(apiUrl + '/lines', () =>
+		HttpResponse.json(
+			[
+				{
+					id: 1,
+					number: '0123456789',
+					profile: 'VD',
+					status: 'Active',
+					comments: 'commentaire ligne 1',
+					agentId: 1,
+					deviceId: 2,
+				},
+				{
+					id: 2,
+					number: '0987654321',
+					profile: 'V',
+					status: 'Résiliée',
+					comments: null,
+					agentId: 2,
+					deviceId: 1,
 				},
 			],
 			{ status: 200 }

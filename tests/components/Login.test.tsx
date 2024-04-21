@@ -39,7 +39,6 @@ describe('Login', () => {
 		).toBeInTheDocument();
 	});
 
-	// TODO fix
 	it('should redirect to the lines page if user is already logged in', async () => {
 		render(
 			<QueryClientProvider client={queryClient}>
@@ -49,8 +48,8 @@ describe('Login', () => {
 			</QueryClientProvider>
 		);
 
-		await waitFor(() =>
-			expect(screen.getByText(/lignes/i)).toBeInTheDocument()
-		);
+		await waitFor(() => {
+			expect(window.location.pathname).toBe('/lines');
+		});
 	});
 });
