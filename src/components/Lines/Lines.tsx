@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Flex, Loader } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
@@ -36,6 +36,7 @@ import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { getModifiedValues } from '@utils/index';
 import { virtualizedTableConfig } from '@utils/tableConfig';
+import Loading from '../Loading/Loading';
 
 export default function Lines() {
 	const {
@@ -543,7 +544,7 @@ export default function Lines() {
 		<ZoomableComponent>
 			<h2>Liste des lignes</h2>
 
-			{anyLoading && <Loader size='xl' />}
+			{anyLoading && <Loading />}
 
 			{anyError && (
 				<span>

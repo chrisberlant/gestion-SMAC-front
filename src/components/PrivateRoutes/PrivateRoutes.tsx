@@ -8,8 +8,8 @@ import Loading from '../Loading/Loading';
 export default function PrivateRoutes() {
 	const { data: loggedUser } = useGetCurrentUser();
 
-	if (loggedUser) {
-		return (
+	return (
+		loggedUser && (
 			<>
 				<Header />
 				<main className='app-content'>
@@ -19,6 +19,6 @@ export default function PrivateRoutes() {
 					<PageTopScroller />
 				</main>
 			</>
-		);
-	}
+		)
+	);
 }
