@@ -5,14 +5,13 @@ export const apiUrl = process.env.VITE_API_URL;
 export const handlers = [
 	http.get(apiUrl + '/me', () =>
 		HttpResponse.json(
-			[
-				{
-					email: 'chuck.norris@gmail.com',
-					firstName: 'Chuck',
-					lastName: 'Norris',
-					role: 'Admin',
-				},
-			],
+			{
+				email: 'chuck.norris@gmail.com',
+				firstName: 'Chuck',
+				lastName: 'Norris',
+				role: 'Admin',
+			},
+
 			{ status: 200 }
 		)
 	),

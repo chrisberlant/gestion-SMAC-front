@@ -31,15 +31,10 @@ describe('Users', () => {
 				})
 			).toBeInTheDocument()
 		);
-		expect(
-			screen.getByText('chuck.norris@gmail.com', {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
 		['Super', 'Administrator', 'Admin'].map((value) =>
 			expect(screen.getByText(value)).toBeInTheDocument()
 		);
-		['Chuck', 'Norris', 'Tech'].map((value) =>
+		['chuck.norris@gmail.com', 'Chuck', 'Norris', 'Tech'].map((value) =>
 			expect(screen.getByText(value)).toBeInTheDocument()
 		);
 	});
