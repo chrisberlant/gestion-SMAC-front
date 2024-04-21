@@ -1,19 +1,12 @@
 import { render, screen, waitFor } from '@tests-utils';
 import ServicesTable from '@components/AdminDashboard/ServicesTable/ServicesTable';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: false,
-		},
-	},
-});
+import { QueryClientProvider } from '@tanstack/react-query';
+import { testQueryClient } from '../setup';
 
 describe('Devices', () => {
 	it('should render the services table title', () => {
 		render(
-			<QueryClientProvider client={queryClient}>
+			<QueryClientProvider client={testQueryClient}>
 				<ServicesTable />
 			</QueryClientProvider>
 		);
@@ -25,7 +18,7 @@ describe('Devices', () => {
 
 	it('should render the first and second services in table rows', async () => {
 		render(
-			<QueryClientProvider client={queryClient}>
+			<QueryClientProvider client={testQueryClient}>
 				<ServicesTable />
 			</QueryClientProvider>
 		);

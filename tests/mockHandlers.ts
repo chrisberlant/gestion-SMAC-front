@@ -19,8 +19,8 @@ export const handlers = [
 	http.get(apiUrl + '/services', () =>
 		HttpResponse.json(
 			[
-				{ id: '1', title: 'first-service' },
-				{ id: '2', title: 'second-service' },
+				{ id: 1, title: 'first-service' },
+				{ id: 2, title: 'second-service' },
 			],
 			{ status: 200 }
 		)
@@ -41,7 +41,7 @@ export const handlers = [
 				},
 				{
 					id: 2,
-					imei: '123321456654779',
+					imei: '134321456654877',
 					preparationDate: '2023-01-07',
 					attributionDate: '2023-01-22',
 					status: 'Attribué',
@@ -87,7 +87,7 @@ export const handlers = [
 					storage: '256GB',
 				},
 				{
-					id: 2,
+					id: '2',
 					brand: 'Samsung',
 					reference: 'S24',
 					storage: null,
@@ -116,6 +116,27 @@ export const handlers = [
 					comments: null,
 					agentId: 2,
 					deviceId: 1,
+				},
+			],
+			{ status: 200 }
+		)
+	),
+	http.get(apiUrl + '/users', () =>
+		HttpResponse.json(
+			[
+				{
+					id: 1,
+					email: 'super.administrator@gmail.com',
+					firstName: 'Super',
+					lastName: 'Administrator',
+					role: 'Admin',
+				},
+				{
+					id: 2,
+					email: 'chuck.norris@gmail.com',
+					firstName: 'Chuck',
+					lastName: 'Norris',
+					role: 'Tech',
 				},
 			],
 			{ status: 200 }
