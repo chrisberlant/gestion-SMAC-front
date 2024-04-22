@@ -36,7 +36,7 @@ import { useGetAllDevices } from '../../queries/deviceQueries';
 import Loading from '../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
 
-export default function AgentsTable() {
+export default function Agents() {
 	const {
 		data: services,
 		isLoading: servicesLoading,

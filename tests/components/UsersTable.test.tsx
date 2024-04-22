@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@tests-utils';
+import { render, screen, waitFor, within } from '@tests-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { testQueryClient } from '../setup';
 import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
@@ -24,18 +24,15 @@ describe('Users', () => {
 			</QueryClientProvider>
 		);
 
-		await waitFor(() =>
-			expect(
-				screen.getByText('super.administrator@gmail.com', {
-					selector: 'td',
-				})
-			).toBeInTheDocument()
-		);
-		['Super', 'Administrator', 'Admin'].map((value) =>
-			expect(screen.getByText(value)).toBeInTheDocument()
-		);
+		const table = await screen.findByRole('table');
+		[
+			/super.administrator@gmail.com/i,
+			/super/i,
+			/administrator/i,
+			/admin/i,
+		].map((value) => within(table).getAllByText(value));
 		['chuck.norris@gmail.com', 'Chuck', 'Norris', 'Tech'].map((value) =>
-			expect(screen.getByText(value)).toBeInTheDocument()
+			within(table).getAllByText(value)
 		);
 	});
 });

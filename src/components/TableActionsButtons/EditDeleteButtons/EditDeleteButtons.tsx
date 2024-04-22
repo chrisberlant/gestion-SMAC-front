@@ -19,7 +19,7 @@ export default function EditDeleteButtons({
 }: EditDeleteButtonsProps) {
 	const { data: currentUser } = useGetCurrentUser();
 
-	return currentUser?.role !== 'Admin' && currentUser?.role !== 'Tech' ? (
+	return currentUser?.role === 'Consultant' ? (
 		<Flex gap='md'>
 			<ActionIcon disabled size='sm'>
 				<IconEditOff />

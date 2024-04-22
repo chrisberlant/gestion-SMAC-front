@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@tests-utils';
+import { render, screen, within } from '@tests-utils';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { testQueryClient } from '../setup';
 import ModelsTable from '../../src/components/AdminDashboard/ModelsTable/ModelsTable';
@@ -23,33 +23,10 @@ describe('Models', () => {
 			</QueryClientProvider>
 		);
 
-		await waitFor(() =>
-			expect(
-				screen.getByText(/apple/i, {
-					selector: 'td',
-				})
-			).toBeInTheDocument()
+		const table = await screen.findByRole('table');
+		[/apple/i, /iphone 15/i, /256gb/i].map((value) =>
+			within(table).getByText(value)
 		);
-
-		expect(
-			screen.getByText(/samsung/i, {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
-		expect(
-			screen.getByText(/iphone 15/i, {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
-		expect(
-			screen.getByText(/s24/i, {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
-		expect(
-			screen.getByText(/256gb/i, {
-				selector: 'td',
-			})
-		).toBeInTheDocument();
+		[/samsung/i, /s24/i].map((value) => within(table).getByText(value));
 	});
 });

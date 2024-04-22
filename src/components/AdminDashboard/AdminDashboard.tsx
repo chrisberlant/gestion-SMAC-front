@@ -16,12 +16,14 @@ export default function AdminDashboard() {
 	}, [currentUser?.role, navigate]);
 
 	return (
-		<ZoomableComponent className='admin-dashboard'>
-			<UsersTable />
-			<div className='horizontal-align-div'>
-				<ServicesTable />
-				<ModelsTable />
-			</div>
-		</ZoomableComponent>
+		currentUser?.role === 'Admin' && (
+			<ZoomableComponent className='admin-dashboard'>
+				<UsersTable />
+				<div className='horizontal-align-div'>
+					<ServicesTable />
+					<ModelsTable />
+				</div>
+			</ZoomableComponent>
+		)
 	);
 }
