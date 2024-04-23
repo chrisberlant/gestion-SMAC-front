@@ -1,28 +1,18 @@
-import { render, screen, waitFor, within } from '@tests-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { testQueryClient } from '../setup';
+import { render, screen, within } from '@tests-utils';
 import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
 import { expect } from 'vitest';
 
 describe('Users', () => {
 	it('should render the users table title', () => {
-		render(
-			<QueryClientProvider client={testQueryClient}>
-				<UsersTable />
-			</QueryClientProvider>
-		);
+		render(<UsersTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /utilisateurs/i })
 		).toBeInTheDocument();
 	});
 
-	it('should render the first and second users in table rows', async () => {
-		render(
-			<QueryClientProvider client={testQueryClient}>
-				<UsersTable />
-			</QueryClientProvider>
-		);
+	it('should render a table with the first and second users', async () => {
+		render(<UsersTable />);
 
 		const table = await screen.findByRole('table');
 		[

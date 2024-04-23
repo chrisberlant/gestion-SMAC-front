@@ -1,32 +1,18 @@
-import { render, screen, waitFor } from '@tests-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { mockServer, testQueryClient } from '../setup';
+import { screen, waitFor } from '@tests-utils';
+import { mockServer } from '../setup';
 import AdminDashboard from '../../src/components/AdminDashboard/AdminDashboard';
-import { BrowserRouter } from 'react-router-dom';
+
 import { http, HttpResponse } from 'msw';
 import { apiUrl } from '../mockHandlers';
+import { renderWithRouter } from '../utils/render';
 
 describe('Admin dashboard', () => {
 	it('should render the admin tables titles if current user is admin', async () => {
-		render(
-			<QueryClientProvider client={testQueryClient}>
-				<BrowserRouter>
-					<AdminDashboard />
-				</BrowserRouter>
-			</QueryClientProvider>
-		);
+		renderWithRouter(<AdminDashboard />);
 
-		await waitFor(() => {
-			expect(
-				screen.getByRole('heading', { name: /utilisateurs/i })
-			).toBeInTheDocument();
-			expect(
-				screen.getByRole('heading', { name: /services/i })
-			).toBeInTheDocument();
-			expect(
-				screen.getByRole('heading', { name: /modèles/i })
-			).toBeInTheDocument();
-		});
+		await screen.findByRole('heading', { name: /utilisateurs/i });
+		await screen.findByRole('heading', { name: /services/i });
+		await screen.findByRole('heading', { name: /modèles/i });
 	});
 
 	it('should redirect to the home page if user is tech', async () => {
@@ -45,17 +31,9 @@ describe('Admin dashboard', () => {
 			)
 		);
 
-		render(
-			<QueryClientProvider client={testQueryClient}>
-				<BrowserRouter>
-					<AdminDashboard />
-				</BrowserRouter>
-			</QueryClientProvider>
-		);
+		renderWithRouter(<AdminDashboard />);
 
-		await waitFor(() => {
-			expect(window.location.pathname).toBe('/');
-		});
+		await waitFor(() => expect(window.location.pathname).toBe('/'));
 	});
 
 	it('should redirect to the home page if user is consultant', async () => {
@@ -74,16 +52,8 @@ describe('Admin dashboard', () => {
 			)
 		);
 
-		render(
-			<QueryClientProvider client={testQueryClient}>
-				<BrowserRouter>
-					<AdminDashboard />
-				</BrowserRouter>
-			</QueryClientProvider>
-		);
+		renderWithRouter(<AdminDashboard />);
 
-		await waitFor(() => {
-			expect(window.location.pathname).toBe('/');
-		});
+		await waitFor(() => expect(window.location.pathname).toBe('/'));
 	});
 });

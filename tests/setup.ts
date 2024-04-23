@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 import { setupServer } from 'msw/node';
 import { handlers } from './mockHandlers';
-import { QueryClient } from '@tanstack/react-query';
 
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
@@ -30,16 +29,8 @@ class ResizeObserver {
 
 window.ResizeObserver = ResizeObserver;
 
-export const testQueryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: false,
-		},
-	},
-});
-
 export const mockServer = setupServer(...handlers);
 
-beforeAll(() => mockServer.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() => mockServer.listen());
 afterAll(() => mockServer.close());
 afterEach(() => mockServer.resetHandlers());

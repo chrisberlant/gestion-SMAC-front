@@ -1,6 +1,5 @@
-import { render, screen, waitFor } from '@tests-utils';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { mockServer, testQueryClient } from '../setup';
+import { render, screen } from '@tests-utils';
+import { mockServer } from '../setup';
 import EditDeleteButtons from '@components/TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
@@ -9,21 +8,16 @@ import { apiUrl } from '../mockHandlers';
 describe('Edit & delete buttons', () => {
 	it('should render the buttons if current user is admin', async () => {
 		render(
-			<QueryClientProvider client={testQueryClient}>
-				<EditDeleteButtons
-					editFunction={() => null}
-					deleteFunction={() => null}
-				/>
-			</QueryClientProvider>
+			<EditDeleteButtons
+				editFunction={() => null}
+				deleteFunction={() => null}
+			/>
 		);
 
-		await waitFor(() => {
-			const buttons = screen.getAllByRole('button');
-			expect(buttons.length).toBe(2);
-			buttons.forEach((button) => {
-				expect(button).toBeEnabled();
-			});
-		});
+		const buttons = await screen.findAllByRole('button');
+
+		expect(buttons.length).toBe(2);
+		buttons.forEach((button) => expect(button).toBeEnabled());
 	});
 
 	it('should render the buttons if current user is tech', async () => {
@@ -36,28 +30,23 @@ describe('Edit & delete buttons', () => {
 						lastName: 'Norris',
 						role: 'Tech',
 					},
-
 					{ status: 200 }
 				)
 			)
 		);
 
 		render(
-			<QueryClientProvider client={testQueryClient}>
-				<EditDeleteButtons
-					editFunction={() => null}
-					deleteFunction={() => null}
-				/>
-			</QueryClientProvider>
+			<EditDeleteButtons
+				editFunction={() => null}
+				deleteFunction={() => null}
+			/>
 		);
+		console.log('TECH TEST');
 
-		await waitFor(() => {
-			const buttons = screen.getAllByRole('button');
-			expect(buttons.length).toBe(2);
-			buttons.forEach((button) => {
-				expect(button).toBeEnabled();
-			});
-		});
+		const buttons = await screen.findAllByRole('button');
+
+		expect(buttons.length).toBe(2);
+		buttons.forEach((button) => expect(button).toBeEnabled());
 	});
 
 	it('should render the disabled buttons if current user is consultant', async () => {
@@ -70,27 +59,21 @@ describe('Edit & delete buttons', () => {
 						lastName: 'Norris',
 						role: 'Consultant',
 					},
-
 					{ status: 200 }
 				)
 			)
 		);
 
 		render(
-			<QueryClientProvider client={testQueryClient}>
-				<EditDeleteButtons
-					editFunction={() => null}
-					deleteFunction={() => null}
-				/>
-			</QueryClientProvider>
+			<EditDeleteButtons
+				editFunction={() => null}
+				deleteFunction={() => null}
+			/>
 		);
 
-		await waitFor(() => {
-			const buttons = screen.getAllByRole('button');
-			expect(buttons.length).toBe(2);
-			buttons.forEach((button) => {
-				expect(button).toBeDisabled();
-			});
-		});
+		const buttons = await screen.findAllByRole('button');
+
+		expect(buttons.length).toBe(2);
+		buttons.forEach((button) => expect(button).toBeDisabled());
 	});
 });

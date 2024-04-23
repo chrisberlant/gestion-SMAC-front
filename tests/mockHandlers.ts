@@ -11,7 +11,6 @@ export const handlers = [
 				lastName: 'Norris',
 				role: 'Admin',
 			},
-
 			{ status: 200 }
 		)
 	),
