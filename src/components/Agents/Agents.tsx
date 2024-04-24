@@ -273,7 +273,6 @@ export default function Agents() {
 				)?.id,
 			} as AgentCreationType;
 
-			console.log(creationData);
 			const validation = agentCreationSchema.safeParse(creationData);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
@@ -281,7 +280,6 @@ export default function Agents() {
 				validation.error.issues.forEach((item) => {
 					errors[item.path[0]] = item.message;
 				});
-				console.log(JSON.stringify(errors));
 				return setValidationErrors(errors);
 			}
 

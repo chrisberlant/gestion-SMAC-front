@@ -1,4 +1,4 @@
-import { useCreateAgent } from '@queries/agentQueries';
+import { useCreateAgent, useGetAllAgents } from '@queries/agentQueries';
 import { agentQuickCreationSchema } from '@validationSchemas/agentSchemas';
 import {
 	Modal,
@@ -6,6 +6,8 @@ import {
 	Button,
 	TextInput,
 	Select,
+	Flex,
+	InputLabel,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -13,7 +15,6 @@ import { toast } from 'sonner';
 import { useRef } from 'react';
 import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ServiceType } from '@customTypes/service';
-import { modals } from '@mantine/modals';
 
 interface AgentAddModalProps {
 	services?: ServiceType[];
@@ -27,7 +28,18 @@ export default function AgentQuickAddModal({
 	openedAgentAddModal,
 	closeAgentAddModal,
 }: AgentAddModalProps) {
-	const { mutate: createAgent } = useCreateAgent();
+	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
+	const closeModal = (cancel = false) => {
+		return () => {
+			closeAgentAddModal();
+			form.reset();
+			if (cancel && form.isDirty())
+				toast.warning("Aucune création d'agent n'a été effectuée");
+		};
+	};
+	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
+	const { data: agents } = useGetAllAgents();
+	const { mutate: createAgent } = useCreateAgent(toggleOverlay, closeModal());
 	const form = useForm({
 		validate: zodResolver(agentQuickCreationSchema),
 		initialValues: {
@@ -50,40 +62,32 @@ export default function AgentQuickAddModal({
 		label: service.title,
 	}));
 
-	// const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const closeModal = () => {
-		closeAgentAddModal();
-		form.reset();
-		// Si des champs avaient été modifiés
-		if (form.isDirty())
-			toast.warning("Aucune création d'agent n'a été effectuée");
+	const handleSubmit = () => {
+		if (agents?.find((agent) => agent.email === form.values.email))
+			return form.setFieldError(
+				'email',
+				'Un agent avec cette adresse mail existe déjà'
+			);
+		createAgent(form.getTransformedValues());
 	};
-	console.log(form.values);
-	console.log('Transformed : ' + JSON.stringify(form.getTransformedValues()));
 
 	return (
 		<div>
 			<Modal
 				opened={openedAgentAddModal}
-				onClose={closeModal}
+				onClose={closeModal(true)}
 				title="Ajout rapide d'un agent"
 				centered
 				overlayProps={{
 					blur: 3,
 				}}
 			>
-				<form
-					onSubmit={form.onSubmit(() => {
-						createAgent(form.getTransformedValues());
-						// form.reset();
-						// closeModal();
-					})}
-				>
-					{/* <LoadingOverlay
+				<form onSubmit={form.onSubmit(handleSubmit)}>
+					<LoadingOverlay
 						visible={visible}
 						zIndex={10}
 						overlayProps={{ radius: 'sm', blur: 2 }}
-					/> */}
+					/>
 					<TextInput
 						label='Adresse mail'
 						placeholder='Adresse mail'
@@ -101,25 +105,36 @@ export default function AgentQuickAddModal({
 						label='Prénom'
 						placeholder='Prénom'
 						{...form.getInputProps('firstName')}
-						mb='xl'
-					/>
-					VIP :
-					<SwitchButton
-						size='lg'
-						defaultValue={false}
-						valueRef={vipRef}
+						mb='xs'
 					/>
 					<Select
-						searchable
 						label='Service'
 						placeholder='Service'
 						data={formattedServices}
 						{...form.getInputProps('serviceId')}
+						searchable
+						clearable
+						mb='md'
 					/>
-					<Button fullWidth mt='xl' type='submit'>
+					<Flex gap={5} align='center'>
+						<InputLabel>VIP</InputLabel>
+						<SwitchButton
+							size='lg'
+							onLabel='Oui'
+							offLabel='Non'
+							defaultValue={false}
+							valueRef={vipRef}
+						/>
+					</Flex>
+					<Button fullWidth mt='lg' type='submit'>
 						Valider
 					</Button>
-					<Button fullWidth mt='md' color='grey' onClick={closeModal}>
+					<Button
+						fullWidth
+						mt='md'
+						color='grey'
+						onClick={closeModal(true)}
+					>
 						Annuler
 					</Button>
 				</form>

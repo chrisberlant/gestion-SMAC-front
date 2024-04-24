@@ -18,11 +18,16 @@ export const useGetAllAgents = () =>
 		},
 	});
 
-// Créer un agent
-export const useCreateAgent = () =>
+// Créer un agent, en cas de création via ajout rapide, la gestion de la modale est ajoutée
+export const useCreateAgent = (
+	toggleOverlay?: () => void,
+	closeQuickAddModal?: () => void
+) =>
 	useMutation({
-		mutationFn: async (newAgent: AgentCreationType) =>
-			(await fetchApi('/agent', 'POST', newAgent)) as AgentType,
+		mutationFn: async (newAgent: AgentCreationType) => {
+			if (toggleOverlay) toggleOverlay();
+			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
+		},
 		onMutate: async (newAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents: AgentType[] | undefined =
@@ -31,7 +36,6 @@ export const useCreateAgent = () =>
 				...agents,
 				{
 					...newAgent,
-					email: newAgent.email,
 				},
 			]);
 			return previousAgents;
@@ -48,6 +52,12 @@ export const useCreateAgent = () =>
 		},
 		onError: (_, __, previousAgents) =>
 			queryClient.setQueryData(['agents'], previousAgents),
+		onSettled: () => {
+			if (toggleOverlay && closeQuickAddModal) {
+				toggleOverlay();
+				closeQuickAddModal();
+			}
+		},
 	});
 
 // Mettre à jour un agent
