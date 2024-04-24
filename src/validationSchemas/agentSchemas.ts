@@ -6,16 +6,24 @@ export const agentCreationSchema = z.strictObject({
 			required_error: "L'adresse mail doit être renseignée",
 			invalid_type_error: "Le format de l'adresse mail est incorrect",
 		})
-		.email("Le format de l'adresse mail est incorrect"),
-	lastName: z.string({
-		required_error: 'Le nom de famille doit être renseigné',
-		invalid_type_error:
-			'Le nom de famille doit être une chaîne de caractères',
-	}),
-	firstName: z.string({
-		required_error: 'Le prénom doit être renseigné',
-		invalid_type_error: 'Le prénom doit être une chaîne de caractères',
-	}),
+		.email("Le format de l'adresse mail est incorrect")
+		.trim()
+		.min(1, "L'adresse mail doit être renseignée"),
+	lastName: z
+		.string({
+			required_error: 'Le nom de famille doit être renseigné',
+			invalid_type_error:
+				'Le nom de famille doit être une chaîne de caractères',
+		})
+		.trim()
+		.min(1, 'Le nom de famille doit être renseigné'),
+	firstName: z
+		.string({
+			required_error: 'Le prénom doit être renseigné',
+			invalid_type_error: 'Le prénom doit être une chaîne de caractères',
+		})
+		.trim()
+		.min(1, 'Le prénom doit être renseigné'),
 	vip: z.boolean({
 		required_error: 'Le statut vip doit être renseigné',
 		invalid_type_error: 'Le statut vip doit être un booléen',
@@ -72,4 +80,11 @@ export const agentUpdateSchema = z.strictObject({
 		.int("L'id du service doit être un nombre entier")
 		.positive("L'id du service fourni est incorrect")
 		.optional(),
+});
+
+// Schéma utilisé lors de la création d'agent via modale
+export const agentQuickCreationSchema = agentCreationSchema.extend({
+	serviceId: z.string({
+		required_error: 'Le service doit être renseigné',
+	}),
 });

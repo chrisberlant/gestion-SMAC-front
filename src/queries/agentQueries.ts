@@ -21,9 +21,8 @@ export const useGetAllAgents = () =>
 // Créer un agent
 export const useCreateAgent = () =>
 	useMutation({
-		mutationFn: async (newAgent: AgentCreationType) => {
-			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
-		},
+		mutationFn: async (newAgent: AgentCreationType) =>
+			(await fetchApi('/agent', 'POST', newAgent)) as AgentType,
 		onMutate: async (newAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents: AgentType[] | undefined =
@@ -47,10 +46,8 @@ export const useCreateAgent = () =>
 			);
 			toast.success('Agent créé avec succès');
 		},
-		onError: (_, __, previousAgents) => {
-			if (previousAgents)
-				queryClient.setQueryData(['agents'], previousAgents);
-		},
+		onError: (_, __, previousAgents) =>
+			queryClient.setQueryData(['agents'], previousAgents),
 	});
 
 // Mettre à jour un agent
@@ -70,7 +67,7 @@ export const useUpdateAgent = () =>
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) =>
 				agents.map((agent) =>
 					agent.id === updatedAgent.id
-						? { ...agent, ...updatedAgent, devices: agent.devices }
+						? { ...agent, ...updatedAgent }
 						: agent
 				)
 			);

@@ -1,8 +1,8 @@
 import { Button } from '@mantine/core';
 import { useGetCurrentUser } from '@queries/userQueries';
 import { useDisclosure } from '@mantine/hooks';
-import AgentAddModal from './AgentAddModal';
-import { ServiceType } from '../../../types/service';
+import AgentQuickAddModal from './AgentQuickAddModal';
+import { ServiceType } from '@customTypes/service';
 
 interface QuickAddAgentButtonProps {
 	services?: ServiceType[];
@@ -26,7 +26,7 @@ export default function QuickAddAgentButton({
 			<Button onClick={openAgentAddModal} mr='auto' ml='xs'>
 				Ajout rapide agent
 			</Button>
-			<AgentAddModal
+			<AgentQuickAddModal
 				services={services}
 				openedAgentAddModal={openedAgentAddModal}
 				closeAgentAddModal={closeAgentAddModal}

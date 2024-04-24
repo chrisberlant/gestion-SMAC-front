@@ -1,5 +1,5 @@
 import { useCreateAgent } from '@queries/agentQueries';
-import { agentCreationSchema } from '../../../validationSchemas/agentSchemas';
+import { agentQuickCreationSchema } from '@validationSchemas/agentSchemas';
 import {
 	Modal,
 	LoadingOverlay,
@@ -11,8 +11,9 @@ import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import { useRef } from 'react';
-import SwitchButton from '../../SwitchButton/SwitchButton';
+import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ServiceType } from '@customTypes/service';
+import { modals } from '@mantine/modals';
 
 interface AgentAddModalProps {
 	services?: ServiceType[];
@@ -21,30 +22,35 @@ interface AgentAddModalProps {
 }
 
 // Modale permettant d'ajouter un agent rapidement
-export default function AgentAddModal({
+export default function AgentQuickAddModal({
 	services,
 	openedAgentAddModal,
 	closeAgentAddModal,
 }: AgentAddModalProps) {
 	const { mutate: createAgent } = useCreateAgent();
 	const form = useForm({
-		validate: zodResolver(agentCreationSchema),
+		validate: zodResolver(agentQuickCreationSchema),
 		initialValues: {
 			lastName: '',
 			firstName: '',
 			email: '',
 			vip: false,
-			serviceId: 0,
+			serviceId: '',
 		},
+		transformValues: (values) => ({
+			...values,
+			serviceId: Number(values.serviceId),
+			vip: vipRef.current,
+		}),
 	});
-	const vipRef = useRef<boolean>(true);
+	const vipRef = useRef<boolean>(false);
 
 	const formattedServices = services?.map((service) => ({
-		value: String(service.id),
+		value: service.id.toString(),
 		label: service.title,
 	}));
 
-	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
+	// const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const closeModal = () => {
 		closeAgentAddModal();
 		form.reset();
@@ -53,6 +59,7 @@ export default function AgentAddModal({
 			toast.warning("Aucune création d'agent n'a été effectuée");
 	};
 	console.log(form.values);
+	console.log('Transformed : ' + JSON.stringify(form.getTransformedValues()));
 
 	return (
 		<div>
@@ -67,11 +74,9 @@ export default function AgentAddModal({
 			>
 				<form
 					onSubmit={form.onSubmit(() => {
-						createAgent({
-							...form.values,
-							vip: vipRef.current,
-						});
-						form.reset();
+						createAgent(form.getTransformedValues());
+						// form.reset();
+						// closeModal();
 					})}
 				>
 					{/* <LoadingOverlay
@@ -104,7 +109,6 @@ export default function AgentAddModal({
 						defaultValue={false}
 						valueRef={vipRef}
 					/>
-					// TODO transformation en nombre avant validation schéma
 					<Select
 						searchable
 						label='Service'
