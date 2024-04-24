@@ -339,7 +339,6 @@ export default function DevicesTable() {
 				validation.error.issues.forEach((item) => {
 					errors[item.path[0]] = item.message;
 				});
-				console.log(JSON.stringify(errors));
 				return setValidationErrors(errors);
 			}
 

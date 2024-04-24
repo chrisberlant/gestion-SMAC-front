@@ -38,6 +38,7 @@ import { getModifiedValues } from '@utils/index';
 import { virtualizedTableConfig } from '@utils/tableConfig';
 import Loading from '../Loading/Loading';
 import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAddButton/AgentQuickAddButton';
+import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAddButton/DeviceQuickAddButton';
 
 export default function Lines() {
 	const {
@@ -512,6 +513,7 @@ export default function Lines() {
 					createFunction={() => table.setCreatingRow(true)}
 				/>
 				<AgentQuickAddButton services={services} />
+				<DeviceQuickAddButton models={models} agents={agents} />
 				<CsvImportButton model='lines' />
 				{/* <Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
 					<Button color='green' onClick={() => console.log(null)}>

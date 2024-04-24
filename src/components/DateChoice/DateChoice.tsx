@@ -6,7 +6,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);
 
 interface DateChoiceProps {
-	defaultValue: string;
+	defaultValue?: string;
 	dateRef: React.MutableRefObject<string | null>;
 }
 
@@ -28,9 +28,7 @@ export default function DateChoice({ defaultValue, dateRef }: DateChoiceProps) {
 			clearable
 			placeholder='Date'
 			value={value}
-			onChange={(e) => {
-				setValue(e);
-			}}
+			onChange={(e) => setValue(e)}
 		/>
 	);
 }

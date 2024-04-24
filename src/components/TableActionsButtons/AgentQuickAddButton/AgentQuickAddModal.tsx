@@ -29,7 +29,7 @@ export default function AgentQuickAddModal({
 	closeAgentAddModal,
 }: AgentAddModalProps) {
 	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
-	const closeModal = (cancel = false) => {
+	const closeModal = (cancel: 'cancel' | undefined = undefined) => {
 		return () => {
 			closeAgentAddModal();
 			form.reset();
@@ -75,7 +75,7 @@ export default function AgentQuickAddModal({
 		<div>
 			<Modal
 				opened={openedAgentAddModal}
-				onClose={closeModal(true)}
+				onClose={closeModal('cancel')}
 				title="Ajout rapide d'un agent"
 				centered
 				overlayProps={{
@@ -133,7 +133,7 @@ export default function AgentQuickAddModal({
 						fullWidth
 						mt='md'
 						color='grey'
-						onClick={closeModal(true)}
+						onClick={closeModal('cancel')}
 					>
 						Annuler
 					</Button>

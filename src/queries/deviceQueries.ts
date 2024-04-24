@@ -16,10 +16,16 @@ export const useGetAllDevices = () =>
 		queryFn: async () => (await fetchApi('/devices')) as DeviceType[],
 	});
 
-export const useCreateDevice = () =>
+// Créer un appareil, en cas de création via ajout rapide, la gestion de la modale est ajoutée
+export const useCreateDevice = (
+	toggleOverlay?: () => void,
+	closeQuickAddModal?: () => void
+) =>
 	useMutation({
-		mutationFn: async (device: DeviceCreationType) =>
-			(await fetchApi('/device', 'POST', device)) as DeviceType,
+		mutationFn: async (device: DeviceCreationType) => {
+			if (toggleOverlay) toggleOverlay();
+			return (await fetchApi('/device', 'POST', device)) as DeviceType;
+		},
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -43,6 +49,12 @@ export const useCreateDevice = () =>
 		},
 		onError: (_, __, previousDevices) =>
 			queryClient.setQueryData(['devices'], previousDevices),
+		onSettled: () => {
+			if (toggleOverlay && closeQuickAddModal) {
+				toggleOverlay();
+				closeQuickAddModal();
+			}
+		},
 	});
 
 export const useUpdateDevice = () =>
