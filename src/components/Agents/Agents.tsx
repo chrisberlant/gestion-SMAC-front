@@ -129,6 +129,7 @@ export default function Agents() {
 				accessorKey: 'email',
 				size: 150,
 				mantineEditTextInputProps: {
+					type: 'email',
 					error: validationErrors?.email,
 					onFocus: () =>
 						setValidationErrors({

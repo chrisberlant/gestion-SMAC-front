@@ -1,8 +1,9 @@
-import { Button } from '@mantine/core';
+import { Button, Tooltip } from '@mantine/core';
 import { useGetCurrentUser } from '@queries/userQueries';
 import { useDisclosure } from '@mantine/hooks';
 import AgentQuickAddModal from './AgentQuickAddModal';
 import { ServiceType } from '@customTypes/service';
+import { IconUserPlus } from '@tabler/icons-react';
 
 interface AgentQuickAddButtonProps {
 	services?: ServiceType[];
@@ -19,14 +20,20 @@ export default function AgentQuickAddButton({
 
 	if (currentUser)
 		return currentUser?.role === 'Consultant' ? (
-			<Button mr='auto' ml='xs' disabled>
-				Ajout rapide agent
+			<Button mr='xl' disabled>
+				<IconUserPlus />
 			</Button>
 		) : (
 			<>
-				<Button onClick={openAgentAddModal} mr='auto' ml='xs'>
-					Ajout rapide agent
-				</Button>
+				<Tooltip
+					label="Ajout rapide d'un agent"
+					events={{ hover: true, focus: true, touch: false }}
+					offset={10}
+				>
+					<Button onClick={openAgentAddModal} mr='xl'>
+						<IconUserPlus />
+					</Button>
+				</Tooltip>
 				<AgentQuickAddModal
 					services={services}
 					openedAgentAddModal={openedAgentAddModal}

@@ -18,6 +18,7 @@ import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ModelType } from '@customTypes/model';
 import { AgentType } from '@customTypes/agent';
 import DateChoice from '@components/DateChoice/DateChoice';
+import { DeviceCreationType } from '@customTypes/device';
 
 interface DeviceAddModalProps {
 	agents?: AgentType[];
@@ -63,14 +64,15 @@ export default function DeviceQuickAddModal({
 			attributionDate: null,
 			comments: null,
 		},
-		transformValues: (values) => ({
-			...values,
-			modelId: Number(values.modelId),
-			agentId: values.agentId ? Number(values.agentId) : null,
-			isNew: isNewRef.current,
-			preparationDate: preparationDateRef.current,
-			attributionDate: attributionDateRef.current,
-		}),
+		transformValues: (values) =>
+			({
+				...values,
+				modelId: Number(values.modelId),
+				agentId: values.agentId ? Number(values.agentId) : null,
+				isNew: isNewRef.current,
+				preparationDate: preparationDateRef.current,
+				attributionDate: attributionDateRef.current,
+			} as DeviceCreationType),
 	});
 
 	console.log(form.values);

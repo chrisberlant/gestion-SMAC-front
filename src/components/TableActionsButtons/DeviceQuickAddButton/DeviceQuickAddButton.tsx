@@ -1,9 +1,10 @@
-import { Button } from '@mantine/core';
+import { Button, Tooltip } from '@mantine/core';
 import { useGetCurrentUser } from '@queries/userQueries';
 import { useDisclosure } from '@mantine/hooks';
 import { ModelType } from '@customTypes/model';
 import DeviceQuickAddModal from './DeviceQuickAddModal';
 import { AgentType } from '../../../types/agent';
+import { IconDeviceMobilePlus } from '@tabler/icons-react';
 
 interface DeviceQuickAddButtonProps {
 	models?: ModelType[];
@@ -22,14 +23,20 @@ export default function DeviceQuickAddButton({
 
 	if (currentUser)
 		return currentUser?.role === 'Consultant' ? (
-			<Button mr='auto' ml='xs' disabled>
-				Ajout rapide appareil
+			<Button mr='xl' disabled>
+				<IconDeviceMobilePlus />
 			</Button>
 		) : (
 			<>
-				<Button onClick={openDeviceAddModal} mr='auto' ml='xs'>
-					Ajout rapide appareil
-				</Button>
+				<Tooltip
+					label="Ajout rapide d'un appareil"
+					events={{ hover: true, focus: true, touch: false }}
+					offset={10}
+				>
+					<Button onClick={openDeviceAddModal} mr='xl'>
+						<IconDeviceMobilePlus />
+					</Button>
+				</Tooltip>
 				<DeviceQuickAddModal
 					models={models}
 					agents={agents}
