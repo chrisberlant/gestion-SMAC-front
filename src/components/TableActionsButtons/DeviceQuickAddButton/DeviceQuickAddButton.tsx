@@ -3,7 +3,7 @@ import { useGetCurrentUser } from '@queries/userQueries';
 import { useDisclosure } from '@mantine/hooks';
 import { ModelType } from '@customTypes/model';
 import DeviceQuickAddModal from './DeviceQuickAddModal';
-import { AgentType } from '../../../types/agent';
+import { AgentType } from '@customTypes/agent';
 import { IconDeviceMobilePlus } from '@tabler/icons-react';
 
 interface DeviceQuickAddButtonProps {

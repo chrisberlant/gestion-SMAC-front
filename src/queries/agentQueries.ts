@@ -7,7 +7,7 @@ import {
 	AgentType,
 	AgentUpdateType,
 } from '@customTypes/agent';
-import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
+import displayAlreadyExistingValuesOnImportModal from '@modals/alreadyExistingValuesOnImportModal';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () =>

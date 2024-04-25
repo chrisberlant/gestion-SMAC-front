@@ -11,7 +11,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckLoginStatus, useLogin } from '@queries/userQueries';
-import { userLoginSchema } from '../../validationSchemas/userSchemas';
+import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
 import Loading from '../Loading/Loading';
 

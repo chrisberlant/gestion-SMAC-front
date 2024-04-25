@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { useGetCurrentUser, useUpdateCurrentUser } from '@queries/userQueries';
 import { currentUserUpdateSchema } from '@validationSchemas/userSchemas';
 import ChangePassword from './ChangePassword/ChangePassword';
+import { IconKey } from '@tabler/icons-react';
 
 interface AccountSettingsProps {
 	openedAccountModal: boolean;
@@ -44,73 +45,76 @@ export default function AccountSettings({
 	};
 
 	return (
-		<div className='account-settings'>
-			<Modal
-				opened={openedAccountModal}
-				onClose={closeModal}
-				title='Paramètres du compte'
-				centered
-				overlayProps={{
-					blur: 3,
-				}}
-			>
-				<form
-					onSubmit={form.onSubmit(() =>
-						updateCurrentUser(form.values)
-					)}
+		currentUser && (
+			<>
+				<Modal
+					opened={openedAccountModal}
+					onClose={closeModal}
+					title='Paramètres du compte'
+					centered
+					overlayProps={{
+						blur: 3,
+					}}
 				>
-					<LoadingOverlay
-						visible={visible}
-						zIndex={10}
-						overlayProps={{ radius: 'sm', blur: 2 }}
-					/>
-					<TextInput
-						label='Adresse mail'
-						placeholder='Votre email'
-						{...form.getInputProps('email')}
-						mb='xs'
-					/>
-					<TextInput
-						label='Nom'
-						placeholder='Votre nom'
-						{...form.getInputProps('lastName')}
-						mb='xs'
-					/>
-					<TextInput
-						label='Prénom'
-						placeholder='Votre prénom'
-						{...form.getInputProps('firstName')}
-						mb='xl'
-					/>
+					<form
+						onSubmit={form.onSubmit(() =>
+							updateCurrentUser(form.values)
+						)}
+					>
+						<LoadingOverlay
+							visible={visible}
+							zIndex={10}
+							overlayProps={{ radius: 'sm', blur: 2 }}
+						/>
+						<TextInput
+							label='Adresse mail'
+							placeholder='Votre email'
+							{...form.getInputProps('email')}
+							mb='xs'
+						/>
+						<TextInput
+							label='Nom'
+							placeholder='Votre nom'
+							{...form.getInputProps('lastName')}
+							mb='xs'
+						/>
+						<TextInput
+							label='Prénom'
+							placeholder='Votre prénom'
+							{...form.getInputProps('firstName')}
+							mb='xl'
+						/>
 
-					<Button fullWidth mt='md' type='submit'>
-						Valider
-					</Button>
-					<Button
-						fullWidth
-						mt='md'
-						onClick={() => {
-							closeAccountModal();
-							openPasswordModal();
-						}}
-					>
-						Modifier le mot de passe
-					</Button>
-					<Button
-						fullWidth
-						mt='md'
-						color='grey'
-						onClick={closeAccountModal}
-					>
-						Annuler
-					</Button>
-				</form>
-			</Modal>
-			<ChangePassword
-				opened={openedPasswordModal}
-				closePasswordModal={closePasswordModal}
-				openAccountModal={openAccountModal}
-			/>
-		</div>
+						<Button fullWidth mt='md' type='submit'>
+							Valider
+						</Button>
+						<Button
+							fullWidth
+							mt='md'
+							onClick={() => {
+								closeAccountModal();
+								openPasswordModal();
+							}}
+							leftSection={<IconKey size={20} />}
+						>
+							Modifier le mot de passe
+						</Button>
+						<Button
+							fullWidth
+							mt='md'
+							color='grey'
+							onClick={closeAccountModal}
+						>
+							Annuler
+						</Button>
+					</form>
+				</Modal>
+				<ChangePassword
+					opened={openedPasswordModal}
+					closePasswordModal={closePasswordModal}
+					openAccountModal={openAccountModal}
+				/>
+			</>
+		)
 	);
 }

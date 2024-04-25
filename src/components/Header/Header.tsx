@@ -9,24 +9,45 @@ import {
 	rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronDown, IconLogout, IconSettings } from '@tabler/icons-react';
+import {
+	IconChevronDown,
+	IconDeviceMobile,
+	IconHistory,
+	IconLogout,
+	IconMobiledata,
+	IconReportAnalytics,
+	IconSettings,
+	IconUser,
+} from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import FrenchFlag from '../../assets/french-flag.svg';
+import FrenchFlag from '@assets/french-flag.svg';
 import { useGetCurrentUser } from '@queries/userQueries';
 import AccountSettings from '../AccountSettings/AccountSettings';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';
 import { toast } from 'sonner';
 
-// Liste des différents onglets avec leurs titres et liens
-const tabs = {
-	Lignes: '/lines',
-	Appareils: '/devices',
-	Agents: '/agents',
-	Statistiques: '/stats',
-} as Record<string, string>;
+// Liste des différents onglets avec leurs titres, liens et icônes
+interface TabsType {
+	[key: string]: {
+		path: string;
+		icon: JSX.Element;
+	};
+}
+const tabs: TabsType = {
+	Lignes: {
+		path: '/lines',
+		icon: <IconMobiledata size={20} />,
+	},
+	Appareils: { path: '/devices', icon: <IconDeviceMobile size={20} /> },
+	Agents: { path: '/agents', icon: <IconUser size={20} /> },
+	Statistiques: {
+		path: '/stats',
+		icon: <IconReportAnalytics size={20} />,
+	},
+};
 
 export default function Header() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -39,16 +60,23 @@ export default function Header() {
 	if (currentUser) {
 		if (currentUser.role === 'Admin') {
 			// Onglets accessibles uniquement par les admins
-			tabs.Historique = 'history';
-			tabs.Administration = 'admin-dashboard';
+			tabs.Historique = {
+				path: 'history',
+				icon: <IconHistory size={20} />,
+			};
+			tabs.Administration = {
+				path: 'admin-dashboard',
+				icon: <IconSettings size={20} />,
+			};
 		}
 
 		// Création des onglets et détection de celui actif
-		const tabsItems = Object.entries(tabs).map(([title, path]) => (
-			<NavLink to={path} key={title}>
+		const tabsItems = Object.entries(tabs).map(([title, values]) => (
+			<NavLink to={values.path} key={title}>
 				{({ isActive }) => (
 					<Tabs.Tab
 						value={title}
+						leftSection={values.icon}
 						{...(isActive ? { 'data-active': 'true' } : {})}
 					>
 						{title}
@@ -147,6 +175,7 @@ export default function Header() {
 				<nav>
 					<Flex justify='center'>
 						<Tabs
+							radius='sm'
 							variant='outline'
 							visibleFrom='sm'
 							classNames={{
