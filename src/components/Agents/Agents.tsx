@@ -194,8 +194,10 @@ export default function Agents() {
 				),
 				Edit: ({ cell }) => (
 					<SwitchButton
-						size='sm'
+						size='lg'
 						defaultValue={cell.getValue() ? true : false}
+						onLabel='Oui'
+						offLabel='Non'
 						valueRef={vipRef}
 					/>
 				),
@@ -369,6 +371,12 @@ export default function Agents() {
 
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
+		initialState: {
+			density: 'xs',
+			columnVisibility: {
+				id: false,
+			},
+		},
 		columns,
 		data: agents || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

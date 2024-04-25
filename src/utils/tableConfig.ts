@@ -37,12 +37,6 @@ export const virtualizedTableConfig = {
 		| 'cell'
 		| 'table'
 		| undefined,
-	initialState: {
-		density: 'xs' as MRT_DensityState,
-		columnVisibility: {
-			id: false,
-		},
-	},
 };
 
 // Paramètres utilisés dans les tableaux paginés
@@ -77,16 +71,6 @@ export const paginatedTableConfig = {
 		mx: 'xl',
 	},
 	mantineTableContainerProps: { style: { minWidth: '40vw' } },
-	initialState: {
-		density: 'xs' as MRT_DensityState,
-		pagination: {
-			pageIndex: 0,
-			pageSize: 10,
-		},
-		columnVisibility: {
-			id: false,
-		},
-	},
 	mantinePaginationProps: {
 		rowsPerPageOptions: ['5', '10', '20', '30'],
 		withEdges: true,

@@ -202,6 +202,16 @@ export default function ModelsTable() {
 
 	const table = useMantineReactTable({
 		...paginatedTableConfig,
+		initialState: {
+			density: 'xs',
+			pagination: {
+				pageIndex: 0,
+				pageSize: 10,
+			},
+			columnVisibility: {
+				id: false,
+			},
+		},
 		columns,
 		data: models || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

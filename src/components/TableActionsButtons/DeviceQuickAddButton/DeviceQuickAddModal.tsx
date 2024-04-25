@@ -75,9 +75,6 @@ export default function DeviceQuickAddModal({
 			} as DeviceCreationType),
 	});
 
-	console.log(form.values);
-	console.log('Transformed : ' + JSON.stringify(form.getTransformedValues()));
-
 	const formattedModels = models?.map((model) => ({
 		value: model.id.toString(),
 		label: `${model.brand} ${model.reference}${

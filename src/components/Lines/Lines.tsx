@@ -494,6 +494,12 @@ export default function Lines() {
 
 	const table: MRT_TableInstance<LineType> = useMantineReactTable({
 		...virtualizedTableConfig,
+		initialState: {
+			density: 'xs',
+			columnVisibility: {
+				id: false,
+			},
+		},
 		columns,
 		data: lines || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

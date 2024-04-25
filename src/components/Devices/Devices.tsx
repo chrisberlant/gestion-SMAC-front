@@ -2,6 +2,7 @@ import { Flex } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
+	MRT_DensityState,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,
@@ -453,6 +454,12 @@ export default function DevicesTable() {
 
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
+		initialState: {
+			density: 'xs',
+			columnVisibility: {
+				id: false,
+			},
+		},
 		columns,
 		data: devices || [],
 		onCreatingRowCancel: () => setValidationErrors({}),

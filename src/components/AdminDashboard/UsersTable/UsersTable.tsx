@@ -233,6 +233,16 @@ export default function UsersTable() {
 
 	const table = useMantineReactTable({
 		...paginatedTableConfig,
+		initialState: {
+			density: 'xs',
+			pagination: {
+				pageIndex: 0,
+				pageSize: 10,
+			},
+			columnVisibility: {
+				id: false,
+			},
+		},
 		columns,
 		data: users || [],
 		onCreatingRowCancel: () => setValidationErrors({}),
