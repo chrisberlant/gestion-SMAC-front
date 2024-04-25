@@ -84,7 +84,10 @@ export const agentUpdateSchema = z.strictObject({
 
 // Schéma utilisé lors de la création d'agent via modale
 export const agentQuickCreationSchema = agentCreationSchema.extend({
-	serviceId: z.string({
-		required_error: 'Le service doit être renseigné',
-	}),
+	serviceId: z
+		.string({
+			required_error: 'Le service doit être renseigné',
+		})
+		.trim()
+		.min(1, 'Le service doit être renseigné'),
 });

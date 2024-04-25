@@ -24,7 +24,7 @@ export default function DeviceQuickAddButton({
 	if (currentUser)
 		return currentUser?.role === 'Consultant' ? (
 			<Button mr='xl' disabled>
-				<IconDeviceMobilePlus />
+				<IconDeviceMobilePlus size={20} />
 			</Button>
 		) : (
 			<>
@@ -34,7 +34,7 @@ export default function DeviceQuickAddButton({
 					offset={10}
 				>
 					<Button onClick={openDeviceAddModal} mr='xl'>
-						<IconDeviceMobilePlus />
+						<IconDeviceMobilePlus size={20} />
 					</Button>
 				</Tooltip>
 				<DeviceQuickAddModal

@@ -67,7 +67,6 @@ export default function AccountSettings({
 					<TextInput
 						label='Adresse mail'
 						placeholder='Votre email'
-						data-autofocus
 						{...form.getInputProps('email')}
 						mb='xs'
 					/>

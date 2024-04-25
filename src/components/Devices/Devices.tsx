@@ -2,7 +2,6 @@ import { Flex } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
-	MRT_DensityState,
 	MRT_TableOptions,
 	MantineReactTable,
 	useMantineReactTable,

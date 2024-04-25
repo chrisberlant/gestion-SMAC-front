@@ -169,10 +169,13 @@ export const deviceUpdateSchema = z.strictObject({
 
 // Schéma utilisé lors de la création d'appareil via modale
 export const deviceQuickCreationSchema = deviceCreationSchema.extend({
-	modelId: z.string({
-		required_error: 'Le modèle doit être renseigné',
-		invalid_type_error: 'Le modèle doit être renseigné',
-	}),
+	modelId: z
+		.string({
+			required_error: 'Le modèle doit être renseigné',
+			invalid_type_error: 'Le modèle doit être renseigné',
+		})
+		.trim()
+		.min(1, 'Le modèle doit être renseigné'),
 	agentId: z
 		.string({
 			invalid_type_error: "L'id de l'agent est incorrect",

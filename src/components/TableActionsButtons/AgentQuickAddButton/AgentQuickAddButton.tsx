@@ -21,7 +21,7 @@ export default function AgentQuickAddButton({
 	if (currentUser)
 		return currentUser?.role === 'Consultant' ? (
 			<Button mr='xl' disabled>
-				<IconUserPlus />
+				<IconUserPlus size={20} />
 			</Button>
 		) : (
 			<>
@@ -31,7 +31,7 @@ export default function AgentQuickAddButton({
 					offset={10}
 				>
 					<Button onClick={openAgentAddModal} mr='xl'>
-						<IconUserPlus />
+						<IconUserPlus size={20} />
 					</Button>
 				</Tooltip>
 				<AgentQuickAddModal

@@ -1,5 +1,3 @@
-import { MRT_DensityState } from 'mantine-react-table';
-
 // Paramètres utilisés dans les tableaux avec lignes virtualisées
 export const virtualizedTableConfig = {
 	enablePagination: false,
