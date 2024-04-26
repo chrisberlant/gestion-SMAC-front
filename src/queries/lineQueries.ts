@@ -18,14 +18,12 @@ export const useCreateLine = () =>
 	useMutation({
 		mutationFn: async (data: LineCreationType) =>
 			(await fetchApi('/line', 'POST', data)) as LineType,
-
 		onMutate: async (newLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
-
 			newLine.deviceId
-				? // Mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
+				? // Si appareil fourni, mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
 				  queryClient.setQueryData(['lines'], (lines: LineType[]) => [
 						...lines.map((line) =>
 							line.deviceId === newLine.deviceId
@@ -80,39 +78,34 @@ export const useUpdateLine = () =>
 			const { id, ...infos } = data;
 			return (await fetchApi(`/line/${id}`, 'PATCH', infos)) as LineType;
 		},
-
 		onMutate: async (updatedLine) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			const previousLines = queryClient.getQueryData(['lines']);
-
 			// Mises à jour de la ligne éditée et de l'ancienne ligne pour retirer l'appareil
-			// Si suppression de l'appareil affecté ou aucune modification de celui-ci
-			if (!updatedLine.deviceId) {
-				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-					lines.map((line) =>
-						line.id === updatedLine.id
-							? { ...line, ...updatedLine }
-							: line
-					)
-				);
-			} else {
-				// Si modification de l'appareil affecté (non nul)
-				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
-					lines.map((line) => {
-						if (line.id === updatedLine.id) {
-							return { ...line, ...updatedLine };
-						}
-						if (
-							line.deviceId === updatedLine.deviceId &&
-							line.id !== updatedLine.id
-						) {
-							return { ...line, deviceId: null };
-						}
-						return line;
-					})
-				);
-			}
-
+			updatedLine.deviceId
+				? // Si modification de l'appareil affecté (non nul)
+				  queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+						lines.map((line) => {
+							if (line.id === updatedLine.id) {
+								return { ...line, ...updatedLine };
+							}
+							if (
+								line.deviceId === updatedLine.deviceId &&
+								line.id !== updatedLine.id
+							) {
+								return { ...line, deviceId: null };
+							}
+							return line;
+						})
+				  )
+				: // Si suppression de l'appareil affecté ou aucune modification de celui-ci
+				  queryClient.setQueryData(['lines'], (lines: LineType[]) =>
+						lines.map((line) =>
+							line.id === updatedLine.id
+								? { ...line, ...updatedLine }
+								: line
+						)
+				  );
 			return previousLines;
 		},
 		onSuccess: (receivedData, sentData) => {

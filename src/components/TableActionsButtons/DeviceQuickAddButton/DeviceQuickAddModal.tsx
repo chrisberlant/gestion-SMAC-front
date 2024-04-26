@@ -1,4 +1,4 @@
-import { useCreateDevice, useGetAllDevices } from '@queries/deviceQueries';
+import { useGetAllDevices, useQuickCreateDevice } from '@queries/deviceQueries';
 import { deviceQuickCreationSchema } from '@validationSchemas/deviceSchemas';
 import {
 	Modal,
@@ -71,7 +71,7 @@ export default function DeviceQuickAddModal({
 	const isNewRef = useRef<boolean>(true);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const { data: devices } = useGetAllDevices();
-	const { mutate: createDevice } = useCreateDevice(
+	const { mutate: createDevice } = useQuickCreateDevice(
 		toggleOverlay,
 		closeModal()
 	);

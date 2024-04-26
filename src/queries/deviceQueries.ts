@@ -17,15 +17,10 @@ export const useGetAllDevices = () =>
 	});
 
 // Créer un appareil, en cas de création via ajout rapide, la gestion de la modale est ajoutée
-export const useCreateDevice = (
-	toggleOverlay?: () => void,
-	closeQuickAddModal?: () => void
-) =>
+export const useCreateDevice = () =>
 	useMutation({
-		mutationFn: async (device: DeviceCreationType) => {
-			if (toggleOverlay) toggleOverlay();
-			return (await fetchApi('/device', 'POST', device)) as DeviceType;
-		},
+		mutationFn: async (device: DeviceCreationType) =>
+			(await fetchApi('/device', 'POST', device)) as DeviceType,
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -49,11 +44,30 @@ export const useCreateDevice = (
 		},
 		onError: (_, __, previousDevices) =>
 			queryClient.setQueryData(['devices'], previousDevices),
+	});
+
+// Ajout rapide d'un appareil via modale, ajout de la gestion du overlay et fermeture de la modale
+export const useQuickCreateDevice = (
+	toggleOverlay: () => void,
+	closeQuickAddModal: () => void
+) =>
+	useMutation({
+		mutationFn: async (device: DeviceCreationType) => {
+			toggleOverlay();
+			return (await fetchApi('/device', 'POST', device)) as DeviceType;
+		},
+		onSuccess: (newDevice) => {
+			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
+				...devices,
+				{
+					...newDevice,
+				},
+			]);
+			toast.success('Appareil créé avec succès');
+		},
 		onSettled: () => {
-			if (toggleOverlay && closeQuickAddModal) {
-				toggleOverlay();
-				closeQuickAddModal();
-			}
+			toggleOverlay();
+			closeQuickAddModal();
 		},
 	});
 
@@ -110,10 +124,9 @@ export const useDeleteDevice = () =>
 			return previousDevices;
 		},
 		onSuccess: () => toast.success('Appareil supprimé avec succès'),
-		onError: (_, __, previousDevices) => {
-			// Rollback des données
-			queryClient.setQueryData(['devices'], previousDevices);
-		},
+		// Rollback des données
+		onError: (_, __, previousDevices) =>
+			queryClient.setQueryData(['devices'], previousDevices),
 	});
 
 // Exporter les appareils en CSV

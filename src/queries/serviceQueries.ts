@@ -29,14 +29,12 @@ export const useCreateService = () =>
 			return previousServices;
 		},
 		onSuccess: (newService) => {
-			queryClient.setQueryData(
-				['services'],
-				(services: ServiceType[] | undefined) =>
-					services?.map((service) =>
-						service.title === newService.title
-							? { ...service, id: newService.id }
-							: service
-					)
+			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
+				services.map((service) =>
+					service.title === newService.title
+						? { ...service, id: newService.id }
+						: service
+				)
 			);
 			toast.success('Service créé avec succès');
 		},

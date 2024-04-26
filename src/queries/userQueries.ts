@@ -77,31 +77,28 @@ export const useUpdateCurrentUser = (
 			)) as UserInfosWithoutRoleType;
 		},
 		onSuccess: (updatedCurrentUser) => {
-			closeAccountModal();
+			const { id: currentUserId, ...updatedInfos } = updatedCurrentUser;
 			queryClient.setQueryData(
 				['currentUser'],
 				(currentUser: LoggedUserType) => ({
-					...currentUser,
-					firstName: updatedCurrentUser?.firstName,
-					lastName: updatedCurrentUser?.lastName,
-					email: updatedCurrentUser?.email,
+					role: currentUser.role,
+					...updatedInfos,
 				})
 			);
 			// Si les utilisateurs sont en cache, mise à jour
 			if (queryClient.getQueryData(['users'])) {
 				queryClient.setQueryData(['users'], (users: UserType[]) =>
 					users.map((user) =>
-						user.id === updatedCurrentUser?.id
+						user.id === currentUserId
 							? {
-									...user,
-									firstName: updatedCurrentUser?.firstName,
-									lastName: updatedCurrentUser?.lastName,
-									email: updatedCurrentUser?.email,
+									role: user.role,
+									...updatedCurrentUser,
 							  }
 							: user
 					)
 				);
 			}
+			closeAccountModal();
 			toast.success('Informations modifiées avec succès');
 		},
 		onSettled: () => {
@@ -131,12 +128,8 @@ export const useUpdateCurrentUserPassword = (
 				window.location.href = '/';
 			}, 2000);
 		},
-		onError: () => {
-			form.setErrors({ oldPassword: ' ' });
-		},
-		onSettled: () => {
-			toggleOverlay();
-		},
+		onError: () => form.setErrors({ oldPassword: ' ' }),
+		onSettled: () => toggleOverlay(),
 	});
 
 // Récupérer tous les utilisateurs
@@ -158,7 +151,6 @@ export const useCreateUser = () =>
 				...users,
 				{
 					...newUser,
-					email: newUser.email,
 				},
 			]);
 			return previousUsers;
@@ -206,9 +198,8 @@ export const useResetPassword = (
 	openConfirmationModal: (user: UserPasswordIsResetType) => void
 ) =>
 	useMutation({
-		mutationFn: async (userId: number) => {
-			return await fetchApi(`/user/password/${userId}`, 'PATCH');
-		},
+		mutationFn: async (userId: number) =>
+			await fetchApi(`/user/password/${userId}`, 'PATCH'),
 		onSuccess: (user: UserPasswordIsResetType) =>
 			openConfirmationModal(user),
 	});

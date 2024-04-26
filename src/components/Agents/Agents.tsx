@@ -231,16 +231,16 @@ export default function Agents() {
 			},
 			{
 				header: 'Appareils affectés',
-				id: 'devices',
 				enableEditing: false,
-				accessorFn: (row) => formattedDevicesList[row.id]?.length || 0,
+				accessorKey: 'devices',
 				size: 75,
 				// Affichage des IMEI au survol s'il y a des appareils affectés
 				Cell: ({ row }) => {
 					const agentDevicesList =
 						formattedDevicesList[row.original.id];
 					const devicesAmount = agentDevicesList?.length || 0;
-					if (!devicesAmount) return 0;
+					// Ne rien afficher lors de la création
+					if (!row.original.email) return null;
 					return (
 						<HoverCard width={200} shadow='md' openDelay={400}>
 							<HoverCard.Target>

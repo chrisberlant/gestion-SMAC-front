@@ -1,4 +1,4 @@
-import { useCreateAgent, useGetAllAgents } from '@queries/agentQueries';
+import { useGetAllAgents, useQuickCreateAgent } from '@queries/agentQueries';
 import { agentQuickCreationSchema } from '@validationSchemas/agentSchemas';
 import {
 	Modal,
@@ -56,7 +56,10 @@ export default function AgentQuickAddModal({
 	};
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const { data: agents } = useGetAllAgents();
-	const { mutate: createAgent } = useCreateAgent(toggleOverlay, closeModal());
+	const { mutate: createAgent } = useQuickCreateAgent(
+		toggleOverlay,
+		closeModal()
+	);
 	const vipRef = useRef<boolean>(false);
 
 	// Formatage des servicespour affichage dans la liste déroulante

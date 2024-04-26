@@ -18,14 +18,10 @@ export const useGetAllAgents = () =>
 		},
 	});
 
-// Créer un agent, en cas de création via ajout rapide, la gestion de la modale est ajoutée
-export const useCreateAgent = (
-	toggleOverlay?: () => void,
-	closeQuickAddModal?: () => void
-) =>
+// Créer un agent
+export const useCreateAgent = () =>
 	useMutation({
 		mutationFn: async (newAgent: AgentCreationType) => {
-			if (toggleOverlay) toggleOverlay();
 			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
 		},
 		onMutate: async (newAgent) => {
@@ -52,11 +48,30 @@ export const useCreateAgent = (
 		},
 		onError: (_, __, previousAgents) =>
 			queryClient.setQueryData(['agents'], previousAgents),
+	});
+
+// Ajout rapide d'un agent via modale, ajout de la gestion du overlay et fermeture de la modale
+export const useQuickCreateAgent = (
+	toggleOverlay: () => void,
+	closeQuickAddModal: () => void
+) =>
+	useMutation({
+		mutationFn: async (newAgent: AgentCreationType) => {
+			toggleOverlay();
+			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
+		},
+		onSuccess: async (newAgent) => {
+			queryClient.setQueryData(['agents'], (agents: AgentType[]) => [
+				...agents,
+				{
+					...newAgent,
+				},
+			]);
+			toast.success('Agent créé avec succès');
+		},
 		onSettled: () => {
-			if (toggleOverlay && closeQuickAddModal) {
-				toggleOverlay();
-				closeQuickAddModal();
-			}
+			toggleOverlay();
+			closeQuickAddModal();
 		},
 	});
 
