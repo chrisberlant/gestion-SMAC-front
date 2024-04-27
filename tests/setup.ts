@@ -29,8 +29,13 @@ class ResizeObserver {
 
 window.ResizeObserver = ResizeObserver;
 
+export const mockVirtualizedTable = () =>
+	(window.Element.prototype.getBoundingClientRect = vitest
+		.fn()
+		.mockReturnValue({ height: 1000, width: 1000 }));
+
 export const mockServer = setupServer(...handlers);
 
-beforeAll(() => mockServer.listen());
+beforeAll(() => mockServer.listen({ onUnhandledRequest: 'error' }));
 afterAll(() => mockServer.close());
 afterEach(() => mockServer.resetHandlers());
