@@ -241,6 +241,7 @@ export default function Agents() {
 					const devicesAmount = agentDevicesList?.length || 0;
 					// Ne rien afficher lors de la création
 					if (!row.original.email) return null;
+					if (devicesAmount === 0) return 0;
 					return (
 						<HoverCard width={200} shadow='md' openDelay={400}>
 							<HoverCard.Target>

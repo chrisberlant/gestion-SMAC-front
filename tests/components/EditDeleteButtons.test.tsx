@@ -16,7 +16,7 @@ describe('Edit & delete buttons', () => {
 
 		const buttons = await screen.findAllByRole('button');
 
-		expect(buttons.length).toBe(2);
+		expect(buttons).toHaveLength(2);
 		buttons.forEach((button) => expect(button).toBeEnabled());
 	});
 
@@ -41,11 +41,10 @@ describe('Edit & delete buttons', () => {
 				deleteFunction={() => null}
 			/>
 		);
-		console.log('TECH TEST');
 
 		const buttons = await screen.findAllByRole('button');
 
-		expect(buttons.length).toBe(2);
+		expect(buttons).toHaveLength(2);
 		buttons.forEach((button) => expect(button).toBeEnabled());
 	});
 
@@ -73,7 +72,7 @@ describe('Edit & delete buttons', () => {
 
 		const buttons = await screen.findAllByRole('button');
 
-		expect(buttons.length).toBe(2);
+		expect(buttons).toHaveLength(2);
 		buttons.forEach((button) => expect(button).toBeDisabled());
 	});
 });

@@ -35,7 +35,11 @@ export default function EditDeleteButtons({
 					label='Modifier'
 					events={{ hover: true, focus: true, touch: false }}
 				>
-					<ActionIcon onClick={editFunction} size='sm'>
+					<ActionIcon
+						aria-label='Modifier'
+						onClick={editFunction}
+						size='sm'
+					>
 						<IconEdit />
 					</ActionIcon>
 				</Tooltip>
@@ -43,7 +47,12 @@ export default function EditDeleteButtons({
 					label='Supprimer'
 					events={{ hover: true, focus: true, touch: false }}
 				>
-					<ActionIcon color='red' onClick={deleteFunction} size='sm'>
+					<ActionIcon
+						aria-label='Modifier'
+						color='red'
+						onClick={deleteFunction}
+						size='sm'
+					>
 						<IconTrash />
 					</ActionIcon>
 				</Tooltip>
