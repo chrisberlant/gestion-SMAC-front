@@ -18,6 +18,7 @@ import {
 	IconReportAnalytics,
 	IconSettings,
 	IconUser,
+	IconUserCircle,
 } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
@@ -114,10 +115,9 @@ export default function Header() {
 										gap={7}
 										className={classes.userProfile}
 									>
+										<IconUserCircle size={20} />
 										<Text fw={500} size='sm' lh={1} mr={3}>
-											{currentUser.firstName +
-												' ' +
-												currentUser.lastName}
+											{`${currentUser.firstName} ${currentUser.lastName}`}
 										</Text>
 										<IconChevronDown
 											style={{

@@ -1,5 +1,5 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Flex } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
@@ -39,6 +39,12 @@ import { virtualizedTableConfig } from '@utils/tableConfig';
 import Loading from '../Loading/Loading';
 import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAddButton/AgentQuickAddButton';
 import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAddButton/DeviceQuickAddButton';
+import {
+	IconAntennaBars5,
+	IconAntennaBarsOff,
+	IconLineDashed,
+	IconProgress,
+} from '@tabler/icons-react';
 
 export default function Lines() {
 	const {
@@ -89,9 +95,14 @@ export default function Lines() {
 		Record<string, string | undefined>
 	>({});
 
-	// const [filter, setFilter] = useState<
-	// 	'active' | 'inProgress' | 'resiliated' | null
-	// >(null);
+	const [filter, setFilter] = useState<
+		'Active' | 'En cours' | 'Résiliée' | null
+	>(null);
+	// Uniquement certaines lignes sont affichées si un filtre est défini par l'utilisateur
+	const filteredLines = useMemo(() => {
+		if (!filter) return lines;
+		return lines?.filter((line) => line.status === filter);
+	}, [lines, filter]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -501,7 +512,7 @@ export default function Lines() {
 			},
 		},
 		columns,
-		data: lines || [],
+		data: filteredLines || [],
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateLine,
 		onEditingRowSave: handleSaveLine,
@@ -518,29 +529,47 @@ export default function Lines() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<AgentQuickAddButton services={services} />
-				<DeviceQuickAddButton models={models} agents={agents} />
-				<CsvImportButton model='lines' />
-				{/* <Flex gap='xl' justify='center' align='center' flex={1} mb='xs'>
-					<Button color='green' onClick={() => console.log(null)}>
+				<Flex mr='auto' ml='xl'>
+					<Button
+						mr='xl'
+						color='blue'
+						onClick={() => setFilter(null)}
+						aria-label='Afficher toutes les lignes'
+						leftSection={<IconLineDashed />}
+					>
 						Toutes les lignes
 					</Button>
-					<Button color='green' onClick={() => console.log('active')}>
+					<Button
+						mr='xl'
+						color='green'
+						onClick={() => setFilter('Active')}
+						aria-label='Afficher les lignes actives'
+						leftSection={<IconAntennaBars5 />}
+					>
 						Actives
 					</Button>
 					<Button
+						mr='xl'
 						color='orange'
-						onClick={() => console.log('inProgress')}
+						onClick={() => setFilter('En cours')}
+						aria-label='Afficher les lignes en cours de création'
+						leftSection={<IconProgress />}
 					>
 						En cours
 					</Button>
 					<Button
+						mr='xl'
 						color='red'
-						onClick={() => console.log('resiliated')}
+						onClick={() => setFilter('Résiliée')}
+						aria-label='Afficher les lignes résiliées'
+						leftSection={<IconAntennaBarsOff />}
 					>
 						Résiliées
 					</Button>
-				</Flex> */}
+				</Flex>
+				<AgentQuickAddButton services={services} />
+				<DeviceQuickAddButton models={models} agents={agents} />
+				<CsvImportButton model='lines' />
 			</>
 		),
 		renderBottomToolbarCustomActions: () => (
