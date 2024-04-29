@@ -29,7 +29,7 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 -   [x] Suppression d'un utilisateur
 -   [x] Ajout/renommage de services auxquels les agents gérés sont rattachés
 -   [x] Ajout de modèles (marque, référence, stockage) d'appareils mobiles
--   [ ] Système d'historique des requêtes
+-   [x] Système d'historique des requêtes
 
 ### Tableaux permettant la création/lecture/modification/suppression (CRUD)
 
@@ -40,7 +40,7 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 -   [x] Tri par colonne
 -   [x] Virtualisation (seules un nombre défini de lignes sont rendues au même moment, dans un but de performance)
 -   [x] Système de modale en cas de confirmation nécessaire ou de choix à effectuer (si conflit)
--   [ ] Système de tri rapide à l'appui sur un bouton
+-   [x] Système de filtre rapide à l'appui sur un bouton
 
 #### Gestion d'agents
 

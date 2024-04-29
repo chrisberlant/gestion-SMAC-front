@@ -42,9 +42,7 @@ import Loading from '../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
 import {
 	IconLineDashed,
-	IconAntennaBarsOff,
 	IconDeviceMobileOff,
-	IconDeviceMobile,
 	IconDeviceMobileCheck,
 	IconDeviceMobileDown,
 	IconDeviceMobileQuestion,
