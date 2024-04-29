@@ -523,7 +523,6 @@ export default function Lines() {
 				deleteFunction={() => openDeleteConfirmModal(row)}
 			/>
 		),
-		// TODO fix
 		renderTopToolbarCustomActions: () => (
 			<>
 				<CreateButton
@@ -532,6 +531,7 @@ export default function Lines() {
 				<Flex mr='auto' ml='xl'>
 					<Button
 						mr='xl'
+						radius='lg'
 						color='blue'
 						onClick={() => setFilter(null)}
 						aria-label='Afficher toutes les lignes'
@@ -541,6 +541,7 @@ export default function Lines() {
 					</Button>
 					<Button
 						mr='xl'
+						radius='lg'
 						color='green'
 						onClick={() => setFilter('Active')}
 						aria-label='Afficher les lignes actives'
@@ -550,6 +551,7 @@ export default function Lines() {
 					</Button>
 					<Button
 						mr='xl'
+						radius='lg'
 						color='orange'
 						onClick={() => setFilter('En cours')}
 						aria-label='Afficher les lignes en cours de création'
@@ -559,6 +561,7 @@ export default function Lines() {
 					</Button>
 					<Button
 						mr='xl'
+						radius='lg'
 						color='red'
 						onClick={() => setFilter('Résiliée')}
 						aria-label='Afficher les lignes résiliées'

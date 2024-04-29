@@ -17,6 +17,7 @@ export default function CsvImportButton({ model }: { model: string }) {
 	) : (
 		<>
 			<Button
+				mr='md'
 				leftSection={<IconFileUpload size={20} />}
 				color='green'
 				onClick={openImportModal}

@@ -1,4 +1,4 @@
-import { Flex } from '@mantine/core';
+import { Button, Flex } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -40,6 +40,17 @@ import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import Loading from '../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
+import {
+	IconLineDashed,
+	IconAntennaBarsOff,
+	IconDeviceMobileOff,
+	IconDeviceMobile,
+	IconDeviceMobileCheck,
+	IconDeviceMobileDown,
+	IconDeviceMobileQuestion,
+	IconDeviceMobileShare,
+	IconDeviceMobileRotated,
+} from '@tabler/icons-react';
 
 export default function DevicesTable() {
 	const {
@@ -90,10 +101,25 @@ export default function DevicesTable() {
 		Record<string, string | undefined>
 	>({});
 
-	// Ref permettant de récupérer les valeurs des enfants
+	// Ref permettant de récupérer les valeurs des composants date et switch
 	const preparationDateRef = useRef<string | null>(null);
 	const attributionDateRef = useRef<string | null>(null);
 	const isNewRef = useRef<boolean>(true);
+
+	const [filter, setFilter] = useState<
+		| 'En stock'
+		| 'Attribué'
+		| 'Restitué'
+		| 'En attente de restitution'
+		| 'En prêt'
+		| 'Volé'
+		| null
+	>(null);
+	// Uniquement certains appareils sont affichés si un filtre est défini par l'utilisateur
+	const filteredDevices = useMemo(() => {
+		if (!filter) return devices;
+		return devices?.filter((device) => device.status === filter);
+	}, [devices, filter]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -460,7 +486,7 @@ export default function DevicesTable() {
 			},
 		},
 		columns,
-		data: devices || [],
+		data: filteredDevices || [],
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
@@ -487,6 +513,78 @@ export default function DevicesTable() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
+				<Flex mr='auto' ml='xl'>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='blue'
+						onClick={() => setFilter(null)}
+						aria-label='Afficher tous les appareils'
+						leftSection={<IconLineDashed />}
+					>
+						Tous les appareils
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='green'
+						onClick={() => setFilter('En stock')}
+						aria-label='Afficher les appareils en stock'
+						leftSection={<IconDeviceMobileRotated />}
+					>
+						En stock
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='green'
+						onClick={() => setFilter('Attribué')}
+						aria-label='Afficher les appareils attribués'
+						leftSection={<IconDeviceMobileCheck />}
+					>
+						Attribués
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='green'
+						onClick={() => setFilter('Restitué')}
+						aria-label='Afficher les appareils restitués'
+						leftSection={<IconDeviceMobileDown />}
+					>
+						Restitués
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='orange'
+						onClick={() => setFilter('En attente de restitution')}
+						aria-label='Afficher les appareils en attente de restitution'
+						leftSection={<IconDeviceMobileQuestion />}
+					>
+						En attente de restitution
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='orange'
+						onClick={() => setFilter('En prêt')}
+						aria-label='Afficher les appareils en prêt'
+						leftSection={<IconDeviceMobileShare />}
+					>
+						En prêt
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='red'
+						onClick={() => setFilter('Volé')}
+						aria-label='Afficher les appareils volés'
+						leftSection={<IconDeviceMobileOff />}
+					>
+						Volés
+					</Button>
+				</Flex>
 				<CsvImportButton model='devices' />
 			</>
 		),
