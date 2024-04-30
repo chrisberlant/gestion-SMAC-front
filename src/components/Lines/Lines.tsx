@@ -121,21 +121,30 @@ export default function Lines() {
 			}),
 		[agents, services]
 	);
+	// Agents proposés dans la liste déroulante
+	const agentsList = useMemo(
+		() =>
+			formattedAgents?.map((agent) => ({
+				value: agent.id.toString(),
+				label: agent.infos,
+			})),
+		[formattedAgents]
+	);
 
-	// La même chose pour les appareils
-	const formattedDevices = useMemo(
+	// Appareils proposés dans la liste déroulante
+	const devicesList = useMemo(
 		() =>
 			devices?.map((device) => {
 				const currentModel = models?.find(
 					(model) => model.id === device.modelId
 				);
 				return {
-					infos: `${device.imei} - ${currentModel?.brand} ${
+					value: device.id.toString(),
+					label: `${device.imei} - ${currentModel?.brand} ${
 						currentModel?.reference
 					}${
 						currentModel?.storage ? ` ${currentModel.storage}` : ''
 					}`,
-					id: device.id,
 				};
 			}),
 		[devices, models]
@@ -202,13 +211,11 @@ export default function Lines() {
 			{
 				header: 'Propriétaire',
 				id: 'agentId',
-				accessorFn: (row) =>
-					formattedAgents?.find((agent) => agent.id === row.agentId)
-						?.infos,
+				accessorFn: (row) => row.agentId?.toString(),
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
-					data: formattedAgents?.map((agent) => agent.infos),
+					data: agentsList,
 					allowDeselect: true,
 					clearable: true,
 					error: validationErrors?.agentId,
@@ -232,14 +239,11 @@ export default function Lines() {
 			{
 				header: 'Appareil',
 				id: 'deviceId',
-				accessorFn: (row) =>
-					formattedDevices?.find(
-						(device) => device.id === row.deviceId
-					)?.infos,
+				accessorFn: (row) => row.deviceId?.toString(),
 				editVariant: 'select',
 				size: 90,
 				mantineEditSelectProps: {
-					data: formattedDevices?.map((device) => device.infos),
+					data: devicesList,
 					clearable: true,
 					error: validationErrors?.deviceId,
 					onFocus: () =>
@@ -248,10 +252,18 @@ export default function Lines() {
 							status: undefined,
 						}),
 				},
-				Cell: ({ cell }) => {
+				Cell: ({ cell, row }) => {
 					const currentDevice = cell.getValue();
 					return currentDevice ? (
-						<>{currentDevice}</>
+						<>
+							{
+								devicesList?.find(
+									(device) =>
+										Number(device.value) ===
+										row.original.deviceId
+								)?.label
+							}
+						</>
 					) : (
 						<span className='personal-device-text'>
 							Aucun appareil (ou personnel)
@@ -273,7 +285,7 @@ export default function Lines() {
 				},
 			},
 		],
-		[validationErrors, formattedAgents, formattedDevices]
+		[validationErrors, formattedAgents, agentsList, devicesList]
 	);
 
 	//CREATE action
@@ -288,15 +300,8 @@ export default function Lines() {
 				profile,
 				status,
 				comments: comments?.trim(),
-				agentId: agentId
-					? formattedAgents?.find((agent) => agent.infos === agentId)
-							?.id
-					: null,
-				deviceId: deviceId
-					? formattedDevices?.find(
-							(device) => device.infos === deviceId
-					  )?.id
-					: null,
+				agentId: Number(agentId) || null,
+				deviceId: Number(deviceId) || null,
 			} as LineCreationType;
 
 			const validation = lineCreationSchema.safeParse(creationData);
@@ -380,13 +385,8 @@ export default function Lines() {
 				profile,
 				status,
 				comments: comments?.trim(),
-				agentId:
-					formattedAgents?.find((agent) => agent.infos === agentId)
-						?.id || null,
-				deviceId:
-					formattedDevices?.find(
-						(device) => device.infos === deviceId
-					)?.id || null,
+				agentId: Number(agentId) || null,
+				deviceId: Number(deviceId) || null,
 			} as LineType;
 
 			// Optimisation pour envoyer uniquement les données modifiées
@@ -429,10 +429,13 @@ export default function Lines() {
 					});
 				}
 			}
-
+			// TODO fix update du cache quand changement de propriétaire
 			const currentLineOwnerId = originalData.agentId ?? null;
 			const newLineOwnerId = updateData.agentId ?? null;
-			const newLineOwnerFullName: string | null = agentId ?? null;
+			const newLineOwnerFullName: string | null =
+				formattedAgents?.find(
+					(agent) => agent.id === newModifiedData.agentId
+				)?.infos ?? null;
 			const newDeviceId = updateData.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
@@ -443,7 +446,10 @@ export default function Lines() {
 					(agent) => agent.id === deviceCurrentOwnerId
 				)?.infos ?? null;
 			const currentDeviceId = originalData.deviceId || null;
-			const deviceFullName: string | null = deviceId ?? null;
+			const deviceFullName: string | null =
+				devicesList?.find(
+					(device) => Number(device.value) === originalData.deviceId
+				)?.label ?? null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
 					(line) =>
@@ -535,7 +541,7 @@ export default function Lines() {
 						color='blue'
 						onClick={() => setFilter(null)}
 						aria-label='Afficher toutes les lignes'
-						leftSection={<IconLineDashed />}
+						leftSection={<IconLineDashed size={20} />}
 					>
 						Toutes les lignes
 					</Button>
@@ -545,7 +551,7 @@ export default function Lines() {
 						color='green'
 						onClick={() => setFilter('Active')}
 						aria-label='Afficher les lignes actives'
-						leftSection={<IconAntennaBars5 />}
+						leftSection={<IconAntennaBars5 size={20} />}
 					>
 						Actives
 					</Button>
@@ -555,7 +561,7 @@ export default function Lines() {
 						color='orange'
 						onClick={() => setFilter('En cours')}
 						aria-label='Afficher les lignes en cours de création'
-						leftSection={<IconProgress />}
+						leftSection={<IconProgress size={20} />}
 					>
 						En cours
 					</Button>
@@ -565,7 +571,7 @@ export default function Lines() {
 						color='red'
 						onClick={() => setFilter('Résiliée')}
 						aria-label='Afficher les lignes résiliées'
-						leftSection={<IconAntennaBarsOff />}
+						leftSection={<IconAntennaBarsOff size={20} />}
 					>
 						Résiliées
 					</Button>

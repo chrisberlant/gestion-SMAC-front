@@ -80,6 +80,16 @@ export default function Agents() {
 		return devicesList;
 	}, [devices]);
 
+	// Services proposés dans la liste déroulante en cas d'ajout/mise à jour d'un agent
+	const servicesList = useMemo(
+		() =>
+			services?.map((service) => ({
+				value: service.id.toString(),
+				label: service.title,
+			})),
+		[services]
+	);
+
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
 			{
@@ -205,13 +215,11 @@ export default function Agents() {
 			{
 				header: 'Service',
 				id: 'serviceId',
-				accessorFn: (row) =>
-					services?.find((service) => service.id === row.serviceId)
-						?.title,
+				accessorFn: (row) => row.serviceId?.toString(),
 				size: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
-					data: services?.map((service) => service.title),
+					data: servicesList,
 					allowDeselect: false,
 					error: validationErrors?.serviceId,
 					onFocus: () =>
@@ -220,14 +228,16 @@ export default function Agents() {
 							serviceId: undefined,
 						}),
 				},
-				Cell: ({ row, cell }) => {
-					const serviceTitle = cell.getValue() as string;
-					return (
-						<span className={row.original.vip ? 'vip-text' : ''}>
-							{serviceTitle}
-						</span>
-					);
-				},
+				Cell: ({ row }) => (
+					<span className={row.original.vip ? 'vip-text' : ''}>
+						{
+							services?.find(
+								(service) =>
+									service.id === row.original.serviceId
+							)?.title
+						}
+					</span>
+				),
 			},
 			{
 				header: 'Appareils affectés',
@@ -260,21 +270,19 @@ export default function Agents() {
 				},
 			},
 		],
-		[validationErrors, services, formattedDevicesList]
+		[validationErrors, servicesList, formattedDevicesList]
 	);
 
 	//CREATE action
 	const handleCreateAgent: MRT_TableOptions<AgentType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
-			const { lastName, firstName, email } = values;
+			const { lastName, firstName, email, serviceId } = values;
 			const creationData = {
 				lastName: lastName.trim(),
 				firstName: firstName.trim(),
 				email: email.trim().toLowerCase(),
 				vip: vipRef.current,
-				serviceId: services?.find(
-					(service) => service.title === values.serviceId
-				)?.id,
+				serviceId: Number(serviceId),
 			} as AgentCreationType;
 
 			const validation = agentCreationSchema.safeParse(creationData);
@@ -309,7 +317,7 @@ export default function Agents() {
 	//UPDATE action
 	const handleSaveAgent: MRT_TableOptions<AgentType>['onEditingRowSave'] =
 		async ({ values, row }) => {
-			const { lastName, firstName, email } = values;
+			const { lastName, firstName, email, serviceId } = values;
 			const { ...originalData } = row.original;
 
 			// Formatage des données
@@ -319,9 +327,7 @@ export default function Agents() {
 				firstName: firstName.trim(),
 				email: email.trim().toLowerCase(),
 				vip: vipRef.current,
-				serviceId: services?.find(
-					(service) => service.title === values.serviceId
-				)?.id,
+				serviceId: Number(serviceId),
 			} as AgentType;
 
 			// Optimisation pour envoyer uniquement les données modifiées

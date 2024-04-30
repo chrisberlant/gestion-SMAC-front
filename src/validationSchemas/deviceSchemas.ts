@@ -73,7 +73,7 @@ export const deviceCreationSchema = z.strictObject({
 	modelId: z
 		.number({
 			required_error: 'Le modèle doit être renseigné',
-			invalid_type_error: "L'id du modèle doit être un nombre",
+			invalid_type_error: 'Le modèle doit être renseigné',
 		})
 		.int("L'id du modèle doit être un nombre entier")
 		.positive("L'id du modèle fourni est incorrect"),

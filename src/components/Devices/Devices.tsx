@@ -137,14 +137,24 @@ export default function DevicesTable() {
 		[agents, services]
 	);
 
-	// La même chose pour les modèles
-	const formattedModels = useMemo(
+	// Agents proposés dans la liste déroulante
+	const agentsList = useMemo(
+		() =>
+			formattedAgents?.map((agent) => ({
+				value: agent.id.toString(),
+				label: agent.infos,
+			})),
+		[formattedAgents]
+	);
+
+	// Modèles proposés dans la liste déroulante
+	const modelsList = useMemo(
 		() =>
 			models?.map((model) => ({
-				infos: `${model.brand} ${model.reference}${
+				value: model.id.toString(),
+				label: `${model.brand} ${model.reference}${
 					model.storage ? ` ${model.storage}` : ''
 				}`,
-				id: model.id,
 			})),
 		[models]
 	);
@@ -229,13 +239,11 @@ export default function DevicesTable() {
 			{
 				header: 'Modèle',
 				id: 'modelId',
-				accessorFn: (row) =>
-					formattedModels?.find((model) => model.id === row.modelId)
-						?.infos,
+				accessorFn: (row) => row.modelId?.toString(),
 				editVariant: 'select',
 				size: 100,
 				mantineEditSelectProps: {
-					data: formattedModels?.map((model) => model.infos),
+					data: modelsList,
 					allowDeselect: false,
 					error: validationErrors?.modelId,
 					onFocus: () =>
@@ -244,18 +252,26 @@ export default function DevicesTable() {
 							modelId: undefined,
 						}),
 				},
+				Cell: ({ row }) => (
+					<>
+						{
+							modelsList?.find(
+								(model) =>
+									Number(model.value) === row.original.modelId
+							)?.label
+						}
+					</>
+				),
 			},
 			{
 				header: 'Propriétaire',
 				id: 'agentId',
-				accessorFn: (row) =>
-					formattedAgents?.find((agent) => agent.id === row.agentId)
-						?.infos,
+				accessorFn: (row) => row.agentId?.toString(),
 				editVariant: 'select',
 				size: 100,
 				clearable: true,
 				mantineEditSelectProps: {
-					data: formattedAgents?.map((agent) => agent.infos),
+					data: agentsList,
 					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
@@ -331,7 +347,7 @@ export default function DevicesTable() {
 				},
 			},
 		],
-		[validationErrors, formattedModels, formattedAgents]
+		[validationErrors, modelsList, formattedAgents, agentsList]
 	);
 
 	//CREATE action
@@ -341,19 +357,14 @@ export default function DevicesTable() {
 
 			// Formatage des informations nécessaires pour la validation du schéma
 			const creationData = {
-				imei: imei.trim(),
+				imei: imei?.trim(),
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: preparationDateRef.current,
 				comments: comments?.trim(),
-				modelId: formattedModels?.find(
-					(model) => model.infos === modelId
-				)?.id,
-				agentId: agentId
-					? formattedAgents?.find((agent) => agent.infos === agentId)
-							?.id
-					: null,
+				modelId: Number(modelId) || null,
+				agentId: Number(agentId) || null,
 			} as DeviceCreationType;
 
 			const validation = deviceCreationSchema.safeParse(creationData);
@@ -398,13 +409,8 @@ export default function DevicesTable() {
 				preparationDate: preparationDateRef.current,
 				attributionDate: attributionDateRef.current,
 				comments: comments?.trim(),
-				modelId: formattedModels?.find(
-					(model) => model.infos === modelId
-				)!.id,
-				agentId: agentId
-					? formattedAgents?.find((agent) => agent.infos === agentId)
-							?.id
-					: null,
+				modelId: Number(modelId),
+				agentId: Number(agentId) || null,
 			} as DeviceType;
 
 			// Optimisation pour envoyer uniquement les données modifiées
@@ -518,7 +524,7 @@ export default function DevicesTable() {
 						color='blue'
 						onClick={() => setFilter(null)}
 						aria-label='Afficher tous les appareils'
-						leftSection={<IconLineDashed />}
+						leftSection={<IconLineDashed size={20} />}
 					>
 						Tous les appareils
 					</Button>
@@ -528,9 +534,9 @@ export default function DevicesTable() {
 						color='green'
 						onClick={() => setFilter('En stock')}
 						aria-label='Afficher les appareils en stock'
-						leftSection={<IconDeviceMobileRotated />}
+						leftSection={<IconDeviceMobileRotated size={20} />}
 					>
-						En stock
+						Stock
 					</Button>
 					<Button
 						mr='xl'
@@ -538,7 +544,7 @@ export default function DevicesTable() {
 						color='green'
 						onClick={() => setFilter('Attribué')}
 						aria-label='Afficher les appareils attribués'
-						leftSection={<IconDeviceMobileCheck />}
+						leftSection={<IconDeviceMobileCheck size={20} />}
 					>
 						Attribués
 					</Button>
@@ -548,7 +554,7 @@ export default function DevicesTable() {
 						color='green'
 						onClick={() => setFilter('Restitué')}
 						aria-label='Afficher les appareils restitués'
-						leftSection={<IconDeviceMobileDown />}
+						leftSection={<IconDeviceMobileDown size={20} />}
 					>
 						Restitués
 					</Button>
@@ -558,9 +564,9 @@ export default function DevicesTable() {
 						color='orange'
 						onClick={() => setFilter('En attente de restitution')}
 						aria-label='Afficher les appareils en attente de restitution'
-						leftSection={<IconDeviceMobileQuestion />}
+						leftSection={<IconDeviceMobileQuestion size={20} />}
 					>
-						En attente de restitution
+						Attente restitution
 					</Button>
 					<Button
 						mr='xl'
@@ -568,9 +574,9 @@ export default function DevicesTable() {
 						color='orange'
 						onClick={() => setFilter('En prêt')}
 						aria-label='Afficher les appareils en prêt'
-						leftSection={<IconDeviceMobileShare />}
+						leftSection={<IconDeviceMobileShare size={20} />}
 					>
-						En prêt
+						Prêts
 					</Button>
 					<Button
 						mr='xl'
@@ -578,7 +584,7 @@ export default function DevicesTable() {
 						color='red'
 						onClick={() => setFilter('Volé')}
 						aria-label='Afficher les appareils volés'
-						leftSection={<IconDeviceMobileOff />}
+						leftSection={<IconDeviceMobileOff size={20} />}
 					>
 						Volés
 					</Button>
