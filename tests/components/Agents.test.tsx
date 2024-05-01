@@ -41,9 +41,9 @@ describe('Agents', () => {
 		const firstEditButton = editButtons[0];
 		await user.click(firstEditButton);
 
-		const selectServiceElement = screen.getAllByDisplayValue(
+		const selectServiceElement = screen.getByPlaceholderText(
 			/^(?!.*[Ff]ilter).*service/i
-		)[0];
+		);
 		expect(selectServiceElement).toBeInTheDocument();
 		await user.click(selectServiceElement);
 
