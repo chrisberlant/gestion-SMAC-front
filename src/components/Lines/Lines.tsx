@@ -115,7 +115,6 @@ export default function Lines() {
 				return {
 					infos: `${agent.lastName} ${agent.firstName} - ${serviceTitle}`,
 					vip: agent.vip,
-					email: agent.email,
 					id: agent.id,
 				};
 			}),
@@ -334,13 +333,18 @@ export default function Lines() {
 				setValidationErrors({});
 				return exitCreatingMode();
 			}
-			// TODO simplifier
+
 			// Si un appareil a été défini lors de la création, des vérifications sont à effectuer
+			const newOwnerId = creationData.agentId || null;
+			const newOwnerFullName =
+				formattedAgents?.find(
+					(agent) => agent.id === creationData.agentId
+				)?.infos || null;
+			const newDeviceId = creationData.deviceId || null;
+			const deviceFullName =
+				devicesList?.find((device) => device.value === deviceId)
+					?.label || null;
 			// Vérification de la présence de l'appareil dans les autres lignes et de son propriétaire actuel
-			const newOwnerId = creationData.agentId ?? null;
-			const newOwnerFullName: string | null = agentId ?? null;
-			const newDeviceId = creationData.deviceId ?? null;
-			const deviceFullName: string | null = deviceId;
 			const alreadyUsingDeviceLine =
 				lines?.find((line) => line.deviceId === newDeviceId) || null;
 			const currentOwnerId =
@@ -429,14 +433,14 @@ export default function Lines() {
 					});
 				}
 			}
-			// TODO fix update du cache quand changement de propriétaire
-			const currentLineOwnerId = originalData.agentId ?? null;
-			const newLineOwnerId = updateData.agentId ?? null;
+
+			const currentLineOwnerId = originalData.agentId || null;
+			const newLineOwnerId = updateData.agentId || null;
 			const newLineOwnerFullName: string | null =
 				formattedAgents?.find(
 					(agent) => agent.id === newModifiedData.agentId
-				)?.infos ?? null;
-			const newDeviceId = updateData.deviceId ?? null;
+				)?.infos || null;
+			const newDeviceId = updateData.deviceId || null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -449,7 +453,7 @@ export default function Lines() {
 			const deviceFullName: string | null =
 				devicesList?.find(
 					(device) => Number(device.value) === originalData.deviceId
-				)?.label ?? null;
+				)?.label || null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
 					(line) =>

@@ -52,10 +52,7 @@ export const useCreateLine = () =>
 						: line
 				)
 			);
-			if (
-				sentData.deviceId &&
-				sentData.agentId !== receivedData.agentId
-			) {
+			if (sentData.deviceId) {
 				// Si nécessaire, mise à jour de l'appareil pour changer le propriétaire
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>
@@ -109,8 +106,8 @@ export const useUpdateLine = () =>
 			return previousLines;
 		},
 		onSuccess: (receivedData, sentData) => {
-			if (sentData.deviceId) {
-				// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
+			// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
+			if (sentData.deviceId || sentData.agentId !== undefined) {
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 					devices.map((device) =>
 						device.id === receivedData.deviceId
