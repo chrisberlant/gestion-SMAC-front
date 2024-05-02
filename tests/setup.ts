@@ -32,7 +32,7 @@ window.ResizeObserver = ResizeObserver;
 export const mockVirtualizedTable = () =>
 	(window.Element.prototype.getBoundingClientRect = vitest
 		.fn()
-		.mockReturnValue({ height: 1000, width: 1000 }));
+		.mockReturnValue({ height: 1920, width: 1080 }));
 
 export const mockServer = setupServer(...handlers);
 

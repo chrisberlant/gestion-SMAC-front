@@ -19,6 +19,7 @@ describe('Agents', () => {
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
+		await within(table).findByText('john.smith@gmail.com');
 		['john.smith@gmail.com', 'Smith', 'John', 'Non', 'second-service'].map(
 			(value) => within(table).getByText(value)
 		);
