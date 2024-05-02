@@ -242,16 +242,17 @@ export default function Agents() {
 			{
 				header: 'Appareils affectés',
 				enableEditing: false,
-				accessorKey: 'devices',
+				id: 'devices',
+				accessorFn: (row) => formattedDevicesList[row.id]?.length || 0,
 				size: 75,
-				// Affichage des IMEI au survol s'il y a des appareils affectés
-				Cell: ({ row }) => {
-					const agentDevicesList =
-						formattedDevicesList[row.original.id];
-					const devicesAmount = agentDevicesList?.length || 0;
+				Cell: ({ row, cell }) => {
 					// Ne rien afficher lors de la création
 					if (!row.original.email) return null;
+					const agentDevicesList =
+						formattedDevicesList[row.original.id];
+					const devicesAmount = cell.getValue() as number;
 					if (devicesAmount === 0) return 0;
+					// Affichage des IMEI au survol s'il y a des appareils affectés
 					return (
 						<HoverCard width={200} shadow='md' openDelay={400}>
 							<HoverCard.Target>
@@ -261,7 +262,18 @@ export default function Agents() {
 								{agentDevicesList?.map((device) => (
 									<Flex gap={5} key={device}>
 										<IconDeviceMobile />
-										<Text>{device}</Text>
+										<Text
+											onClick={() => {
+												navigator.clipboard.writeText(
+													device
+												);
+												toast.info(
+													'IMEI copié dans le presse-papiers'
+												);
+											}}
+										>
+											{device}
+										</Text>
 									</Flex>
 								))}
 							</HoverCard.Dropdown>

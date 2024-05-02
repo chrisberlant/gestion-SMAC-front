@@ -543,6 +543,7 @@ export default function Lines() {
 						mr='xl'
 						radius='lg'
 						color='blue'
+						variant='light'
 						onClick={() => setFilter(null)}
 						aria-label='Afficher toutes les lignes'
 						leftSection={<IconLineDashed size={20} />}
@@ -553,6 +554,7 @@ export default function Lines() {
 						mr='xl'
 						radius='lg'
 						color='green'
+						variant='light'
 						onClick={() => setFilter('Active')}
 						aria-label='Afficher les lignes actives'
 						leftSection={<IconAntennaBars5 size={20} />}
@@ -563,6 +565,7 @@ export default function Lines() {
 						mr='xl'
 						radius='lg'
 						color='orange'
+						variant='light'
 						onClick={() => setFilter('En cours')}
 						aria-label='Afficher les lignes en cours de création'
 						leftSection={<IconProgress size={20} />}
@@ -573,6 +576,7 @@ export default function Lines() {
 						mr='xl'
 						radius='lg'
 						color='red'
+						variant='light'
 						onClick={() => setFilter('Résiliée')}
 						aria-label='Afficher les lignes résiliées'
 						leftSection={<IconAntennaBarsOff size={20} />}

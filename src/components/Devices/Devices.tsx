@@ -522,6 +522,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='blue'
+						variant='light'
 						onClick={() => setFilter(null)}
 						aria-label='Afficher tous les appareils'
 						leftSection={<IconLineDashed size={20} />}
@@ -532,6 +533,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='green'
+						variant='light'
 						onClick={() => setFilter('En stock')}
 						aria-label='Afficher les appareils en stock'
 						leftSection={<IconDeviceMobileRotated size={20} />}
@@ -542,6 +544,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='green'
+						variant='light'
 						onClick={() => setFilter('Attribué')}
 						aria-label='Afficher les appareils attribués'
 						leftSection={<IconDeviceMobileCheck size={20} />}
@@ -552,6 +555,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='green'
+						variant='light'
 						onClick={() => setFilter('Restitué')}
 						aria-label='Afficher les appareils restitués'
 						leftSection={<IconDeviceMobileDown size={20} />}
@@ -562,6 +566,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='orange'
+						variant='light'
 						onClick={() => setFilter('En attente de restitution')}
 						aria-label='Afficher les appareils en attente de restitution'
 						leftSection={<IconDeviceMobileQuestion size={20} />}
@@ -572,6 +577,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='orange'
+						variant='light'
 						onClick={() => setFilter('En prêt')}
 						aria-label='Afficher les appareils en prêt'
 						leftSection={<IconDeviceMobileShare size={20} />}
@@ -582,6 +588,7 @@ export default function DevicesTable() {
 						mr='xl'
 						radius='lg'
 						color='red'
+						variant='light'
 						onClick={() => setFilter('Volé')}
 						aria-label='Afficher les appareils volés'
 						leftSection={<IconDeviceMobileOff size={20} />}
