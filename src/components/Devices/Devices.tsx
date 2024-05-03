@@ -52,6 +52,11 @@ import {
 
 export default function DevicesTable() {
 	const {
+		data: devices,
+		isLoading: devicesLoading,
+		isError: devicesError,
+	} = useGetAllDevices();
+	const {
 		data: services,
 		isLoading: servicesLoading,
 		isError: servicesError,
@@ -61,11 +66,7 @@ export default function DevicesTable() {
 		isLoading: agentsLoading,
 		isError: agentsError,
 	} = useGetAllAgents();
-	const {
-		data: devices,
-		isLoading: devicesLoading,
-		isError: devicesError,
-	} = useGetAllDevices();
+
 	const {
 		data: models,
 		isLoading: modelsLoading,
@@ -93,7 +94,6 @@ export default function DevicesTable() {
 		agentsError ||
 		modelsError ||
 		linesError;
-	const allData = devices && services && agents && models;
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -158,6 +158,7 @@ export default function DevicesTable() {
 			})),
 		[models]
 	);
+	const requiredData = devices && agentsList && modelsList;
 
 	const columns = useMemo<MRT_ColumnDef<DeviceType>[]>(
 		() => [
@@ -618,7 +619,7 @@ export default function DevicesTable() {
 				</span>
 			)}
 
-			{allData && <MantineReactTable table={table} />}
+			{requiredData && <MantineReactTable table={table} />}
 		</div>
 	);
 }

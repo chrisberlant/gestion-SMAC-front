@@ -90,7 +90,7 @@ export default function Lines() {
 		devicesError ||
 		agentsError ||
 		modelsError;
-	const allData = services && agents && devices && models && lines;
+
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
 	>({});
@@ -148,6 +148,8 @@ export default function Lines() {
 			}),
 		[devices, models]
 	);
+
+	const requiredData = lines && agentsList && devicesList;
 
 	const columns = useMemo<MRT_ColumnDef<LineType>[]>(
 		() => [
@@ -608,7 +610,7 @@ export default function Lines() {
 				</span>
 			)}
 
-			{allData && <MantineReactTable table={table} />}
+			{requiredData && <MantineReactTable table={table} />}
 		</ZoomableComponent>
 	);
 }

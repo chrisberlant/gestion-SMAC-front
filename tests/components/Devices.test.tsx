@@ -19,8 +19,8 @@ describe('Devices', () => {
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
+		await within(table).findByText('123321456654780');
 		[
-			'123321456654780',
 			'En stock',
 			'Neuf',
 			'Apple iPhone 15 256GB',

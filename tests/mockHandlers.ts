@@ -1,4 +1,10 @@
 import { http, HttpResponse } from 'msw';
+import { DeviceType } from '../src/types/device';
+import { AgentType } from '../src/types/agent';
+import { ModelType } from '../src/types/model';
+import { LineType } from '../src/types/line';
+import { UserType } from '../src/types/user';
+import { ServiceType } from '../src/types/service';
 
 export const apiUrl = process.env.VITE_API_URL;
 
@@ -19,7 +25,7 @@ export const handlers = [
 			[
 				{ id: 1, title: 'first-service' },
 				{ id: 2, title: 'second-service' },
-			],
+			] as ServiceType[],
 			{ status: 200 }
 		)
 	),
@@ -48,7 +54,7 @@ export const handlers = [
 					agentId: 1,
 					modelId: 2,
 				},
-			],
+			] as DeviceType[],
 			{ status: 200 }
 		)
 	),
@@ -71,7 +77,7 @@ export const handlers = [
 					vip: true,
 					serviceId: 1,
 				},
-			],
+			] as AgentType[],
 			{ status: 200 }
 		)
 	),
@@ -85,12 +91,12 @@ export const handlers = [
 					storage: '256GB',
 				},
 				{
-					id: '2',
+					id: 2,
 					brand: 'Samsung',
 					reference: 'S24',
 					storage: null,
 				},
-			],
+			] as ModelType[],
 			{ status: 200 }
 		)
 	),
@@ -115,7 +121,7 @@ export const handlers = [
 					agentId: 2,
 					deviceId: 1,
 				},
-			],
+			] as LineType[],
 			{ status: 200 }
 		)
 	),
@@ -136,7 +142,7 @@ export const handlers = [
 					lastName: 'Norris',
 					role: 'Tech',
 				},
-			],
+			] as UserType[],
 			{ status: 200 }
 		)
 	),

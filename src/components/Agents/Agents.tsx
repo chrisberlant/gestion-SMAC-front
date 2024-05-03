@@ -59,7 +59,6 @@ export default function Agents() {
 
 	const anyLoading = servicesLoading || devicesLoading || agentsLoading;
 	const anyError = servicesError || devicesError || agentsError;
-	const allData = services && agents && devices;
 
 	const [validationErrors, setValidationErrors] = useState<
 		Record<string, string | undefined>
@@ -89,6 +88,8 @@ export default function Agents() {
 			})),
 		[services]
 	);
+
+	const requiredData = agents && formattedDevicesList && servicesList;
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -440,7 +441,7 @@ export default function Agents() {
 				</span>
 			)}
 
-			{allData && <MantineReactTable table={table} />}
+			{requiredData && <MantineReactTable table={table} />}
 		</div>
 	);
 }

@@ -16,12 +16,12 @@ describe('Users', () => {
 
 		const table = await screen.findByRole('table');
 		[
-			/super.administrator@gmail.com/i,
+			'super.administrator@gmail.com',
 			/super/i,
 			/administrator/i,
 			/admin/i,
 		].map((value) => within(table).getAllByText(value));
-		['chuck.norris@gmail.com', 'Chuck', 'Norris', 'Tech'].map((value) =>
+		['chuck.norris@gmail.com', /chuck/i, /norris/i, /tech/i].map((value) =>
 			within(table).getAllByText(value)
 		);
 	});

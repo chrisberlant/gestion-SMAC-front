@@ -16,13 +16,13 @@ describe('Lines', () => {
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
+		await within(table).findByText('0123456789');
 		[
-			'0123456789',
 			'VD',
 			'Active',
 			'Smith John - second-service',
-			'134321456654877 - Samsung S24',
 			'commentaire ligne 1',
+			'134321456654877 - Samsung S24',
 		].map((value) => within(table).getByText(value));
 		[
 			'0987654321',
