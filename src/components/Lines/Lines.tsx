@@ -120,6 +120,7 @@ export default function Lines() {
 			}),
 		[agents, services]
 	);
+
 	// Agents proposés dans la liste déroulante
 	const agentsList = useMemo(
 		() =>
@@ -149,7 +150,7 @@ export default function Lines() {
 		[devices, models]
 	);
 
-	const requiredData = lines && agentsList && devicesList;
+	const requiredData = lines && agents && devices;
 
 	const columns = useMemo<MRT_ColumnDef<LineType>[]>(
 		() => [

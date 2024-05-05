@@ -3,11 +3,14 @@ import Lines from '@components/Lines/Lines';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Lines', () => {
-	it('should render the lines table title', () => {
-		render(<Lines />);
+	it('should render the lines table title while loading', () => {
+		const { container } = render(<Lines />);
 
 		expect(
 			screen.getByRole('heading', { name: /lignes/i })
+		).toBeInTheDocument();
+		expect(
+			container.getElementsByClassName('loading')[0]
 		).toBeInTheDocument();
 	});
 

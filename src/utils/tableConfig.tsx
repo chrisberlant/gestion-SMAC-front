@@ -1,3 +1,5 @@
+import { Flex } from '@mantine/core';
+
 // Paramètres utilisés dans les tableaux avec lignes virtualisées
 export const virtualizedTableConfig = {
 	enablePagination: false,
@@ -35,6 +37,21 @@ export const virtualizedTableConfig = {
 		| 'cell'
 		| 'table'
 		| undefined,
+	renderEmptyRowsFallback: () => (
+		<Flex
+			justify='center'
+			align='center'
+			styles={{
+				root: {
+					fontStyle: 'italic',
+					fontSize: 16,
+					color: 'var(--mantine-color-dimmed)',
+				},
+			}}
+		>
+			Aucune donnée existante
+		</Flex>
+	),
 };
 
 // Paramètres utilisés dans les tableaux paginés
@@ -73,4 +90,20 @@ export const paginatedTableConfig = {
 		rowsPerPageOptions: ['5', '10', '20', '30'],
 		withEdges: true,
 	},
+	renderEmptyRowsFallback: () => (
+		<Flex
+			justify='center'
+			align='center'
+			mih='80'
+			styles={{
+				root: {
+					fontStyle: 'italic',
+					fontSize: 16,
+					color: 'var(--mantine-color-dimmed)',
+				},
+			}}
+		>
+			Aucune donnée existante
+		</Flex>
+	),
 };

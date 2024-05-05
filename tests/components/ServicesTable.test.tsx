@@ -1,12 +1,15 @@
 import { render, screen, within } from '@tests-utils';
 import ServicesTable from '@components/AdminDashboard/ServicesTable/ServicesTable';
 
-describe('Devices', () => {
-	it('should render the services table title', () => {
-		render(<ServicesTable />);
+describe('Devices table', () => {
+	it('should render the services table title while loading', () => {
+		const { container } = render(<ServicesTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /services/i })
+		).toBeInTheDocument();
+		expect(
+			container.getElementsByClassName('loading')[0]
 		).toBeInTheDocument();
 	});
 

@@ -1,12 +1,15 @@
 import { render, screen, within } from '@tests-utils';
 import ModelsTable from '@components/AdminDashboard/ModelsTable/ModelsTable';
 
-describe('Models', () => {
-	it('should render the models table title', () => {
-		render(<ModelsTable />);
+describe('Models table', () => {
+	it('should render the models table title while loading', () => {
+		const { container } = render(<ModelsTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /modèles/i })
+		).toBeInTheDocument();
+		expect(
+			container.getElementsByClassName('loading')[0]
 		).toBeInTheDocument();
 	});
 

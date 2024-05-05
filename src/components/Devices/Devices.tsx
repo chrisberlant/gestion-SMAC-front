@@ -158,7 +158,7 @@ export default function DevicesTable() {
 			})),
 		[models]
 	);
-	const requiredData = devices && agentsList && modelsList;
+	const requiredData = devices && agents && models;
 
 	const columns = useMemo<MRT_ColumnDef<DeviceType>[]>(
 		() => [
@@ -513,6 +513,7 @@ export default function DevicesTable() {
 				}}
 			/>
 		),
+		// renderEmptyRowsFallback: () => <Flex>Aucune donnée</Flex>,
 		renderTopToolbarCustomActions: () => (
 			<>
 				<CreateButton

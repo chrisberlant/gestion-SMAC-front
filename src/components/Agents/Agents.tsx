@@ -66,17 +66,18 @@ export default function Agents() {
 	const vipRef = useRef<boolean>(true);
 
 	// Pour chaque agent, récupérer sa liste d'appareils
-	const formattedDevicesList = useMemo(() => {
-		const devicesList: Record<number, string[]> = {};
+	const devicesList = useMemo(() => {
+		const devicesListPerAgent: Record<number, string[]> = {};
 		devices?.forEach((device) => {
 			if (device.agentId) {
-				if (!devicesList[device.agentId]) {
-					devicesList[device.agentId] = [];
+				// Si la paire propriété/valeur correspondant à l'agent n'est pas créée
+				if (!devicesListPerAgent[device.agentId]) {
+					devicesListPerAgent[device.agentId] = [];
 				}
-				devicesList[device.agentId].push(device.imei);
+				devicesListPerAgent[device.agentId].push(device.imei);
 			}
 		});
-		return devicesList;
+		return devicesListPerAgent;
 	}, [devices]);
 
 	// Services proposés dans la liste déroulante en cas d'ajout/mise à jour d'un agent
@@ -89,7 +90,7 @@ export default function Agents() {
 		[services]
 	);
 
-	const requiredData = agents && formattedDevicesList && servicesList;
+	const requiredData = agents && devices && services;
 
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
@@ -244,13 +245,12 @@ export default function Agents() {
 				header: 'Appareils affectés',
 				enableEditing: false,
 				id: 'devices',
-				accessorFn: (row) => formattedDevicesList[row.id]?.length || 0,
+				accessorFn: (row) => devicesList[row.id]?.length || 0,
 				size: 75,
 				Cell: ({ row, cell }) => {
 					// Ne rien afficher lors de la création
 					if (!row.original.email) return null;
-					const agentDevicesList =
-						formattedDevicesList[row.original.id];
+					const agentDevicesList = devicesList[row.original.id];
 					const devicesAmount = cell.getValue() as number;
 					if (devicesAmount === 0) return 0;
 					// Affichage des IMEI au survol s'il y a des appareils affectés
@@ -283,7 +283,7 @@ export default function Agents() {
 				},
 			},
 		],
-		[validationErrors, servicesList, formattedDevicesList]
+		[validationErrors, servicesList, devicesList]
 	);
 
 	//CREATE action

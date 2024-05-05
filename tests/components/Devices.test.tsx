@@ -3,7 +3,7 @@ import Devices from '@components/Devices/Devices';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Devices', () => {
-	it('should render the devices table title', () => {
+	it('should render the devices table title while loading', () => {
 		const { container } = render(<Devices />);
 
 		expect(

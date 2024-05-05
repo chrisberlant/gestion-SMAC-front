@@ -2,12 +2,15 @@ import { render, screen, within } from '@tests-utils';
 import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
 import { expect } from 'vitest';
 
-describe('Users', () => {
-	it('should render the users table title', () => {
-		render(<UsersTable />);
+describe('Users table', () => {
+	it('should render the users table title while loading', () => {
+		const { container } = render(<UsersTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /utilisateurs/i })
+		).toBeInTheDocument();
+		expect(
+			container.getElementsByClassName('loading')[0]
 		).toBeInTheDocument();
 	});
 
