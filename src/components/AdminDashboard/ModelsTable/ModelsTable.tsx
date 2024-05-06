@@ -26,7 +26,7 @@ import { toast } from 'sonner';
 import displayModelDeleteModal from '@modals/modelDeleteModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
-import { paginatedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();
@@ -201,24 +201,26 @@ export default function ModelsTable() {
 		};
 
 	const table = useMantineReactTable({
-		...paginatedTableConfig,
+		...virtualizedTableConfig,
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0,
-				pageSize: 10,
-			},
 			columnVisibility: {
 				id: false,
 			},
 		},
 		columns,
 		data: models || [],
+		renderBottomToolbar: false,
+		mantineTableContainerProps: { style: { minWidth: '50vw' } },
+		displayColumnDefOptions: {
+			'mrt-row-actions': {
+				size: 50,
+			},
+		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateModel,
 		onEditingRowSave: handleSaveModel,
 		onEditingRowCancel: () => setValidationErrors({}),
-
 		renderRowActions: ({ row, table }) => (
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}

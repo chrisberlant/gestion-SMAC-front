@@ -28,7 +28,7 @@ import {
 import displayDeleteUserModal from '@modals/userDeleteModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
-import { paginatedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
@@ -108,7 +108,7 @@ export default function UsersTable() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				size: 400,
+				size: 200,
 				mantineEditTextInputProps: {
 					error: validationErrors?.email,
 					onFocus: () =>
@@ -232,7 +232,7 @@ export default function UsersTable() {
 		};
 
 	const table = useMantineReactTable({
-		...paginatedTableConfig,
+		...virtualizedTableConfig,
 		initialState: {
 			density: 'xs',
 			pagination: {
@@ -245,11 +245,17 @@ export default function UsersTable() {
 		},
 		columns,
 		data: users || [],
+		renderBottomToolbar: false,
+		mantineTableContainerProps: { style: { minWidth: '60vw' } },
+		displayColumnDefOptions: {
+			'mrt-row-actions': {
+				size: 80,
+			},
+		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateUser,
 		onEditingRowSave: handleSaveUser,
 		onEditingRowCancel: () => setValidationErrors({}),
-		// mantineTableContainerProps: { style: { minWidth: '60vw' } },
 		renderRowActions: ({ row }) => (
 			<EditDeleteResetPasswordButtons
 				rowEmail={row.original.email}

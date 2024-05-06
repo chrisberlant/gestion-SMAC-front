@@ -16,6 +16,12 @@ export const virtualizedTableConfig = {
 		style: { minWidth: '300px' },
 		variant: 'default',
 	},
+	displayColumnDefOptions: {
+		'mrt-row-actions': {
+			header: 'Actions',
+			size: 70,
+		},
+	},
 	mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 	mantineTableProps: {
 		striped: true,
@@ -87,7 +93,7 @@ export const paginatedTableConfig = {
 	},
 	mantineTableContainerProps: { style: { minWidth: '40vw' } },
 	mantinePaginationProps: {
-		rowsPerPageOptions: ['5', '10', '20', '30'],
+		rowsPerPageOptions: ['10', '20', '50', '100', '200'],
 		withEdges: true,
 	},
 	renderEmptyRowsFallback: () => (

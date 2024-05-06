@@ -485,6 +485,7 @@ export default function DevicesTable() {
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
 		initialState: {
+			sorting: [{ id: 'id', desc: true }],
 			density: 'xs',
 			columnVisibility: {
 				id: false,
@@ -492,6 +493,11 @@ export default function DevicesTable() {
 		},
 		columns,
 		data: filteredDevices || [],
+		displayColumnDefOptions: {
+			'mrt-row-actions': {
+				size: 20,
+			},
+		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
@@ -500,6 +506,7 @@ export default function DevicesTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => {
+					// TODO effectuer la vérification uniquement si nécessaire
 					// Vérification si l'appareil est associé à une ligne
 					const affectedLineNumber =
 						lines?.find((line) => line.deviceId === row.original.id)
@@ -513,7 +520,6 @@ export default function DevicesTable() {
 				}}
 			/>
 		),
-		// renderEmptyRowsFallback: () => <Flex>Aucune donnée</Flex>,
 		renderTopToolbarCustomActions: () => (
 			<>
 				<CreateButton

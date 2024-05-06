@@ -18,16 +18,11 @@ export default function ZoomableComponent({
 				right={50}
 				color='blue'
 				size='sm'
-				min={75}
-				max={150}
+				min={50}
+				max={100}
 				step={5}
 				label={(value) => `${value}%`}
-				marks={[
-					{ value: 75 },
-					{ value: 100 },
-					{ value: 125 },
-					{ value: 150 },
-				]}
+				marks={[{ value: 50 }, { value: 75 }, { value: 100 }]}
 				value={zoom}
 				onChange={setZoom}
 				w={100}

@@ -21,7 +21,7 @@ import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
 import displayServiceDeleteModal from '@modals/serviceDeleteModal';
 import Loading from '../../Loading/Loading';
-import { paginatedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();
@@ -140,7 +140,7 @@ export default function ServicesTable() {
 		};
 
 	const table = useMantineReactTable({
-		...paginatedTableConfig,
+		...virtualizedTableConfig,
 		initialState: {
 			density: 'xs',
 			pagination: {
@@ -154,6 +154,13 @@ export default function ServicesTable() {
 		columns,
 		data: services || [],
 		enableColumnFilters: false,
+		renderBottomToolbar: false,
+		mantineTableContainerProps: { style: { minWidth: '30vw' } },
+		displayColumnDefOptions: {
+			'mrt-row-actions': {
+				size: 20,
+			},
+		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateService,
 		onEditingRowSave: handleSaveService,
