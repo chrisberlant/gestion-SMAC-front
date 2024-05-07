@@ -155,11 +155,8 @@ export default function ServicesTable() {
 		data: services || [],
 		enableColumnFilters: false,
 		renderBottomToolbar: false,
-		mantineTableContainerProps: { style: { minWidth: '30vw' } },
-		displayColumnDefOptions: {
-			'mrt-row-actions': {
-				size: 20,
-			},
+		mantineTableContainerProps: {
+			style: { maxHeight: '30vh' },
 		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateService,

@@ -30,7 +30,7 @@ export default function EditDeleteButtons({
 				</ActionIcon>
 			</Flex>
 		) : (
-			<Flex gap='md'>
+			<Flex gap='md' miw={70}>
 				<Tooltip
 					label='Modifier'
 					events={{ hover: true, focus: true, touch: false }}

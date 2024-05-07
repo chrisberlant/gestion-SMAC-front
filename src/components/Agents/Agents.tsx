@@ -103,7 +103,7 @@ export default function Agents() {
 			{
 				header: 'Nom',
 				accessorKey: 'lastName',
-				size: 120,
+				minSize: 120,
 				mantineEditTextInputProps: {
 					error: validationErrors?.lastName,
 					onFocus: () =>
@@ -121,7 +121,7 @@ export default function Agents() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				size: 100,
+				minSize: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -139,8 +139,11 @@ export default function Agents() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				size: 150,
+				minSize: 200,
 				mantineEditTextInputProps: {
+					style: {
+						width: 250,
+					},
 					type: 'email',
 					error: validationErrors?.email,
 					onFocus: () =>
@@ -218,7 +221,7 @@ export default function Agents() {
 				header: 'Service',
 				id: 'serviceId',
 				accessorFn: (row) => row.serviceId?.toString(),
-				size: 80,
+				minSize: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: servicesList,
@@ -246,7 +249,7 @@ export default function Agents() {
 				enableEditing: false,
 				id: 'devices',
 				accessorFn: (row) => devicesList[row.id]?.length || 0,
-				size: 75,
+				minSize: 75,
 				Cell: ({ row, cell }) => {
 					// Ne rien afficher lors de la création
 					if (!row.original.email) return null;
@@ -402,7 +405,7 @@ export default function Agents() {
 		data: agents || [],
 		displayColumnDefOptions: {
 			'mrt-row-actions': {
-				size: 20,
+				size: 50,
 			},
 		},
 		onCreatingRowCancel: () => setValidationErrors({}),

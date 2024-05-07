@@ -163,7 +163,7 @@ export default function Lines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
-				size: 50,
+				size: 70,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
 					onFocus: () =>
@@ -182,6 +182,9 @@ export default function Lines() {
 				size: 50,
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
+					style: {
+						width: 70,
+					},
 					allowDeselect: false,
 					error: validationErrors?.profile,
 					searchable: false, // Désactiver la recherche
@@ -197,7 +200,7 @@ export default function Lines() {
 				id: 'status',
 				accessorFn: (row) => row.status || 'Active',
 				editVariant: 'select',
-				size: 90,
+				size: 50,
 				mantineEditSelectProps: {
 					data: ['Active', 'En cours', 'Résiliée'],
 					allowDeselect: false,
@@ -218,6 +221,9 @@ export default function Lines() {
 				size: 100,
 				mantineEditSelectProps: {
 					data: agentsList,
+					style: {
+						width: 250,
+					},
 					allowDeselect: true,
 					clearable: true,
 					error: validationErrors?.agentId,
@@ -243,9 +249,12 @@ export default function Lines() {
 				id: 'deviceId',
 				accessorFn: (row) => row.deviceId?.toString(),
 				editVariant: 'select',
-				size: 90,
+				minSize: 120,
 				mantineEditSelectProps: {
 					data: devicesList,
+					style: {
+						width: 400,
+					},
 					clearable: true,
 					error: validationErrors?.deviceId,
 					onFocus: () =>
@@ -276,8 +285,11 @@ export default function Lines() {
 			{
 				header: 'Commentaires',
 				accessorKey: 'comments',
-				size: 90,
+				minSize: 90,
 				mantineEditTextInputProps: {
+					style: {
+						width: 400,
+					},
 					error: validationErrors?.comments,
 					onFocus: () =>
 						setValidationErrors({

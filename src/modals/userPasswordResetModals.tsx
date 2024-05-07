@@ -19,7 +19,7 @@ export const displayUserPasswordResetModal = ({
 	modals.openConfirmModal({
 		title: "Réinitialisation du mot de passe d'un utilisateur",
 		children: (
-			<Text>
+			<Text mb='xs'>
 				Voulez-vous vraiment réinitialiser le mot de passe de
 				l'utilisateur{' '}
 				<span className='bold-text'>
@@ -52,7 +52,7 @@ export const displayUserPasswordResetSuccessModal = (
 					été réinitialisé.
 				</Text>
 				<Text>Le nouveau mot de passe à fournir est : </Text>
-				<Flex gap='md' my='lg' justify='center' align='center'>
+				<Flex gap='md' my='xl' justify='center' align='center'>
 					<Text>{user.generatedPassword}</Text>
 					<Tooltip label='Copier dans le presse-papiers'>
 						<ActionIcon

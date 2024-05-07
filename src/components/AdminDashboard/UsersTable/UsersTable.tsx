@@ -52,7 +52,7 @@ export default function UsersTable() {
 			{
 				header: 'Nom',
 				accessorKey: 'lastName',
-				size: 150,
+				minSize: 150,
 				mantineEditTextInputProps: {
 					error: validationErrors?.lastName,
 					onFocus: () =>
@@ -65,7 +65,7 @@ export default function UsersTable() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				size: 150,
+				minSize: 150,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -78,7 +78,7 @@ export default function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'role',
-				size: 130,
+				maxSize: 130,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant
@@ -108,7 +108,8 @@ export default function UsersTable() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				size: 200,
+				minSize: 300,
+				maxSize: 400,
 				mantineEditTextInputProps: {
 					error: validationErrors?.email,
 					onFocus: () =>
@@ -246,10 +247,12 @@ export default function UsersTable() {
 		columns,
 		data: users || [],
 		renderBottomToolbar: false,
-		mantineTableContainerProps: { style: { minWidth: '60vw' } },
+		mantineTableContainerProps: {
+			style: { maxHeight: '30vh' },
+		},
 		displayColumnDefOptions: {
 			'mrt-row-actions': {
-				size: 80,
+				size: 120,
 			},
 		},
 		onCreatingRowCancel: () => setValidationErrors({}),

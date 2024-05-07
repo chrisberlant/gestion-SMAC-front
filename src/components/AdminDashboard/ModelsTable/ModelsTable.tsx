@@ -46,6 +46,7 @@ export default function ModelsTable() {
 			{
 				header: 'Marque',
 				accessorKey: 'brand',
+				minSize: 120,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.brand,
@@ -59,6 +60,7 @@ export default function ModelsTable() {
 			{
 				header: 'Modèle',
 				accessorKey: 'reference',
+				minSize: 150,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.reference,
@@ -72,7 +74,7 @@ export default function ModelsTable() {
 			{
 				header: 'Stockage',
 				accessorKey: 'storage',
-				size: 120,
+				maxSize: 130,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.storage,
@@ -211,11 +213,8 @@ export default function ModelsTable() {
 		columns,
 		data: models || [],
 		renderBottomToolbar: false,
-		mantineTableContainerProps: { style: { minWidth: '50vw' } },
-		displayColumnDefOptions: {
-			'mrt-row-actions': {
-				size: 50,
-			},
+		mantineTableContainerProps: {
+			style: { maxHeight: '30vh' },
 		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateModel,

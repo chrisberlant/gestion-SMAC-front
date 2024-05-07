@@ -171,7 +171,7 @@ export default function DevicesTable() {
 			{
 				header: 'IMEI',
 				accessorKey: 'imei',
-				size: 150,
+				maxSize: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.imei,
 					onFocus: () =>
@@ -186,7 +186,7 @@ export default function DevicesTable() {
 				header: 'Statut',
 				id: 'status',
 				accessorFn: (row) => row.status || 'En stock',
-				size: 150,
+				maxSize: 100,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: [
@@ -200,7 +200,7 @@ export default function DevicesTable() {
 					],
 					allowDeselect: false,
 					error: validationErrors?.status,
-					maxDropdownHeight: 234,
+					maxDropdownHeight: 250,
 					searchable: false,
 					onFocus: () =>
 						setValidationErrors({
@@ -212,7 +212,7 @@ export default function DevicesTable() {
 			{
 				header: 'État',
 				accessorKey: 'isNew',
-				size: 100,
+				maxSize: 50,
 				mantineEditTextInputProps: {
 					error: validationErrors?.isNew,
 					onFocus: () =>
@@ -242,9 +242,12 @@ export default function DevicesTable() {
 				id: 'modelId',
 				accessorFn: (row) => row.modelId?.toString(),
 				editVariant: 'select',
-				size: 100,
+				size: 120,
 				mantineEditSelectProps: {
 					data: modelsList,
+					style: {
+						width: 250,
+					},
 					allowDeselect: false,
 					error: validationErrors?.modelId,
 					onFocus: () =>
@@ -269,10 +272,13 @@ export default function DevicesTable() {
 				id: 'agentId',
 				accessorFn: (row) => row.agentId?.toString(),
 				editVariant: 'select',
-				size: 100,
+				size: 120,
 				clearable: true,
 				mantineEditSelectProps: {
 					data: agentsList,
+					style: {
+						width: 250,
+					},
 					clearable: true,
 					error: validationErrors?.agentId,
 					onFocus: () =>
@@ -295,7 +301,7 @@ export default function DevicesTable() {
 			{
 				header: 'Préparation',
 				accessorKey: 'preparationDate',
-				size: 90,
+				size: 80,
 				mantineEditTextInputProps: {
 					error: validationErrors?.preparationDate,
 					onFocus: () =>
@@ -316,7 +322,7 @@ export default function DevicesTable() {
 			{
 				header: 'Attribution',
 				accessorKey: 'attributionDate',
-				size: 90,
+				size: 80,
 				mantineEditTextInputProps: {
 					error: validationErrors?.attributionDate,
 					onFocus: () =>
@@ -339,6 +345,9 @@ export default function DevicesTable() {
 				accessorKey: 'comments',
 				size: 100,
 				mantineEditTextInputProps: {
+					style: {
+						width: 400,
+					},
 					error: validationErrors?.comments,
 					onFocus: () =>
 						setValidationErrors({
@@ -506,7 +515,6 @@ export default function DevicesTable() {
 			<EditDeleteButtons
 				editFunction={() => table.setEditingRow(row)}
 				deleteFunction={() => {
-					// TODO effectuer la vérification uniquement si nécessaire
 					// Vérification si l'appareil est associé à une ligne
 					const affectedLineNumber =
 						lines?.find((line) => line.deviceId === row.original.id)

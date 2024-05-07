@@ -18,8 +18,7 @@ export const virtualizedTableConfig = {
 	},
 	displayColumnDefOptions: {
 		'mrt-row-actions': {
-			header: 'Actions',
-			size: 70,
+			size: 80,
 		},
 	},
 	mantineTableContainerProps: { style: { maxHeight: '60vh' } },
@@ -60,7 +59,7 @@ export const virtualizedTableConfig = {
 	),
 };
 
-// Paramètres utilisés dans les tableaux paginés
+// Paramètres utilisés dans les tableaux paginés (historique)
 export const paginatedTableConfig = {
 	enableColumnActions: false,
 	createDisplayMode: 'row' as 'row' | 'custom' | 'modal' | undefined,
