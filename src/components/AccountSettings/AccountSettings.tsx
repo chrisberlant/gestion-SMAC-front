@@ -102,7 +102,7 @@ export default function AccountSettings({
 						<Button
 							fullWidth
 							mt='md'
-							color='grey'
+							color='gray'
 							onClick={closeAccountModal}
 						>
 							Annuler

@@ -1,4 +1,4 @@
-import { ScrollArea, Table, TextInput, keys, rem } from '@mantine/core';
+import { ScrollArea, Table, TextInput, keys } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { StatsType } from '../../../types';
@@ -111,12 +111,7 @@ export default function StatsTable({
 						placeholder='Filtrer'
 						w={190}
 						mb={0}
-						leftSection={
-							<IconSearch
-								style={{ width: rem(16), height: rem(16) }}
-								stroke={1.5}
-							/>
-						}
+						leftSection={<IconSearch size={16} stroke={1.5} />}
 						value={search}
 						onChange={handleSearchChange}
 					/>

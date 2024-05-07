@@ -191,7 +191,7 @@ export default function DeviceQuickAddModal({
 				<Button
 					fullWidth
 					mt='md'
-					color='grey'
+					color='gray'
 					onClick={closeModal('cancel')}
 				>
 					Annuler

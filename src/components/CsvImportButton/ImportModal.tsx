@@ -38,7 +38,7 @@ export default function ImportModal({
 	openedImportModal,
 	closeImportModal,
 }: ImportModalProps) {
-	const iconUpload = <IconUpload style={{ height: 20 }} />;
+	const iconUpload = <IconUpload size={20} />;
 
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const form = useForm({
@@ -115,7 +115,7 @@ export default function ImportModal({
 	const tooltipIcon = (
 		<HoverCard width={400} shadow='md'>
 			<HoverCard.Target>
-				<IconQuestionMark style={{ height: 20 }} />
+				<IconQuestionMark size={20} />
 			</HoverCard.Target>
 			<HoverCard.Dropdown>
 				<Text>
@@ -174,7 +174,7 @@ export default function ImportModal({
 					<Button
 						fullWidth
 						mt='md'
-						color='grey'
+						color='gray'
 						onClick={closeImportModal}
 					>
 						Annuler

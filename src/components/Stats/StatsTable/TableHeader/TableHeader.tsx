@@ -1,4 +1,4 @@
-import { Table, UnstyledButton, Group, Text, Center, rem } from '@mantine/core';
+import { Table, UnstyledButton, Group, Text, Center } from '@mantine/core';
 import {
 	IconSelector,
 	IconChevronDown,
@@ -28,10 +28,7 @@ export default function Th({ title, reversed, sorted, onSort }: ThProps) {
 						{title}
 					</Text>
 					<Center className={classes.icon}>
-						<Icon
-							style={{ width: rem(16), height: rem(16) }}
-							stroke={1.5}
-						/>
+						<Icon size={16} stroke={1.5} />
 					</Center>
 				</Group>
 			</UnstyledButton>

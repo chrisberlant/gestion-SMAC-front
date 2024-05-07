@@ -82,7 +82,7 @@ export default function ChangePassword({
 					<Button
 						fullWidth
 						mt='xl'
-						color='grey'
+						color='gray'
 						onClick={() => {
 							openAccountModal();
 							closePasswordModal();

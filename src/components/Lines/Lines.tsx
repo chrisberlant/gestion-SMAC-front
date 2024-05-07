@@ -21,7 +21,6 @@ import {
 	useGetAllLines,
 	useUpdateLine,
 } from '@queries/lineQueries';
-import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 import { useGetAllAgents } from '@queries/agentQueries';
 import { useGetAllServices } from '@queries/serviceQueries';
 import { useGetAllDevices } from '@queries/deviceQueries';
@@ -559,7 +558,7 @@ export default function Lines() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<Flex mr='auto' ml='xl'>
+				<Flex mr='auto' ml='xl' align='center'>
 					<Button
 						mr='xl'
 						radius='lg'
@@ -618,7 +617,7 @@ export default function Lines() {
 	});
 
 	return (
-		<ZoomableComponent>
+		<div>
 			<h2>Liste des lignes</h2>
 
 			{anyLoading && <Loading />}
@@ -630,6 +629,6 @@ export default function Lines() {
 			)}
 
 			{requiredData && <MantineReactTable table={table} />}
-		</ZoomableComponent>
+		</div>
 	);
 }

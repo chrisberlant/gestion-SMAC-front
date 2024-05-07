@@ -623,7 +623,7 @@ export default function DevicesTable() {
 	});
 
 	return (
-		<div className='devices-table'>
+		<div>
 			<h2>Liste des appareils</h2>
 
 			{anyLoading && <Loading />}

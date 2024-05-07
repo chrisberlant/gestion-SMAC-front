@@ -441,9 +441,11 @@ export default function Agents() {
 	});
 
 	return (
-		<div className='agents-table'>
+		<div>
 			<h2>Liste des agents</h2>
+
 			{anyLoading && <Loading />}
+
 			{anyError && (
 				<span>
 					Impossible de récupérer les agents depuis le serveur

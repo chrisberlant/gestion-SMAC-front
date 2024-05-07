@@ -6,7 +6,6 @@ import {
 	Tabs,
 	Text,
 	UnstyledButton,
-	rem,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -120,10 +119,7 @@ export default function Header() {
 											{`${currentUser.firstName} ${currentUser.lastName}`}
 										</Text>
 										<IconChevronDown
-											style={{
-												width: rem(12),
-												height: rem(12),
-											}}
+											size={12}
 											stroke={1.5}
 										/>
 									</Group>
@@ -132,13 +128,7 @@ export default function Header() {
 							<Menu.Dropdown>
 								<Menu.Item
 									leftSection={
-										<IconSettings
-											style={{
-												width: rem(16),
-												height: rem(16),
-											}}
-											stroke={1.5}
-										/>
+										<IconSettings size={16} stroke={1.5} />
 									}
 									onClick={openAccountModal}
 								>
@@ -155,13 +145,7 @@ export default function Header() {
 										}, 2000);
 									}}
 									leftSection={
-										<IconLogout
-											style={{
-												width: rem(16),
-												height: rem(16),
-											}}
-											stroke={1.5}
-										/>
+										<IconLogout size={16} stroke={1.5} />
 									}
 								>
 									Déconnexion

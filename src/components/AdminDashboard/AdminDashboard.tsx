@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGetCurrentUser } from '@queries/userQueries';
-import ZoomableComponent from '../ZoomableComponent/ZoomableComponent';
 import ModelsTable from './ModelsTable/ModelsTable';
 import ServicesTable from './ServicesTable/ServicesTable';
 import UsersTable from './UsersTable/UsersTable';
@@ -17,13 +16,13 @@ export default function AdminDashboard() {
 
 	return (
 		currentUser?.role === 'Admin' && (
-			<ZoomableComponent className='admin-dashboard'>
+			<div className='admin-dashboard'>
 				<UsersTable />
 				<div className='horizontal-align-div'>
 					<ServicesTable />
 					<ModelsTable />
 				</div>
-			</ZoomableComponent>
+			</div>
 		)
 	);
 }

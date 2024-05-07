@@ -12,10 +12,11 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ServiceType } from '@customTypes/service';
 import { AgentCreationType } from '@customTypes/agent';
+import { IconAt } from '@tabler/icons-react';
 
 interface AgentAddModalProps {
 	services?: ServiceType[];
@@ -29,6 +30,30 @@ export default function AgentQuickAddModal({
 	openedAgentAddModal,
 	closeAgentAddModal,
 }: AgentAddModalProps) {
+	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
+	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
+	const closeModal = (cancel: 'cancel' | undefined = undefined) => {
+		return () => {
+			closeAgentAddModal();
+			if (cancel && form.isDirty())
+				toast.warning("Aucune création d'agent n'a été effectuée");
+			form.reset();
+		};
+	};
+	const { data: agents } = useGetAllAgents();
+	const { mutate: createAgent } = useQuickCreateAgent(
+		toggleOverlay,
+		closeModal()
+	);
+	const [emailDomain, setEmailDomain] = useState<{
+		value: string | null;
+		locked: boolean;
+	}>({
+		value: null,
+		locked: false,
+	});
+	const vipRef = useRef<boolean>(false);
+	// TODO validation zod des données transformées
 	const form = useForm({
 		validate: zodResolver(agentQuickCreationSchema),
 		initialValues: {
@@ -43,24 +68,21 @@ export default function AgentQuickAddModal({
 				...values,
 				serviceId: Number(values.serviceId),
 				vip: vipRef.current,
+				email: emailDomain.value
+					? `${values.email}@${emailDomain.value}`
+					: values.email,
 			} as AgentCreationType),
 	});
-	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
-	const closeModal = (cancel: 'cancel' | undefined = undefined) => {
-		return () => {
-			closeAgentAddModal();
-			if (cancel && form.isDirty())
-				toast.warning("Aucune création d'agent n'a été effectuée");
-			form.reset();
-		};
-	};
-	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const { data: agents } = useGetAllAgents();
-	const { mutate: createAgent } = useQuickCreateAgent(
-		toggleOverlay,
-		closeModal()
-	);
-	const vipRef = useRef<boolean>(false);
+	console.log(form.getTransformedValues());
+
+	useEffect(() => {
+		// A l'insertion d'un @, verrouillage du champ permettant d'ajouter un nom de domaine
+		if (form.values.email.includes('@'))
+			return setEmailDomain({ value: null, locked: true });
+		// Déverrouillage du champ si pas de @ et que le champ était verrouillé
+		if (emailDomain.locked)
+			return setEmailDomain((prev) => ({ ...prev, locked: false }));
+	}, [form.values.email]);
 
 	// Formatage des servicespour affichage dans la liste déroulante
 	const formattedServices = useMemo(
@@ -84,6 +106,7 @@ export default function AgentQuickAddModal({
 	return (
 		<Modal
 			opened={openedAgentAddModal}
+			size='lg'
 			onClose={closeModal('cancel')}
 			title="Ajout rapide d'un agent"
 			centered
@@ -97,13 +120,41 @@ export default function AgentQuickAddModal({
 					zIndex={10}
 					overlayProps={{ radius: 'sm', blur: 2 }}
 				/>
-				<TextInput
-					label='Adresse mail'
-					placeholder='Adresse mail'
-					data-autofocus
-					{...form.getInputProps('email')}
-					mb='xs'
-				/>
+				<InputLabel>
+					Adresse mail
+					<Flex gap={10}>
+						<TextInput
+							placeholder='Adresse mail'
+							{...form.getInputProps('email')}
+							data-autofocus
+							mb='xs'
+							style={{
+								width: 295,
+							}}
+						/>
+						<Select
+							clearable={true}
+							{...(emailDomain.locked
+								? { disabled: true }
+								: null)}
+							data={[
+								'developpement-durable.gouv.fr',
+								'i-carre.net',
+							]}
+							value={emailDomain.value}
+							onChange={(value) =>
+								setEmailDomain((prev) => ({
+									...prev,
+									value,
+								}))
+							}
+							leftSection={<IconAt size={18} />}
+							style={{
+								width: 280,
+							}}
+						/>
+					</Flex>
+				</InputLabel>
 				<TextInput
 					label='Nom'
 					placeholder='Nom'
@@ -141,7 +192,7 @@ export default function AgentQuickAddModal({
 				<Button
 					fullWidth
 					mt='md'
-					color='grey'
+					color='gray'
 					onClick={closeModal('cancel')}
 				>
 					Annuler
