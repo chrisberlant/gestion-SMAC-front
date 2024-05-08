@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ServiceType } from '@customTypes/service';
-import { AgentCreationType } from '@customTypes/agent';
+import { AgentCreationType, AgentQuickCreationType } from '@customTypes/agent';
 import { IconAt } from '@tabler/icons-react';
 
 interface AgentAddModalProps {
@@ -38,6 +38,7 @@ export default function AgentQuickAddModal({
 			if (cancel && form.isDirty())
 				toast.warning("Aucune création d'agent n'a été effectuée");
 			form.reset();
+			setEmailDomainLock(false);
 		};
 	};
 	const { data: agents } = useGetAllAgents();
@@ -45,47 +46,43 @@ export default function AgentQuickAddModal({
 		toggleOverlay,
 		closeModal()
 	);
-	const [emailDomain, setEmailDomain] = useState<{
-		value: string | null;
-		locked: boolean;
-	}>({
-		value: null,
-		locked: false,
-	});
+	const [emailDomainLock, setEmailDomainLock] = useState<boolean>(false);
 	const vipRef = useRef<boolean>(false);
-	// TODO validation zod des données transformées
+
 	const form = useForm({
-		validate: zodResolver(agentQuickCreationSchema),
 		initialValues: {
 			lastName: '',
 			firstName: '',
 			email: '',
 			vip: false,
 			serviceId: '',
-		},
+			emailDomain: null,
+		} as AgentQuickCreationType,
 		transformValues: (values) =>
 			({
-				...values,
+				lastName: values.lastName,
+				firstName: values.firstName,
 				serviceId: Number(values.serviceId),
 				vip: vipRef.current,
-				email: emailDomain.value
-					? `${values.email}@${emailDomain.value}`
+				email: values.emailDomain
+					? `${values.email}@${values.emailDomain}`
 					: values.email,
 			} as AgentCreationType),
+		validate: zodResolver(agentQuickCreationSchema),
 	});
-	console.log(form.getTransformedValues());
 
 	useEffect(() => {
 		// A l'insertion d'un @, verrouillage du champ permettant d'ajouter un nom de domaine
-		if (form.values.email.includes('@'))
-			return setEmailDomain({ value: null, locked: true });
+		if (form.values.email.includes('@')) {
+			form.setFieldValue('emailDomain', null);
+			return setEmailDomainLock(true);
+		}
 		// Déverrouillage du champ si pas de @ et que le champ était verrouillé
-		if (emailDomain.locked)
-			return setEmailDomain((prev) => ({ ...prev, locked: false }));
+		if (emailDomainLock) return setEmailDomainLock(false);
 	}, [form.values.email]);
 
 	// Formatage des servicespour affichage dans la liste déroulante
-	const formattedServices = useMemo(
+	const servicesList = useMemo(
 		() =>
 			services?.map((service) => ({
 				value: service.id.toString(),
@@ -134,20 +131,12 @@ export default function AgentQuickAddModal({
 						/>
 						<Select
 							clearable={true}
-							{...(emailDomain.locked
-								? { disabled: true }
-								: null)}
+							{...form.getInputProps('emailDomain')}
+							{...(emailDomainLock ? { disabled: true } : null)}
 							data={[
 								'developpement-durable.gouv.fr',
 								'i-carre.net',
 							]}
-							value={emailDomain.value}
-							onChange={(value) =>
-								setEmailDomain((prev) => ({
-									...prev,
-									value,
-								}))
-							}
 							leftSection={<IconAt size={18} />}
 							style={{
 								width: 280,
@@ -170,7 +159,7 @@ export default function AgentQuickAddModal({
 				<Select
 					label='Service'
 					placeholder='Service'
-					data={formattedServices}
+					data={servicesList}
 					{...form.getInputProps('serviceId')}
 					searchable
 					clearable

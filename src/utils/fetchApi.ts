@@ -1,9 +1,7 @@
-type MethodType = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
-
 // Fonction utilisée pour fetch les données depuis l'API en simplifiant la syntaxe
 export default async function fetchApi(
 	route: string,
-	method?: MethodType,
+	method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE',
 	infos?: object
 ) {
 	const baseUrl = import.meta.env.VITE_API_URL;

@@ -83,11 +83,39 @@ export const agentUpdateSchema = z.strictObject({
 });
 
 // Schéma utilisé lors de la création d'agent via modale
-export const agentQuickCreationSchema = agentCreationSchema.extend({
-	serviceId: z
-		.string({
-			required_error: 'Le service doit être renseigné',
-		})
-		.trim()
-		.min(1, 'Le service doit être renseigné'),
-});
+export const agentQuickCreationSchema = agentCreationSchema
+	.extend({
+		serviceId: z
+			.string({
+				required_error: 'Le service doit être renseigné',
+			})
+			.trim()
+			.min(1, 'Le service doit être renseigné'),
+		email: z
+			.string({
+				required_error: "L'adresse mail doit être renseignée",
+			})
+			.trim()
+			.min(1, "L'adresse mail doit être renseignée"),
+		emailDomain: z.string().nullable().optional(),
+	})
+	.refine(
+		(data) => {
+			// Si pas de domaine renseigné via champ, vérification standard du champ email
+			if (!data.emailDomain) {
+				const isValidEmail = z.string().email().safeParse(data.email);
+				return isValidEmail.success;
+			}
+			if (data.emailDomain) {
+				// Si domaine renseigné via champ, vérification de la concanténation des deux champs
+				const fullEmail = `${data.email}@${data.emailDomain}`;
+				const isValidEmail = z.string().email().safeParse(fullEmail);
+				return isValidEmail.success;
+			}
+			return true;
+		},
+		{
+			message: "Le format de l'adresse mail est incorrect",
+			path: ['email'],
+		}
+	);
