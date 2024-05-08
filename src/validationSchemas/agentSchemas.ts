@@ -106,13 +106,10 @@ export const agentQuickCreationSchema = agentCreationSchema
 				const isValidEmail = z.string().email().safeParse(data.email);
 				return isValidEmail.success;
 			}
-			if (data.emailDomain) {
-				// Si domaine renseigné via champ, vérification de la concanténation des deux champs
-				const fullEmail = `${data.email}@${data.emailDomain}`;
-				const isValidEmail = z.string().email().safeParse(fullEmail);
-				return isValidEmail.success;
-			}
-			return true;
+			// Si domaine renseigné via champ, vérification de la concanténation des deux champs
+			const fullEmail = `${data.email}@${data.emailDomain}`;
+			const isValidEmail = z.string().email().safeParse(fullEmail);
+			return isValidEmail.success;
 		},
 		{
 			message: "Le format de l'adresse mail est incorrect",

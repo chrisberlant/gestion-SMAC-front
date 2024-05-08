@@ -140,6 +140,7 @@ export default function DeviceQuickAddModal({
 						'En panne',
 						'Volé',
 					]}
+					maxDropdownHeight={250}
 					{...form.getInputProps('status')}
 					mb='xs'
 				/>
