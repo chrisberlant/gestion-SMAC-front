@@ -12,7 +12,7 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import SwitchButton from '@components/SwitchButton/SwitchButton';
 import { ServiceType } from '@customTypes/service';
 import { AgentCreationType, AgentQuickCreationType } from '@customTypes/agent';
@@ -38,7 +38,6 @@ export default function AgentQuickAddModal({
 			if (cancel && form.isDirty())
 				toast.warning("Aucune création d'agent n'a été effectuée");
 			form.reset();
-			setEmailDomainLock(false);
 		};
 	};
 	const { data: agents } = useGetAllAgents();
@@ -46,7 +45,6 @@ export default function AgentQuickAddModal({
 		toggleOverlay,
 		closeModal()
 	);
-	const [emailDomainLock, setEmailDomainLock] = useState<boolean>(false);
 	const vipRef = useRef<boolean>(false);
 
 	const form = useForm({
@@ -71,16 +69,6 @@ export default function AgentQuickAddModal({
 		validate: zodResolver(agentQuickCreationSchema),
 	});
 
-	useEffect(() => {
-		// A l'insertion d'un @, verrouillage du champ permettant d'ajouter un nom de domaine
-		if (form.values.email.includes('@')) {
-			form.setFieldValue('emailDomain', null);
-			return setEmailDomainLock(true);
-		}
-		// Déverrouillage du champ si pas de @ et que le champ était verrouillé
-		if (emailDomainLock) return setEmailDomainLock(false);
-	}, [form.values.email]);
-
 	// Formatage des servicespour affichage dans la liste déroulante
 	const servicesList = useMemo(
 		() =>
@@ -99,6 +87,11 @@ export default function AgentQuickAddModal({
 			);
 		createAgent(form.getTransformedValues());
 	};
+
+	useEffect(() => {
+		if (form.values.email.includes('@'))
+			form.setFieldValue('emailDomain', null);
+	}, [form.values.email]);
 
 	return (
 		<Modal
@@ -132,7 +125,9 @@ export default function AgentQuickAddModal({
 						<Select
 							clearable={true}
 							{...form.getInputProps('emailDomain')}
-							{...(emailDomainLock ? { disabled: true } : null)}
+							{...(form.values.email.includes('@')
+								? { disabled: true }
+								: null)}
 							data={[
 								'developpement-durable.gouv.fr',
 								'i-carre.net',

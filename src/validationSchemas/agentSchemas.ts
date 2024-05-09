@@ -101,14 +101,11 @@ export const agentQuickCreationSchema = agentCreationSchema
 	})
 	.refine(
 		(data) => {
-			// Si pas de domaine renseigné via champ, vérification standard du champ email
-			if (!data.emailDomain) {
-				const isValidEmail = z.string().email().safeParse(data.email);
-				return isValidEmail.success;
-			}
-			// Si domaine renseigné via champ, vérification de la concanténation des deux champs
-			const fullEmail = `${data.email}@${data.emailDomain}`;
-			const isValidEmail = z.string().email().safeParse(fullEmail);
+			// Si un domaine est fourni, validation de la concanténation
+			const emailToValidate = data.emailDomain
+				? `${data.email}@${data.emailDomain}`
+				: data.email;
+			const isValidEmail = z.string().email().safeParse(emailToValidate);
 			return isValidEmail.success;
 		},
 		{
