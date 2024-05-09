@@ -121,7 +121,7 @@ export default function Agents() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				minSize: 100,
+				size: 100,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -139,7 +139,7 @@ export default function Agents() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				minSize: 200,
+				minSize: 100,
 				mantineEditTextInputProps: {
 					style: {
 						width: 250,
@@ -154,14 +154,22 @@ export default function Agents() {
 				},
 				Cell: ({ row }) => {
 					const agentEmail = row.original.email;
+					const shortAgentEmail = agentEmail.substring(
+						0,
+						agentEmail.indexOf('@')
+					);
 					return (
 						<Flex gap='xs' align='center'>
-							<span
-								className={row.original.vip ? 'vip-text' : ''}
-							>
-								{agentEmail}
-							</span>
-							<Tooltip label={`Copier ${agentEmail}`}>
+							<Tooltip label={agentEmail}>
+								<span
+									className={
+										row.original.vip ? 'vip-text' : ''
+									}
+								>
+									{shortAgentEmail}
+								</span>
+							</Tooltip>
+							<Tooltip label={`Copier`}>
 								<ActionIcon
 									size='xs'
 									onClick={() => {
@@ -176,7 +184,7 @@ export default function Agents() {
 									<IconCopy />
 								</ActionIcon>
 							</Tooltip>
-							<Tooltip label={`E-mail à ${agentEmail}`}>
+							<Tooltip label={`Envoyer un e-mail`}>
 								<ActionIcon
 									size='xs'
 									onClick={() =>
@@ -193,7 +201,7 @@ export default function Agents() {
 			{
 				header: 'VIP',
 				accessorKey: 'vip',
-				size: 50,
+				size: 60,
 				mantineEditTextInputProps: {
 					error: validationErrors?.vip,
 					onFocus: () =>
@@ -220,7 +228,7 @@ export default function Agents() {
 			{
 				header: 'Service',
 				id: 'serviceId',
-				accessorFn: (row) => row.serviceId?.toString(),
+				accessorFn: (row) => row.serviceId?.toString() || null,
 				minSize: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -408,6 +416,7 @@ export default function Agents() {
 				size: 50,
 			},
 		},
+		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateAgent,
 		onEditingRowSave: handleSaveAgent,

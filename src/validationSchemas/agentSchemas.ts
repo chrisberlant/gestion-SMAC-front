@@ -33,8 +33,7 @@ export const agentCreationSchema = z.strictObject({
 			required_error: 'Le service doit être renseigné',
 			invalid_type_error: "L'id du service doit être un nombre",
 		})
-		.int("L'id du service doit être un nombre entier")
-		.positive("L'id du service fourni est incorrect"),
+		.positive('Le service doit être renseigné'),
 });
 
 export const agentUpdateSchema = z.strictObject({

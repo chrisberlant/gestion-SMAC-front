@@ -543,6 +543,7 @@ export default function Lines() {
 				size: 20,
 			},
 		},
+		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateLine,
 		onEditingRowSave: handleSaveLine,

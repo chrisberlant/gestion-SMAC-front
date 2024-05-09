@@ -1,11 +1,20 @@
-import { Button, LoadingOverlay, Modal, TextInput } from '@mantine/core';
+import {
+	ActionIcon,
+	Button,
+	Flex,
+	InputLabel,
+	LoadingOverlay,
+	Modal,
+	TextInput,
+} from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import { useGetCurrentUser, useUpdateCurrentUser } from '@queries/userQueries';
 import { currentUserUpdateSchema } from '@validationSchemas/userSchemas';
 import ChangePassword from './ChangePassword/ChangePassword';
-import { IconKey } from '@tabler/icons-react';
+import { IconEdit, IconKey } from '@tabler/icons-react';
+import { useState } from 'react';
 
 interface AccountSettingsProps {
 	openedAccountModal: boolean;
@@ -36,12 +45,28 @@ export default function AccountSettings({
 		toggleOverlay,
 		closeAccountModal
 	);
-	const closeModal = () => {
+	const closeModalAndReset = () => {
 		closeAccountModal();
-		form.reset();
 		// Si des champs avaient été modifiés
 		if (form.isDirty())
 			toast.warning("Les modifications n'ont pas été enregistrées");
+		form.reset();
+		setInputLocks({ email: true, lastName: true, firstName: true });
+	};
+
+	const [inputsLock, setInputLocks] = useState({
+		email: true,
+		lastName: true,
+		firstName: true,
+	});
+
+	const handleSubmit = () => {
+		if (!form.isDirty()) {
+			closeModalAndReset();
+			toast.warning('Aucune modification effectuée');
+			return form.reset();
+		}
+		return updateCurrentUser(form.values);
 	};
 
 	return (
@@ -49,50 +74,110 @@ export default function AccountSettings({
 			<>
 				<Modal
 					opened={openedAccountModal}
-					onClose={closeModal}
+					onClose={closeModalAndReset}
 					title='Paramètres du compte'
 					centered
 					overlayProps={{
 						blur: 3,
 					}}
 				>
-					<form
-						onSubmit={form.onSubmit(() =>
-							updateCurrentUser(form.values)
-						)}
-					>
+					<form onSubmit={form.onSubmit(handleSubmit)}>
 						<LoadingOverlay
 							visible={visible}
-							zIndex={10}
+							zIndex={2}
 							overlayProps={{ radius: 'sm', blur: 2 }}
 						/>
-						<TextInput
-							label='Adresse mail'
-							placeholder='Votre email'
-							{...form.getInputProps('email')}
-							mb='xs'
-						/>
-						<TextInput
-							label='Nom'
-							placeholder='Votre nom'
-							{...form.getInputProps('lastName')}
-							mb='xs'
-						/>
-						<TextInput
-							label='Prénom'
-							placeholder='Votre prénom'
-							{...form.getInputProps('firstName')}
-							mb='xl'
-						/>
+						<Flex direction='column' gap='xs'>
+							<InputLabel>
+								Adresse mail
+								<Flex align='center' gap='md' mt={4}>
+									<ActionIcon
+										aria-label="Modifier l'adresse mail"
+										size='lg'
+										onClick={() =>
+											setInputLocks((prev) => ({
+												...prev,
+												email: !prev.email,
+											}))
+										}
+									>
+										<IconEdit />
+									</ActionIcon>
+									<TextInput
+										placeholder='Votre email'
+										{...form.getInputProps('email')}
+										{...(inputsLock.email
+											? { disabled: true }
+											: null)}
+										flex={1}
+									/>
+								</Flex>
+							</InputLabel>
+							<InputLabel>
+								Nom
+								<Flex align='center' gap='md' mt='4'>
+									<ActionIcon
+										aria-label='Modifier le nom'
+										size='lg'
+										onClick={() =>
+											setInputLocks((prev) => ({
+												...prev,
+												lastName: !prev.lastName,
+											}))
+										}
+									>
+										<IconEdit />
+									</ActionIcon>
+									<TextInput
+										placeholder='Votre nom'
+										{...form.getInputProps('lastName')}
+										{...(inputsLock.lastName
+											? { disabled: true }
+											: null)}
+										flex={1}
+									/>
+								</Flex>
+							</InputLabel>
+							<InputLabel>
+								Prénom
+								<Flex align='center' gap='md' mt={4}>
+									<ActionIcon
+										aria-label='Modifier le prénom'
+										size='lg'
+										onClick={() =>
+											setInputLocks((prev) => ({
+												...prev,
+												firstName: !prev.firstName,
+											}))
+										}
+									>
+										<IconEdit />
+									</ActionIcon>
+									<TextInput
+										placeholder='Votre prénom'
+										{...form.getInputProps('firstName')}
+										{...(inputsLock.firstName
+											? { disabled: true }
+											: null)}
+										flex={1}
+									/>
+								</Flex>
+							</InputLabel>
+						</Flex>
 
-						<Button fullWidth mt='md' type='submit'>
+						<Button fullWidth mt='xl' type='submit'>
 							Valider
 						</Button>
 						<Button
 							fullWidth
 							mt='md'
 							onClick={() => {
-								closeAccountModal();
+								closeModalAndReset();
+								setInputLocks({
+									email: true,
+									lastName: true,
+									firstName: true,
+								});
 								openPasswordModal();
 							}}
 							leftSection={<IconKey size={20} />}
@@ -103,7 +188,7 @@ export default function AccountSettings({
 							fullWidth
 							mt='md'
 							color='gray'
-							onClick={closeAccountModal}
+							onClick={closeModalAndReset}
 						>
 							Annuler
 						</Button>

@@ -507,6 +507,7 @@ export default function DevicesTable() {
 				size: 20,
 			},
 		},
+		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,

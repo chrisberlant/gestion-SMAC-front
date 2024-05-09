@@ -21,7 +21,6 @@ export const virtualizedTableConfig = {
 			size: 80,
 		},
 	},
-	mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 	mantineTableProps: {
 		striped: true,
 	},
@@ -90,7 +89,7 @@ export const paginatedTableConfig = {
 		mb: 'xs',
 		mx: 'xl',
 	},
-	mantineTableContainerProps: { style: { minWidth: '40vw' } },
+	mantineTableContainerProps: { style: { maxHeight: '200vh' } },
 	mantinePaginationProps: {
 		rowsPerPageOptions: ['10', '20', '50', '100', '200'],
 		withEdges: true,

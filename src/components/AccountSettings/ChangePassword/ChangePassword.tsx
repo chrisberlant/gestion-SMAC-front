@@ -54,7 +54,7 @@ export default function ChangePassword({
 				>
 					<LoadingOverlay
 						visible={visible}
-						zIndex={10}
+						zIndex={2}
 						overlayProps={{ radius: 'sm', blur: 2 }}
 					/>
 					<PasswordInput
@@ -76,16 +76,17 @@ export default function ChangePassword({
 						{...form.getInputProps('confirmPassword')}
 						mb='xl'
 					/>
-					<Button fullWidth mt='xl' type='submit'>
+					<Button fullWidth mt='md' type='submit'>
 						Valider
 					</Button>
 					<Button
 						fullWidth
-						mt='xl'
+						mt='md'
 						color='gray'
 						onClick={() => {
-							openAccountModal();
+							form.reset();
 							closePasswordModal();
+							openAccountModal();
 						}}
 					>
 						Retour

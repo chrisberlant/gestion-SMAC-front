@@ -107,7 +107,7 @@ export default function AgentQuickAddModal({
 			<form onSubmit={form.onSubmit(handleSubmit)}>
 				<LoadingOverlay
 					visible={visible}
-					zIndex={10}
+					zIndex={2}
 					overlayProps={{ radius: 'sm', blur: 2 }}
 				/>
 				<InputLabel>
