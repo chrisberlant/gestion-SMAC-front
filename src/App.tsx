@@ -4,10 +4,10 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { lazy } from 'react';
 import { Toaster } from 'sonner';
 import './App.css';
-import Login from './components/Login/Login';
-import PrivateRoutes from './components/PrivateRoutes/PrivateRoutes';
+import Login from '@components/Login/Login';
+import PrivateRoutes from '@components/PrivateRoutes/PrivateRoutes';
 const AdminDashboard = lazy(
-	() => import('./components/AdminDashboard/AdminDashboard')
+	() => import('@components/AdminDashboard/AdminDashboard')
 );
 const Agents = lazy(() => import('./components/Agents/Agents'));
 const Devices = lazy(() => import('./components/Devices/Devices'));

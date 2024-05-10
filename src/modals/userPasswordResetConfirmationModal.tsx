@@ -1,49 +1,17 @@
-import { modals } from '@mantine/modals';
-import { MRT_Row } from 'mantine-react-table';
 import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core';
-import { UserType, UserPasswordIsResetType } from '@customTypes/user';
+import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
+import { UserPasswordIsResetType } from '@customTypes/user';
 import { sendEmail } from '@utils/index';
 
-interface DisplayUserPasswordResetModalProps {
-	row: MRT_Row<UserType>;
-	resetPassword: (id: number) => void;
-}
-
-// Modale pour demander une confirmation à l'utilisateur
-export const displayUserPasswordResetModal = ({
-	row,
-	resetPassword,
-}: DisplayUserPasswordResetModalProps) =>
-	modals.openConfirmModal({
-		title: "Réinitialisation du mot de passe d'un utilisateur",
-		children: (
-			<Text mb='xs'>
-				Voulez-vous vraiment réinitialiser le mot de passe de
-				l'utilisateur{' '}
-				<span className='bold-text'>
-					{row.original.firstName} {row.original.lastName}
-				</span>{' '}
-				?
-			</Text>
-		),
-		centered: true,
-		overlayProps: {
-			blur: 3,
-		},
-		labels: { confirm: 'Réinitialiser', cancel: 'Annuler' },
-		confirmProps: { color: 'orange' },
-		// Appel API
-		onConfirm: () => resetPassword(row.original.id),
-	});
-
 // Modale pour indiquer le succès et permettre l'affichage et l'envoi du nouveau mot de passe
-export const displayUserPasswordResetSuccessModal = (
+export const displayUserPasswordResetConfirmationModal = (
 	user: UserPasswordIsResetType
 ) =>
 	modals.open({
 		title: 'Confirmation de la réinitialisation',
+		size: 'md',
 		children: (
 			<>
 				<Text>

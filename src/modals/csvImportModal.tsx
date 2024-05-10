@@ -157,8 +157,9 @@ export default function ImportModal({
 						accept='.csv'
 						mt='md'
 						mb='xl'
-						leftSectionPointerEvents='none'
 						{...form.getInputProps('file')}
+						leftSectionPointerEvents='none'
+						labelProps={{ mb: '4' }}
 					/>
 					<Button fullWidth mt='xl' type='submit'>
 						Importer

@@ -110,45 +110,47 @@ export default function AgentQuickAddModal({
 					zIndex={2}
 					overlayProps={{ radius: 'sm', blur: 2 }}
 				/>
-				<InputLabel>
-					Adresse mail
-					<Flex gap={10}>
-						<TextInput
-							placeholder='Adresse mail'
-							{...form.getInputProps('email')}
-							data-autofocus
-							mb='xs'
-							style={{
-								width: 295,
-							}}
-						/>
-						<Select
-							clearable={true}
-							{...form.getInputProps('emailDomain')}
-							{...(form.values.email.includes('@')
-								? { disabled: true }
-								: null)}
-							data={[
-								'developpement-durable.gouv.fr',
-								'i-carre.net',
-							]}
-							leftSection={<IconAt size={18} />}
-							style={{
-								width: 280,
-							}}
-						/>
-					</Flex>
-				</InputLabel>
+
+				<Flex align='center' gap={10}>
+					<TextInput
+						label='Adresse mail'
+						placeholder='Adresse mail'
+						{...form.getInputProps('email')}
+						data-autofocus
+						mb='xs'
+						style={{
+							width: 295,
+						}}
+						labelProps={{ mb: '4' }}
+					/>
+					<Select
+						clearable={true}
+						{...form.getInputProps('emailDomain')}
+						{...(form.values.email.includes('@')
+							? { disabled: true }
+							: null)}
+						data={['developpement-durable.gouv.fr', 'i-carre.net']}
+						leftSection={<IconAt size={18} />}
+						leftSectionPointerEvents='none'
+						style={{
+							width: 280,
+						}}
+						mt={18}
+					/>
+				</Flex>
+
 				<TextInput
 					label='Nom'
 					placeholder='Nom'
 					{...form.getInputProps('lastName')}
+					labelProps={{ mb: '4' }}
 					mb='xs'
 				/>
 				<TextInput
 					label='Prénom'
 					placeholder='Prénom'
 					{...form.getInputProps('firstName')}
+					labelProps={{ mb: '4' }}
 					mb='xs'
 				/>
 				<Select
@@ -158,6 +160,7 @@ export default function AgentQuickAddModal({
 					{...form.getInputProps('serviceId')}
 					searchable
 					clearable
+					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
 				<Flex gap={5} align='center'>

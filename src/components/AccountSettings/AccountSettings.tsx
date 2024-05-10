@@ -2,7 +2,6 @@ import {
 	ActionIcon,
 	Button,
 	Flex,
-	InputLabel,
 	LoadingOverlay,
 	Modal,
 	TextInput,
@@ -51,7 +50,7 @@ export default function AccountSettings({
 		if (form.isDirty())
 			toast.warning("Les modifications n'ont pas été enregistrées");
 		form.reset();
-		setInputLocks({ email: true, lastName: true, firstName: true });
+		// setInputLocks({ email: true, lastName: true, firstName: true });
 	};
 
 	const [inputsLock, setInputLocks] = useState({
@@ -88,81 +87,88 @@ export default function AccountSettings({
 							overlayProps={{ radius: 'sm', blur: 2 }}
 						/>
 						<Flex direction='column' gap='xs'>
-							<InputLabel>
-								Adresse mail
-								<Flex align='center' gap='md' mt={4}>
-									<ActionIcon
-										aria-label="Modifier l'adresse mail"
-										size='lg'
-										onClick={() =>
-											setInputLocks((prev) => ({
-												...prev,
-												email: !prev.email,
-											}))
-										}
-									>
-										<IconEdit />
-									</ActionIcon>
-									<TextInput
-										placeholder='Votre email'
-										{...form.getInputProps('email')}
-										{...(inputsLock.email
-											? { disabled: true }
-											: null)}
-										flex={1}
-									/>
-								</Flex>
-							</InputLabel>
-							<InputLabel>
-								Nom
-								<Flex align='center' gap='md' mt='4'>
-									<ActionIcon
-										aria-label='Modifier le nom'
-										size='lg'
-										onClick={() =>
-											setInputLocks((prev) => ({
-												...prev,
-												lastName: !prev.lastName,
-											}))
-										}
-									>
-										<IconEdit />
-									</ActionIcon>
-									<TextInput
-										placeholder='Votre nom'
-										{...form.getInputProps('lastName')}
-										{...(inputsLock.lastName
-											? { disabled: true }
-											: null)}
-										flex={1}
-									/>
-								</Flex>
-							</InputLabel>
-							<InputLabel>
-								Prénom
-								<Flex align='center' gap='md' mt={4}>
-									<ActionIcon
-										aria-label='Modifier le prénom'
-										size='lg'
-										onClick={() =>
-											setInputLocks((prev) => ({
-												...prev,
-												firstName: !prev.firstName,
-											}))
-										}
-									>
-										<IconEdit />
-									</ActionIcon>
-									<TextInput
-										placeholder='Votre prénom'
-										{...form.getInputProps('firstName')}
-										{...(inputsLock.firstName
-											? { disabled: true }
-											: null)}
-										flex={1}
-									/>
-								</Flex>
-							</InputLabel>
+							<Flex align='flex-end' gap='md'>
+								<ActionIcon
+									aria-label="Modifier l'adresse mail"
+									size='lg'
+									color={inputsLock.email ? 'blue' : 'red'}
+									mb={1}
+									onClick={() =>
+										setInputLocks((prev) => ({
+											...prev,
+											email: !prev.email,
+										}))
+									}
+								>
+									<IconEdit />
+								</ActionIcon>
+								<TextInput
+									placeholder='Votre adresse mail'
+									label='Adresse mail'
+									labelProps={{ mb: '4' }}
+									{...form.getInputProps('email')}
+									{...(inputsLock.email
+										? { disabled: true }
+										: null)}
+									flex={1}
+								/>
+							</Flex>
+
+							<Flex align='flex-end' gap='md' mt='4'>
+								<ActionIcon
+									aria-label='Modifier le nom'
+									size='lg'
+									color={inputsLock.lastName ? 'blue' : 'red'}
+									mb={1}
+									onClick={() =>
+										setInputLocks((prev) => ({
+											...prev,
+											lastName: !prev.lastName,
+										}))
+									}
+								>
+									<IconEdit />
+								</ActionIcon>
+								<TextInput
+									placeholder='Votre nom'
+									label='Votre nom'
+									labelProps={{ mb: 4 }}
+									{...form.getInputProps('lastName')}
+									{...(inputsLock.lastName
+										? { disabled: true }
+										: null)}
+									flex={1}
+								/>
+							</Flex>
+
+							<Flex align='flex-end' gap='md' mt={4}>
+								<ActionIcon
+									aria-label='Modifier le prénom'
+									size='lg'
+									color={
+										inputsLock.firstName ? 'blue' : 'red'
+									}
+									mb={1}
+									onClick={() =>
+										setInputLocks((prev) => ({
+											...prev,
+											firstName: !prev.firstName,
+										}))
+									}
+								>
+									<IconEdit />
+								</ActionIcon>
+								<TextInput
+									placeholder='Votre prénom'
+									label='Votre prénom'
+									labelProps={{ mb: 4 }}
+									{...form.getInputProps('firstName')}
+									{...(inputsLock.firstName
+										? { disabled: true }
+										: null)}
+									flex={1}
+								/>
+							</Flex>
 						</Flex>
 
 						<Button fullWidth mt='xl' type='submit'>

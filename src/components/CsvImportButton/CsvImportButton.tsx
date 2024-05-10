@@ -1,6 +1,6 @@
 import { Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import ImportModal from './ImportModal';
+import ImportModal from '@modals/csvImportModal';
 import { useGetCurrentUser } from '@queries/userQueries';
 import { IconFileUpload } from '@tabler/icons-react';
 

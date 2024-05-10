@@ -66,16 +66,18 @@ export default function Login() {
 								<TextInput
 									label='Email'
 									placeholder='Votre adresse mail'
-									size='md'
 									data-autofocus
 									{...form.getInputProps('email')}
+									size='md'
+									labelProps={{ mb: '4' }}
 								/>
 								<PasswordInput
 									label='Mot de passe'
 									placeholder='Votre mot de passe'
 									mt='md'
-									size='md'
 									{...form.getInputProps('password')}
+									size='md'
+									labelProps={{ mb: '4' }}
 								/>
 
 								<Button

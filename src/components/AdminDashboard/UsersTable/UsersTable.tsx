@@ -21,10 +21,8 @@ import { toast } from 'sonner';
 import { UserCreationType, UserType, UserUpdateType } from '@customTypes/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
-import {
-	displayUserPasswordResetModal,
-	displayUserPasswordResetSuccessModal,
-} from '@modals/userPasswordResetModals';
+import { displayUserPasswordResetModal } from '@modals/userPasswordResetModal';
+import { displayUserPasswordResetConfirmationModal } from '@modals/userPasswordResetConfirmationModal';
 import displayDeleteUserModal from '@modals/userDeleteModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
@@ -35,7 +33,7 @@ export default function UsersTable() {
 	const { mutate: createUser } = useCreateUser();
 	const { mutate: updateUser } = useUpdateUser();
 	const { mutate: resetPassword } = useResetPassword(
-		displayUserPasswordResetSuccessModal
+		displayUserPasswordResetConfirmationModal
 	);
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<

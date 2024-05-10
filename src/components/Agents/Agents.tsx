@@ -32,7 +32,7 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import displayAgentDeleteModal from '@modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
-import { useGetAllDevices } from '../../queries/deviceQueries';
+import { useGetAllDevices } from '@queries/deviceQueries';
 import Loading from '../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
 

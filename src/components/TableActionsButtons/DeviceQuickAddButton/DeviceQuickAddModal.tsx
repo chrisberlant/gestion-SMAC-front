@@ -126,6 +126,7 @@ export default function DeviceQuickAddModal({
 					placeholder='IMEI'
 					data-autofocus
 					{...form.getInputProps('imei')}
+					labelProps={{ mb: '4' }}
 					mb='xs'
 				/>
 				<Select
@@ -142,6 +143,7 @@ export default function DeviceQuickAddModal({
 					]}
 					maxDropdownHeight={250}
 					{...form.getInputProps('status')}
+					labelProps={{ mb: '4' }}
 					mb='xs'
 				/>
 				<Select
@@ -151,6 +153,7 @@ export default function DeviceQuickAddModal({
 					{...form.getInputProps('modelId')}
 					searchable
 					clearable
+					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
 				<Flex gap={10} align='center' mb='xs'>
@@ -170,20 +173,22 @@ export default function DeviceQuickAddModal({
 					{...form.getInputProps('agentId')}
 					searchable
 					clearable
+					labelProps={{ mb: '4' }}
 					mb='xs'
 				/>
 				<Flex direction='column' mb='xs'>
-					<InputLabel>Date de préparation</InputLabel>
+					<InputLabel mb={4}>Date de préparation</InputLabel>
 					<DateChoice dateRef={preparationDateRef} />
 				</Flex>
 				<Flex direction='column' mb='xs'>
-					<InputLabel>Date d'attribution</InputLabel>
+					<InputLabel mb={4}>Date d'attribution</InputLabel>
 					<DateChoice dateRef={attributionDateRef} />
 				</Flex>
 				<TextInput
 					label='Commentaires'
 					placeholder='Commentaires'
 					{...form.getInputProps('comments')}
+					labelProps={{ mb: '4' }}
 					mb='xl'
 				/>
 				<Button fullWidth mt='lg' type='submit'>
