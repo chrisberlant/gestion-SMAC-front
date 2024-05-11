@@ -51,3 +51,13 @@ export const getModifiedValues = <
 	});
 	return newOptimizedData;
 };
+
+// Vérifier si une string est au format JSON, utilisée dans certains cas pour tester le retour de l'API
+export const isJson = (string: string) => {
+	try {
+		JSON.parse(string);
+		return true;
+	} catch (error) {
+		return false;
+	}
+};

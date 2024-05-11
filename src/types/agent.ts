@@ -3,7 +3,7 @@ import {
 	agentCreationSchema,
 	agentQuickCreationSchema,
 	agentUpdateSchema,
-} from '../validationSchemas/agentSchemas';
+} from '@/validationSchemas/agentSchemas';
 
 export interface AgentType {
 	id: number;
@@ -12,7 +12,6 @@ export interface AgentType {
 	lastName: string;
 	vip: boolean;
 	serviceId: number;
-	// devices: { id: number; imei: string }[];
 }
 
 export type AgentCreationType = z.infer<typeof agentCreationSchema>;

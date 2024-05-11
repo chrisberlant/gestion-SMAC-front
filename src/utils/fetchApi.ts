@@ -44,12 +44,12 @@ export default async function fetchApi(
 		link.click();
 		return true;
 	}
-
 	// Si pas de pièce jointe, conversion en json
 	const data = await response.json();
 
 	// Si la requête a échoué
 	if (!response.ok) {
+		if (typeof data === 'object') throw new Error(JSON.stringify(data));
 		throw new Error(data);
 	}
 

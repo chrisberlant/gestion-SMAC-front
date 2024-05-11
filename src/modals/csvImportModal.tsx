@@ -77,7 +77,19 @@ export default function ImportModal({
 	const options: {
 		title: string;
 		requiredCsvHeaders: string;
-		mutationFn: UseMutateFunction<unknown, Error, object[], void>;
+		mutationFn:
+			| UseMutateFunction<unknown, Error, object[], void>
+			| UseMutateFunction<
+					any,
+					{
+						message: {
+							emails: string[];
+							services: string[];
+						};
+					},
+					object[],
+					void
+			  >;
 		templateGenerationFn: () => void;
 	} = {
 		title: '',
@@ -152,7 +164,7 @@ export default function ImportModal({
 						label='Sélectionner le fichier à importer'
 						leftSection={iconUpload}
 						rightSection={tooltipIcon}
-						placeholder='Sélectionner le fichier à importer'
+						placeholder='Sélectionner un fichier'
 						name='file'
 						accept='.csv'
 						mt='md'

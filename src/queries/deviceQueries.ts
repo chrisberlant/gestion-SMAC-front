@@ -8,7 +8,8 @@ import {
 import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType } from '@customTypes/line';
-import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
+import displayErrorOnImportModal from '@modals/errorOnImportModal';
+import { isJson } from '../utils';
 
 export const useGetAllDevices = () =>
 	useQuery({
@@ -159,14 +160,20 @@ export const useImportMultipleDevices = (
 			toast.success('Appareils importés avec succès');
 		},
 		onError: (error) => {
+			if (!isJson(error.message)) return toast.error(error.message);
+
+			const errors = JSON.parse(error.message);
+			const formatedErrors: Record<string, string[]> = {};
+
 			// Si IMEI déjà existants, la modale est affichée
-			if (/\d{15}/.test(error.message))
-				return displayAlreadyExistingValuesOnImportModal({
-					text: 'Certains IMEI fournis sont déjà existants :',
-					values: error.message.split(','),
-				});
+			if (errors.usedDevices.length > 0) {
+				formatedErrors['Les appareils suivants sont déjà existants :'] =
+					errors.usedDevices;
+				return displayErrorOnImportModal(formatedErrors);
+			}
+
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
-			toast.error('Format du CSV incorrect');
+			return toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
 			toggleOverlay();

@@ -7,7 +7,8 @@ import {
 	AgentType,
 	AgentUpdateType,
 } from '@customTypes/agent';
-import displayAlreadyExistingValuesOnImportModal from '@modals/alreadyExistingValuesOnImportModal';
+import displayErrorOnImportModal from '@/modals/errorOnImportModal';
+import { isJson } from '../utils';
 
 // Récupérer tous les agents
 export const useGetAllAgents = () =>
@@ -141,7 +142,13 @@ export const useImportMultipleAgents = (
 	useMutation({
 		mutationFn: async (importedAgents: object[]) => {
 			toggleOverlay();
-			return await fetchApi('/agents/csv', 'POST', importedAgents);
+			const response = await fetchApi(
+				'/agents/csv',
+				'POST',
+				importedAgents
+			);
+			console.log(response);
+			return response;
 		},
 		meta: {
 			importMutation: 'true',
@@ -153,14 +160,27 @@ export const useImportMultipleAgents = (
 			toast.success('Agents importés avec succès');
 		},
 		onError: (error) => {
-			// Si adresses mail déjà existantes, la modale est affichée
-			if (error.message.includes('@'))
-				return displayAlreadyExistingValuesOnImportModal({
-					text: 'Certaines adresses mail fournies sont déjà existantes :',
-					values: error.message.split(','),
-				});
-			// Si Zod renvoie un message indiquant un problème dans le format du CSV
-			toast.error('Format du CSV incorrect');
+			if (!isJson(error.message)) return toast.error(error.message);
+
+			const errors = JSON.parse(error.message);
+			const formatedErrors: Record<string, string[]> = {};
+
+			// Création d'un nouvel objet ayant l'erreur en tant que propriété
+			if (errors.usedEmails.length > 0)
+				formatedErrors[
+					'Les adresses mail suivantes sont déjà existantes :'
+				] = errors.usedEmails;
+
+			if (errors.unknownServices.length > 0)
+				formatedErrors['Les services suivants sont introuvables :'] =
+					errors.unknownServices;
+
+			// Si conflits, affichage de la modale
+			if (Object.keys(errors).length > 0)
+				return displayErrorOnImportModal(formatedErrors);
+
+			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV
+			return toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
 			toggleOverlay();

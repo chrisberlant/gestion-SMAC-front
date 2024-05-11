@@ -5,7 +5,8 @@ import fetchApi from '@utils/fetchApi';
 import queryClient from './queryClient';
 import { LineType, LineCreationType, LineUpdateType } from '@customTypes/line';
 import { DeviceType } from '@customTypes/device';
-import displayAlreadyExistingValuesOnImportModal from '../modals/alreadyExistingValuesOnImportModal';
+import displayErrorOnImportModal from '../modals/errorOnImportModal';
+import { isJson } from '../utils';
 
 export const useGetAllLines = () =>
 	useQuery({
@@ -171,49 +172,35 @@ export const useImportMultipleLines = (
 			toast.success('Lignes importées avec succès');
 		},
 		onError: (error) => {
-			// Tableau contenant tous les éléments retournés
-			const alreadyExistingItems = error.message.split(',');
-			// Séparation de chaque type d'élement dans un tableau différent
-			const alreadyExistingNumbers = alreadyExistingItems.filter((item) =>
-				/^\d{10}$/.test(item)
-			);
-			const alreadyExistingImeis = alreadyExistingItems.filter((item) =>
-				/^\d{15}$/.test(item)
-			);
+			if (!isJson(error.message)) return toast.error(error.message);
 
-			// Si des numéros déjà existants et appareils déjà affectés
-			if (
-				alreadyExistingNumbers.length > 0 &&
-				alreadyExistingImeis.length > 0
-			)
-				return displayAlreadyExistingValuesOnImportModal({
-					text: 'Certains numéros de ligne fournis sont déjà existants :',
-					values: alreadyExistingNumbers,
-					secondaryText:
-						'Certains IMEI fournis sont déjà existants :',
-					secondaryValues: alreadyExistingImeis,
-				});
-			// Si des numéros déjà existants mais pas d'appareils déjà affectés
-			if (
-				alreadyExistingNumbers.length > 0 &&
-				alreadyExistingImeis.length === 0
-			)
-				return displayAlreadyExistingValuesOnImportModal({
-					text: 'Certains numéros de ligne fournis sont déjà existants :',
-					values: alreadyExistingNumbers,
-				});
-			// Si des appareils déjà affectés mais pas de numéros déjà existants
-			if (
-				alreadyExistingImeis.length > 0 &&
-				alreadyExistingNumbers.length === 0
-			)
-				return displayAlreadyExistingValuesOnImportModal({
-					text: 'Certains IMEI fournis sont déjà existants :',
-					values: alreadyExistingImeis,
-				});
+			const errors = JSON.parse(error.message);
+			const formatedErrors: Record<string, string[]> = {};
 
-			// Si pas d'appareil/numéro déjà affecté mais que Zod renvoie un message indiquant un problème dans le format du CSV
-			toast.error('Format du CSV incorrect');
+			// Création d'un nouvel objet ayant l'erreur en tant que propriété
+			if (errors.usedNumbers.length > 0)
+				formatedErrors[
+					'Certains numéros de ligne fournis sont déjà existants :'
+				] = errors.usedNumbers;
+
+			if (errors.usedDevices.length > 0)
+				formatedErrors['Les appareils suivants sont déjà existants :'] =
+					errors.usedDevices;
+
+			if (errors.unknownDevices.length > 0)
+				formatedErrors['Les appareils suivants sont inconnus :'] =
+					errors.unknownDevices;
+
+			if (errors.unknownAgents.length > 0)
+				formatedErrors['Les agents suivants sont inconnus :'] =
+					errors.unknownAgents;
+			console.log(JSON.stringify(formatedErrors));
+			// Si conflits, affichage de la modale
+			if (Object.keys(errors).length > 0)
+				return displayErrorOnImportModal(formatedErrors);
+
+			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV
+			return toast.error('Format du CSV incorrect');
 		},
 		onSettled: () => {
 			toggleOverlay();
