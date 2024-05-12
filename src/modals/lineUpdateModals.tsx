@@ -231,11 +231,11 @@ export default function displayLineUpdateModal({
 					<Text mb='xs'>
 						A qui souhaitez-vous affecter la ligne ?
 					</Text>
-					<Text mb='xl'>
-						Si vous choisissez "Pas de propriétaire", l'appareil
-						sera désaffecté de son propriétaire actuel.
+					<Text mb='md'>
+						Si vous choisissez "Aucun propriétaire", l'appareil sera
+						désaffecté de son propriétaire actuel.
 					</Text>
-					<Flex align='center'>
+					<Flex align='center' justify='center'>
 						<Button
 							mt='lg'
 							mx='md'
@@ -247,12 +247,13 @@ export default function displayLineUpdateModal({
 								modals.closeAll();
 							}}
 						>
-							À {deviceCurrentOwnerFullName}
+							Au propriétaire de l'appareil :{' '}
+							{deviceCurrentOwnerFullName}
 						</Button>
 						<Button
 							mt='lg'
 							mx='md'
-							color='rgba(68, 145, 42, 1)'
+							color='red'
 							onClick={() => {
 								updateLine(updateData);
 								setValidationErrors({});
@@ -260,7 +261,7 @@ export default function displayLineUpdateModal({
 								modals.closeAll();
 							}}
 						>
-							Pas de propriétaire
+							Aucun propriétaire
 						</Button>
 					</Flex>
 					<Button
