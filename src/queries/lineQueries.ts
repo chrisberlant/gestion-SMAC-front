@@ -175,28 +175,39 @@ export const useImportMultipleLines = (
 			if (!isJson(error.message)) return toast.error(error.message);
 
 			const errors = JSON.parse(error.message);
-			const formatedErrors: Record<string, string[]> = {};
+			// Création d'un nouvel objet afin d'afficher un message personnalisé dans la modale qui sera appelée
+			const formatedErrors: {
+				message: string;
+				values: string[];
+			}[] = [];
 
-			// Création d'un nouvel objet ayant l'erreur en tant que propriété
 			if (errors.usedNumbers.length > 0)
-				formatedErrors[
-					'Certains numéros de ligne fournis sont déjà existants :'
-				] = errors.usedNumbers;
+				formatedErrors.push({
+					message:
+						'Certains numéros de ligne fournis sont déjà existants :',
+					values: errors.usedNumbers,
+				});
 
 			if (errors.usedDevices.length > 0)
-				formatedErrors['Les appareils suivants sont déjà existants :'] =
-					errors.usedDevices;
+				formatedErrors.push({
+					message: 'Les appareils suivants sont déjà existants :',
+					values: errors.usedDevices,
+				});
 
 			if (errors.unknownDevices.length > 0)
-				formatedErrors['Les appareils suivants sont inconnus :'] =
-					errors.unknownDevices;
+				formatedErrors.push({
+					message: 'Les appareils suivants sont introuvables :',
+					values: errors.unknownDevices,
+				});
 
 			if (errors.unknownAgents.length > 0)
-				formatedErrors['Les agents suivants sont inconnus :'] =
-					errors.unknownAgents;
-			console.log(JSON.stringify(formatedErrors));
+				formatedErrors.push({
+					message: 'Les agents suivants sont introuvables :',
+					values: errors.unknownAgents,
+				});
+
 			// Si conflits, affichage de la modale
-			if (Object.keys(errors).length > 0)
+			if (formatedErrors.length > 0)
 				return displayErrorOnImportModal(formatedErrors);
 
 			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV

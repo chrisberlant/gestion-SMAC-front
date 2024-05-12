@@ -163,20 +163,27 @@ export const useImportMultipleAgents = (
 			if (!isJson(error.message)) return toast.error(error.message);
 
 			const errors = JSON.parse(error.message);
-			const formatedErrors: Record<string, string[]> = {};
+			// Création d'un nouvel objet afin d'afficher un message personnalisé dans la modale qui sera appelée
+			const formatedErrors: {
+				message: string;
+				values: string[];
+			}[] = [];
 
-			// Création d'un nouvel objet ayant l'erreur en tant que propriété
 			if (errors.usedEmails.length > 0)
-				formatedErrors[
-					'Les adresses mail suivantes sont déjà existantes :'
-				] = errors.usedEmails;
+				formatedErrors.push({
+					message:
+						'Les adresses mail suivantes sont déjà existantes :',
+					values: errors.usedEmails,
+				});
 
 			if (errors.unknownServices.length > 0)
-				formatedErrors['Les services suivants sont introuvables :'] =
-					errors.unknownServices;
+				formatedErrors.push({
+					message: 'Les services suivants sont introuvables :',
+					values: errors.unknownServices,
+				});
 
 			// Si conflits, affichage de la modale
-			if (Object.keys(errors).length > 0)
+			if (formatedErrors.length > 0)
 				return displayErrorOnImportModal(formatedErrors);
 
 			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV

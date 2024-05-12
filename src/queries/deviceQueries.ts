@@ -163,14 +163,33 @@ export const useImportMultipleDevices = (
 			if (!isJson(error.message)) return toast.error(error.message);
 
 			const errors = JSON.parse(error.message);
-			const formatedErrors: Record<string, string[]> = {};
+			// Création d'un nouvel objet afin d'afficher un message personnalisé dans la modale qui sera appelée
+			const formatedErrors: {
+				message: string;
+				values: string[];
+			}[] = [];
 
-			// Si IMEI déjà existants, la modale est affichée
-			if (errors.usedDevices.length > 0) {
-				formatedErrors['Les appareils suivants sont déjà existants :'] =
-					errors.usedDevices;
+			if (errors.usedDevices.length > 0)
+				formatedErrors.push({
+					message: 'Les appareils suivants sont déjà existants :',
+					values: errors.usedDevices,
+				});
+
+			if (errors.unknownModels.length > 0)
+				formatedErrors.push({
+					message:
+						"Les modèles d'appareil suivants sont introuvables :",
+					values: errors.unknownModels,
+				});
+
+			if (errors.unknownAgents.length > 0)
+				formatedErrors.push({
+					message: 'Les agents suivants sont introuvables :',
+					values: errors.unknownAgents,
+				});
+
+			if (formatedErrors.length > 0)
 				return displayErrorOnImportModal(formatedErrors);
-			}
 
 			// Si Zod renvoie un message indiquant un problème dans le format du CSV
 			return toast.error('Format du CSV incorrect');
