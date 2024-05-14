@@ -3,7 +3,6 @@ import 'mantine-react-table/styles.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { lazy } from 'react';
 import { Toaster } from 'sonner';
-import './App.css';
 import Login from '@components/Login/Login';
 import PrivateRoutes from '@components/PrivateRoutes/PrivateRoutes';
 const AdminDashboard = lazy(
@@ -17,6 +16,7 @@ const PageNotFound = lazy(
 const Stats = lazy(() => import('./components/Stats/Stats'));
 const Lines = lazy(() => import('./components/Lines/Lines'));
 const History = lazy(() => import('./components/History/History'));
+import './App.css';
 
 const AppRoutes = () => (
 	<Routes>

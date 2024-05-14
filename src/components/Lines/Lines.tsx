@@ -44,6 +44,7 @@ import {
 	IconLineDashed,
 	IconProgress,
 } from '@tabler/icons-react';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Lines() {
 	const {
@@ -94,14 +95,29 @@ export default function Lines() {
 		Record<string, string | undefined>
 	>({});
 
-	const [filter, setFilter] = useState<
-		'Active' | 'En cours' | 'Résiliée' | null
-	>(null);
+	const [filterParams, setFilterParams] = useSearchParams({ filter: '' });
+
 	// Uniquement certaines lignes sont affichées si un filtre est défini par l'utilisateur
 	const filteredLines = useMemo(() => {
-		if (!filter) return lines;
-		return lines?.filter((line) => line.status === filter);
-	}, [lines, filter]);
+		let filterName = '';
+		switch (filterParams.get('filter')) {
+			case 'active':
+				filterName = 'Active';
+				break;
+			case 'in-progress':
+				filterName = 'En cours';
+				break;
+			case 'resiliated':
+				filterName = 'Résiliée';
+				break;
+			default:
+				filterName = '';
+		}
+
+		return filterName
+			? lines?.filter((line) => line.status === filterName)
+			: lines;
+	}, [lines, filterParams]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -565,7 +581,10 @@ export default function Lines() {
 						radius='lg'
 						color='blue'
 						variant='light'
-						onClick={() => setFilter(null)}
+						onClick={() => {
+							filterParams.delete('filter');
+							setFilterParams(filterParams);
+						}}
 						aria-label='Afficher toutes les lignes'
 						leftSection={<IconLineDashed size={20} />}
 					>
@@ -576,7 +595,15 @@ export default function Lines() {
 						radius='lg'
 						color='green'
 						variant='light'
-						onClick={() => setFilter('Active')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'active');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les lignes actives'
 						leftSection={<IconAntennaBars5 size={20} />}
 					>
@@ -587,7 +614,15 @@ export default function Lines() {
 						radius='lg'
 						color='orange'
 						variant='light'
-						onClick={() => setFilter('En cours')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'in-progress');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les lignes en cours de création'
 						leftSection={<IconProgress size={20} />}
 					>
@@ -598,7 +633,15 @@ export default function Lines() {
 						radius='lg'
 						color='red'
 						variant='light'
-						onClick={() => setFilter('Résiliée')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'resiliated');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les lignes résiliées'
 						leftSection={<IconAntennaBarsOff size={20} />}
 					>

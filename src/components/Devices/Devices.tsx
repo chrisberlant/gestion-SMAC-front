@@ -49,8 +49,9 @@ import {
 	IconDeviceMobileShare,
 	IconDeviceMobileRotated,
 } from '@tabler/icons-react';
+import { useSearchParams } from 'react-router-dom';
 
-export default function DevicesTable() {
+export default function Devices() {
 	const {
 		data: devices,
 		isLoading: devicesLoading,
@@ -104,20 +105,37 @@ export default function DevicesTable() {
 	const attributionDateRef = useRef<string | null>(null);
 	const isNewRef = useRef<boolean>(true);
 
-	const [filter, setFilter] = useState<
-		| 'En stock'
-		| 'Attribué'
-		| 'Restitué'
-		| 'En attente de restitution'
-		| 'En prêt'
-		| 'Volé'
-		| null
-	>(null);
+	const [filterParams, setFilterParams] = useSearchParams({ filter: '' });
+
 	// Uniquement certains appareils sont affichés si un filtre est défini par l'utilisateur
 	const filteredDevices = useMemo(() => {
-		if (!filter) return devices;
-		return devices?.filter((device) => device.status === filter);
-	}, [devices, filter]);
+		let filterName = '';
+		switch (filterParams.get('filter')) {
+			case 'in-stock':
+				filterName = 'En stock';
+				break;
+			case 'attributed':
+				filterName = 'Attribué';
+				break;
+			case 'restituted':
+				filterName = 'Restitué';
+				break;
+			case 'awaiting-restitution':
+				filterName = 'En attente de restitution';
+				break;
+			case 'lent':
+				filterName = 'En prêt';
+				break;
+			case 'stolen':
+				filterName = 'Volé';
+				break;
+			default:
+				filterName = '';
+		}
+		return filterName
+			? devices?.filter((device) => device.status === filterName)
+			: devices;
+	}, [devices, filterParams]);
 
 	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
@@ -540,7 +558,10 @@ export default function DevicesTable() {
 						radius='lg'
 						color='blue'
 						variant='light'
-						onClick={() => setFilter(null)}
+						onClick={() => {
+							filterParams.delete('filter');
+							setFilterParams(filterParams);
+						}}
 						aria-label='Afficher tous les appareils'
 						leftSection={<IconLineDashed size={20} />}
 					>
@@ -551,7 +572,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='green'
 						variant='light'
-						onClick={() => setFilter('En stock')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'in-stock');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils en stock'
 						leftSection={<IconDeviceMobileRotated size={20} />}
 					>
@@ -562,7 +591,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='green'
 						variant='light'
-						onClick={() => setFilter('Attribué')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'attributed');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils attribués'
 						leftSection={<IconDeviceMobileCheck size={20} />}
 					>
@@ -573,7 +610,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='green'
 						variant='light'
-						onClick={() => setFilter('Restitué')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'restituted');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils restitués'
 						leftSection={<IconDeviceMobileDown size={20} />}
 					>
@@ -584,7 +629,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='orange'
 						variant='light'
-						onClick={() => setFilter('En attente de restitution')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'awaiting-restitution');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils en attente de restitution'
 						leftSection={<IconDeviceMobileQuestion size={20} />}
 					>
@@ -595,7 +648,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='orange'
 						variant='light'
-						onClick={() => setFilter('En prêt')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'lent');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils en prêt'
 						leftSection={<IconDeviceMobileShare size={20} />}
 					>
@@ -606,7 +667,15 @@ export default function DevicesTable() {
 						radius='lg'
 						color='red'
 						variant='light'
-						onClick={() => setFilter('Volé')}
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'stolen');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
 						aria-label='Afficher les appareils volés'
 						leftSection={<IconDeviceMobileOff size={20} />}
 					>
