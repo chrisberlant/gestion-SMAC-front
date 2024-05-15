@@ -17,11 +17,11 @@ const displayErrorOnImportModal = (
 				{errors.map((error) => (
 					<div key={error.message}>
 						<Text mb='xs'>{error.message}</Text>
-						<Flex align='center' direction='column' mb='md'>
+						<ul>
 							{error.values.map((value) => (
-								<Text key={value}>{value}</Text>
+								<li key={value}> {value}</li>
 							))}
-						</Flex>
+						</ul>
 					</div>
 				))}
 
