@@ -32,6 +32,12 @@ export default function AccountSettings({
 		{ open: openPasswordModal, close: closePasswordModal },
 	] = useDisclosure(false);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
+
+	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
+		toggleOverlay,
+		closeAccountModal
+	);
+
 	const form = useForm({
 		validate: zodResolver(currentUserUpdateSchema),
 		initialValues: {
@@ -40,18 +46,6 @@ export default function AccountSettings({
 			firstName: currentUser?.firstName || '',
 		},
 	});
-	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
-		toggleOverlay,
-		closeAccountModal
-	);
-	const closeModalAndReset = () => {
-		closeAccountModal();
-		// Si des champs avaient été modifiés
-		if (form.isDirty())
-			toast.warning("Les modifications n'ont pas été enregistrées");
-		form.reset();
-		// setInputLocks({ email: true, lastName: true, firstName: true });
-	};
 
 	const [inputsLock, setInputLocks] = useState({
 		email: true,
@@ -59,11 +53,24 @@ export default function AccountSettings({
 		firstName: true,
 	});
 
+	// En cas de fermeture de la modale par l'utilisateur
+	const closeModalAndReset = () => {
+		closeAccountModal();
+		// Si des champs avaient été modifiés
+		if (form.isDirty()) {
+			const { role, ...currentUserInfos } = currentUser!;
+			form.setValues(currentUserInfos);
+			toast.warning("Les modifications n'ont pas été enregistrées");
+		}
+		setInputLocks({ email: true, lastName: true, firstName: true });
+	};
+
+	// Soumission du formulaire
 	const handleSubmit = () => {
+		setInputLocks({ email: true, lastName: true, firstName: true });
 		if (!form.isDirty()) {
-			closeModalAndReset();
-			toast.warning('Aucune modification effectuée');
-			return form.reset();
+			closeAccountModal();
+			return toast.warning('Aucune modification effectuée');
 		}
 		return updateCurrentUser(form.values);
 	};

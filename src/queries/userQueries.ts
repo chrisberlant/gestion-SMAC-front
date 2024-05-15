@@ -65,7 +65,7 @@ export const useCheckLoginStatus = () =>
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
 	toggleOverlay: () => void,
-	closeAccountModal: () => void
+	closeModal: () => void
 ) =>
 	useMutation({
 		mutationFn: async (data: CurrentUserUpdateType) => {
@@ -81,8 +81,8 @@ export const useUpdateCurrentUser = (
 			queryClient.setQueryData(
 				['currentUser'],
 				(currentUser: LoggedUserType) => ({
-					role: currentUser.role,
 					...updatedInfos,
+					role: currentUser.role,
 				})
 			);
 			// Si les utilisateurs sont en cache, mise à jour
@@ -98,7 +98,7 @@ export const useUpdateCurrentUser = (
 					)
 				);
 			}
-			closeAccountModal();
+			closeModal();
 			toast.success('Informations modifiées avec succès');
 		},
 		onSettled: () => {

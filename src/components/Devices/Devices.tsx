@@ -48,6 +48,7 @@ import {
 	IconDeviceMobileQuestion,
 	IconDeviceMobileShare,
 	IconDeviceMobileRotated,
+	IconDeviceMobileCancel,
 } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -128,6 +129,9 @@ export default function Devices() {
 				break;
 			case 'stolen':
 				filterName = 'Volé';
+				break;
+			case 'out-of-order':
+				filterName = 'En panne';
 				break;
 			default:
 				filterName = '';
@@ -552,6 +556,7 @@ export default function Devices() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
+				{/* Filtres */}
 				<Flex mr='auto' ml='xl'>
 					<Button
 						mr='xl'
@@ -680,6 +685,25 @@ export default function Devices() {
 						leftSection={<IconDeviceMobileOff size={20} />}
 					>
 						Volés
+					</Button>
+					<Button
+						mr='xl'
+						radius='lg'
+						color='red'
+						variant='light'
+						onClick={() =>
+							setFilterParams(
+								(prev) => {
+									prev.set('filter', 'out-of-order');
+									return prev;
+								},
+								{ replace: true }
+							)
+						}
+						aria-label='Afficher les appareils en panne'
+						leftSection={<IconDeviceMobileCancel size={20} />}
+					>
+						HS
 					</Button>
 				</Flex>
 				<CsvImportButton model='devices' />

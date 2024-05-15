@@ -55,7 +55,7 @@ export default function Login() {
 								mt='md'
 								mb={50}
 							>
-								Gestion SMAC - BETA
+								Gestion SMAC - Connexion
 							</Title>
 							<form onSubmit={form.onSubmit(() => submitLogin())}>
 								<LoadingOverlay
