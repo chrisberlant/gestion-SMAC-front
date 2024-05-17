@@ -1,10 +1,10 @@
-import { render, screen, userEvent, within } from '@tests-utils';
+import { renderWithRouter, screen, userEvent, within } from '@tests-utils';
 import Devices from '@components/Devices/Devices';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Devices', () => {
 	it('should render the devices table title while loading', () => {
-		const { container } = render(<Devices />);
+		const { container } = renderWithRouter(<Devices />);
 
 		expect(
 			screen.getByRole('heading', { name: /appareils/i })
@@ -15,7 +15,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the first and second devices in table rows', async () => {
-		render(<Devices />);
+		renderWithRouter(<Devices />);
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
@@ -39,7 +39,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the list of agents when user is editing a row and clicking on the agents list', async () => {
-		render(<Devices />);
+		renderWithRouter(<Devices />);
 		mockVirtualizedTable();
 
 		const user = userEvent.setup();
@@ -61,7 +61,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the list of models when user is editing a row and clicking on the models list', async () => {
-		render(<Devices />);
+		renderWithRouter(<Devices />);
 		mockVirtualizedTable();
 
 		const user = userEvent.setup();

@@ -1,10 +1,10 @@
-import { render, screen, within } from '@tests-utils';
+import { screen, within, renderWithRouter } from '@tests-utils';
 import Lines from '@components/Lines/Lines';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Lines', () => {
 	it('should render the lines table title while loading', () => {
-		const { container } = render(<Lines />);
+		const { container } = renderWithRouter(<Lines />);
 
 		expect(
 			screen.getByRole('heading', { name: /lignes/i })
@@ -15,7 +15,7 @@ describe('Lines', () => {
 	});
 
 	it('should render the first and second lines in table rows', async () => {
-		render(<Lines />);
+		renderWithRouter(<Lines />);
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');

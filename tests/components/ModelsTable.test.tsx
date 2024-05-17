@@ -1,9 +1,9 @@
-import { render, screen, within } from '@tests-utils';
+import { renderWithRouter, screen, within } from '@tests-utils';
 import ModelsTable from '@components/AdminDashboard/ModelsTable/ModelsTable';
 
 describe('Models table', () => {
 	it('should render the models table title while loading', () => {
-		const { container } = render(<ModelsTable />);
+		const { container } = renderWithRouter(<ModelsTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /modèles/i })
@@ -14,7 +14,7 @@ describe('Models table', () => {
 	});
 
 	it('should render the first and second models in table rows', async () => {
-		render(<ModelsTable />);
+		renderWithRouter(<ModelsTable />);
 
 		const table = await screen.findByRole('table');
 		[/apple/i, /iphone 15/i, /256gb/i].map((value) =>

@@ -1,10 +1,10 @@
-import { render, screen, userEvent, within } from '@tests-utils';
+import { renderWithRouter, screen, userEvent, within } from '@tests-utils';
 import Agents from '@components/Agents/Agents';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Agents', () => {
 	it('should render the agents table title and loader while loading', () => {
-		const { container } = render(<Agents />);
+		const { container } = renderWithRouter(<Agents />);
 
 		expect(
 			screen.getByRole('heading', { name: /agents/i })
@@ -15,7 +15,7 @@ describe('Agents', () => {
 	});
 
 	it('should render the first and second agents in table rows', async () => {
-		render(<Agents />);
+		renderWithRouter(<Agents />);
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
@@ -33,7 +33,7 @@ describe('Agents', () => {
 	});
 
 	it('should render the list of services when user is editing a row and clicking on the services list', async () => {
-		render(<Agents />);
+		renderWithRouter(<Agents />);
 		mockVirtualizedTable();
 
 		const user = userEvent.setup();

@@ -1,10 +1,10 @@
-import { render, screen, within } from '@tests-utils';
+import { renderWithRouter, screen, within } from '@tests-utils';
 import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
 import { expect } from 'vitest';
 
 describe('Users table', () => {
 	it('should render the users table title while loading', () => {
-		const { container } = render(<UsersTable />);
+		const { container } = renderWithRouter(<UsersTable />);
 
 		expect(
 			screen.getByRole('heading', { name: /utilisateurs/i })
@@ -15,7 +15,7 @@ describe('Users table', () => {
 	});
 
 	it('should render a table with the first and second users', async () => {
-		render(<UsersTable />);
+		renderWithRouter(<UsersTable />);
 
 		const table = await screen.findByRole('table');
 		[
