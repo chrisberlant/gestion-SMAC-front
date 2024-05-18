@@ -29,25 +29,39 @@ import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';
 import { toast } from 'sonner';
 
-// Liste des différents onglets avec leurs titres, liens et icônes
-interface TabsType {
-	[key: string]: {
-		path: string;
-		icon: JSX.Element;
-	};
-}
-const tabs: TabsType = {
-	Lignes: {
+// Liste des différents onglets avec leurs en-têtes, liens et icônes
+const baseTabs = [
+	{
+		header: 'Lignes',
 		path: '/lines',
 		icon: <IconMobiledata size={20} />,
 	},
-	Appareils: { path: '/devices', icon: <IconDeviceMobile size={20} /> },
-	Agents: { path: '/agents', icon: <IconUser size={20} /> },
-	Statistiques: {
+	{
+		header: 'Appareils',
+		path: '/devices',
+		icon: <IconDeviceMobile size={20} />,
+	},
+	{ header: 'Agents', path: '/agents', icon: <IconUser size={20} /> },
+	{
+		header: 'Statistiques',
 		path: '/stats',
 		icon: <IconReportAnalytics size={20} />,
 	},
-};
+];
+
+// Onglets accessibles uniquement par les admins
+const adminTabs = [
+	{
+		header: 'Historique',
+		path: 'history',
+		icon: <IconHistory size={20} />,
+	},
+	{
+		header: 'Administration',
+		path: 'admin-dashboard',
+		icon: <IconSettings size={20} />,
+	},
+];
 
 export default function Header() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -58,28 +72,21 @@ export default function Header() {
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 
 	if (currentUser) {
-		if (currentUser.role === 'Admin') {
-			// Onglets accessibles uniquement par les admins
-			tabs.Historique = {
-				path: 'history',
-				icon: <IconHistory size={20} />,
-			};
-			tabs.Administration = {
-				path: 'admin-dashboard',
-				icon: <IconSettings size={20} />,
-			};
-		}
+		const tabsToDisplay =
+			currentUser.role === 'Admin'
+				? [...baseTabs, ...adminTabs]
+				: baseTabs;
 
 		// Création des onglets et détection de celui actif
-		const tabsItems = Object.entries(tabs).map(([title, values]) => (
-			<NavLink to={values.path} key={title}>
+		const tabsItems = tabsToDisplay.map((tab) => (
+			<NavLink to={tab.path} key={tab.path}>
 				{({ isActive }) => (
 					<Tabs.Tab
-						value={title}
-						leftSection={values.icon}
+						value={tab.header}
+						leftSection={tab.icon}
 						{...(isActive ? { 'data-active': 'true' } : {})}
 					>
-						{title}
+						{tab.header}
 					</Tabs.Tab>
 				)}
 			</NavLink>
