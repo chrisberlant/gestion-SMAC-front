@@ -16,7 +16,7 @@ const PageNotFound = lazy(
 const Stats = lazy(() => import('./components/Stats/Stats'));
 const Lines = lazy(() => import('./components/Lines/Lines'));
 const History = lazy(() => import('./components/History/History'));
-import './App.css';
+import './index.css';
 
 const AppRoutes = () => (
 	<Routes>

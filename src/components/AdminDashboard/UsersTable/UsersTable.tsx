@@ -284,7 +284,7 @@ export default function UsersTable() {
 	});
 
 	return (
-		<div className='users-table'>
+		<div>
 			<h2>Utilisateurs et droits</h2>
 
 			{isLoading && <Loading />}

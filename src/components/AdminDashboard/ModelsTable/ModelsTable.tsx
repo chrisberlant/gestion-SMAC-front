@@ -244,7 +244,7 @@ export default function ModelsTable() {
 	});
 
 	return (
-		<div className='models-table'>
+		<div>
 			<h2>Modèles d'appareils</h2>
 
 			{isLoading && <Loading />}
