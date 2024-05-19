@@ -1,4 +1,4 @@
-import { Badge, Box } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -79,7 +79,7 @@ export default function UsersTable() {
 			{
 				header: 'Rôle',
 				accessorKey: 'role',
-				maxSize: 130,
+				maxSize: 135,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: ['Tech', 'Admin', 'Consultant'], // Options disponibles dans le menu déroulant

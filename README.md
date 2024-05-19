@@ -14,9 +14,9 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 -   [x] Mise en cache des données
 -   [x] Mise à jour instantanée de l'interface (_optimistic updates_)
 -   [x] Affichage de statistiques
--   [x] Export en CSV des données
+-   [x] Export/import en CSV des données
 
-### Utilisateur connecté
+### Gestion du profil de l'utilisateur connecté
 
 -   [x] Modification des informations (nom, prénom, adresse mail)
 -   [x] Modification du mot de passe
