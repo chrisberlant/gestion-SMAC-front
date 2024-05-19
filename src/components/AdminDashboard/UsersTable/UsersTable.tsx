@@ -1,4 +1,4 @@
-import { Badge } from '@mantine/core';
+import { Badge, Box } from '@mantine/core';
 import {
 	useCreateUser,
 	useDeleteUser,
@@ -284,7 +284,7 @@ export default function UsersTable() {
 	});
 
 	return (
-		<div className='users-table'>
+		<div>
 			<h2>Utilisateurs et droits</h2>
 
 			{isLoading && <Loading />}

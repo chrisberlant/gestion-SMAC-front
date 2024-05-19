@@ -180,7 +180,7 @@ export default function ServicesTable() {
 	});
 
 	return (
-		<div className='services-table'>
+		<div>
 			<h2>Services</h2>
 
 			{isLoading && <Loading />}
