@@ -2,7 +2,15 @@ import dayjs from 'dayjs';
 import Papa from 'papaparse';
 
 // Envoi d'email
-export const sendEmail = (sendTo: string, subject: string, content: string) => {
+export const sendEmail = ({
+	sendTo,
+	subject,
+	content,
+}: {
+	sendTo: string;
+	subject: string;
+	content: string;
+}) => {
 	const emailSubject = encodeURIComponent(subject);
 	const emailContent = encodeURIComponent(content);
 

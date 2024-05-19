@@ -9,7 +9,7 @@ import {
 	LoggedUserType,
 	UserCreationType,
 	UserLoginType,
-	UserPasswordIsResetType,
+	UserInfosAndPasswordType,
 	UserType,
 	UserUpdateType,
 } from '@customTypes/user';
@@ -140,7 +140,9 @@ export const useGetAllUsers = () =>
 	});
 
 // Créer un utilisateur
-export const useCreateUser = () =>
+export const useCreateUser = (
+	openConfirmationModal: (user: UserInfosAndPasswordType) => void
+) =>
 	useMutation({
 		mutationFn: async (user: UserCreationType) =>
 			await fetchApi('/user', 'POST', user),
@@ -163,6 +165,11 @@ export const useCreateUser = () =>
 						: user
 				)
 			);
+			openConfirmationModal({
+				fullName: `${newUser.user.firstName} ${newUser.user.lastName}`,
+				email: newUser.user.email,
+				generatedPassword: newUser.generatedPassword,
+			});
 			toast.success('Utilisateur créé avec succès');
 		},
 		onError: (_, __, previousUsers) =>
@@ -195,12 +202,12 @@ export const useUpdateUser = () =>
 
 // Réinitialiser le mot de passe d'un utilisateur
 export const useResetPassword = (
-	openConfirmationModal: (user: UserPasswordIsResetType) => void
+	openConfirmationModal: (user: UserInfosAndPasswordType) => void
 ) =>
 	useMutation({
 		mutationFn: async (userId: number) =>
 			await fetchApi(`/user/password/${userId}`, 'PATCH'),
-		onSuccess: (user: UserPasswordIsResetType) =>
+		onSuccess: (user: UserInfosAndPasswordType) =>
 			openConfirmationModal(user),
 	});
 

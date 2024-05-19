@@ -2,12 +2,12 @@ import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
-import { UserPasswordIsResetType } from '@customTypes/user';
+import { UserInfosAndPasswordType } from '@customTypes/user';
 import { sendEmail } from '@utils/index';
 
-// Modale pour indiquer le succès et permettre l'affichage et l'envoi du nouveau mot de passe
-export const displayUserPasswordResetConfirmationModal = (
-	user: UserPasswordIsResetType
+// Modale pour indiquer le succès de la réinitialisation et permettre l'affichage et l'envoi du nouveau mot de passe
+export const displayUserPasswordResetConfirmModal = (
+	user: UserInfosAndPasswordType
 ) =>
 	modals.open({
 		title: 'Confirmation de la réinitialisation',
@@ -20,10 +20,20 @@ export const displayUserPasswordResetConfirmationModal = (
 					été réinitialisé.
 				</Text>
 				<Text>Le nouveau mot de passe à fournir est : </Text>
-				<Flex gap='md' my='xl' justify='center' align='center'>
+				<Flex
+					gap='md'
+					my='xl'
+					mx='xl'
+					justify='center'
+					align='center'
+					bg='passwordContainer'
+					py='6'
+					style={{ borderRadius: '5px' }}
+				>
 					<Text>{user.generatedPassword}</Text>
 					<Tooltip label='Copier dans le presse-papiers'>
 						<ActionIcon
+							size={22}
 							onClick={() => {
 								navigator.clipboard.writeText(
 									user.generatedPassword
@@ -39,12 +49,18 @@ export const displayUserPasswordResetConfirmationModal = (
 					{/* Envoi en utilisant le client de messagerie par défaut */}
 					<Tooltip label='Envoyer par e-mail'>
 						<ActionIcon
+							size={22}
 							onClick={() =>
-								sendEmail(
-									user.email,
-									'Réinitialisation de votre mot de passe sur Gestion-SMAC',
-									`Bonjour ${user.fullName},\r\rVotre mot de passe a été réinitialisé.\r\rVous pouvez désormais vous connecter avec le nouveau : ${user.generatedPassword}\r\r`
-								)
+								sendEmail({
+									sendTo: user.email,
+									subject:
+										'Réinitialisation de votre mot de passe sur Gestion-SMAC',
+									content: `Bonjour ${user.fullName},
+
+									Votre mot de passe a été réinitialisé.
+
+									Vous pouvez désormais vous connecter avec le nouveau : ${user.generatedPassword}`,
+								})
 							}
 						>
 							<IconMail />
@@ -61,3 +77,5 @@ export const displayUserPasswordResetConfirmationModal = (
 			blur: 3,
 		},
 	});
+
+export default displayUserPasswordResetConfirmModal;

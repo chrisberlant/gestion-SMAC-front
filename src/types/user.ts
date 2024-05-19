@@ -30,7 +30,7 @@ export type CurrentUserPasswordUpdateType = z.infer<
 export type UserCreationType = z.infer<typeof userCreationSchema>;
 export type UserUpdateType = z.infer<typeof userUpdateSchema>;
 
-export type UserPasswordIsResetType = {
+export type UserInfosAndPasswordType = {
 	fullName: string;
 	email: string;
 	generatedPassword: string;

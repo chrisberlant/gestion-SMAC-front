@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 import { useCheckLoginStatus, useLogin } from '@queries/userQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
-import Loading from '../Loading/Loading';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
@@ -42,8 +41,6 @@ export default function Login() {
 
 	return (
 		<>
-			{isLoading && <Loading />}
-
 			{isNotConnected && (
 				<main className={classes.loginPage}>
 					<div className={classes.wrapper}>

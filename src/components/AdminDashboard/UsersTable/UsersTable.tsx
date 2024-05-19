@@ -22,18 +22,21 @@ import { UserCreationType, UserType, UserUpdateType } from '@customTypes/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
 import { displayUserPasswordResetModal } from '@modals/userPasswordResetModal';
-import { displayUserPasswordResetConfirmationModal } from '@modals/userPasswordResetConfirmationModal';
+import displayUserPasswordResetConfirmModal from '@modals/userPasswordResetConfirmModal';
 import displayDeleteUserModal from '@modals/userDeleteModal';
+import displayUserCreationConfirmModal from '../../../modals/userCreationConfirmModal';
 import { getModifiedValues } from '@utils/index';
 import Loading from '../../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();
-	const { mutate: createUser } = useCreateUser();
+	const { mutate: createUser } = useCreateUser(
+		displayUserCreationConfirmModal
+	);
 	const { mutate: updateUser } = useUpdateUser();
 	const { mutate: resetPassword } = useResetPassword(
-		displayUserPasswordResetConfirmationModal
+		displayUserPasswordResetConfirmModal
 	);
 	const { mutate: deleteUser } = useDeleteUser();
 	const [validationErrors, setValidationErrors] = useState<
@@ -233,6 +236,7 @@ export default function UsersTable() {
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
 		initialState: {
+			sorting: [{ id: 'id', desc: false }],
 			density: 'xs',
 			pagination: {
 				pageIndex: 0,
