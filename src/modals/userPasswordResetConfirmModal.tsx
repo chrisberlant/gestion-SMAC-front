@@ -1,4 +1,11 @@
-import { ActionIcon, Button, Flex, Text, Tooltip } from '@mantine/core';
+import {
+	ActionIcon,
+	Button,
+	Flex,
+	PasswordInput,
+	Text,
+	Tooltip,
+} from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
@@ -30,10 +37,16 @@ export const displayUserPasswordResetConfirmModal = (
 					py='6'
 					style={{ borderRadius: '5px' }}
 				>
-					<Text>{user.generatedPassword}</Text>
+					<PasswordInput
+						readOnly
+						variant='unstyled'
+						w={150}
+						value={user.generatedPassword}
+					/>
 					<Tooltip label='Copier dans le presse-papiers'>
 						<ActionIcon
 							size={22}
+							variant='subtle'
 							onClick={() => {
 								navigator.clipboard.writeText(
 									user.generatedPassword
@@ -50,6 +63,7 @@ export const displayUserPasswordResetConfirmModal = (
 					<Tooltip label='Envoyer par e-mail'>
 						<ActionIcon
 							size={22}
+							variant='subtle'
 							onClick={() =>
 								sendEmail({
 									sendTo: user.email,
