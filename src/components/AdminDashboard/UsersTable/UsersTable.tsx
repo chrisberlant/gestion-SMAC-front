@@ -1,4 +1,4 @@
-import { Badge } from '@mantine/core';
+import { Badge, Box } from '@mantine/core';
 import {
 	useCreateUser,
 	useDeleteUser,
