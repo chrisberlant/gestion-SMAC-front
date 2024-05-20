@@ -60,7 +60,9 @@ A utiliser avec le back-end en Node/Express/PostgreSQL stocké sur le repository
 -   [x] Modification des informations (numéro, profil, statut, propriétaire, appareil associé, commentaires)
 -   [x] Suppression de lignes téléphoniques
 
-## Principale bibliothèques employées
+## Détails techniques
+
+### Principale bibliothèques employées
 
 TypeScript  
 React  
@@ -69,3 +71,11 @@ Tanstack query
 Tanstack table
 Zod  
 Sonner
+
+### Utilisation du JSON Web Token
+
+Le JWT est stocké dans le local storage car cela évite les problèmes si le back-end et le front-end sont sur différents serveurs, pour repasser en mode cookie, voir le fichier src/utils/fetchApi.ts de la branche cookie-auth.
+
+### Validation des données
+
+Les données sont validées par Zod avant d'être envoyées à l'API (qui vérifie également celles-ci via Zod), pour éviter les requêtes inutiles au serveur.
