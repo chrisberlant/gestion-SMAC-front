@@ -188,7 +188,11 @@ export default function Agents() {
 								<ActionIcon
 									size='xs'
 									onClick={() =>
-										sendEmail(agentEmail, '', '')
+										sendEmail({
+											sendTo: agentEmail,
+											subject: '',
+											content: '',
+										})
 									}
 								>
 									<IconMail />
