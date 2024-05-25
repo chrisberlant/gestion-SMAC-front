@@ -18,7 +18,7 @@ export const virtualizedTableConfig = {
 	},
 	displayColumnDefOptions: {
 		'mrt-row-actions': {
-			size: 80,
+			size: 70,
 		},
 	},
 	mantineTableProps: {
@@ -61,6 +61,7 @@ export const virtualizedTableConfig = {
 // Paramètres utilisés dans les tableaux paginés (historique)
 export const paginatedTableConfig = {
 	enableColumnActions: false,
+	enableColumnOrdering: true,
 	createDisplayMode: 'row' as 'row' | 'custom' | 'modal' | undefined,
 	editDisplayMode: 'row' as
 		| 'row'

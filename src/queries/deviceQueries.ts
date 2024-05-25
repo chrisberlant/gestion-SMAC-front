@@ -26,10 +26,10 @@ export const useCreateDevice = () =>
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
-				...devices,
 				{
 					...newDevice,
 				},
+				...devices,
 			]);
 			return previousDevices;
 		},
@@ -59,10 +59,10 @@ export const useQuickCreateDevice = (
 		},
 		onSuccess: (newDevice) => {
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
-				...devices,
 				{
 					...newDevice,
 				},
+				...devices,
 			]);
 			toast.success('Appareil créé avec succès');
 		},

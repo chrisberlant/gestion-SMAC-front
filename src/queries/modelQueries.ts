@@ -22,10 +22,10 @@ export const useCreateModel = () =>
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
 			queryClient.setQueryData(['models'], (models: ModelType[]) => [
-				...models,
 				{
 					...newModel,
 				},
+				...models,
 			]);
 			return previousModels;
 		},

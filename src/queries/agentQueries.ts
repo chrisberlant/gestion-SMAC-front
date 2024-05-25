@@ -30,10 +30,10 @@ export const useCreateAgent = () =>
 			const previousAgents: AgentType[] | undefined =
 				queryClient.getQueryData(['agents']);
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) => [
-				...agents,
 				{
 					...newAgent,
 				},
+				...agents,
 			]);
 			return previousAgents;
 		},

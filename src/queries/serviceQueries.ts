@@ -20,10 +20,10 @@ export const useCreateService = () =>
 			queryClient.setQueryData(
 				['services'],
 				(services: ServiceType[]) => [
-					...services,
 					{
 						...newService,
 					},
+					...services,
 				]
 			);
 			return previousServices;

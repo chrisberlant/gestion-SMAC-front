@@ -516,7 +516,6 @@ export default function Devices() {
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
 		initialState: {
-			sorting: [{ id: 'id', desc: true }],
 			density: 'xs',
 			columnVisibility: {
 				id: false,
@@ -524,11 +523,6 @@ export default function Devices() {
 		},
 		columns,
 		data: filteredDevices || [],
-		displayColumnDefOptions: {
-			'mrt-row-actions': {
-				size: 20,
-			},
-		},
 		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,

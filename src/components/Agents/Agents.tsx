@@ -407,7 +407,6 @@ export default function Agents() {
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
 		initialState: {
-			sorting: [{ id: 'id', desc: true }],
 			density: 'xs',
 			columnVisibility: {
 				id: false,
@@ -417,7 +416,7 @@ export default function Agents() {
 		data: agents || [],
 		displayColumnDefOptions: {
 			'mrt-row-actions': {
-				size: 50,
+				size: 70,
 			},
 		},
 		mantineTableContainerProps: { style: { maxHeight: '60vh' } },

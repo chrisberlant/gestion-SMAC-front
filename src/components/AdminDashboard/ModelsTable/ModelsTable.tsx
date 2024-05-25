@@ -204,6 +204,7 @@ export default function ModelsTable() {
 
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
+		enableColumnOrdering: false,
 		initialState: {
 			density: 'xs',
 			columnVisibility: {

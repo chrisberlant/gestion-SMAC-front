@@ -141,6 +141,7 @@ export default function ServicesTable() {
 
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
+		enableColumnOrdering: false,
 		initialState: {
 			density: 'xs',
 			pagination: {

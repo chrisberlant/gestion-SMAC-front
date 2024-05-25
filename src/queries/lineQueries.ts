@@ -26,21 +26,21 @@ export const useCreateLine = () =>
 			newLine.deviceId
 				? // Si appareil fourni, mise à jour de l'ancienne ligne pour retirer l'appareil et ajout de la nouvelle ligne dans le tableau
 				  queryClient.setQueryData(['lines'], (lines: LineType[]) => [
+						{
+							...newLine,
+						},
 						...lines.map((line) =>
 							line.deviceId === newLine.deviceId
 								? { ...line, deviceId: null }
 								: line
 						),
-						{
-							...newLine,
-						},
 				  ])
 				: // Si pas d'appareil fourni, uniquement ajout de la nouvelle ligne dans le tableau
 				  queryClient.setQueryData(['lines'], (lines: LineType[]) => [
-						...lines,
 						{
 							...newLine,
 						},
+						...lines,
 				  ]);
 
 			return previousLines;

@@ -235,8 +235,8 @@ export default function UsersTable() {
 
 	const table = useMantineReactTable({
 		...virtualizedTableConfig,
+		enableColumnOrdering: false,
 		initialState: {
-			sorting: [{ id: 'id', desc: false }],
 			density: 'xs',
 			pagination: {
 				pageIndex: 0,
