@@ -1,5 +1,6 @@
 import { renderWithRouter, screen, within } from '@tests-utils';
 import ModelsTable from '@components/AdminDashboard/ModelsTable/ModelsTable';
+import { mockVirtualizedTable } from '../setup';
 
 describe('Models table', () => {
 	it('should render the models table title while loading', () => {
@@ -15,11 +16,11 @@ describe('Models table', () => {
 
 	it('should render the first and second models in table rows', async () => {
 		renderWithRouter(<ModelsTable />);
+		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
-		[/apple/i, /iphone 15/i, /256gb/i].map((value) =>
-			within(table).getByText(value)
-		);
+		await within(table).findByText(/apple/i);
+		[/iphone 15/i, /256gb/i].map((value) => within(table).getByText(value));
 		[/samsung/i, /s24/i].map((value) => within(table).getByText(value));
 	});
 });

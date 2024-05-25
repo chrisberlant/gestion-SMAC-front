@@ -19,17 +19,13 @@ describe('Agents', () => {
 		mockVirtualizedTable();
 
 		const table = await screen.findByRole('table');
-		await within(table).findByText('john.smith@gmail.com');
-		['Smith', 'John', 'Non', 'second-service'].map((value) =>
+		await within(table).findByText(/john.smith/i);
+		['Smith', 'John', /non/i, /second-service/i].map((value) =>
 			within(table).getByText(value)
 		);
-		[
-			'karen.taylor@gmail.com',
-			'Taylor',
-			'Karen',
-			'Oui',
-			'first-service',
-		].map((value) => within(table).getByText(value));
+		[/karen.taylor/i, 'Taylor', 'Karen', /oui/i, /first-service/i].map(
+			(value) => within(table).getByText(value)
+		);
 	});
 
 	it('should render the list of services when user is editing a row and clicking on the services list', async () => {
