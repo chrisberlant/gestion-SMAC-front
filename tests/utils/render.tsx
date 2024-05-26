@@ -3,6 +3,7 @@ import { MantineProvider } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { mockVirtualizedTable } from '../setup';
 
 function Wrapper({ children }: { children: ReactNode }) {
 	const queryClient = new QueryClient({
@@ -39,4 +40,9 @@ export function renderWithRouter(ui: React.ReactNode) {
 			</MantineProvider>
 		),
 	});
+}
+
+export function renderWithRouterAndVirtualization(ui: React.ReactNode) {
+	mockVirtualizedTable();
+	return renderWithRouter(ui);
 }

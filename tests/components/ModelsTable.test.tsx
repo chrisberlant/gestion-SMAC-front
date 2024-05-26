@@ -1,6 +1,10 @@
-import { renderWithRouter, screen, within } from '@tests-utils';
+import {
+	renderWithRouter,
+	renderWithRouterAndVirtualization,
+	screen,
+	within,
+} from '@tests-utils';
 import ModelsTable from '@components/AdminDashboard/ModelsTable/ModelsTable';
-import { mockVirtualizedTable } from '../setup';
 
 describe('Models table', () => {
 	it('should render the models table title while loading', () => {
@@ -15,8 +19,7 @@ describe('Models table', () => {
 	});
 
 	it('should render the first and second models in table rows', async () => {
-		renderWithRouter(<ModelsTable />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<ModelsTable />);
 
 		const table = await screen.findByRole('table');
 		await within(table).findByText(/apple/i);

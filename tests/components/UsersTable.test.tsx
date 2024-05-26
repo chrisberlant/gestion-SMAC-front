@@ -1,7 +1,11 @@
-import { renderWithRouter, screen, within } from '@tests-utils';
+import {
+	renderWithRouter,
+	renderWithRouterAndVirtualization,
+	screen,
+	within,
+} from '@tests-utils';
 import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
 import { expect } from 'vitest';
-import { mockVirtualizedTable } from '../setup';
 
 describe('Users table', () => {
 	it('should render the users table title while loading', () => {
@@ -16,8 +20,7 @@ describe('Users table', () => {
 	});
 
 	it('should render a table with the first and second users', async () => {
-		renderWithRouter(<UsersTable />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<UsersTable />);
 
 		const table = await screen.findByRole('table');
 		await within(table).findByText('super.administrator@gmail.com');

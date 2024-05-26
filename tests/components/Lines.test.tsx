@@ -1,6 +1,10 @@
-import { screen, within, renderWithRouter } from '@tests-utils';
+import {
+	screen,
+	within,
+	renderWithRouter,
+	renderWithRouterAndVirtualization,
+} from '@tests-utils';
 import Lines from '@components/Lines/Lines';
-import { mockVirtualizedTable } from '../setup';
 
 describe('Lines', () => {
 	it('should render the lines table title while loading', () => {
@@ -15,8 +19,7 @@ describe('Lines', () => {
 	});
 
 	it('should render the first and second lines in table rows', async () => {
-		renderWithRouter(<Lines />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<Lines />);
 
 		const table = await screen.findByRole('table');
 		await within(table).findByText('0123456789');

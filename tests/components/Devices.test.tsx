@@ -1,6 +1,11 @@
-import { renderWithRouter, screen, userEvent, within } from '@tests-utils';
+import {
+	renderWithRouter,
+	screen,
+	userEvent,
+	within,
+	renderWithRouterAndVirtualization,
+} from '@tests-utils';
 import Devices from '@components/Devices/Devices';
-import { mockVirtualizedTable } from '../setup';
 
 describe('Devices', () => {
 	it('should render the devices table title while loading', () => {
@@ -15,8 +20,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the first and second devices in table rows', async () => {
-		renderWithRouter(<Devices />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<Devices />);
 
 		const table = await screen.findByRole('table');
 		await within(table).findByText('123321456654780');
@@ -39,8 +43,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the list of agents when user is editing a row and clicking on the agents list', async () => {
-		renderWithRouter(<Devices />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<Devices />);
 
 		const user = userEvent.setup();
 
@@ -51,6 +54,9 @@ describe('Devices', () => {
 		const selectAgentElement = screen.getByPlaceholderText(
 			/^(?!.*[Ff]ilter).*propriétaire/i
 		);
+		// const selectAgentElement = screen.getByRole('textbox', {
+		// 	name: 'Propriétaire',
+		// });
 		expect(selectAgentElement).toBeInTheDocument();
 		await user.click(selectAgentElement);
 
@@ -61,8 +67,7 @@ describe('Devices', () => {
 	});
 
 	it('should render the list of models when user is editing a row and clicking on the models list', async () => {
-		renderWithRouter(<Devices />);
-		mockVirtualizedTable();
+		renderWithRouterAndVirtualization(<Devices />);
 
 		const user = userEvent.setup();
 
