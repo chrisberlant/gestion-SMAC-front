@@ -1,23 +1,31 @@
 import {
+	Text,
 	Button,
 	LoadingOverlay,
 	Paper,
 	PasswordInput,
 	TextInput,
 	Title,
+	Flex,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCheckLoginStatus, useLogin } from '@queries/userQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
+import fetchApi from '@utils/fetchApi';
+import { toast } from 'sonner';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
+	const [demoUserInfos, setDemoUserInfos] = useState<{
+		email: string;
+		password: string;
+	} | null>(null);
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
@@ -34,6 +42,15 @@ export default function Login() {
 		if (userIsConnected) navigate('/lines');
 	}, [userIsConnected, navigate]);
 
+	const createDemoUser = async () => {
+		const createdDemoUser = await fetchApi('/demo');
+		setDemoUserInfos({
+			email: createdDemoUser.email,
+			password: createdDemoUser.password,
+		});
+		toast.success('Utilisateur créé avec succès !');
+	};
+
 	return (
 		<main className={classes.loginPage}>
 			<div className={classes.wrapper}>
@@ -45,7 +62,7 @@ export default function Login() {
 						mt='md'
 						mb={50}
 					>
-						Gestion SMAC - Connexion
+						Gestion SMAC - Version de démonstration
 					</Title>
 					<form onSubmit={form.onSubmit(() => submitLogin())}>
 						<LoadingOverlay
@@ -74,6 +91,38 @@ export default function Login() {
 							Connexion
 						</Button>
 					</form>
+					<Button
+						mt='30%'
+						fullWidth
+						size='md'
+						color='green'
+						onClick={createDemoUser}
+					>
+						Créer un utilisateur de démonstration
+					</Button>
+					{demoUserInfos && (
+						<Paper mt='xl' p='md' bg='gray' radius='md'>
+							<Flex direction='column' align='center'>
+								<Text>
+									Vous pouvez désormais vous connecter avec
+									les identifiants :
+								</Text>
+								<Text>{demoUserInfos.email}</Text>
+								<Text>{demoUserInfos.password}</Text>
+								<Button
+									mt='lg'
+									onClick={() =>
+										form.setValues({
+											email: demoUserInfos.email,
+											password: demoUserInfos.password,
+										})
+									}
+								>
+									Renseigner automatiquement le formulaire
+								</Button>
+							</Flex>
+						</Paper>
+					)}
 
 					<div className={classes.serverStatus}>
 						&Eacute;tat du serveur :{' '}
