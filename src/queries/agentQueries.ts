@@ -14,9 +14,7 @@ import { isJson } from '../utils';
 export const useGetAllAgents = () =>
 	useQuery({
 		queryKey: ['agents'],
-		queryFn: async () => {
-			return (await fetchApi('/agents')) as AgentType[];
-		},
+		queryFn: async () => (await fetchApi('/agents')) as AgentType[],
 	});
 
 // Créer un agent

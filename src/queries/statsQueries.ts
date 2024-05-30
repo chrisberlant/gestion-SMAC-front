@@ -9,11 +9,10 @@ import fetchApi from '@utils/fetchApi';
 export const useGetDevicesAmountPerModel = () =>
 	useQuery({
 		queryKey: ['devicesAmountPerModel'],
-		queryFn: async () => {
-			return (await fetchApi(
+		queryFn: async () =>
+			(await fetchApi(
 				'/stats/devices-per-model'
-			)) as DevicesAmountPerModelType[];
-		},
+			)) as DevicesAmountPerModelType[],
 		staleTime: 0,
 		gcTime: 0,
 	});
@@ -22,11 +21,10 @@ export const useGetDevicesAmountPerModel = () =>
 export const useGetAgentsAndDevicesPerService = () =>
 	useQuery({
 		queryKey: ['agentsAndDevicesPerService'],
-		queryFn: async () => {
-			return (await fetchApi(
+		queryFn: async () =>
+			(await fetchApi(
 				'/stats/agents-devices-per-service'
-			)) as AgentsAndDevicesPerServiceType[];
-		},
+			)) as AgentsAndDevicesPerServiceType[],
 		staleTime: 0,
 		gcTime: 0,
 	});
