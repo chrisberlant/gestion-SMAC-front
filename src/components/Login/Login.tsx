@@ -92,7 +92,7 @@ export default function Login() {
 						</Button>
 					</form>
 					<Button
-						mt='30%'
+						mt='20%'
 						fullWidth
 						size='md'
 						color='green'
@@ -102,24 +102,33 @@ export default function Login() {
 					</Button>
 					{demoUserInfos && (
 						<Paper mt='xl' p='md' bg='gray' radius='md'>
-							<Flex direction='column' align='center'>
+							<Flex direction='column'>
 								<Text>
+									La base de données a été réinitialisée.
+								</Text>
+								<Text mt='sm'>
 									Vous pouvez désormais vous connecter avec
 									les identifiants :
 								</Text>
-								<Text>{demoUserInfos.email}</Text>
-								<Text>{demoUserInfos.password}</Text>
-								<Button
-									mt='lg'
-									onClick={() =>
-										form.setValues({
-											email: demoUserInfos.email,
-											password: demoUserInfos.password,
-										})
-									}
-								>
-									Renseigner automatiquement le formulaire
-								</Button>
+								<Flex align='center' direction='column'>
+									<Text fw={700}>{demoUserInfos.email}</Text>
+									<Text fw={700}>
+										{demoUserInfos.password}
+									</Text>
+									<Button
+										mt='lg'
+										w='80%'
+										onClick={() =>
+											form.setValues({
+												email: demoUserInfos.email,
+												password:
+													demoUserInfos.password,
+											})
+										}
+									>
+										Renseigner automatiquement le formulaire
+									</Button>
+								</Flex>
 							</Flex>
 						</Paper>
 					)}
