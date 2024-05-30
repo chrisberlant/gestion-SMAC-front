@@ -16,10 +16,7 @@ import queryClient from './queryClient';
 // Utilisé uniquement pour la démo
 export const useResetDbAndCreateDemoUser = (
 	setDemoUserInfos: React.Dispatch<
-		React.SetStateAction<{
-			email: string;
-			password: string;
-		} | null>
+		React.SetStateAction<UserCredentialsType | null>
 	>
 ) =>
 	useMutation({
