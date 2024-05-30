@@ -1,6 +1,6 @@
 import { Button } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
-import { useGetCurrentUser } from '@queries/userQueries';
+import { useGetCurrentUser } from '@queries/authQueries';
 
 export default function CsvExportButton({ request }: { request: () => void }) {
 	const { data: currentUser } = useGetCurrentUser();
