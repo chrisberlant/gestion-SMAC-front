@@ -35,3 +35,8 @@ export type UserInfosAndPasswordType = {
 	email: string;
 	generatedPassword: string;
 };
+
+export type UserCredentialsType = {
+	email: string;
+	password: string;
+};

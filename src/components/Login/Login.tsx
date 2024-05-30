@@ -12,20 +12,21 @@ import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCheckLoginStatus, useLogin } from '@queries/authQueries';
+import {
+	useCheckLoginStatus,
+	useLogin,
+	useResetDbAndCreateDemoUser,
+} from '@queries/authQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
-import fetchApi from '@utils/fetchApi';
-import { toast } from 'sonner';
+import { UserCredentialsType } from '@customTypes/user';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const navigate = useNavigate();
 	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
-	const [demoUserInfos, setDemoUserInfos] = useState<{
-		email: string;
-		password: string;
-	} | null>(null);
+	const [demoUserInfos, setDemoUserInfos] =
+		useState<UserCredentialsType | null>(null);
 
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
@@ -36,20 +37,13 @@ export default function Login() {
 	});
 
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
+	const { mutate: resetDbAndCreateDemoUser } =
+		useResetDbAndCreateDemoUser(setDemoUserInfos);
 
 	useEffect(() => {
 		// Rediriger vers l'app si utilisateur déjà connecté
 		if (userIsConnected) navigate('/lines');
 	}, [userIsConnected, navigate]);
-
-	const createDemoUser = async () => {
-		const createdDemoUser = await fetchApi('/demo');
-		setDemoUserInfos({
-			email: createdDemoUser.email,
-			password: createdDemoUser.password,
-		});
-		toast.success('Utilisateur créé avec succès !');
-	};
 
 	return (
 		<main className={classes.loginPage}>
@@ -96,7 +90,7 @@ export default function Login() {
 						fullWidth
 						size='md'
 						color='green'
-						onClick={createDemoUser}
+						onClick={() => resetDbAndCreateDemoUser()}
 					>
 						Créer un utilisateur de démonstration
 					</Button>
