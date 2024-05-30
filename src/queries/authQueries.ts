@@ -41,9 +41,7 @@ export const useLogin = (
 export const useGetCurrentUser = () =>
 	useQuery({
 		queryKey: ['currentUser'],
-		queryFn: async () => {
-			return (await fetchApi('/me')) as LoggedUserType;
-		},
+		queryFn: async () => (await fetchApi('/me')) as LoggedUserType,
 		gcTime: Infinity,
 	});
 
