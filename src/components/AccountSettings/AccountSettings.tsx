@@ -9,7 +9,7 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import { useGetCurrentUser, useUpdateCurrentUser } from '@queries/userQueries';
+import { useGetCurrentUser, useUpdateCurrentUser } from '@queries/authQueries';
 import { currentUserUpdateSchema } from '@validationSchemas/userSchemas';
 import ChangePassword from './ChangePassword/ChangePassword';
 import { IconEdit, IconKey } from '@tabler/icons-react';

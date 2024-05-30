@@ -2,7 +2,7 @@ import { Button, LoadingOverlay, Modal, PasswordInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { currentUserPasswordUpdateSchema } from '@validationSchemas/userSchemas';
 import { useDisclosure } from '@mantine/hooks';
-import { useUpdateCurrentUserPassword } from '@queries/userQueries';
+import { useUpdateCurrentUserPassword } from '@queries/authQueries';
 import { toast } from 'sonner';
 
 interface ChangePasswordProps {

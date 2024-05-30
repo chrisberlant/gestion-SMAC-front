@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core';
-import { useGetCurrentUser } from '@queries/userQueries';
+import { useGetCurrentUser } from '@queries/authQueries';
 
 interface CreateButtonProps {
 	createFunction: () => void;

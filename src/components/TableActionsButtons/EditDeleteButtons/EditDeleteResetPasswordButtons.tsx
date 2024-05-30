@@ -7,7 +7,7 @@ import {
 	IconKey,
 	IconKeyOff,
 } from '@tabler/icons-react';
-import { useGetCurrentUser } from '@queries/userQueries';
+import { useGetCurrentUser } from '@queries/authQueries';
 
 interface EditDeleteResetPasswordButtonsProps {
 	editFunction: () => void;
