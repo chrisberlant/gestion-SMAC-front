@@ -21,14 +21,13 @@ main.loginPage {
 		}
 
 		.serverStatus {
-			/* width: 100%; */
+			position: relative;
 			align-self: center;
 			display: flex;
-			justify-content: center;
 			align-items: center;
 			gap: 1rem;
-			position: absolute;
-			bottom: 2rem;
+			margin-top: auto;
+
 			.statusDot {
 				width: 10px;
 				height: 10px;
