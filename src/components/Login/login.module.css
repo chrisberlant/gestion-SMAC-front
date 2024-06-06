@@ -4,7 +4,7 @@ main.loginPage {
 	.wrapper {
 		background-size: cover;
 		background-repeat: no-repeat;
-		background-image: url('../../assets/login-background.jpg');
+		background-image: url('@assets/login-background.jpg');
 	}
 
 	.form {
@@ -21,14 +21,13 @@ main.loginPage {
 		}
 
 		.serverStatus {
-			/* width: 100%; */
+			position: relative;
 			align-self: center;
 			display: flex;
-			justify-content: center;
 			align-items: center;
 			gap: 1rem;
-			position: absolute;
-			bottom: 2rem;
+			margin-top: auto;
+			bottom: 5%;
 			.statusDot {
 				width: 10px;
 				height: 10px;
@@ -71,8 +70,27 @@ main.loginPage {
 		}
 	}
 
+	.demoArrowIcon {
+		position: absolute;
+		right: 5%;
+		top: 105%;
+		transform: rotate(45deg);
+		animation: pulse 1s infinite;
+		@keyframes pulse {
+			0% {
+				transform: rotate(55deg) scale(1);
+			}
+			50% {
+				transform: rotate(55deg) scale(1.2);
+			}
+			100% {
+				transform: rotate(55deg) scale(1);
+			}
+		}
+	}
+
 	form {
-		padding: 0 30px 0 30px;
+		padding: 0 30px;
 	}
 
 	.title {

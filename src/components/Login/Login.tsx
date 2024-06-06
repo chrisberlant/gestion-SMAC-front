@@ -20,6 +20,7 @@ import {
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
 import { UserCredentialsType } from '@customTypes/user';
+import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
@@ -85,17 +86,28 @@ export default function Login() {
 							Connexion
 						</Button>
 					</form>
-					<Button
-						mt='20%'
-						fullWidth
-						size='md'
-						color='green'
-						onClick={() => resetDbAndCreateDemoUser()}
-					>
-						Créer un utilisateur de démonstration
-					</Button>
+					{/* Bouton de démo et affichage des infos */}
+					<Flex pos='relative'>
+						<Button
+							mt='20%'
+							fullWidth
+							size='md'
+							color='green'
+							onClick={() => resetDbAndCreateDemoUser()}
+						>
+							Créer un utilisateur de démonstration
+						</Button>
+						{!demoUserInfos && (
+							<IconArrowBigLeftLinesFilled
+								stroke={5}
+								size={60}
+								color='red'
+								className={classes.demoArrowIcon}
+							/>
+						)}
+					</Flex>
 					{demoUserInfos && (
-						<Paper mt='xl' p='md' bg='gray' radius='md'>
+						<Paper mt='xl' p='md' mb='md' bg='gray' radius='md'>
 							<Flex direction='column'>
 								<Text>
 									La base de données a été réinitialisée.
