@@ -107,7 +107,14 @@ export default function Login() {
 						)}
 					</Flex>
 					{demoUserInfos && (
-						<Paper mt='xl' p='md' mb='md' bg='gray' radius='md'>
+						<Paper
+							mt='xl'
+							p='md'
+							mb='md'
+							bg='gray'
+							radius='md'
+							withBorder
+						>
 							<Flex direction='column'>
 								<Text>
 									La base de données a été réinitialisée.
