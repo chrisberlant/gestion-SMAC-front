@@ -1,10 +1,9 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useGetCurrentUser } from '@queries/authQueries';
-import ModelsTable from './ModelsTable/ModelsTable';
-import ServicesTable from './ServicesTable/ServicesTable';
-import UsersTable from './UsersTable/UsersTable';
 import './adminDashboard.css';
+import AdminNavBar from './AdminNavBar/AdminNavBar';
+import { Flex } from '@mantine/core';
 
 export default function AdminDashboard() {
 	const { data: currentUser } = useGetCurrentUser();
@@ -16,13 +15,12 @@ export default function AdminDashboard() {
 
 	return (
 		currentUser?.role === 'Admin' && (
-			<div className='admin-dashboard'>
-				<UsersTable />
-				<div className='horizontal-align-div'>
-					<ServicesTable />
-					<ModelsTable />
-				</div>
-			</div>
+			<Flex className='admin-dashboard'>
+				<AdminNavBar />
+				<Flex justify='center' w='100%'>
+					<Outlet />
+				</Flex>
+			</Flex>
 		)
 	);
 }

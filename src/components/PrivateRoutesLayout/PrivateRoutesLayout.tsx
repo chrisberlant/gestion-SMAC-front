@@ -6,13 +6,13 @@ import { Suspense, useState } from 'react';
 import Loading from '../Loading/Loading';
 import { Slider } from '@mantine/core';
 
-export default function PrivateRoutes() {
+export default function PrivateRoutesLayout() {
 	const { data: loggedUser } = useGetCurrentUser();
 	const [zoom, setZoom] = useState(100);
 
 	return (
 		loggedUser && (
-			<>
+			<div className='app'>
 				<Header />
 				<Slider
 					pos='absolute'
@@ -37,7 +37,7 @@ export default function PrivateRoutes() {
 					</Suspense>
 					<PageTopScroller />
 				</main>
-			</>
+			</div>
 		)
 	);
 }

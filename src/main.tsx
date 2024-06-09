@@ -12,6 +12,7 @@ import { ModalsProvider } from '@mantine/modals';
 import queryClient from '@queries/queryClient';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { DatesProvider } from '@mantine/dates';
+import { Toaster } from 'sonner';
 
 const theme = createTheme({
 	cursorType: 'pointer',
@@ -33,6 +34,18 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 				<ModalsProvider>
 					<DatesProvider settings={{ locale: 'fr' }}>
 						<App />
+						<Toaster
+							richColors
+							closeButton
+							expand={true}
+							toastOptions={{
+								style: {
+									width: 'auto',
+									position: 'absolute',
+									right: '0px',
+								},
+							}}
+						/>
 					</DatesProvider>
 				</ModalsProvider>
 			</MantineProvider>

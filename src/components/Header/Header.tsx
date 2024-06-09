@@ -11,7 +11,6 @@ import { useDisclosure } from '@mantine/hooks';
 import {
 	IconChevronDown,
 	IconDeviceMobile,
-	IconHistory,
 	IconLogout,
 	IconMobiledata,
 	IconReportAnalytics,
@@ -32,18 +31,18 @@ import { toast } from 'sonner';
 // Liste des différents onglets avec leurs en-têtes, liens et icônes
 const baseTabs = [
 	{
-		header: 'Lignes',
+		label: 'Lignes',
 		path: '/lines',
 		icon: <IconMobiledata size={20} />,
 	},
 	{
-		header: 'Appareils',
+		label: 'Appareils',
 		path: '/devices',
 		icon: <IconDeviceMobile size={20} />,
 	},
-	{ header: 'Agents', path: '/agents', icon: <IconUser size={20} /> },
+	{ label: 'Agents', path: '/agents', icon: <IconUser size={20} /> },
 	{
-		header: 'Statistiques',
+		label: 'Statistiques',
 		path: '/stats',
 		icon: <IconReportAnalytics size={20} />,
 	},
@@ -52,12 +51,7 @@ const baseTabs = [
 // Onglets accessibles uniquement par les admins
 const adminTabs = [
 	{
-		header: 'Historique',
-		path: 'history',
-		icon: <IconHistory size={20} />,
-	},
-	{
-		header: 'Administration',
+		label: 'Administration',
 		path: 'admin-dashboard',
 		icon: <IconSettings size={20} />,
 	},
@@ -82,11 +76,11 @@ export default function Header() {
 			<NavLink to={tab.path} key={tab.path}>
 				{({ isActive }) => (
 					<Tabs.Tab
-						value={tab.header}
+						value={tab.label}
 						leftSection={tab.icon}
-						{...(isActive ? { 'data-active': 'true' } : {})}
+						data-active={isActive || undefined}
 					>
-						{tab.header}
+						{tab.label}
 					</Tabs.Tab>
 				)}
 			</NavLink>
