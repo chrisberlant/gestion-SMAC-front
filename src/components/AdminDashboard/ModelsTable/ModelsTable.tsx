@@ -74,7 +74,6 @@ export default function ModelsTable() {
 			{
 				header: 'Stockage',
 				accessorKey: 'storage',
-				maxSize: 130,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.storage,

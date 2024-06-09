@@ -144,10 +144,6 @@ export default function ServicesTable() {
 		enableColumnOrdering: false,
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0,
-				pageSize: 10,
-			},
 			columnVisibility: {
 				id: false,
 			},
@@ -156,9 +152,6 @@ export default function ServicesTable() {
 		data: services || [],
 		enableColumnFilters: false,
 		renderBottomToolbar: false,
-		mantineTableContainerProps: {
-			style: { maxHeight: '30vh' },
-		},
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateService,
 		onEditingRowSave: handleSaveService,

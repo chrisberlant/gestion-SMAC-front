@@ -238,10 +238,6 @@ export default function UsersTable() {
 		enableColumnOrdering: false,
 		initialState: {
 			density: 'xs',
-			pagination: {
-				pageIndex: 0,
-				pageSize: 10,
-			},
 			columnVisibility: {
 				id: false,
 			},
@@ -249,9 +245,6 @@ export default function UsersTable() {
 		columns,
 		data: users || [],
 		renderBottomToolbar: false,
-		mantineTableContainerProps: {
-			style: { maxHeight: '30vh' },
-		},
 		displayColumnDefOptions: {
 			'mrt-row-actions': {
 				size: 120,
