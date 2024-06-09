@@ -1,9 +1,9 @@
 import {
-	IconGauge,
-	IconDeviceDesktopAnalytics,
 	IconUser,
 	IconHistory,
 	IconSettings,
+	IconUsersGroup,
+	IconDevicesPlus,
 } from '@tabler/icons-react';
 import { NavLink } from 'react-router-dom';
 import { Group, Text } from '@mantine/core';
@@ -11,9 +11,13 @@ import classes from './adminNavBar.module.css';
 
 const dashboardSections = [
 	{ icon: IconUser, label: 'Utilisateurs', path: '/admin-dashboard/users' },
-	{ icon: IconGauge, label: 'Services', path: '/admin-dashboard/services' },
 	{
-		icon: IconDeviceDesktopAnalytics,
+		icon: IconUsersGroup,
+		label: 'Services',
+		path: '/admin-dashboard/services',
+	},
+	{
+		icon: IconDevicesPlus,
 		label: 'Modèles',
 		path: '/admin-dashboard/models',
 	},
