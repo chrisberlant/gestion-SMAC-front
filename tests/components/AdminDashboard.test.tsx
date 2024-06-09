@@ -7,12 +7,10 @@ import { apiUrl } from '../mockHandlers';
 import { renderWithRouter } from '../utils/render';
 
 describe('Admin dashboard', () => {
-	it('should render the admin tables titles if current user is admin', async () => {
+	it('should render the dashboard if current user is admin', async () => {
 		renderWithRouter(<AdminDashboard />);
 
-		await screen.findByRole('heading', { name: /utilisateurs/i });
-		await screen.findByRole('heading', { name: /services/i });
-		await screen.findByRole('heading', { name: /modèles/i });
+		await screen.findByText(/tableau de bord/i);
 	});
 
 	it('should redirect to the home page if user is tech', async () => {

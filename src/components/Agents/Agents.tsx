@@ -414,11 +414,6 @@ export default function Agents() {
 		},
 		columns,
 		data: agents || [],
-		displayColumnDefOptions: {
-			'mrt-row-actions': {
-				size: 70,
-			},
-		},
 		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateAgent,

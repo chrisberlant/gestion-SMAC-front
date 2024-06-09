@@ -25,6 +25,7 @@ import './index.css';
 import UsersTable from './components/AdminDashboard/UsersTable/UsersTable';
 import ModelsTable from './components/AdminDashboard/ModelsTable/ModelsTable';
 import ServicesTable from './components/AdminDashboard/ServicesTable/ServicesTable';
+import AdminHomePage from './components/AdminDashboard/AdminHomePage/AdminHomepage';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -38,6 +39,7 @@ const router = createBrowserRouter(
 				<Route element={<Stats />} path='/stats' />
 				{/* Routes admin */}
 				<Route element={<AdminDashboard />} path='/admin-dashboard'>
+					<Route element={<AdminHomePage />} index />
 					<Route
 						element={<UsersTable />}
 						path='/admin-dashboard/users'

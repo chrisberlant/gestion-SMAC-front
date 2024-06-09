@@ -1,52 +1,13 @@
-import { useState } from 'react';
-import { Tooltip, UnstyledButton, Stack, rem, Tabs } from '@mantine/core';
 import {
-	IconHome2,
 	IconGauge,
 	IconDeviceDesktopAnalytics,
 	IconUser,
 	IconHistory,
-	IconLogout,
-	IconSwitchHorizontal,
-	IconCalendarStats,
-	IconFingerprint,
 	IconSettings,
 } from '@tabler/icons-react';
-import classes from './adminNavBar.module.css';
 import { NavLink } from 'react-router-dom';
-
-interface NavbarLinkProps {
-	icon: typeof IconHome2;
-	label: string;
-	path: string;
-	active?: boolean;
-	onClick?(): void;
-}
-
-function NavbarLink({ icon: Icon, label, path, onClick }: NavbarLinkProps) {
-	return (
-		<Tooltip
-			label={label}
-			position='right'
-			transitionProps={{ duration: 0 }}
-		>
-			<NavLink to={path} key={path}>
-				{({ isActive }) => (
-					<UnstyledButton
-						onClick={onClick}
-						className={classes.link}
-						data-active={isActive || undefined}
-					>
-						<Icon
-							style={{ width: rem(20), height: rem(20) }}
-							stroke={1.5}
-						/>
-					</UnstyledButton>
-				)}
-			</NavLink>
-		</Tooltip>
-	);
-}
+import { Group, Text } from '@mantine/core';
+import classes from './adminNavBar.module.css';
 
 const dashboardSections = [
 	{ icon: IconUser, label: 'Utilisateurs', path: '/admin-dashboard/users' },
@@ -63,24 +24,30 @@ const dashboardSections = [
 	},
 ];
 
+const dashboardTabs = dashboardSections.map((item) => (
+	<NavLink to={item.path} key={item.label}>
+		{({ isActive }) => (
+			<div className={classes.link} data-active={isActive || undefined}>
+				<item.icon
+					data-active={isActive || undefined}
+					className={classes.linkIcon}
+					stroke={1.5}
+				/>
+				<span>{item.label}</span>
+			</div>
+		)}
+	</NavLink>
+));
+
 export default function AdminNavBar() {
-	const [active, setActive] = useState(2);
-
-	const links = dashboardSections.map((link, index) => (
-		<NavbarLink
-			{...link}
-			key={link.label}
-			active={index === active}
-			onClick={() => setActive(index)}
-		/>
-	));
-
 	return (
 		<nav className={classes.navbar}>
 			<div className={classes.navbarMain}>
-				<Stack justify='center' gap={0}>
-					{links}
-				</Stack>
+				<Group className={classes.header} justify='space-around'>
+					<IconSettings size={28} />
+					<Text fw={700}>Tableau de bord Admin</Text>
+				</Group>
+				{dashboardTabs}
 			</div>
 		</nav>
 	);
