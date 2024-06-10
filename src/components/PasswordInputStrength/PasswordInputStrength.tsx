@@ -31,12 +31,12 @@ function PasswordRequirement({
 }
 
 const requirements = [
-	{ regex: /[0-9]/, label: 'Possède un nombre' },
-	{ regex: /[a-z]/, label: 'Possède une minuscule' },
-	{ regex: /[A-Z]/, label: 'Possède une majuscule' },
+	{ regex: /[0-9]/, label: 'Possède au moins un nombre' },
+	{ regex: /[a-z]/, label: 'Possède au moins une minuscule' },
+	{ regex: /[A-Z]/, label: 'Possède au moins une majuscule' },
 	{
 		regex: /[$&+,:;=?@#|'<>.^*()%!_-]/,
-		label: 'Possède un caractère spécial',
+		label: 'Possède au moins un caractère spécial',
 	},
 ];
 
