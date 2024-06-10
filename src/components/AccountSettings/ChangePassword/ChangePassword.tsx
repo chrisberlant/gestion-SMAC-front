@@ -4,6 +4,7 @@ import { currentUserPasswordUpdateSchema } from '@validationSchemas/userSchemas'
 import { useDisclosure } from '@mantine/hooks';
 import { useUpdateCurrentUserPassword } from '@queries/authQueries';
 import { toast } from 'sonner';
+import { PasswordInputStrength } from '../../PasswordInputStrength/PasswordInputStrength';
 
 interface ChangePasswordProps {
 	opened: boolean;
@@ -58,26 +59,21 @@ export default function ChangePassword({
 						overlayProps={{ radius: 'sm', blur: 2 }}
 					/>
 					<PasswordInput
+						data-autofocus
 						label='Mot de passe actuel'
 						placeholder='Votre mot de passe'
-						data-autofocus
 						{...form.getInputProps('oldPassword')}
 						labelProps={{ mb: '4' }}
 						mb='xs'
 					/>
-					<PasswordInput
-						label='Nouveau mot de passe'
-						placeholder='Votre nouveau mot de passe'
-						{...form.getInputProps('newPassword')}
-						labelProps={{ mb: '4' }}
-						mb='xs'
-					/>
+					<PasswordInputStrength form={form} field={'newPassword'} />
 					<PasswordInput
 						label='Confirmation nouveau mot de passe'
 						placeholder='Confirmer le nouveau mot de passe'
 						{...form.getInputProps('confirmPassword')}
 						labelProps={{ mb: '4' }}
 						mb='xl'
+						mt={4}
 					/>
 					<Button fullWidth mt='md' type='submit'>
 						Valider

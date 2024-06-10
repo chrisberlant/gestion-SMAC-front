@@ -18,8 +18,6 @@ import {
 	IconUser,
 	IconUserCircle,
 } from '@tabler/icons-react';
-import cx from 'clsx';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import FrenchFlag from '@assets/french-flag.svg';
 import { useGetCurrentUser } from '@queries/authQueries';
@@ -27,9 +25,10 @@ import AccountSettings from '../AccountSettings/AccountSettings';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';
 import { toast } from 'sonner';
+import AdminMenu from './AdminMenu/AdminMenu';
 
 // Liste des différents onglets avec leurs en-têtes, liens et icônes
-const baseTabs = [
+const tabs = [
 	{
 		label: 'Lignes',
 		path: '/lines',
@@ -48,31 +47,16 @@ const baseTabs = [
 	},
 ];
 
-// Onglets accessibles uniquement par les admins
-const adminTabs = [
-	{
-		label: 'Administration',
-		path: 'admin-dashboard',
-		icon: <IconSettings size={20} />,
-	},
-];
-
 export default function Header() {
 	const { data: currentUser } = useGetCurrentUser();
 	const [
 		openedAccountModal,
 		{ open: openAccountModal, close: closeAccountModal },
 	] = useDisclosure(false);
-	const [userMenuOpened, setUserMenuOpened] = useState(false);
 
 	if (currentUser) {
-		const tabsToDisplay =
-			currentUser.role === 'Admin'
-				? [...baseTabs, ...adminTabs]
-				: baseTabs;
-
 		// Création des onglets et détection de celui actif
-		const tabsItems = tabsToDisplay.map((tab) => (
+		const tabsItems = tabs.map((tab) => (
 			<NavLink to={tab.path} key={tab.path}>
 				{({ isActive }) => (
 					<Tabs.Tab
@@ -86,6 +70,8 @@ export default function Header() {
 			</NavLink>
 		));
 
+		// const adminTabsItems = [...tabsItems, AdminMenu];
+
 		return (
 			<header className={classes.header}>
 				<Container className={classes.mainSection} size='xl'>
@@ -98,19 +84,14 @@ export default function Header() {
 						</div>
 						{/* Menu utilisateur */}
 						<Menu
-							width={260}
-							position='bottom-end'
+							width={200}
+							trigger='click'
+							position='bottom-start'
+							// offset={-2}
 							transitionProps={{ transition: 'pop-top-right' }}
-							onClose={() => setUserMenuOpened(false)}
-							onOpen={() => setUserMenuOpened(true)}
-							withinPortal
 						>
 							<Menu.Target>
-								<UnstyledButton
-									className={cx(classes.user, {
-										[classes.userActive]: userMenuOpened,
-									})}
-								>
+								<UnstyledButton className={classes.user}>
 									<Group
 										gap={7}
 										className={classes.userProfile}
@@ -169,7 +150,10 @@ export default function Header() {
 								tab: classes.tab,
 							}}
 						>
-							<Tabs.List>{tabsItems}</Tabs.List>
+							<Tabs.List>
+								{tabsItems}
+								{currentUser.role === 'Admin' && <AdminMenu />}
+							</Tabs.List>
 						</Tabs>
 					</Flex>
 				</nav>
