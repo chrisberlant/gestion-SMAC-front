@@ -18,8 +18,6 @@ import {
 	IconUser,
 	IconUserCircle,
 } from '@tabler/icons-react';
-import cx from 'clsx';
-import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import FrenchFlag from '@assets/french-flag.svg';
 import { useGetCurrentUser } from '@queries/authQueries';
