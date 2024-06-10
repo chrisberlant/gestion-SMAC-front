@@ -6,7 +6,7 @@ import {
 	Text,
 	Center,
 } from '@mantine/core';
-import { useInputState } from '@mantine/hooks';
+import { UseFormReturnType } from '@mantine/form';
 import { IconCheck, IconX } from '@tabler/icons-react';
 
 function PasswordRequirement({
@@ -31,32 +31,41 @@ function PasswordRequirement({
 }
 
 const requirements = [
-	{ re: /[0-9]/, label: 'Possède un nombre' },
-	{ re: /[a-z]/, label: 'Possède une minuscule' },
-	{ re: /[A-Z]/, label: 'Possède une majuscule' },
-	{ re: /[$&+,:;=?@#|'<>.^*()%!_-]/, label: 'Includes special symbol' },
+	{ regex: /[0-9]/, label: 'Possède un nombre' },
+	{ regex: /[a-z]/, label: 'Possède une minuscule' },
+	{ regex: /[A-Z]/, label: 'Possède une majuscule' },
+	{
+		regex: /[$&+,:;=?@#|'<>.^*()%!_-]/,
+		label: 'Possède un caractère spécial',
+	},
 ];
 
 function getStrength(password: string) {
-	let multiplier = password.length > 5 ? 0 : 1;
+	let multiplier = password.length > 7 ? 0 : 1;
 
 	requirements.forEach((requirement) => {
-		if (!requirement.re.test(password)) {
-			multiplier += 1;
-		}
+		if (!requirement.regex.test(password)) multiplier += 1;
 	});
 
 	return Math.max(100 - (100 / (requirements.length + 1)) * multiplier, 0);
 }
 
-export function PasswordInputStrength() {
-	const [value, setValue] = useInputState('');
+interface PasswordInputStrengthProps<T> {
+	form: UseFormReturnType<T>;
+	field: keyof T;
+}
+
+export function PasswordInputStrength<T>({
+	form,
+	field,
+}: PasswordInputStrengthProps<T>) {
+	const value = form.values[field] as string;
 	const strength = getStrength(value);
 	const checks = requirements.map((requirement, index) => (
 		<PasswordRequirement
 			key={index}
 			label={requirement.label}
-			meets={requirement.re.test(value)}
+			meets={requirement.regex.test(value)}
 		/>
 	));
 	const bars = Array(4)
@@ -82,20 +91,20 @@ export function PasswordInputStrength() {
 	return (
 		<div>
 			<PasswordInput
-				value={value}
-				onChange={setValue}
-				placeholder='Your password'
-				label='Password'
-				required
+				label='Nouveau mot de passe'
+				placeholder='Votre nouveau mot de passe'
+				{...form.getInputProps(field)}
+				labelProps={{ mb: '4' }}
+				mb='xs'
 			/>
 
-			<Group gap={5} grow mt='xs' mb='md'>
+			<Group gap={5} grow mt='xs' mb='xs'>
 				{bars}
 			</Group>
 
 			<PasswordRequirement
-				label='Has at least 6 characters'
-				meets={value.length > 5}
+				label='Possède au moins 8 caractères'
+				meets={value.length > 7}
 			/>
 			{checks}
 		</div>

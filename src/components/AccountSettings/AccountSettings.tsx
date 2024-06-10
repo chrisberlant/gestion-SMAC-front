@@ -120,7 +120,6 @@ export default function AccountSettings({
 									flex={1}
 								/>
 							</Flex>
-
 							<Flex align='flex-end' gap='md' mt='4'>
 								<ActionIcon
 									aria-label='Modifier le nom'
@@ -147,7 +146,6 @@ export default function AccountSettings({
 									flex={1}
 								/>
 							</Flex>
-
 							<Flex align='flex-end' gap='md' mt={4}>
 								<ActionIcon
 									aria-label='Modifier le prénom'
