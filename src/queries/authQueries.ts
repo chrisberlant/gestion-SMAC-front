@@ -4,7 +4,6 @@ import { toast } from 'sonner';
 import {
 	UserLoginType,
 	LoggedUserType,
-	CurrentUserUpdateType,
 	UserInfosWithoutRoleType,
 	UserType,
 	CurrentUserPasswordUpdateType,
