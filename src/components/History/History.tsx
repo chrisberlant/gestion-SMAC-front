@@ -45,7 +45,7 @@ export default function History() {
 				size: 50,
 			},
 			{
-				header: 'Élément concerné',
+				header: 'Élément',
 				accessorKey: 'table',
 				Cell: ({ row }) => {
 					let value = '';
@@ -68,7 +68,7 @@ export default function History() {
 				},
 			},
 			{
-				header: 'Date/heure',
+				header: 'Date/Heure',
 				accessorKey: 'createdAt',
 				Cell: ({ row }) =>
 					dateTimeToStringFormatting(row.original.createdAt),
@@ -77,7 +77,7 @@ export default function History() {
 			{
 				header: 'Auteur',
 				accessorKey: 'userId',
-				size: 150,
+				minSize: 150,
 				Cell: ({ row }) =>
 					formattedUsers?.find(
 						(user) => user.id === row.original.userId

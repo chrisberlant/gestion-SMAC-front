@@ -60,7 +60,7 @@ export default function ModelsTable() {
 			{
 				header: 'Modèle',
 				accessorKey: 'reference',
-				minSize: 150,
+				minSize: 250,
 				mantineEditTextInputProps: {
 					required: true,
 					error: validationErrors?.reference,

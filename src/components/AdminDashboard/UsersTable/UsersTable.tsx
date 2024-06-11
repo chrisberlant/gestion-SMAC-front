@@ -53,7 +53,7 @@ export default function UsersTable() {
 			{
 				header: 'Nom',
 				accessorKey: 'lastName',
-				minSize: 150,
+				minSize: 200,
 				mantineEditTextInputProps: {
 					error: validationErrors?.lastName,
 					onFocus: () =>
@@ -66,7 +66,7 @@ export default function UsersTable() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				minSize: 150,
+				minSize: 200,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -109,8 +109,7 @@ export default function UsersTable() {
 			{
 				header: 'Email',
 				accessorKey: 'email',
-				minSize: 300,
-				maxSize: 400,
+				minSize: 400,
 				mantineEditTextInputProps: {
 					error: validationErrors?.email,
 					onFocus: () =>

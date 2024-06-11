@@ -40,8 +40,12 @@ export default function ServicesTable() {
 			},
 			{
 				header: 'Titre',
+				minSize: 500,
 				accessorKey: 'title',
 				mantineEditTextInputProps: {
+					style: {
+						width: 500,
+					},
 					required: true,
 					error: validationErrors?.title,
 					onFocus: () =>
