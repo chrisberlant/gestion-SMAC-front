@@ -58,8 +58,7 @@ export default function AccountSettings({
 		closeAccountModal();
 		// Si des champs avaient été modifiés
 		if (form.isDirty()) {
-			const { role, ...currentUserInfos } = currentUser!;
-			form.setValues(currentUserInfos);
+			form.reset();
 			toast.warning("Les modifications n'ont pas été enregistrées");
 		}
 		setInputLocks({ email: true, lastName: true, firstName: true });
@@ -72,7 +71,7 @@ export default function AccountSettings({
 			closeAccountModal();
 			return toast.warning('Aucune modification effectuée');
 		}
-		return updateCurrentUser(form.values);
+		return updateCurrentUser(form);
 	};
 
 	return (

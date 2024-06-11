@@ -62,7 +62,7 @@ export default function Login() {
 					<form onSubmit={form.onSubmit(() => submitLogin())}>
 						<LoadingOverlay
 							visible={visible}
-							zIndex={1000}
+							zIndex={2}
 							overlayProps={{ radius: 'sm', blur: 2 }}
 						/>
 						<TextInput

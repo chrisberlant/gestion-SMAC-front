@@ -29,10 +29,7 @@ export default function PageNotFound() {
 									Retour à la page précédente
 								</Button>
 							) : (
-								<Button
-									size='md'
-									onClick={() => navigate('/active-lines')}
-								>
+								<Button size='md' onClick={() => navigate('/')}>
 									Retour à la page d'accueil
 								</Button>
 							)}
