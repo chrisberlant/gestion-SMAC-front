@@ -62,15 +62,22 @@ export const useUpdateCurrentUser = (
 	closeModal: () => void
 ) =>
 	useMutation({
-		mutationFn: async (data: CurrentUserUpdateType) => {
+		mutationFn: async (
+			form: UseFormReturnType<{
+				email: string;
+				lastName: string;
+				firstName: string;
+			}>
+		) => {
 			toggleOverlay();
-			return (await fetchApi(
+			const result = (await fetchApi(
 				'/me',
 				'PATCH',
-				data
+				form.values
 			)) as UserInfosWithoutRoleType;
+			return { updatedCurrentUser: result, form };
 		},
-		onSuccess: (updatedCurrentUser) => {
+		onSuccess: ({ updatedCurrentUser, form }) => {
 			const { id: currentUserId, ...updatedInfos } = updatedCurrentUser;
 			queryClient.setQueryData(
 				['currentUser'],
@@ -79,6 +86,7 @@ export const useUpdateCurrentUser = (
 					role: currentUser.role,
 				})
 			);
+			form.setInitialValues(updatedInfos);
 			// Si les utilisateurs sont en cache, mise à jour
 			if (queryClient.getQueryData(['users'])) {
 				queryClient.setQueryData(['users'], (users: UserType[]) =>
