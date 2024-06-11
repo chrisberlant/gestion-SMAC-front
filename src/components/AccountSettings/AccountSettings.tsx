@@ -33,11 +33,6 @@ export default function AccountSettings({
 	] = useDisclosure(false);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 
-	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
-		toggleOverlay,
-		closeAccountModal
-	);
-
 	const form = useForm({
 		validate: zodResolver(currentUserUpdateSchema),
 		initialValues: {
@@ -46,6 +41,12 @@ export default function AccountSettings({
 			firstName: currentUser?.firstName || '',
 		},
 	});
+
+	const { mutate: updateCurrentUser } = useUpdateCurrentUser(
+		toggleOverlay,
+		form,
+		closeAccountModal
+	);
 
 	const [inputsLock, setInputLocks] = useState({
 		email: true,
@@ -71,7 +72,7 @@ export default function AccountSettings({
 			closeAccountModal();
 			return toast.warning('Aucune modification effectuée');
 		}
-		return updateCurrentUser(form);
+		return updateCurrentUser();
 	};
 
 	return (

@@ -77,25 +77,23 @@ export const useCheckLoginStatus = () =>
 // Modifier les infos utilisateur actuel
 export const useUpdateCurrentUser = (
 	toggleOverlay: () => void,
+	form: UseFormReturnType<{
+		email: string;
+		lastName: string;
+		firstName: string;
+	}>,
 	closeModal: () => void
 ) =>
 	useMutation({
-		mutationFn: async (
-			form: UseFormReturnType<{
-				email: string;
-				lastName: string;
-				firstName: string;
-			}>
-		) => {
+		mutationFn: async () => {
 			toggleOverlay();
-			const result = (await fetchApi(
+			return (await fetchApi(
 				'/me',
 				'PATCH',
 				form.values
 			)) as UserInfosWithoutRoleType;
-			return { updatedCurrentUser: result, form };
 		},
-		onSuccess: ({ updatedCurrentUser, form }) => {
+		onSuccess: (updatedCurrentUser) => {
 			const { id: currentUserId, ...updatedInfos } = updatedCurrentUser;
 			queryClient.setQueryData(
 				['currentUser'],
