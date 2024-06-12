@@ -10,21 +10,20 @@ import {
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import {
 	useCheckLoginStatus,
 	useLogin,
 	useResetDbAndCreateDemoUser,
 } from '@queries/authQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
-import classes from './login.module.css';
-import { UserCredentialsType } from '@customTypes/user';
 import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
+import { UserCredentialsType } from '@customTypes/user';
+import { useState } from 'react';
+import classes from './login.module.css';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const navigate = useNavigate();
 	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
 	const [demoUserInfos, setDemoUserInfos] =
 		useState<UserCredentialsType | null>(null);
@@ -36,15 +35,11 @@ export default function Login() {
 			password: '',
 		},
 	});
-
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 	const { mutate: resetDbAndCreateDemoUser } =
 		useResetDbAndCreateDemoUser(setDemoUserInfos);
 
-	useEffect(() => {
-		// Rediriger vers l'app si utilisateur déjà connecté
-		if (userIsConnected) navigate('/lines');
-	}, [userIsConnected, navigate]);
+	if (userIsConnected) return <Navigate to='/lines' replace />;
 
 	return (
 		<main className={classes.loginPage}>
