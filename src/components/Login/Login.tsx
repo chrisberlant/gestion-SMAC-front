@@ -8,17 +8,14 @@ import {
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { useCheckLoginStatus, useLogin } from '@queries/authQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const navigate = useNavigate();
 	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
-
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -26,13 +23,9 @@ export default function Login() {
 			password: '',
 		},
 	});
-
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
-	useEffect(() => {
-		// Rediriger vers l'app si utilisateur déjà connecté
-		if (userIsConnected) navigate('/lines');
-	}, [userIsConnected, navigate]);
+	if (userIsConnected) return <Navigate to='/lines' replace />;
 
 	return (
 		<main className={classes.loginPage}>
