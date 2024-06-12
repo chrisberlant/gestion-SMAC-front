@@ -16,14 +16,14 @@ const queryClient = new QueryClient({
 			// Si serveur injoignable
 			if (error.message === 'Failed to fetch')
 				return toast.error('Impossible de joindre le serveur');
-			// Si vérification du statut de connexion
-			if (query.meta?.loginStatusQuery) return true;
+			// Si vérification du statut de l'authentification sur la page de connexion
+			if (query.meta?.loginPage) return;
 			if (error.message.toLowerCase().includes('token')) {
 				// Redirection vers l'index si problème de token
 				localStorage.removeItem('smac_token');
 				return (window.location.href = '/');
 			}
-			// Dans tous les autres cas, notification contenant le message d'erreur
+			// Dans tous les autres cas, toast d'erreur
 			toast.error(error.message);
 		},
 		onSuccess: () => {},
@@ -39,8 +39,8 @@ const queryClient = new QueryClient({
 				localStorage.removeItem('smac_token');
 				return (window.location.href = '/');
 			}
-			// Si erreur lors de l'import, pas de message d'erreur
-			if (mutation.options.meta?.importMutation) return true;
+			// Si erreur lors de l'import, pas de toast d'erreur
+			if (mutation.options.meta?.importMutation) return;
 			toast.error(error.message);
 		},
 	}),

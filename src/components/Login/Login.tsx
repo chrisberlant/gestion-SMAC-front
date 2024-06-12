@@ -9,13 +9,17 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { Navigate } from 'react-router-dom';
-import { useCheckLoginStatus, useLogin } from '@queries/authQueries';
+import { useGetCurrentUser, useLogin } from '@queries/authQueries';
 import { userLoginSchema } from '@validationSchemas/userSchemas';
 import classes from './login.module.css';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
+	const {
+		data: userIsAuthenticated,
+		isLoading,
+		error,
+	} = useGetCurrentUser({ loginPage: true });
 	const form = useForm({
 		validate: zodResolver(userLoginSchema),
 		initialValues: {
@@ -25,7 +29,7 @@ export default function Login() {
 	});
 	const { mutate: submitLogin } = useLogin(form, toggleOverlay);
 
-	if (userIsConnected) return <Navigate to='/lines' replace />;
+	if (userIsAuthenticated) return <Navigate to='/lines' replace />;
 
 	return (
 		<main className={classes.loginPage}>

@@ -37,20 +37,16 @@ export const useLogin = (
 	});
 
 // Récupérer les infos utilisateur
-export const useGetCurrentUser = () =>
-	useQuery({
-		queryKey: ['currentUser'],
-		queryFn: async () => (await fetchApi('/me')) as LoggedUserType,
-		gcTime: Infinity,
-	});
-
-// Vérifier si l'utilisateur a déjà un token lorsqu'il est sur la page de connexion
-export const useCheckLoginStatus = () =>
+export const useGetCurrentUser = ({
+	loginPage,
+}: {
+	loginPage?: boolean;
+} = {}) =>
 	useQuery({
 		queryKey: ['currentUser'],
 		queryFn: async () => (await fetchApi('/me')) as LoggedUserType,
 		meta: {
-			loginStatusQuery: 'true',
+			loginPage,
 		},
 		gcTime: Infinity,
 	});
