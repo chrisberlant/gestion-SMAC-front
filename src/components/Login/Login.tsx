@@ -12,7 +12,7 @@ import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { Navigate } from 'react-router-dom';
 import {
-	useCheckLoginStatus,
+	useGetCurrentUser,
 	useLogin,
 	useResetDbAndCreateDemoUser,
 } from '@queries/authQueries';
@@ -24,7 +24,11 @@ import classes from './login.module.css';
 
 export default function Login() {
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
-	const { data: userIsConnected, isLoading, error } = useCheckLoginStatus();
+	const {
+		data: userIsAuthenticated,
+		isLoading,
+		error,
+	} = useGetCurrentUser({ loginPage: true });
 	const [demoUserInfos, setDemoUserInfos] =
 		useState<UserCredentialsType | null>(null);
 
@@ -39,7 +43,7 @@ export default function Login() {
 	const { mutate: resetDbAndCreateDemoUser } =
 		useResetDbAndCreateDemoUser(setDemoUserInfos);
 
-	if (userIsConnected) return <Navigate to='/lines' replace />;
+	if (userIsAuthenticated) return <Navigate to='/lines' replace />;
 
 	return (
 		<main className={classes.loginPage}>
