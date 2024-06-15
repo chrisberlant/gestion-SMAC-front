@@ -43,7 +43,7 @@ export default function AdminNavBar() {
 	return (
 		<nav className={classes.navbar}>
 			<div className={classes.navbarMain}>
-				<Group className={classes.header} justify='space-around'>
+				<Group className={classes.header} justify='center'>
 					<IconSettings size={28} />
 					<Text fw={700}>Tableau de bord Admin</Text>
 				</Group>
