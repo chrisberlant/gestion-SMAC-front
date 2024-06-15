@@ -498,8 +498,6 @@ export default function Lines() {
 					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
 				)?.infos || null;
 
-			console.log(newModifiedData);
-
 			// Si retrait de l'appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
 			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
