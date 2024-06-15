@@ -140,13 +140,7 @@ export const useImportMultipleAgents = (
 	useMutation({
 		mutationFn: async (importedAgents: object[]) => {
 			toggleOverlay();
-			const response = await fetchApi(
-				'/agents/csv',
-				'POST',
-				importedAgents
-			);
-			console.log(response);
-			return response;
+			return await fetchApi('/agents/csv', 'POST', importedAgents);
 		},
 		meta: {
 			importMutation: 'true',

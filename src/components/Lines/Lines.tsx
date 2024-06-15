@@ -386,23 +386,27 @@ export default function Lines() {
 
 			// Si aucun appareil ou si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
-			!newDeviceId ||
-			(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
-				? (createLine(creationData),
-				  setValidationErrors({}),
-				  exitCreatingMode())
-				: displayLineCreationModal({
-						createLine,
-						exitCreatingMode,
-						setValidationErrors,
-						alreadyUsingDeviceLine,
-						deviceFullName,
-						currentOwnerFullName,
-						currentOwnerId,
-						newOwnerFullName,
-						newOwnerId,
-						creationData,
-				  });
+			if (
+				!newDeviceId ||
+				(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
+			) {
+				createLine(creationData);
+				setValidationErrors({});
+				return exitCreatingMode();
+			}
+
+			return displayLineCreationModal({
+				createLine,
+				exitCreatingMode,
+				setValidationErrors,
+				alreadyUsingDeviceLine,
+				deviceFullName,
+				currentOwnerFullName,
+				currentOwnerId,
+				newOwnerFullName,
+				newOwnerId,
+				creationData,
+			});
 		};
 
 	//UPDATE action
@@ -467,22 +471,21 @@ export default function Lines() {
 			const currentLineOwnerId = originalData.agentId || null;
 			const newLineOwnerId = updateData.agentId || null;
 			const newLineOwnerFullName: string | null =
-				formattedAgents?.find(
-					(agent) => agent.id === newModifiedData.agentId
-				)?.infos || null;
+				formattedAgents?.find((agent) => agent.id === newLineOwnerId)
+					?.infos || null;
 			const newDeviceId = updateData.deviceId || null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
-			const deviceCurrentOwnerId = newDevice ? newDevice.agentId : null;
-			const deviceCurrentOwnerFullName =
+			const currentDeviceOwnerId = newDevice ? newDevice.agentId : null;
+			const currentDeviceOwnerFullName =
 				formattedAgents?.find(
-					(agent) => agent.id === deviceCurrentOwnerId
+					(agent) => agent.id === currentDeviceOwnerId
 				)?.infos ?? null;
 			const currentDeviceId = originalData.deviceId || null;
 			const deviceFullName: string | null =
 				devicesList?.find(
-					(device) => Number(device.value) === originalData.deviceId
+					(device) => Number(device.value) === newDeviceId
 				)?.label || null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
@@ -495,7 +498,7 @@ export default function Lines() {
 					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
 				)?.infos || null;
 
-			// Si aucun nouvel appareil
+			// Si retrait de l'appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
 			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
 			if (
@@ -503,7 +506,7 @@ export default function Lines() {
 				(currentDeviceId === newDeviceId &&
 					currentLineOwnerId === newLineOwnerId) ||
 				(!alreadyUsingDeviceLine &&
-					deviceCurrentOwnerId === newLineOwnerId)
+					currentDeviceOwnerId === newLineOwnerId)
 			) {
 				updateLine(newModifiedData);
 				table.setEditingRow(null);
@@ -511,7 +514,7 @@ export default function Lines() {
 			}
 
 			// Sinon affichage de la modale en fonction du contexte
-			displayLineUpdateModal({
+			return displayLineUpdateModal({
 				updateLine,
 				exitUpdatingMode: () => table.setEditingRow(null),
 				setValidationErrors,
@@ -522,8 +525,8 @@ export default function Lines() {
 				newLineOwnerFullName,
 				newLineOwnerId,
 				currentDeviceId,
-				deviceCurrentOwnerId,
-				deviceCurrentOwnerFullName,
+				currentDeviceOwnerId,
+				currentDeviceOwnerFullName,
 				newDeviceId,
 				updateData: newModifiedData,
 			});

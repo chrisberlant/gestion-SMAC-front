@@ -15,8 +15,8 @@ interface DisplayLineUpdateModalProps {
 	newLineOwnerFullName: string | null;
 	newLineOwnerId: number | null;
 	currentDeviceId: number | null;
-	deviceCurrentOwnerId: number | null;
-	deviceCurrentOwnerFullName: string | null;
+	currentDeviceOwnerId: number | null;
+	currentDeviceOwnerFullName: string | null;
 	newDeviceId: number | null;
 	updateData: LineUpdateType;
 }
@@ -33,8 +33,8 @@ export default function displayLineUpdateModal({
 	newLineOwnerId,
 	currentDeviceId,
 	newDeviceId,
-	deviceCurrentOwnerId,
-	deviceCurrentOwnerFullName,
+	currentDeviceOwnerId,
+	currentDeviceOwnerFullName,
 	updateData,
 }: DisplayLineUpdateModalProps) {
 	// Configuration des modales
@@ -60,63 +60,17 @@ export default function displayLineUpdateModal({
 		});
 	};
 
-	// Si l'appareil n'a pas été changé
-	if (newDeviceId && newDeviceId === currentDeviceId) {
-		// Si le propriétaire actuel est différent de l'ancien
-		if (currentLineOwnerId !== newLineOwnerId) {
-			// Si un nouveau propriétaire mais pas d'ancien
-			if (!currentLineOwnerId) {
-				return openConfirmModal(
-					"Affectation d'un propriétaire à l'appareil",
-					<>
-						<Text mb='xs'>
-							L'appareil{' '}
-							<span className='bold-text'>{deviceFullName}</span>{' '}
-							n'appartient actuellement à aucun agent.
-						</Text>
-						<Text mb='xl'>
-							Si vous continuez, il sera affecté à l'agent{' '}
-							<span className='bold-text'>
-								{newLineOwnerFullName}
-							</span>
-							.
-						</Text>
-					</>
-				);
-			}
-			// Retrait du propriétaire existant de la ligne
-			if (!newLineOwnerId) {
-				return openConfirmModal(
-					"Désaffectation du propriétaire de l'appareil",
-					<>
-						<Text mb='xs'>
-							L'appareil{' '}
-							<span className='bold-text'>{deviceFullName}</span>{' '}
-							appartient actuellement à l'agent{' '}
-							<span className='bold-text'>
-								{deviceCurrentOwnerFullName}
-							</span>
-							.
-						</Text>
-						<Text mb='xl'>
-							Si vous continuez, celui-ci sera désaffecté.
-						</Text>
-					</>
-				);
-			}
-
-			// Si l'ancien et le nouveau propriétaire sont différents (non nuls)
+	// Si l'appareil n'a pas été modifié
+	if (newDeviceId === currentDeviceId) {
+		// Si un nouveau propriétaire mais pas d'ancien
+		if (newLineOwnerId && !currentLineOwnerId)
 			return openConfirmModal(
-				"Changement de propriétaire de l'appareil",
+				"Affectation d'un propriétaire à l'appareil",
 				<>
 					<Text mb='xs'>
 						L'appareil{' '}
 						<span className='bold-text'>{deviceFullName}</span>{' '}
-						appartient actuellement à l'agent{' '}
-						<span className='bold-text'>
-							{deviceCurrentOwnerFullName}
-						</span>
-						.
+						n'appartient actuellement à aucun agent.
 					</Text>
 					<Text mb='xl'>
 						Si vous continuez, il sera affecté à l'agent{' '}
@@ -127,45 +81,89 @@ export default function displayLineUpdateModal({
 					</Text>
 				</>
 			);
-		}
+
+		// Retrait du propriétaire existant de la ligne
+		if (!newLineOwnerId && currentLineOwnerId)
+			return openConfirmModal(
+				"Désaffectation du propriétaire de l'appareil",
+				<>
+					<Text mb='xs'>
+						L'appareil{' '}
+						<span className='bold-text'>{deviceFullName}</span>{' '}
+						appartient actuellement à l'agent{' '}
+						<span className='bold-text'>
+							{currentDeviceOwnerFullName}
+						</span>
+						.
+					</Text>
+					<Text mb='xl'>
+						Si vous continuez, celui-ci sera désaffecté.
+					</Text>
+				</>
+			);
+
+		// Si l'ancien et le nouveau propriétaire sont différents (non nuls)
+		return openConfirmModal(
+			"Changement de propriétaire de l'appareil",
+			<>
+				<Text mb='xs'>
+					L'appareil{' '}
+					<span className='bold-text'>{deviceFullName}</span>{' '}
+					appartient actuellement à l'agent{' '}
+					<span className='bold-text'>
+						{currentDeviceOwnerFullName}
+					</span>
+					.
+				</Text>
+				<Text mb='xl'>
+					Si vous continuez, il sera affecté à l'agent{' '}
+					<span className='bold-text'>{newLineOwnerFullName}</span>.
+				</Text>
+			</>
+		);
 	}
 
 	// Si l'appareil a été modifié
 
-	// Si l'appareil est déjà associé à une autre ligne
-	if (alreadyUsingDeviceLine) {
-		// Si l'autre ligne a le même propriétaire que la ligne actuelle (peuvent être nuls)
-		if (alreadyUsingDeviceLine.agentId === newLineOwnerId) {
-			return openConfirmModal(
-				"Appareil déjà associé à une autre ligne de l'agent",
-				<>
-					<Text mb='xs'>
-						L'appareil{' '}
-						<span className='bold-text'>{deviceFullName}</span> est
-						actuellement affecté à la ligne{' '}
-						<span className='bold-text'>
-							{alreadyUsingDeviceLine.number}
-						</span>{' '}
-						{alreadyUsingDeviceLineOwnerFullName ? (
-							<>
-								de l'agent{' '}
-								<span className='bold-text'>
-									{alreadyUsingDeviceLineOwnerFullName}
-								</span>
-							</>
-						) : (
-							'sans propriétaire'
-						)}
-						.
-					</Text>
-					<Text mb='xl'>
-						Si vous continuez, il sera désaffecté de celle-ci pour
-						être affecté à la ligne en cours de modification.
-					</Text>
-				</>
-			);
-		}
-		// Si l'autre ligne possède un propriétaire différent (ou aucun)
+	// Si l'autre ligne a le même propriétaire que la ligne actuelle (peuvent être nuls)
+	if (
+		alreadyUsingDeviceLine &&
+		alreadyUsingDeviceLine.agentId === newLineOwnerId
+	)
+		return openConfirmModal(
+			"Appareil déjà associé à une autre ligne de l'agent",
+			<>
+				<Text mb='xs'>
+					L'appareil{' '}
+					<span className='bold-text'>{deviceFullName}</span> est
+					actuellement affecté à la ligne{' '}
+					<span className='bold-text'>
+						{alreadyUsingDeviceLine.number}
+					</span>{' '}
+					{alreadyUsingDeviceLineOwnerFullName ? (
+						<>
+							de l'agent{' '}
+							<span className='bold-text'>
+								{alreadyUsingDeviceLineOwnerFullName}
+							</span>
+						</>
+					) : (
+						'sans propriétaire'
+					)}
+					.
+				</Text>
+				<Text mb='xl'>
+					Si vous continuez, il sera désaffecté de celle-ci pour être
+					affecté à la ligne en cours de modification.
+				</Text>
+			</>
+		);
+
+	// Si l'autre ligne possède un propriétaire différent (ou aucun)
+	if (
+		alreadyUsingDeviceLine &&
+		alreadyUsingDeviceLine.agentId !== newLineOwnerId
+	)
 		return openConfirmModal(
 			alreadyUsingDeviceLine.agentId
 				? "Appareil déjà associé à une ligne d'un autre agent"
@@ -207,12 +205,11 @@ export default function displayLineUpdateModal({
 				</Text>
 			</>
 		);
-	}
 
 	// Si l'appareil n'est pas associé à une autre ligne et que l'agent et l'appareil fournis ne sont pas associés
 
-	// Si pas de propriétaire de la ligne mais un lié à l'appareil
-	if (!newLineOwnerId) {
+	// Si pas de nouveau propriétaire de la ligne mais un lié à l'appareil
+	if (!newLineOwnerId && currentDeviceOwnerId) {
 		return modals.open({
 			title: 'Appareil affecté à un agent',
 			size: 'lg',
@@ -224,7 +221,7 @@ export default function displayLineUpdateModal({
 						<span className='bold-text'>{deviceFullName}</span> est
 						actuellement affecté à l'agent{' '}
 						<span className='bold-text'>
-							{deviceCurrentOwnerFullName}
+							{currentDeviceOwnerFullName}
 						</span>
 						, mais n'est affecté à aucune ligne.
 					</Text>
@@ -240,7 +237,7 @@ export default function displayLineUpdateModal({
 							mt='lg'
 							mx='md'
 							onClick={() => {
-								updateData.agentId = deviceCurrentOwnerId;
+								updateData.agentId = currentDeviceOwnerId;
 								updateLine(updateData);
 								setValidationErrors({});
 								exitUpdatingMode();
@@ -248,7 +245,7 @@ export default function displayLineUpdateModal({
 							}}
 						>
 							Au propriétaire de l'appareil :{' '}
-							{deviceCurrentOwnerFullName}
+							{currentDeviceOwnerFullName}
 						</Button>
 						<Button
 							mt='lg'
@@ -278,7 +275,7 @@ export default function displayLineUpdateModal({
 	}
 
 	// Si pas d'agent lié à l'appareil mais un lié à la ligne
-	if (!deviceCurrentOwnerId) {
+	if (newLineOwnerId && !currentDeviceOwnerId) {
 		return openConfirmModal(
 			'Appareil actuellement non affecté',
 			<>
@@ -302,7 +299,7 @@ export default function displayLineUpdateModal({
 			<Text mb='xs'>
 				L'appareil <span className='bold-text'>{deviceFullName}</span>{' '}
 				est actuellement affecté à l'agent{' '}
-				<span className='bold-text'>{deviceCurrentOwnerFullName}</span>,
+				<span className='bold-text'>{currentDeviceOwnerFullName}</span>,
 				mais n'est affecté à aucune ligne.
 			</Text>
 			<Text mb='xl'>
