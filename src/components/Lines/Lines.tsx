@@ -471,22 +471,21 @@ export default function Lines() {
 			const currentLineOwnerId = originalData.agentId || null;
 			const newLineOwnerId = updateData.agentId || null;
 			const newLineOwnerFullName: string | null =
-				formattedAgents?.find(
-					(agent) => agent.id === newModifiedData.agentId
-				)?.infos || null;
+				formattedAgents?.find((agent) => agent.id === newLineOwnerId)
+					?.infos || null;
 			const newDeviceId = updateData.deviceId || null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
-			const deviceCurrentOwnerId = newDevice ? newDevice.agentId : null;
-			const deviceCurrentOwnerFullName =
+			const currentDeviceOwnerId = newDevice ? newDevice.agentId : null;
+			const currentDeviceOwnerFullName =
 				formattedAgents?.find(
-					(agent) => agent.id === deviceCurrentOwnerId
+					(agent) => agent.id === currentDeviceOwnerId
 				)?.infos ?? null;
 			const currentDeviceId = originalData.deviceId || null;
 			const deviceFullName: string | null =
 				devicesList?.find(
-					(device) => Number(device.value) === originalData.deviceId
+					(device) => Number(device.value) === newDeviceId
 				)?.label || null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
@@ -499,7 +498,9 @@ export default function Lines() {
 					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
 				)?.infos || null;
 
-			// Si aucun nouvel appareil
+			console.log(newModifiedData);
+
+			// Si retrait de l'appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
 			// ou si l'appareil et l'agent fournis sont déjà liés et l'appareil non affecté à une autre ligne, pas de modale
 			if (
@@ -507,7 +508,7 @@ export default function Lines() {
 				(currentDeviceId === newDeviceId &&
 					currentLineOwnerId === newLineOwnerId) ||
 				(!alreadyUsingDeviceLine &&
-					deviceCurrentOwnerId === newLineOwnerId)
+					currentDeviceOwnerId === newLineOwnerId)
 			) {
 				updateLine(newModifiedData);
 				table.setEditingRow(null);
@@ -515,7 +516,7 @@ export default function Lines() {
 			}
 
 			// Sinon affichage de la modale en fonction du contexte
-			displayLineUpdateModal({
+			return displayLineUpdateModal({
 				updateLine,
 				exitUpdatingMode: () => table.setEditingRow(null),
 				setValidationErrors,
@@ -526,8 +527,8 @@ export default function Lines() {
 				newLineOwnerFullName,
 				newLineOwnerId,
 				currentDeviceId,
-				deviceCurrentOwnerId,
-				deviceCurrentOwnerFullName,
+				currentDeviceOwnerId,
+				currentDeviceOwnerFullName,
 				newDeviceId,
 				updateData: newModifiedData,
 			});
