@@ -386,23 +386,27 @@ export default function Lines() {
 
 			// Si aucun appareil ou si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
-			!newDeviceId ||
-			(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
-				? (createLine(creationData),
-				  setValidationErrors({}),
-				  exitCreatingMode())
-				: displayLineCreationModal({
-						createLine,
-						exitCreatingMode,
-						setValidationErrors,
-						alreadyUsingDeviceLine,
-						deviceFullName,
-						currentOwnerFullName,
-						currentOwnerId,
-						newOwnerFullName,
-						newOwnerId,
-						creationData,
-				  });
+			if (
+				!newDeviceId ||
+				(newOwnerId === currentOwnerId && !alreadyUsingDeviceLine)
+			) {
+				createLine(creationData);
+				setValidationErrors({});
+				return exitCreatingMode();
+			}
+
+			return displayLineCreationModal({
+				createLine,
+				exitCreatingMode,
+				setValidationErrors,
+				alreadyUsingDeviceLine,
+				deviceFullName,
+				currentOwnerFullName,
+				currentOwnerId,
+				newOwnerFullName,
+				newOwnerId,
+				creationData,
+			});
 		};
 
 	//UPDATE action
