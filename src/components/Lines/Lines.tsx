@@ -136,6 +136,17 @@ export default function Lines() {
 		[agents, services]
 	);
 
+	const formattedModels = useMemo(
+		() =>
+			models?.map((model) => ({
+				id: model.id,
+				infos: `${model.brand} ${model.reference}${
+					model.storage ? ` ${model.storage}` : ''
+				}`,
+			})),
+		[models]
+	);
+
 	// Agents proposés dans la liste déroulante
 	const agentsList = useMemo(
 		() =>
@@ -262,7 +273,8 @@ export default function Lines() {
 				id: 'deviceId',
 				accessorFn: (row) => row.deviceId?.toString(),
 				editVariant: 'select',
-				minSize: 120,
+				minSize: 90,
+				maxSize: 110,
 				mantineEditSelectProps: {
 					data: devicesList,
 					style: {
@@ -281,11 +293,10 @@ export default function Lines() {
 					return currentDevice ? (
 						<>
 							{
-								devicesList?.find(
+								devices?.find(
 									(device) =>
-										Number(device.value) ===
-										row.original.deviceId
-								)?.label
+										device.id === row.original.deviceId
+								)?.imei
 							}
 						</>
 					) : (
@@ -293,6 +304,29 @@ export default function Lines() {
 							Aucun appareil (ou personnel)
 						</span>
 					);
+				},
+			},
+			{
+				header: 'Modèle',
+				id: 'deviceModel',
+				enableEditing: false,
+				accessorFn: (row) => {
+					if (!row.deviceId) return;
+					const modelId = devices?.find(
+						(device) => device.id === row.deviceId
+					)?.modelId;
+					const model =
+						formattedModels?.find((model) => model.id === modelId)
+							?.infos ?? null;
+					return model;
+				},
+				minSize: 90,
+				maxSize: 120,
+				mantineEditTextInputProps: {
+					style: {
+						width: 400,
+					},
+					error: validationErrors?.comments,
 				},
 			},
 			{
