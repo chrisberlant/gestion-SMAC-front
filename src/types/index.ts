@@ -14,3 +14,9 @@ export type DevicesAmountPerModelType = {
 export type StatsType =
 	| AgentsAndDevicesPerServiceType
 	| DevicesAmountPerModelType;
+
+export type ColumnOrderTableState = {
+	columnOrder: ColumnOrderState;
+};
+
+export type ColumnOrderState = string[];

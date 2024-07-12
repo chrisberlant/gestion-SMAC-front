@@ -90,8 +90,6 @@ export default function Agents() {
 		[services]
 	);
 
-	const requiredData = agents && devices && services;
-
 	const columns = useMemo<MRT_ColumnDef<AgentType>[]>(
 		() => [
 			{
@@ -301,6 +299,18 @@ export default function Agents() {
 		[validationErrors, servicesList, devicesList]
 	);
 
+	const storedColumnOrder = localStorage.getItem('agentsColumnOrder');
+	const initialColumnOrder = storedColumnOrder
+		? JSON.parse(storedColumnOrder)
+		: [
+				'mrt-row-actions',
+				...columns.map(
+					(c) => (c.accessorKey as string) ?? (c.id as string)
+				),
+		  ];
+	const [columnOrder, setColumnOrder] =
+		useState<string[]>(initialColumnOrder);
+
 	//CREATE action
 	const handleCreateAgent: MRT_TableOptions<AgentType>['onCreatingRowSave'] =
 		async ({ values, exitCreatingMode }) => {
@@ -445,6 +455,16 @@ export default function Agents() {
 				<CsvExportButton request={exportsAgentsToCsv} />
 			</Flex>
 		),
+		state: {
+			columnOrder,
+		},
+		onColumnOrderChange: (newColumnOrder) => {
+			localStorage.setItem(
+				'agentsColumnOrder',
+				JSON.stringify(newColumnOrder)
+			);
+			setColumnOrder(newColumnOrder);
+		},
 	});
 
 	return (
@@ -459,7 +479,7 @@ export default function Agents() {
 				</span>
 			)}
 
-			{requiredData && <MantineReactTable table={table} />}
+			{!anyLoading && !anyError && <MantineReactTable table={table} />}
 		</div>
 	);
 }

@@ -165,8 +165,6 @@ export default function Lines() {
 		[devices, models]
 	);
 
-	const requiredData = lines && agents && devices;
-
 	const columns = useMemo<MRT_ColumnDef<LineType>[]>(
 		() => [
 			{
@@ -316,6 +314,18 @@ export default function Lines() {
 		],
 		[validationErrors, formattedAgents, agentsList, devicesList]
 	);
+
+	const storedColumnOrder = localStorage.getItem('linesColumnOrder');
+	const initialColumnOrder = storedColumnOrder
+		? JSON.parse(storedColumnOrder)
+		: [
+				'mrt-row-actions',
+				...columns.map(
+					(c) => (c.accessorKey as string) ?? (c.id as string)
+				),
+		  ];
+	const [columnOrder, setColumnOrder] =
+		useState<string[]>(initialColumnOrder);
 
 	//CREATE action
 	const handleCreateLine: MRT_TableOptions<LineType>['onCreatingRowSave'] =
@@ -655,6 +665,16 @@ export default function Lines() {
 				<CsvExportButton request={exportsLinesToCsv} />
 			</Flex>
 		),
+		state: {
+			columnOrder,
+		},
+		onColumnOrderChange: (newColumnOrder) => {
+			localStorage.setItem(
+				'linesColumnOrder',
+				JSON.stringify(newColumnOrder)
+			);
+			setColumnOrder(newColumnOrder);
+		},
 	});
 
 	return (
@@ -669,7 +689,7 @@ export default function Lines() {
 				</span>
 			)}
 
-			{requiredData && <MantineReactTable table={table} />}
+			{!anyLoading && !anyError && <MantineReactTable table={table} />}
 		</div>
 	);
 }
