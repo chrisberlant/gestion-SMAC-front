@@ -28,14 +28,16 @@ describe('Lines', () => {
 			'Active',
 			'Smith John - second-service',
 			'commentaire ligne 1',
-			'134321456654877 - Samsung S24',
+			'134321456654877',
+			'Samsung S24',
 		].map((value) => within(table).getByText(value));
 		[
 			'0987654321',
 			'V',
 			'Résiliée',
 			'Taylor Karen - first-service',
-			'123321456654780 - Apple iPhone 15 256GB',
+			'123321456654780',
+			'Apple iPhone 15 256GB',
 		].map((value) => within(table).getByText(value));
 	});
 });
