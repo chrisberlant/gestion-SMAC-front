@@ -136,6 +136,17 @@ export default function Lines() {
 		[agents, services]
 	);
 
+	const formattedModels = useMemo(
+		() =>
+			models?.reduce((acc, model) => {
+				acc[model.id] = `${model.brand} ${model.reference}${
+					model.storage ? ` ${model.storage}` : ''
+				}`;
+				return acc;
+			}, {} as Record<number, string>),
+		[models]
+	);
+
 	// Agents proposés dans la liste déroulante
 	const agentsList = useMemo(
 		() =>
@@ -164,8 +175,6 @@ export default function Lines() {
 			}),
 		[devices, models]
 	);
-
-	const requiredData = lines && agents && devices;
 
 	const columns = useMemo<MRT_ColumnDef<LineType>[]>(
 		() => [
@@ -264,7 +273,8 @@ export default function Lines() {
 				id: 'deviceId',
 				accessorFn: (row) => row.deviceId?.toString(),
 				editVariant: 'select',
-				minSize: 120,
+				minSize: 90,
+				maxSize: 110,
 				mantineEditSelectProps: {
 					data: devicesList,
 					style: {
@@ -283,11 +293,10 @@ export default function Lines() {
 					return currentDevice ? (
 						<>
 							{
-								devicesList?.find(
+								devices?.find(
 									(device) =>
-										Number(device.value) ===
-										row.original.deviceId
-								)?.label
+										device.id === row.original.deviceId
+								)?.imei
 							}
 						</>
 					) : (
@@ -295,6 +304,27 @@ export default function Lines() {
 							Aucun appareil (ou personnel)
 						</span>
 					);
+				},
+			},
+			{
+				header: 'Modèle',
+				id: 'deviceModel',
+				enableEditing: false,
+				accessorFn: (row) => {
+					if (!row.deviceId) return null;
+					const modelId = devices?.find(
+						(device) => device.id === row.deviceId
+					)?.modelId;
+					if (!modelId) return null;
+					return formattedModels ? formattedModels[modelId] : null;
+				},
+				minSize: 90,
+				maxSize: 120,
+				mantineEditTextInputProps: {
+					style: {
+						width: 400,
+					},
+					error: validationErrors?.comments,
 				},
 			},
 			{
@@ -316,6 +346,18 @@ export default function Lines() {
 		],
 		[validationErrors, formattedAgents, agentsList, devicesList]
 	);
+
+	const storedColumnOrder = localStorage.getItem('linesColumnOrder');
+	const initialColumnOrder = storedColumnOrder
+		? JSON.parse(storedColumnOrder)
+		: [
+				'mrt-row-actions',
+				...columns.map(
+					(c) => (c.accessorKey as string) ?? (c.id as string)
+				),
+		  ];
+	const [columnOrder, setColumnOrder] =
+		useState<string[]>(initialColumnOrder);
 
 	//CREATE action
 	const handleCreateLine: MRT_TableOptions<LineType>['onCreatingRowSave'] =
@@ -655,6 +697,16 @@ export default function Lines() {
 				<CsvExportButton request={exportsLinesToCsv} />
 			</Flex>
 		),
+		state: {
+			columnOrder,
+		},
+		onColumnOrderChange: (newColumnOrder) => {
+			localStorage.setItem(
+				'linesColumnOrder',
+				JSON.stringify(newColumnOrder)
+			);
+			setColumnOrder(newColumnOrder);
+		},
 	});
 
 	return (
@@ -669,7 +721,7 @@ export default function Lines() {
 				</span>
 			)}
 
-			{requiredData && <MantineReactTable table={table} />}
+			{!anyLoading && !anyError && <MantineReactTable table={table} />}
 		</div>
 	);
 }
