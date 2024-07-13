@@ -165,7 +165,7 @@ export default function Devices() {
 			formattedAgents?.map((agent) => ({
 				value: agent.id.toString(),
 				label: agent.infos,
-			})),
+			})) || [],
 		[formattedAgents]
 	);
 
@@ -177,7 +177,7 @@ export default function Devices() {
 				label: `${model.brand} ${model.reference}${
 					model.storage ? ` ${model.storage}` : ''
 				}`,
-			})),
+			})) || [],
 		[models]
 	);
 

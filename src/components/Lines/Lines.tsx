@@ -119,7 +119,7 @@ export default function Lines() {
 			: lines;
 	}, [lines, filterParams]);
 
-	// Récupération des informations des agents formatées sous forme d'un objet contenant leurs infos importantes ainsi que leurs id
+	// Récupération des informations des agents formatées sous forme d'un tableau d'objets contenant leurs infos importantes ainsi que leurs id
 	const formattedAgents = useMemo(
 		() =>
 			agents?.map((agent) => {
@@ -132,7 +132,7 @@ export default function Lines() {
 					vip: agent.vip,
 					id: agent.id,
 				};
-			}),
+			}) || [],
 		[agents, services]
 	);
 
