@@ -138,12 +138,12 @@ export default function Lines() {
 
 	const formattedModels = useMemo(
 		() =>
-			models?.map((model) => ({
-				id: model.id,
-				infos: `${model.brand} ${model.reference}${
+			models?.reduce((acc, model) => {
+				acc[model.id] = `${model.brand} ${model.reference}${
 					model.storage ? ` ${model.storage}` : ''
-				}`,
-			})),
+				}`;
+				return acc;
+			}, {} as Record<number, string>),
 		[models]
 	);
 
@@ -311,14 +311,12 @@ export default function Lines() {
 				id: 'deviceModel',
 				enableEditing: false,
 				accessorFn: (row) => {
-					if (!row.deviceId) return;
+					if (!row.deviceId) return null;
 					const modelId = devices?.find(
 						(device) => device.id === row.deviceId
 					)?.modelId;
-					const model =
-						formattedModels?.find((model) => model.id === modelId)
-							?.infos ?? null;
-					return model;
+					if (!modelId) return null;
+					return formattedModels ? formattedModels[modelId] : null;
 				},
 				minSize: 90,
 				maxSize: 120,
