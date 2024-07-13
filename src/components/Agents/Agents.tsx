@@ -86,7 +86,7 @@ export default function Agents() {
 			services?.map((service) => ({
 				value: service.id.toString(),
 				label: service.title,
-			})),
+			})) || [],
 		[services]
 	);
 
