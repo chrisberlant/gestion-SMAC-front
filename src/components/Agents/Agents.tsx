@@ -66,19 +66,19 @@ export default function Agents() {
 	const vipRef = useRef<boolean>(true);
 
 	// Pour chaque agent, récupérer sa liste d'appareils
-	const devicesList = useMemo(() => {
-		const devicesListPerAgent: Record<number, string[]> = {};
-		devices?.forEach((device) => {
-			if (device.agentId) {
-				// Si la paire propriété/valeur correspondant à l'agent n'est pas créée
-				if (!devicesListPerAgent[device.agentId]) {
-					devicesListPerAgent[device.agentId] = [];
+	const devicesList = useMemo(
+		() =>
+			devices?.reduce<Record<number, string[]>>((acc, device) => {
+				// Si un agent est associé à l'appareil
+				if (device.agentId) {
+					// Initialisation de la liste pour chaque agent
+					if (!acc[device.agentId]) acc[device.agentId] = [];
+					acc[device.agentId].push(device.imei);
 				}
-				devicesListPerAgent[device.agentId].push(device.imei);
-			}
-		});
-		return devicesListPerAgent;
-	}, [devices]);
+				return acc;
+			}, {}) || {},
+		[devices]
+	);
 
 	// Services proposés dans la liste déroulante en cas d'ajout/mise à jour d'un agent
 	const servicesList = useMemo(
@@ -263,9 +263,9 @@ export default function Agents() {
 				Cell: ({ row, cell }) => {
 					// Ne rien afficher lors de la création
 					if (!row.original.email) return null;
-					const agentDevicesList = devicesList[row.original.id];
 					const devicesAmount = cell.getValue() as number;
 					if (devicesAmount === 0) return 0;
+					const agentDevicesList = devicesList[row.original.id];
 					// Affichage des IMEI au survol s'il y a des appareils affectés
 					return (
 						<HoverCard width={200} shadow='md' openDelay={400}>

@@ -138,12 +138,12 @@ export default function Lines() {
 
 	const formattedModels = useMemo(
 		() =>
-			models?.reduce((acc, model) => {
+			models?.reduce<Record<number, string>>((acc, model) => {
 				acc[model.id] = `${model.brand} ${model.reference}${
 					model.storage ? ` ${model.storage}` : ''
 				}`;
 				return acc;
-			}, {} as Record<number, string>),
+			}, {}) || {},
 		[models]
 	);
 
@@ -316,7 +316,7 @@ export default function Lines() {
 						(device) => device.id === row.deviceId
 					)?.modelId;
 					if (!modelId) return null;
-					return formattedModels ? formattedModels[modelId] : null;
+					return formattedModels[modelId] ?? null;
 				},
 				minSize: 90,
 				maxSize: 120,
