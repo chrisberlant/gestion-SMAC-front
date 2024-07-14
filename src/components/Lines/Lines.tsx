@@ -593,7 +593,6 @@ export default function Lines() {
 		},
 		columns,
 		data: filteredLines ?? [],
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateLine,
 		onEditingRowSave: handleSaveLine,

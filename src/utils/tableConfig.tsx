@@ -11,6 +11,7 @@ export const virtualizedTableConfig = {
 	enableEditing: true,
 	enableHiding: true,
 	enableDensityToggle: false,
+	mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 	mantineSearchTextInputProps: {
 		placeholder: 'Rechercher',
 		style: { minWidth: '300px' },
@@ -90,7 +91,6 @@ export const paginatedTableConfig = {
 		mb: 'xs',
 		mx: 'xl',
 	},
-	mantineTableContainerProps: { style: { maxHeight: '200vh' } },
 	mantinePaginationProps: {
 		rowsPerPageOptions: ['10', '20', '50', '100', '200'],
 		withEdges: true,

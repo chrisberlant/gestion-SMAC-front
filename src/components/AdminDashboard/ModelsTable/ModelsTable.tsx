@@ -213,9 +213,7 @@ export default function ModelsTable() {
 		columns,
 		data: models ?? [],
 		renderBottomToolbar: false,
-		mantineTableContainerProps: {
-			style: { maxHeight: '30vh' },
-		},
+
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateModel,
 		onEditingRowSave: handleSaveModel,
