@@ -154,11 +154,9 @@ export default function UsersTable() {
 						(row) => row.original.email === creationData.email
 					)
 			) {
-				toast.error(
-					'Un utilisateur avec cette adresse mail existe déjà'
-				);
+				toast.error("Impossible de créer l'utilisateur");
 				return setValidationErrors({
-					email: ' ',
+					email: 'Un utilisateur avec cette adresse mail existe déjà',
 				});
 			}
 
@@ -218,11 +216,9 @@ export default function UsersTable() {
 								row.original.id !== updateData.id
 						)
 				) {
-					toast.error(
-						'Un utilisateur avec cette adresse mail existe déjà'
-					);
+					toast.error("Impossible de créer l'utilisateur");
 					return setValidationErrors({
-						email: ' ',
+						email: 'Un utilisateur avec cette adresse mail existe déjà',
 					});
 				}
 			}

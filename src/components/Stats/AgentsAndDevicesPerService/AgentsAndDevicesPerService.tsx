@@ -44,6 +44,7 @@ export default function AgentsAndDevicesPerService() {
 					/>
 					<Flex direction='column' align='flex-end' w='40%' gap={20}>
 						<BarChart
+							py={8}
 							ref={ref}
 							h={300}
 							data={data}
