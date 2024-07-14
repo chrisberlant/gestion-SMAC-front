@@ -36,9 +36,9 @@ export default function AccountSettings({
 	const form = useForm({
 		validate: zodResolver(currentUserUpdateSchema),
 		initialValues: {
-			email: currentUser?.email || '',
-			lastName: currentUser?.lastName || '',
-			firstName: currentUser?.firstName || '',
+			email: currentUser?.email ?? '',
+			lastName: currentUser?.lastName ?? '',
+			firstName: currentUser?.firstName ?? '',
 		},
 	});
 

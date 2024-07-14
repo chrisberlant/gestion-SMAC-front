@@ -242,7 +242,7 @@ export default function UsersTable() {
 			},
 		},
 		columns,
-		data: users || [],
+		data: users ?? [],
 		renderBottomToolbar: false,
 		displayColumnDefOptions: {
 			'mrt-row-actions': {

@@ -76,7 +76,7 @@ export default function Agents() {
 					acc[device.agentId].push(device.imei);
 				}
 				return acc;
-			}, {}) || {},
+			}, {}) ?? {},
 		[devices]
 	);
 
@@ -86,7 +86,7 @@ export default function Agents() {
 			services?.map((service) => ({
 				value: service.id.toString(),
 				label: service.title,
-			})) || [],
+			})) ?? [],
 		[services]
 	);
 
@@ -230,7 +230,7 @@ export default function Agents() {
 			{
 				header: 'Service',
 				id: 'serviceId',
-				accessorFn: (row) => row.serviceId?.toString() || null,
+				accessorFn: (row) => row.serviceId?.toString() ?? null,
 				minSize: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -258,7 +258,7 @@ export default function Agents() {
 				header: 'Appareils affectés',
 				enableEditing: false,
 				id: 'devices',
-				accessorFn: (row) => devicesList[row.id]?.length || 0,
+				accessorFn: (row) => devicesList[row.id]?.length ?? 0,
 				minSize: 75,
 				Cell: ({ row, cell }) => {
 					// Ne rien afficher lors de la création
@@ -299,6 +299,7 @@ export default function Agents() {
 		[validationErrors, servicesList, devicesList]
 	);
 
+	// Gestion de l'ordre des colonnes
 	const storedColumnOrder = localStorage.getItem('agentsColumnOrder');
 	const initialColumnOrder = storedColumnOrder
 		? JSON.parse(storedColumnOrder)
@@ -423,7 +424,7 @@ export default function Agents() {
 			},
 		},
 		columns,
-		data: agents || [],
+		data: agents ?? [],
 		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateAgent,
@@ -468,7 +469,7 @@ export default function Agents() {
 	});
 
 	return (
-		<div>
+		<section>
 			<h2>Liste des agents</h2>
 
 			{anyLoading && <Loading />}
@@ -480,6 +481,6 @@ export default function Agents() {
 			)}
 
 			{!anyLoading && !anyError && <MantineReactTable table={table} />}
-		</div>
+		</section>
 	);
 }

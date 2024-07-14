@@ -101,7 +101,7 @@ export default function History() {
 		},
 		enableEditing: false,
 		columns,
-		data: history || [],
+		data: history ?? [],
 		enableRowSelection: true,
 		getRowId: (originalRow) => String(originalRow.id),
 		mantineSelectCheckboxProps: {
