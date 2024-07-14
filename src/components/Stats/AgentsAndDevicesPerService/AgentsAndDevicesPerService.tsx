@@ -4,9 +4,9 @@ import Loading from '../../Loading/Loading';
 import { BarChart } from '@mantine/charts';
 import { Button, Flex } from '@mantine/core';
 import { useEffect, useRef } from 'react';
+import { IconDownload } from '@tabler/icons-react';
 // @ts-ignore
 import { useScreenshot } from 'use-react-screenshot';
-import { IconDownload } from '@tabler/icons-react';
 
 export default function AgentsAndDevicesPerService() {
 	const { data, isLoading, isError } = useGetAgentsAndDevicesPerService();
