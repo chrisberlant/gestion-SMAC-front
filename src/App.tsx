@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css';
 import 'mantine-react-table/styles.css';
+import '@mantine/charts/styles.css';
 import {
 	Route,
 	RouterProvider,
@@ -7,7 +8,6 @@ import {
 	createRoutesFromElements,
 } from 'react-router-dom';
 import { lazy } from 'react';
-
 import Login from '@components/Login/Login';
 import PrivateRoutesLayout from '@components/PrivateRoutesLayout/PrivateRoutesLayout';
 const AdminDashboard = lazy(
