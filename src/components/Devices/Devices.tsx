@@ -1,4 +1,4 @@
-import { Button, Flex } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
@@ -40,17 +40,8 @@ import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import Loading from '../Loading/Loading';
 import { virtualizedTableConfig } from '@utils/tableConfig';
-import {
-	IconLineDashed,
-	IconDeviceMobileOff,
-	IconDeviceMobileCheck,
-	IconDeviceMobileDown,
-	IconDeviceMobileQuestion,
-	IconDeviceMobileShare,
-	IconDeviceMobileRotated,
-	IconDeviceMobileCancel,
-} from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
+import DevicesFilter from './DevicesFilter/DevicesFilter';
 
 export default function Devices() {
 	const {
@@ -165,7 +156,7 @@ export default function Devices() {
 			formattedAgents?.map((agent) => ({
 				value: agent.id.toString(),
 				label: agent.infos,
-			})) || [],
+			})) ?? [],
 		[formattedAgents]
 	);
 
@@ -177,7 +168,7 @@ export default function Devices() {
 				label: `${model.brand} ${model.reference}${
 					model.storage ? ` ${model.storage}` : ''
 				}`,
-			})) || [],
+			})) ?? [],
 		[models]
 	);
 
@@ -206,7 +197,7 @@ export default function Devices() {
 			{
 				header: 'Statut',
 				id: 'status',
-				accessorFn: (row) => row.status || 'En stock',
+				accessorFn: (row) => row.status ?? 'En stock',
 				maxSize: 100,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -353,7 +344,7 @@ export default function Devices() {
 						}),
 				},
 				Cell: ({ row }) =>
-					dateFrFormatting(row.original.attributionDate) || null,
+					dateFrFormatting(row.original.attributionDate) ?? null,
 				Edit: ({ row }) => (
 					<DateChoice
 						defaultValue={row.original.attributionDate}
@@ -381,6 +372,7 @@ export default function Devices() {
 		[validationErrors, modelsList, formattedAgents, agentsList]
 	);
 
+	// Gestion de l'ordre des colonnes
 	const storedColumnOrder = localStorage.getItem('devicesColumnOrder');
 	const initialColumnOrder = storedColumnOrder
 		? JSON.parse(storedColumnOrder)
@@ -498,12 +490,12 @@ export default function Devices() {
 			}
 
 			const lineUsingDevice =
-				lines?.find((line) => line.deviceId === newModifiedData.id) ||
+				lines?.find((line) => line.deviceId === newModifiedData.id) ??
 				null;
 			const lineOwnerFullName =
 				formattedAgents?.find(
 					(agent) => agent.id === lineUsingDevice?.agentId
-				)?.infos || null;
+				)?.infos ?? null;
 
 			// Si le propriétaire a changé et qu'une ligne utilise l'appareil,
 			// le cache des lignes est mis à jour
@@ -546,7 +538,7 @@ export default function Devices() {
 					// Vérification si l'appareil est associé à une ligne
 					const affectedLineNumber =
 						lines?.find((line) => line.deviceId === row.original.id)
-							?.number || null;
+							?.number ?? null;
 					displayDeviceDeleteModal({
 						deviceId: row.original.id,
 						imei: row.original.imei,
@@ -562,155 +554,10 @@ export default function Devices() {
 					createFunction={() => table.setCreatingRow(true)}
 				/>
 				{/* Filtres */}
-				<Flex mr='auto' ml='xl'>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='blue'
-						variant='light'
-						onClick={() => {
-							filterParams.delete('filter');
-							setFilterParams(filterParams);
-						}}
-						aria-label='Afficher tous les appareils'
-						leftSection={<IconLineDashed size={20} />}
-					>
-						Tous les appareils
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='green'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'in-stock');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils en stock'
-						leftSection={<IconDeviceMobileRotated size={20} />}
-					>
-						Stock
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='green'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'attributed');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils attribués'
-						leftSection={<IconDeviceMobileCheck size={20} />}
-					>
-						Attribués
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='green'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'restituted');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils restitués'
-						leftSection={<IconDeviceMobileDown size={20} />}
-					>
-						Restitués
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='orange'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'awaiting-restitution');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils en attente de restitution'
-						leftSection={<IconDeviceMobileQuestion size={20} />}
-					>
-						Attente restitution
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='orange'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'lent');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils en prêt'
-						leftSection={<IconDeviceMobileShare size={20} />}
-					>
-						Prêts
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='red'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'stolen');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils volés'
-						leftSection={<IconDeviceMobileOff size={20} />}
-					>
-						Volés
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='red'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'out-of-order');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les appareils en panne'
-						leftSection={<IconDeviceMobileCancel size={20} />}
-					>
-						HS
-					</Button>
-				</Flex>
+				<DevicesFilter
+					filterParams={filterParams}
+					setFilterParams={setFilterParams}
+				/>
 				<CsvImportButton model='devices' />
 			</>
 		),
@@ -732,7 +579,7 @@ export default function Devices() {
 	});
 
 	return (
-		<div>
+		<section>
 			<h2>Liste des appareils</h2>
 
 			{anyLoading && <Loading />}
@@ -744,6 +591,6 @@ export default function Devices() {
 			)}
 
 			{!anyLoading && !anyError && <MantineReactTable table={table} />}
-		</div>
+		</section>
 	);
 }

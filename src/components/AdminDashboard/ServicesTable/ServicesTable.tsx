@@ -153,7 +153,7 @@ export default function ServicesTable() {
 			},
 		},
 		columns,
-		data: services || [],
+		data: services ?? [],
 		enableColumnFilters: false,
 		renderBottomToolbar: false,
 		onCreatingRowCancel: () => setValidationErrors({}),

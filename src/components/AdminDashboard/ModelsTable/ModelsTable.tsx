@@ -211,7 +211,7 @@ export default function ModelsTable() {
 			},
 		},
 		columns,
-		data: models || [],
+		data: models ?? [],
 		renderBottomToolbar: false,
 		mantineTableContainerProps: {
 			style: { maxHeight: '30vh' },

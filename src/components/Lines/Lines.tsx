@@ -1,5 +1,4 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-import { Button, Flex } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
@@ -38,13 +37,8 @@ import { virtualizedTableConfig } from '@utils/tableConfig';
 import Loading from '../Loading/Loading';
 import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAddButton/AgentQuickAddButton';
 import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAddButton/DeviceQuickAddButton';
-import {
-	IconAntennaBars5,
-	IconAntennaBarsOff,
-	IconLineDashed,
-	IconProgress,
-} from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
+import LinesFilter from './LinesFilter/LinesFilter';
 
 export default function Lines() {
 	const {
@@ -132,7 +126,7 @@ export default function Lines() {
 					vip: agent.vip,
 					id: agent.id,
 				};
-			}) || [],
+			}) ?? [],
 		[agents, services]
 	);
 
@@ -143,7 +137,7 @@ export default function Lines() {
 					model.storage ? ` ${model.storage}` : ''
 				}`;
 				return acc;
-			}, {}) || {},
+			}, {}) ?? {},
 		[models]
 	);
 
@@ -201,7 +195,7 @@ export default function Lines() {
 			{
 				header: 'Profil',
 				id: 'profile',
-				accessorFn: (row) => row.profile || 'VD',
+				accessorFn: (row) => row.profile ?? 'VD',
 				editVariant: 'select',
 				size: 50,
 				mantineEditSelectProps: {
@@ -222,7 +216,7 @@ export default function Lines() {
 			{
 				header: 'Statut',
 				id: 'status',
-				accessorFn: (row) => row.status || 'Active',
+				accessorFn: (row) => row.status ?? 'Active',
 				editVariant: 'select',
 				size: 50,
 				mantineEditSelectProps: {
@@ -311,12 +305,12 @@ export default function Lines() {
 				id: 'deviceModel',
 				enableEditing: false,
 				accessorFn: (row) => {
-					if (!row.deviceId) return null;
+					if (!row.deviceId) return '';
 					const modelId = devices?.find(
 						(device) => device.id === row.deviceId
 					)?.modelId;
-					if (!modelId) return null;
-					return formattedModels[modelId] ?? null;
+					if (!modelId) return '';
+					return formattedModels[modelId] ?? '';
 				},
 				minSize: 90,
 				maxSize: 120,
@@ -347,6 +341,7 @@ export default function Lines() {
 		[validationErrors, formattedAgents, agentsList, devicesList]
 	);
 
+	// Gestion de l'ordre des colonnes
 	const storedColumnOrder = localStorage.getItem('linesColumnOrder');
 	const initialColumnOrder = storedColumnOrder
 		? JSON.parse(storedColumnOrder)
@@ -407,24 +402,24 @@ export default function Lines() {
 			}
 
 			// Si un appareil a été défini lors de la création, des vérifications sont à effectuer
-			const newOwnerId = creationData.agentId || null;
+			const newOwnerId = creationData.agentId ?? null;
 			const newOwnerFullName =
 				formattedAgents?.find(
 					(agent) => agent.id === creationData.agentId
-				)?.infos || null;
-			const newDeviceId = creationData.deviceId || null;
+				)?.infos ?? null;
+			const newDeviceId = creationData.deviceId ?? null;
 			const deviceFullName =
 				devicesList?.find((device) => device.value === deviceId)
-					?.label || null;
+					?.label ?? null;
 			// Vérification de la présence de l'appareil dans les autres lignes et de son propriétaire actuel
 			const alreadyUsingDeviceLine =
-				lines?.find((line) => line.deviceId === newDeviceId) || null;
+				lines?.find((line) => line.deviceId === newDeviceId) ?? null;
 			const currentOwnerId =
-				devices?.find((device) => device.id === newDeviceId)?.agentId ||
+				devices?.find((device) => device.id === newDeviceId)?.agentId ??
 				null;
 			const currentOwnerFullName =
 				formattedAgents?.find((agent) => agent.id === currentOwnerId)
-					?.infos || null;
+					?.infos ?? null;
 
 			// Si aucun appareil ou si l'appareil appartient déjà à l'agent ou qu'aucun nouveau et ancien propriétaires ne sont définis
 			// et qu'il n'est affecté à aucune autre ligne, aucune modale
@@ -510,12 +505,12 @@ export default function Lines() {
 				}
 			}
 
-			const currentLineOwnerId = originalData.agentId || null;
-			const newLineOwnerId = updateData.agentId || null;
+			const currentLineOwnerId = originalData.agentId ?? null;
+			const newLineOwnerId = updateData.agentId ?? null;
 			const newLineOwnerFullName: string | null =
 				formattedAgents?.find((agent) => agent.id === newLineOwnerId)
-					?.infos || null;
-			const newDeviceId = updateData.deviceId || null;
+					?.infos ?? null;
+			const newDeviceId = updateData.deviceId ?? null;
 			const newDevice = newDeviceId
 				? devices?.find((device) => device.id === newDeviceId)
 				: null;
@@ -524,21 +519,21 @@ export default function Lines() {
 				formattedAgents?.find(
 					(agent) => agent.id === currentDeviceOwnerId
 				)?.infos ?? null;
-			const currentDeviceId = originalData.deviceId || null;
+			const currentDeviceId = originalData.deviceId ?? null;
 			const deviceFullName: string | null =
 				devicesList?.find(
 					(device) => Number(device.value) === newDeviceId
-				)?.label || null;
+				)?.label ?? null;
 			const alreadyUsingDeviceLine =
 				lines?.find(
 					(line) =>
 						line.deviceId === newDeviceId &&
 						line.id !== row.original.id
-				) || null;
+				) ?? null;
 			const alreadyUsingDeviceLineOwnerFullName =
 				formattedAgents?.find(
 					(agent) => agent.id === alreadyUsingDeviceLine?.agentId
-				)?.infos || null;
+				)?.infos ?? null;
 
 			// Si retrait de l'appareil
 			// ou si l'appareil et le propriétaire n'ont pas été modifiés
@@ -578,7 +573,7 @@ export default function Lines() {
 	const openDeleteConfirmModal = (row: MRT_Row<LineType>) => {
 		const currentOwnerFullName =
 			formattedAgents?.find((agent) => agent.id === row.original.agentId)
-				?.infos || null;
+				?.infos ?? null;
 		const lineNumber = row.original.number;
 		displayLineDeleteModal({
 			id: row.original.id,
@@ -597,7 +592,7 @@ export default function Lines() {
 			},
 		},
 		columns,
-		data: filteredLines || [],
+		data: filteredLines ?? [],
 		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateLine,
@@ -614,79 +609,10 @@ export default function Lines() {
 				<CreateButton
 					createFunction={() => table.setCreatingRow(true)}
 				/>
-				<Flex mr='auto' ml='xl' align='center'>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='blue'
-						variant='light'
-						onClick={() => {
-							filterParams.delete('filter');
-							setFilterParams(filterParams);
-						}}
-						aria-label='Afficher toutes les lignes'
-						leftSection={<IconLineDashed size={20} />}
-					>
-						Toutes les lignes
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='green'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'active');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les lignes actives'
-						leftSection={<IconAntennaBars5 size={20} />}
-					>
-						Actives
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='orange'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'in-progress');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les lignes en cours de création'
-						leftSection={<IconProgress size={20} />}
-					>
-						En cours
-					</Button>
-					<Button
-						mr='xl'
-						radius='lg'
-						color='red'
-						variant='light'
-						onClick={() =>
-							setFilterParams(
-								(prev) => {
-									prev.set('filter', 'resiliated');
-									return prev;
-								},
-								{ replace: true }
-							)
-						}
-						aria-label='Afficher les lignes résiliées'
-						leftSection={<IconAntennaBarsOff size={20} />}
-					>
-						Résiliées
-					</Button>
-				</Flex>
+				<LinesFilter
+					filterParams={filterParams}
+					setFilterParams={setFilterParams}
+				/>
 				<AgentQuickAddButton services={services} />
 				<DeviceQuickAddButton models={models} agents={agents} />
 				<CsvImportButton model='lines' />
@@ -710,7 +636,7 @@ export default function Lines() {
 	});
 
 	return (
-		<div>
+		<section>
 			<h2>Liste des lignes</h2>
 
 			{anyLoading && <Loading />}
@@ -722,6 +648,6 @@ export default function Lines() {
 			)}
 
 			{!anyLoading && !anyError && <MantineReactTable table={table} />}
-		</div>
+		</section>
 	);
 }
