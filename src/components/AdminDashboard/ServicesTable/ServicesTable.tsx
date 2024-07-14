@@ -84,9 +84,9 @@ export default function ServicesTable() {
 							creationData.title.toLowerCase()
 					)
 			) {
-				toast.error('Un service porte déjà ce nom');
+				toast.error('Impossible de créer ce service');
 				return setValidationErrors({
-					title: ' ',
+					title: 'Un service avec ce nom existe déjà',
 				});
 			}
 
@@ -132,9 +132,9 @@ export default function ServicesTable() {
 							row.original.id !== updateData.id
 					)
 			) {
-				toast.error('Un service porte déjà ce nom');
+				toast.error('Impossible de créer ce service');
 				return setValidationErrors({
-					title: ' ',
+					title: 'Un service avec ce nom existe déjà',
 				});
 			}
 
