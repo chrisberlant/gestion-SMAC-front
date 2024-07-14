@@ -305,12 +305,12 @@ export default function Lines() {
 				id: 'deviceModel',
 				enableEditing: false,
 				accessorFn: (row) => {
-					if (!row.deviceId) return null;
+					if (!row.deviceId) return '';
 					const modelId = devices?.find(
 						(device) => device.id === row.deviceId
 					)?.modelId;
-					if (!modelId) return null;
-					return formattedModels[modelId] ?? null;
+					if (!modelId) return '';
+					return formattedModels[modelId] ?? '';
 				},
 				minSize: 90,
 				maxSize: 120,
