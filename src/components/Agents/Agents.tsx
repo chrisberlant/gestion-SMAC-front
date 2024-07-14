@@ -425,7 +425,6 @@ export default function Agents() {
 		},
 		columns,
 		data: agents ?? [],
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateAgent,
 		onEditingRowSave: handleSaveAgent,

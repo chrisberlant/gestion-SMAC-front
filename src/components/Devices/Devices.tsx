@@ -526,7 +526,6 @@ export default function Devices() {
 		},
 		columns,
 		data: filteredDevices || [],
-		mantineTableContainerProps: { style: { maxHeight: '60vh' } },
 		onCreatingRowCancel: () => setValidationErrors({}),
 		onCreatingRowSave: handleCreateDevice,
 		onEditingRowSave: handleSaveDevice,
