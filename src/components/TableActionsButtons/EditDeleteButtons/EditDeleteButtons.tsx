@@ -5,7 +5,7 @@ import {
 	IconEditOff,
 	IconTrashOff,
 } from '@tabler/icons-react';
-import { useGetCurrentUser } from '@queries/authQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 
 interface EditDeleteButtonsProps {
 	editFunction: () => void;

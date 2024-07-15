@@ -3,11 +3,11 @@ import {
 	useDeleteModel,
 	useGetAllModels,
 	useUpdateModel,
-} from '@queries/modelQueries';
+} from '@/hooks/modelQueries';
 import {
 	modelCreationSchema,
 	modelUpdateSchema,
-} from '@validationSchemas/modelSchemas';
+} from '@/validationSchemas/modelSchemas';
 import {
 	MRT_TableOptions,
 	MantineReactTable,
@@ -15,18 +15,14 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import {
-	ModelCreationType,
-	ModelType,
-	ModelUpdateType,
-} from '@customTypes/model';
+import { ModelCreationType, ModelType, ModelUpdateType } from '@/types/model';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
 import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { toast } from 'sonner';
-import displayModelDeleteModal from '@modals/modelDeleteModal';
-import { getModifiedValues } from '@utils/index';
+import displayModelDeleteModal from '@/modals/modelDeleteModal';
+import { getModifiedValues } from '@/utils';
 import Loading from '../../Loading/Loading';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 
 export default function ModelsTable() {
 	const { data: models, isLoading, isError } = useGetAllModels();

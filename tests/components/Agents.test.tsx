@@ -1,5 +1,5 @@
 import { renderWithRouter, screen, userEvent, within } from '@tests-utils';
-import Agents from '@components/Agents/Agents';
+import Agents from '@/components/Agents/Agents';
 import { mockVirtualizedTable } from '../setup';
 
 describe('Agents', () => {

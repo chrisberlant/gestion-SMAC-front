@@ -1,12 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import fetchApi from '@utils/fetchApi';
+import fetchApi from '@/utils/fetchApi';
 import queryClient from './queryClient';
-import {
-	AgentCreationType,
-	AgentType,
-	AgentUpdateType,
-} from '@customTypes/agent';
+import { AgentCreationType, AgentType, AgentUpdateType } from '@/types/agent';
 import displayErrorOnImportModal from '@/modals/errorOnImportModal';
 import { isJson } from '../utils';
 

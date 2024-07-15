@@ -1,5 +1,5 @@
-import { useGetAllAgents, useQuickCreateAgent } from '@queries/agentQueries';
-import { agentQuickCreationSchema } from '@validationSchemas/agentSchemas';
+import { useGetAllAgents, useQuickCreateAgent } from '@/hooks/agentQueries';
+import { agentQuickCreationSchema } from '@/validationSchemas/agentSchemas';
 import {
 	Modal,
 	LoadingOverlay,
@@ -13,9 +13,9 @@ import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
 import { useEffect, useMemo, useRef } from 'react';
-import SwitchButton from '@components/SwitchButton/SwitchButton';
-import { ServiceType } from '@customTypes/service';
-import { AgentCreationType, AgentQuickCreationType } from '@customTypes/agent';
+import SwitchButton from '@/components/SwitchButton/SwitchButton';
+import { ServiceType } from '@/types/service';
+import { AgentCreationType, AgentQuickCreationType } from '@/types/agent';
 import { IconAt } from '@tabler/icons-react';
 
 interface AgentAddModalProps {

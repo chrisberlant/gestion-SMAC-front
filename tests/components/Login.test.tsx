@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@tests-utils';
-import Login from '@components/Login/Login';
+import Login from '@/components/Login/Login';
 import { apiUrl } from '../mockHandlers';
 import { http, HttpResponse } from 'msw';
 import { mockServer } from '../setup';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { serviceCreationSchema } from '@validationSchemas/serviceSchemas';
+import { serviceCreationSchema } from '@/validationSchemas/serviceSchemas';
 
 export interface ServiceType {
 	id: number;

@@ -2,8 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 import {
 	AgentsAndDevicesPerServiceType,
 	DevicesAmountPerModelType,
-} from '../types';
-import fetchApi from '@utils/fetchApi';
+} from '@/types';
+import fetchApi from '@/utils/fetchApi';
 
 // Nombre d'appareils par modèle
 export const useGetDevicesAmountPerModel = () =>

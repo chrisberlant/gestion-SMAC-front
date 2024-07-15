@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DateInput, DateValue } from '@mantine/dates';
-import { dateUsFormatting } from '@utils/index';
+import { dateUsFormatting } from '@/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 dayjs.extend(customParseFormat);

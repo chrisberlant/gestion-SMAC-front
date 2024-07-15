@@ -5,11 +5,11 @@ import {
 	useGetAllUsers,
 	useResetPassword,
 	useUpdateUser,
-} from '@queries/userQueries';
+} from '@/hooks/userQueries';
 import {
 	userCreationSchema,
 	userUpdateSchema,
-} from '@validationSchemas/userSchemas';
+} from '@/validationSchemas/userSchemas';
 import {
 	MRT_TableOptions,
 	MantineReactTable,
@@ -18,16 +18,16 @@ import {
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { UserCreationType, UserType, UserUpdateType } from '@customTypes/user';
+import { UserCreationType, UserType, UserUpdateType } from '@/types/user';
 import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
-import EditDeleteResetPasswordButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
-import { displayUserPasswordResetModal } from '@modals/userPasswordResetModal';
-import displayUserPasswordResetConfirmModal from '@modals/userPasswordResetConfirmModal';
-import displayDeleteUserModal from '@modals/userDeleteModal';
-import displayUserCreationConfirmModal from '../../../modals/userCreationConfirmModal';
-import { getModifiedValues } from '@utils/index';
-import Loading from '../../Loading/Loading';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import EditDeleteResetPasswordButtons from '@/components/TableActionsButtons/EditDeleteButtons/EditDeleteResetPasswordButtons';
+import { displayUserPasswordResetModal } from '@/modals/userPasswordResetModal';
+import displayUserPasswordResetConfirmModal from '@/modals/userPasswordResetConfirmModal';
+import displayDeleteUserModal from '@/modals/userDeleteModal';
+import displayUserCreationConfirmModal from '@/modals/userCreationConfirmModal';
+import { getModifiedValues } from '@/utils';
+import Loading from '@/components/Loading/Loading';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 
 export default function UsersTable() {
 	const { data: users, isLoading, isError } = useGetAllUsers();

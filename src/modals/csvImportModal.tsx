@@ -9,22 +9,22 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import fileImportSchema from '@validationSchemas/fileImportSchema';
+import fileImportSchema from '@/validationSchemas/fileImportSchema';
 import { IconQuestionMark, IconUpload } from '@tabler/icons-react';
 import {
 	useGetAgentsCsvTemplate,
 	useImportMultipleAgents,
-} from '@queries/agentQueries';
-import { parseCsvToJson } from '@utils/index';
+} from '@/hooks/agentQueries';
+import { parseCsvToJson } from '@/utils';
 import { UseMutateFunction } from '@tanstack/react-query';
 import {
 	useGetDevicesCsvTemplate,
 	useImportMultipleDevices,
-} from '@queries/deviceQueries';
+} from '@/hooks/deviceQueries';
 import {
 	useGetLinesCsvTemplate,
 	useImportMultipleLines,
-} from '@queries/lineQueries';
+} from '@/hooks/lineQueries';
 
 interface ImportModalProps {
 	model: string;

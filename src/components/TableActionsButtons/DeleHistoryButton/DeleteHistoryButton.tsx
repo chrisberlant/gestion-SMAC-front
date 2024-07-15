@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
-import { useGetCurrentUser } from '@queries/authQueries';
-import displayHistoryDeleteModal from '@modals/historyDeleteModal';
-import { useDeleteHistory } from '@queries/historyQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
+import displayHistoryDeleteModal from '@/modals/historyDeleteModal';
+import { useDeleteHistory } from '@/hooks/historyQueries';
 
 interface DeleteHistoryButtonProps {
 	entriesToDelete: number[];

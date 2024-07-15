@@ -15,11 +15,11 @@ import {
 	useGetCurrentUser,
 	useLogin,
 	useResetDbAndCreateDemoUser,
-} from '@queries/authQueries';
-import { userLoginSchema } from '@validationSchemas/userSchemas';
-import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
-import { UserCredentialsType } from '@customTypes/user';
+} from '@/hooks/authQueries';
+import { userLoginSchema } from '@/validationSchemas/userSchemas';
 import { useState } from 'react';
+import { UserCredentialsType } from '@/types/user';
+import { IconArrowBigLeftLinesFilled } from '@tabler/icons-react';
 import classes from './login.module.css';
 
 export default function Login() {

@@ -1,10 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-	ModelCreationType,
-	ModelType,
-	ModelUpdateType,
-} from '@customTypes/model';
-import fetchApi from '@utils/fetchApi';
+import { ModelCreationType, ModelType, ModelUpdateType } from '@/types/model';
+import fetchApi from '@/utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 

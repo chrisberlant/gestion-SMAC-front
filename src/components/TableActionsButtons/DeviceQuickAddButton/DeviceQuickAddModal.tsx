@@ -1,5 +1,5 @@
-import { useGetAllDevices, useQuickCreateDevice } from '@queries/deviceQueries';
-import { deviceQuickCreationSchema } from '@validationSchemas/deviceSchemas';
+import { useGetAllDevices, useQuickCreateDevice } from '@/hooks/deviceQueries';
+import { deviceQuickCreationSchema } from '@/validationSchemas/deviceSchemas';
 import {
 	Modal,
 	LoadingOverlay,
@@ -14,11 +14,11 @@ import { useDisclosure } from '@mantine/hooks';
 import '@mantine/dates/styles.css';
 import { toast } from 'sonner';
 import { useMemo, useRef } from 'react';
-import SwitchButton from '@components/SwitchButton/SwitchButton';
-import { ModelType } from '@customTypes/model';
-import { AgentType } from '@customTypes/agent';
-import DateChoice from '@components/DateChoice/DateChoice';
-import { DeviceCreationType } from '@customTypes/device';
+import SwitchButton from '@/components/SwitchButton/SwitchButton';
+import { ModelType } from '@/types/model';
+import { AgentType } from '@/types/agent';
+import DateChoice from '@/components/DateChoice/DateChoice';
+import { DeviceCreationType } from '@/types/device';
 
 interface DeviceAddModalProps {
 	agents?: AgentType[];

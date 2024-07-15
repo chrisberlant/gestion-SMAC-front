@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ServiceType, ServiceCreationType } from '@customTypes/service';
-import fetchApi from '@utils/fetchApi';
+import { ServiceType, ServiceCreationType } from '@/types/service';
+import fetchApi from '@/utils/fetchApi';
 import { toast } from 'sonner';
 import queryClient from './queryClient';
 

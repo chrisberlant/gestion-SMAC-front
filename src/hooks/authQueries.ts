@@ -7,28 +7,9 @@ import {
 	UserInfosWithoutRoleType,
 	UserType,
 	CurrentUserPasswordUpdateType,
-	UserCredentialsType,
-} from '@customTypes/user';
-import fetchApi from '@utils/fetchApi';
+} from '@/types/user';
+import fetchApi from '@/utils/fetchApi';
 import queryClient from './queryClient';
-
-// Utilisé uniquement pour la démo
-export const useResetDbAndCreateDemoUser = (
-	setDemoUserInfos: React.Dispatch<
-		React.SetStateAction<UserCredentialsType | null>
-	>
-) =>
-	useMutation({
-		mutationFn: async () =>
-			(await fetchApi('/demo', 'POST')) as UserCredentialsType,
-		onSuccess: (createdDemoUser) => {
-			toast.success('Initialisation de la version de démo effectuée !');
-			setDemoUserInfos({
-				email: createdDemoUser.email,
-				password: createdDemoUser.password,
-			});
-		},
-	});
 
 // Connexion
 export const useLogin = (

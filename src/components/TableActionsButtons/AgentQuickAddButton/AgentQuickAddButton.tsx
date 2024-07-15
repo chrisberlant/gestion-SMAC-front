@@ -1,5 +1,5 @@
 import { Button, Tooltip } from '@mantine/core';
-import { useGetCurrentUser } from '@queries/authQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import { useDisclosure } from '@mantine/hooks';
 import AgentQuickAddModal from './AgentQuickAddModal';
 import { ServiceType } from '@customTypes/service';

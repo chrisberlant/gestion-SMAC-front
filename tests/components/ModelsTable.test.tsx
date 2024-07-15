@@ -4,7 +4,7 @@ import {
 	screen,
 	within,
 } from '@tests-utils';
-import ModelsTable from '@components/AdminDashboard/ModelsTable/ModelsTable';
+import ModelsTable from '@/components/AdminDashboard/ModelsTable/ModelsTable';
 
 describe('Models table', () => {
 	it('should render the models table title while loading', () => {
