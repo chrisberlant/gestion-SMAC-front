@@ -1,6 +1,6 @@
 import { Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
-import { DeviceUpdateType } from '@customTypes/device';
+import { DeviceUpdateType } from '@/types/device';
 
 interface DisplayDeviceOwnerChangeModalProps {
 	updateDevice: (data: DeviceUpdateType) => void;

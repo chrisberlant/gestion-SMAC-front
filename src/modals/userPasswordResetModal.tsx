@@ -1,7 +1,7 @@
 import { modals } from '@mantine/modals';
 import { MRT_Row } from 'mantine-react-table';
 import { Text } from '@mantine/core';
-import { UserType } from '@customTypes/user';
+import { UserType } from '@/types/user';
 
 interface DisplayUserPasswordResetModalProps {
 	row: MRT_Row<UserType>;

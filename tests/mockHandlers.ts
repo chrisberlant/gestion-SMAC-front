@@ -1,10 +1,10 @@
 import { http, HttpResponse } from 'msw';
-import { DeviceType } from '@customTypes/device';
-import { AgentType } from '@customTypes/agent';
-import { ModelType } from '@customTypes/model';
-import { LineType } from '@customTypes/line';
-import { UserType } from '@customTypes/user';
-import { ServiceType } from '@customTypes/service';
+import { DeviceType } from '@/types/device';
+import { AgentType } from '@/types/agent';
+import { ModelType } from '@/types/model';
+import { LineType } from '@/types/line';
+import { UserType } from '@/types/user';
+import { ServiceType } from '@/types/service';
 
 export const apiUrl = process.env.VITE_API_URL;
 
