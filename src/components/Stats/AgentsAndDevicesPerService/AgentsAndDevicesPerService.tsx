@@ -7,9 +7,27 @@ import { useEffect, useRef } from 'react';
 import { IconDownload } from '@tabler/icons-react';
 // @ts-ignore
 import { useScreenshot } from 'use-react-screenshot';
+import { AgentsAndDevicesPerServiceWithNumberValuesType } from '@/types';
 
 export default function AgentsAndDevicesPerService() {
 	const { data, isLoading, isError } = useGetAgentsAndDevicesPerService();
+	const formattedAgentsAndDevicesPerService =
+		data?.map((element) => ({
+			...element,
+			devicesAmount: Number(element.devicesAmount),
+			agentsAmount: Number(element.agentsAmount),
+		})) ?? [];
+
+	// Découpage du tableau de données en plusieurs tableaux
+	const splitArray = (
+		arr: AgentsAndDevicesPerServiceWithNumberValuesType[],
+		size: number
+	): AgentsAndDevicesPerServiceWithNumberValuesType[][] =>
+		arr.length > size
+			? [arr.slice(0, size), ...splitArray(arr.slice(size), size)]
+			: [arr];
+	const dataArray = splitArray(formattedAgentsAndDevicesPerService, 5);
+
 	const titles = ['Service', "Nombre d'agents", "Nombre d'appareils"];
 	const ref = useRef(null);
 	const [image, takeScreenshot] = useScreenshot();
@@ -42,32 +60,44 @@ export default function AgentsAndDevicesPerService() {
 						titles={titles}
 						tableTitle="Nombre d'agents et appareils par service"
 					/>
-					<Flex direction='column' align='flex-end' w='40%' gap={20}>
-						<BarChart
-							py={8}
+					<Flex direction='column' w='40%'>
+						<Flex
+							direction='column'
 							ref={ref}
-							h={300}
-							data={data}
-							dataKey='service'
-							withBarValueLabel
-							tooltipAnimationDuration={200}
-							withLegend
-							series={[
-								{
-									name: 'agentsAmount',
-									label: 'Agents',
-									color: 'violet.6',
-								},
-								{
-									name: 'devicesAmount',
-									label: 'Appareils',
-									color: 'blue.6',
-								},
-							]}
-							tickLine='none'
-						/>
+							align='flex-end'
+							py={8}
+							gap={20}
+						>
+							{dataArray.map((item) => (
+								<BarChart
+									key={item[0].service}
+									h={300}
+									data={item}
+									dataKey='service'
+									withBarValueLabel
+									tooltipAnimationDuration={200}
+									withLegend
+									series={[
+										{
+											name: 'agentsAmount',
+											label: 'Agents',
+											color: 'violet.6',
+										},
+										{
+											name: 'devicesAmount',
+											label: 'Appareils',
+											color: 'blue.6',
+										},
+									]}
+									tickLine='none'
+								/>
+							))}
+						</Flex>
 						<Button
 							w='30%'
+							mt={14}
+							mb={30}
+							ml='60%'
 							onClick={() => takeScreenshot(ref.current)}
 							leftSection={<IconDownload size={20} />}
 						>
