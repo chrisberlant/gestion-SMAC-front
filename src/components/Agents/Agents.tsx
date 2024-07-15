@@ -6,11 +6,11 @@ import {
 	useExportAgentsToCsv,
 	useGetAllAgents,
 	useUpdateAgent,
-} from '@queries/agentQueries';
+} from '@/hooks/agentQueries';
 import {
 	agentCreationSchema,
 	agentUpdateSchema,
-} from '@validationSchemas/agentSchemas';
+} from '@/validationSchemas/agentSchemas';
 import {
 	MRT_TableOptions,
 	MantineReactTable,
@@ -18,23 +18,19 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useRef, useState } from 'react';
-import {
-	AgentCreationType,
-	AgentType,
-	AgentUpdateType,
-} from '@customTypes/agent';
-import { useGetAllServices } from '@queries/serviceQueries';
+import { AgentCreationType, AgentType, AgentUpdateType } from '@/types/agent';
+import { useGetAllServices } from '@/hooks/serviceQueries';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import { toast } from 'sonner';
-import { getModifiedValues, sendEmail } from '@utils/index';
+import { getModifiedValues, sendEmail } from '@/utils';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
-import displayAgentDeleteModal from '@modals/agentDeleteModal';
+import displayAgentDeleteModal from '@/modals/agentDeleteModal';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
-import { useGetAllDevices } from '@queries/deviceQueries';
+import { useGetAllDevices } from '@/hooks/deviceQueries';
 import Loading from '../Loading/Loading';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 
 export default function Agents() {
 	const {

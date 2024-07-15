@@ -1,8 +1,8 @@
-import { useGetDevicesAmountPerModel } from '@queries/statsQueries';
+import { useGetDevicesAmountPerModel } from '@/hooks/statsQueries';
 import StatsTable from '../StatsTable/StatsTable';
 import Loading from '../../Loading/Loading';
 import { useEffect, useRef } from 'react';
-import { Flex, Button, List } from '@mantine/core';
+import { Flex, Button, List, Text } from '@mantine/core';
 import { IconCircleFilled, IconDownload } from '@tabler/icons-react';
 import { DonutChart } from '@mantine/charts';
 // @ts-ignore
@@ -43,49 +43,53 @@ export default function DevicesAmountPerModel() {
 			)}
 
 			{data && formattedDevicesAmountPerModel && (
-				<Flex justify='space-around' mb={10}>
-					<StatsTable
-						data={data}
-						titles={titles}
-						tableTitle="Nombre d'appareils par modèle"
-					/>
-					<Flex direction='column' align='center' w='40%'>
-						<Flex ref={ref} pr={8} pt={8}>
-							<DonutChart
-								size={200}
-								thickness={24}
-								paddingAngle={10}
-								tooltipDataSource='segment'
-								withLabels
-								withLabelsLine
-								data={formattedDevicesAmountPerModel}
-							/>
-							<List center size='sm' spacing='xs'>
-								{formattedDevicesAmountPerModel.map((item) => (
-									<List.Item
-										key={item.name}
-										icon={
-											<IconCircleFilled
-												fill={item.color}
-												size={15}
-											/>
-										}
-									>
-										{item.name}
-									</List.Item>
-								))}
-							</List>
+				<>
+					<Text size='xl' component='h3' mb={20}>
+						Nombre d'appareils par modèle
+					</Text>
+					<Flex justify='space-around' mb={10}>
+						<StatsTable data={data} titles={titles} />
+						<Flex direction='column' align='center' w='40%'>
+							<Flex ref={ref} pr={8} pt={8}>
+								<DonutChart
+									size={200}
+									thickness={24}
+									paddingAngle={10}
+									tooltipDataSource='segment'
+									withLabels
+									withLabelsLine
+									data={formattedDevicesAmountPerModel}
+								/>
+								<List center size='sm' spacing='xs'>
+									{formattedDevicesAmountPerModel.map(
+										(item) =>
+											item.value ? (
+												<List.Item
+													key={item.name}
+													icon={
+														<IconCircleFilled
+															fill={item.color}
+															size={15}
+														/>
+													}
+												>
+													{item.name}
+												</List.Item>
+											) : null
+									)}
+								</List>
+							</Flex>
+							<Button
+								ml='auto'
+								w='30%'
+								onClick={() => takeScreenshot(ref.current)}
+								leftSection={<IconDownload size={20} />}
+							>
+								Exporter
+							</Button>
 						</Flex>
-						<Button
-							ml='auto'
-							w='30%'
-							onClick={() => takeScreenshot(ref.current)}
-							leftSection={<IconDownload size={20} />}
-						>
-							Exporter
-						</Button>
 					</Flex>
-				</Flex>
+				</>
 			)}
 		</>
 	);

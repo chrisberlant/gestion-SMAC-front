@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import Header from '../Header/Header';
 import PageTopScroller from '../PageTopScroller/PageTopScroller';
-import { useGetCurrentUser } from '@queries/authQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import { Suspense, useState } from 'react';
 import Loading from '../Loading/Loading';
 import { Slider } from '@mantine/core';

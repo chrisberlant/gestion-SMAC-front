@@ -9,8 +9,8 @@ import {
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { Navigate } from 'react-router-dom';
-import { useGetCurrentUser, useLogin } from '@queries/authQueries';
-import { userLoginSchema } from '@validationSchemas/userSchemas';
+import { useGetCurrentUser, useLogin } from '@/hooks/authQueries';
+import { userLoginSchema } from '@/validationSchemas/userSchemas';
 import classes from './login.module.css';
 
 export default function Login() {

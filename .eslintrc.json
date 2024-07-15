@@ -17,16 +17,7 @@
 		},
 		"import/resolver": {
 			"alias": {
-				"map": [
-					["@assets", "./src/assets"],
-					["@utils", "./src/utils"],
-					["@validationSchemas", "./src/validationSchemas"],
-					["@customTypes", "./src/types"],
-					["@queries", "./src/queries"],
-					["@modals", "./src/modals"],
-					["@components", "./src/components"],
-					["@tests-utils", "./tests/utils/index.ts"]
-				]
+				"map": [["@tests-utils", "./tests/utils/index.ts"]]
 			},
 			"typescript": {
 				"alwaysTryTypes": true

@@ -2,7 +2,7 @@ import { Flex } from '@mantine/core';
 import {
 	lineCreationSchema,
 	lineUpdateSchema,
-} from '@validationSchemas/lineSchemas';
+} from '@/validationSchemas/lineSchemas';
 import {
 	MRT_Row,
 	MRT_TableOptions,
@@ -12,28 +12,28 @@ import {
 	MRT_TableInstance,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { LineCreationType, LineType, LineUpdateType } from '@customTypes/line';
+import { LineCreationType, LineType, LineUpdateType } from '@/types/line';
 import {
 	useCreateLine,
 	useDeleteLine,
 	useExportLinesToCsv,
 	useGetAllLines,
 	useUpdateLine,
-} from '@queries/lineQueries';
-import { useGetAllAgents } from '@queries/agentQueries';
-import { useGetAllServices } from '@queries/serviceQueries';
-import { useGetAllDevices } from '@queries/deviceQueries';
-import { useGetAllModels } from '@queries/modelQueries';
+} from '@/hooks/lineQueries';
+import { useGetAllAgents } from '@/hooks/agentQueries';
+import { useGetAllServices } from '@/hooks/serviceQueries';
+import { useGetAllDevices } from '@/hooks/deviceQueries';
+import { useGetAllModels } from '@/hooks/modelQueries';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import displayLineCreationModal from '@modals/lineCreationModals';
-import displayLineUpdateModal from '@modals/lineUpdateModals';
-import displayLineDeleteModal from '@modals/lineDeleteModal';
+import displayLineCreationModal from '@/modals/lineCreationModals';
+import displayLineUpdateModal from '@/modals/lineUpdateModals';
+import displayLineDeleteModal from '@/modals/lineDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
-import { getModifiedValues } from '@utils/index';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import { getModifiedValues } from '@/utils';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 import Loading from '../Loading/Loading';
 import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAddButton/AgentQuickAddButton';
 import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAddButton/DeviceQuickAddButton';

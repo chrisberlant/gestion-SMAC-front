@@ -4,13 +4,13 @@ import {
 	useMantineReactTable,
 } from 'mantine-react-table';
 import { useMemo } from 'react';
-import { useGetAllHistory } from '@queries/historyQueries';
-import { HistoryType } from '@customTypes/history';
-import { useGetAllUsers } from '@queries/userQueries';
-import { dateTimeToStringFormatting } from '@utils/index';
+import { useGetAllHistory } from '@/hooks/historyQueries';
+import { HistoryType } from '@/types/history';
+import { useGetAllUsers } from '@/hooks/userQueries';
+import { dateTimeToStringFormatting } from '@/utils';
 import DeleteHistoryButton from '../TableActionsButtons/DeleHistoryButton/DeleteHistoryButton';
 import Loading from '../Loading/Loading';
-import { paginatedTableConfig } from '@utils/tableConfig';
+import { paginatedTableConfig } from '@/utils/tableConfig';
 
 export default function History() {
 	const {

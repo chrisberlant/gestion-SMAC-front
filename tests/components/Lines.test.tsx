@@ -4,7 +4,7 @@ import {
 	renderWithRouter,
 	renderWithRouterAndVirtualization,
 } from '@tests-utils';
-import Lines from '@components/Lines/Lines';
+import Lines from '@/components/Lines/Lines';
 
 describe('Lines', () => {
 	it('should render the lines table title while loading', () => {

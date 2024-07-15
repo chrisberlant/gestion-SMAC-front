@@ -1,6 +1,6 @@
 import { render, screen, userEvent } from '@tests-utils';
 import { describe, it } from 'vitest';
-import ThemeToggler from '@components/ThemeToggler/ThemeToggler';
+import ThemeToggler from '@/components/ThemeToggler/ThemeToggler';
 
 describe('Theme toggler', () => {
 	it('should render the theme toggler with a button to switch to dark theme', () => {

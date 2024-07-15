@@ -19,8 +19,8 @@ import {
 	IconUserCircle,
 } from '@tabler/icons-react';
 import { NavLink } from 'react-router-dom';
-import FrenchFlag from '@assets/french-flag.svg';
-import { useGetCurrentUser } from '@queries/authQueries';
+import FrenchFlag from '@/assets/french-flag.svg';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import AccountSettings from '../AccountSettings/AccountSettings';
 import ThemeToggler from '../ThemeToggler/ThemeToggler';
 import classes from './header.module.css';

@@ -1,5 +1,5 @@
 import { Button, Tooltip } from '@mantine/core';
-import { useGetCurrentUser } from '@queries/authQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import { useDisclosure } from '@mantine/hooks';
 import { ModelType } from '@customTypes/model';
 import DeviceQuickAddModal from './DeviceQuickAddModal';

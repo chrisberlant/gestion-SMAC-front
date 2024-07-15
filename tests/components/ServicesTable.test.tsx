@@ -4,7 +4,7 @@ import {
 	screen,
 	within,
 } from '@tests-utils';
-import ServicesTable from '@components/AdminDashboard/ServicesTable/ServicesTable';
+import ServicesTable from '@/components/AdminDashboard/ServicesTable/ServicesTable';
 
 describe('Devices table', () => {
 	it('should render the services table title while loading', () => {

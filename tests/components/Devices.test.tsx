@@ -5,7 +5,7 @@ import {
 	within,
 	renderWithRouterAndVirtualization,
 } from '@tests-utils';
-import Devices from '@components/Devices/Devices';
+import Devices from '@/components/Devices/Devices';
 
 describe('Devices', () => {
 	it('should render the devices table title while loading', () => {

@@ -1,7 +1,7 @@
 import { Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import ImportModal from '@modals/csvImportModal';
-import { useGetCurrentUser } from '@queries/authQueries';
+import ImportModal from '@/modals/csvImportModal';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import { IconFileUpload } from '@tabler/icons-react';
 
 // Bouton permettant d'ouvrir la modale d'import de fichier, model permet de déterminer le type de modale à afficher

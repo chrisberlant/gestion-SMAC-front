@@ -3,12 +3,10 @@ import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { StatsType } from '../../../types';
 import Th from './TableHeader/TableHeader';
-import './statsTable.css';
 
 interface StatsTableProps {
 	data: StatsType[] | [];
 	titles: string[];
-	tableTitle: string;
 }
 
 // Filtrer en fonction du champ de recherche
@@ -50,11 +48,7 @@ const sortData = (
 	);
 };
 
-export default function StatsTable({
-	data,
-	titles,
-	tableTitle,
-}: StatsTableProps) {
+export default function StatsTable({ data, titles }: StatsTableProps) {
 	const [search, setSearch] = useState('');
 	const [sortedData, setSortedData] = useState(data);
 	const [sortBy, setSortBy] = useState<string | null>(null);
@@ -115,7 +109,6 @@ export default function StatsTable({
 						value={search}
 						onChange={handleSearchChange}
 					/>
-					<span className='stats-table-title'>{tableTitle}</span>
 				</div>
 				<Table
 					horizontalSpacing='md'

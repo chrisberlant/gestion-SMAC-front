@@ -5,8 +5,8 @@ import {
 	UserInfosAndPasswordType,
 	UserType,
 	UserUpdateType,
-} from '@customTypes/user';
-import fetchApi from '@utils/fetchApi';
+} from '@/types/user';
+import fetchApi from '@/utils/fetchApi';
 import queryClient from './queryClient';
 
 // Récupérer tous les utilisateurs

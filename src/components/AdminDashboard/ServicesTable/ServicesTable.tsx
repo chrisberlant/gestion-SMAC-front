@@ -3,11 +3,11 @@ import {
 	useDeleteService,
 	useGetAllServices,
 	useUpdateService,
-} from '@queries/serviceQueries';
+} from '@/hooks/serviceQueries';
 import {
 	serviceCreationSchema,
 	serviceUpdateSchema,
-} from '@validationSchemas/serviceSchemas';
+} from '@/validationSchemas/serviceSchemas';
 import {
 	MRT_TableOptions,
 	MantineReactTable,
@@ -15,13 +15,13 @@ import {
 	type MRT_ColumnDef,
 } from 'mantine-react-table';
 import { useMemo, useState } from 'react';
-import { ServiceCreationType, ServiceType } from '@customTypes/service';
-import EditDeleteButtons from '../../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
-import CreateButton from '../../TableActionsButtons/CreateButton/CreateButton';
+import { ServiceCreationType, ServiceType } from '@/types/service';
+import EditDeleteButtons from '@/components/TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import CreateButton from '@/components/TableActionsButtons/CreateButton/CreateButton';
 import { toast } from 'sonner';
-import displayServiceDeleteModal from '@modals/serviceDeleteModal';
-import Loading from '../../Loading/Loading';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import displayServiceDeleteModal from '@/modals/serviceDeleteModal';
+import Loading from '@/components/Loading/Loading';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 
 export default function ServicesTable() {
 	const { data: services, isLoading, isError } = useGetAllServices();

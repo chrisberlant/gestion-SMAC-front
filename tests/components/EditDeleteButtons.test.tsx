@@ -1,6 +1,6 @@
 import { render, screen } from '@tests-utils';
 import { mockServer } from '../setup';
-import EditDeleteButtons from '@components/TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
+import EditDeleteButtons from '@/components/TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import { expect } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { apiUrl } from '../mockHandlers';

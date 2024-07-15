@@ -3,7 +3,7 @@ import {
 	IconHistory,
 	IconSettings,
 	IconUsersGroup,
-	IconDevicesPlus,
+	IconDevices,
 } from '@tabler/icons-react';
 import { NavLink } from 'react-router-dom';
 import { Group, Text } from '@mantine/core';
@@ -17,7 +17,7 @@ const dashboardSections = [
 		path: '/admin-dashboard/services',
 	},
 	{
-		icon: IconDevicesPlus,
+		icon: IconDevices,
 		label: 'Modèles',
 		path: '/admin-dashboard/models',
 	},

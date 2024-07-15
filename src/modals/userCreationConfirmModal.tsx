@@ -9,8 +9,8 @@ import {
 import { modals } from '@mantine/modals';
 import { IconCopy, IconMail } from '@tabler/icons-react';
 import { toast } from 'sonner';
-import { UserInfosAndPasswordType } from '@customTypes/user';
-import { sendEmail } from '@utils/index';
+import { UserInfosAndPasswordType } from '@/types/user';
+import { sendEmail } from '@/utils';
 
 // Modale pour indiquer le succès de la créatioon et permettre l'affichage et l'envoi du nouveau mot de passe
 export const displayUserCreationConfirmModal = (

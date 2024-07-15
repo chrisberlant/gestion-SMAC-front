@@ -11,35 +11,35 @@ import {
 	DeviceCreationType,
 	DeviceType,
 	DeviceUpdateType,
-} from '@customTypes/device';
-import { useGetAllAgents } from '@queries/agentQueries';
+} from '@/types/device';
+import { useGetAllAgents } from '@/hooks/agentQueries';
 import {
 	useCreateDevice,
 	useDeleteDevice,
 	useExportDevicesToCsv,
 	useGetAllDevices,
 	useUpdateDevice,
-} from '@queries/deviceQueries';
-import { useGetAllModels } from '@queries/modelQueries';
-import { useGetAllServices } from '@queries/serviceQueries';
-import { useGetAllLines } from '@queries/lineQueries';
+} from '@/hooks/deviceQueries';
+import { useGetAllModels } from '@/hooks/modelQueries';
+import { useGetAllServices } from '@/hooks/serviceQueries';
+import { useGetAllLines } from '@/hooks/lineQueries';
 import {
 	deviceCreationSchema,
 	deviceUpdateSchema,
-} from '@validationSchemas/deviceSchemas';
+} from '@/validationSchemas/deviceSchemas';
 import '@mantine/dates/styles.css';
-import { dateFrFormatting, getModifiedValues } from '@utils/index';
+import { dateFrFormatting, getModifiedValues } from '@/utils';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
 import EditDeleteButtons from '../TableActionsButtons/EditDeleteButtons/EditDeleteButtons';
 import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
-import displayDeviceOwnerChangeModal from '@modals/deviceOwnerChangeModal';
-import displayDeviceDeleteModal from '@modals/deviceDeleteModal';
+import displayDeviceOwnerChangeModal from '@/modals/deviceOwnerChangeModal';
+import displayDeviceDeleteModal from '@/modals/deviceDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
 import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import Loading from '../Loading/Loading';
-import { virtualizedTableConfig } from '@utils/tableConfig';
+import { virtualizedTableConfig } from '@/utils/tableConfig';
 import { useSearchParams } from 'react-router-dom';
 import DevicesFilter from './DevicesFilter/DevicesFilter';
 

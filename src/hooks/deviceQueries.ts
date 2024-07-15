@@ -4,11 +4,11 @@ import {
 	DeviceType,
 	DeviceCreationType,
 	DeviceUpdateType,
-} from '@customTypes/device';
-import fetchApi from '@utils/fetchApi';
+} from '@/types/device';
+import fetchApi from '@/utils/fetchApi';
 import queryClient from './queryClient';
-import { LineType } from '@customTypes/line';
-import displayErrorOnImportModal from '@modals/errorOnImportModal';
+import { LineType } from '@/types/line';
+import displayErrorOnImportModal from '@/modals/errorOnImportModal';
 import { isJson } from '../utils';
 
 export const useGetAllDevices = () =>

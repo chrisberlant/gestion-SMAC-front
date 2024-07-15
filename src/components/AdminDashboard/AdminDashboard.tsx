@@ -1,6 +1,6 @@
 import { Suspense, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useGetCurrentUser } from '@queries/authQueries';
+import { useGetCurrentUser } from '@/hooks/authQueries';
 import { Flex } from '@mantine/core';
 import AdminNavBar from './AdminNavBar/AdminNavBar';
 import Loading from '../Loading/Loading';

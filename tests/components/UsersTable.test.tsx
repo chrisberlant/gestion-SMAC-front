@@ -4,7 +4,7 @@ import {
 	screen,
 	within,
 } from '@tests-utils';
-import UsersTable from '@components/AdminDashboard/UsersTable/UsersTable';
+import UsersTable from '@/components/AdminDashboard/UsersTable/UsersTable';
 import { expect } from 'vitest';
 
 describe('Users table', () => {

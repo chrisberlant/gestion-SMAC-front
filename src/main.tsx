@@ -9,7 +9,7 @@ import {
 	virtualColor,
 } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-import queryClient from '@queries/queryClient';
+import queryClient from '@/hooks/queryClient';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { DatesProvider } from '@mantine/dates';
 import { Toaster } from 'sonner';
