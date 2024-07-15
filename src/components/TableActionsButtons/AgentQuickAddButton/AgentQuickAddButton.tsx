@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@mantine/core';
 import { useGetCurrentUser } from '@/hooks/authQueries';
 import { useDisclosure } from '@mantine/hooks';
 import AgentQuickAddModal from './AgentQuickAddModal';
-import { ServiceType } from '@customTypes/service';
+import { ServiceType } from '@/types/service';
 import { IconUserPlus } from '@tabler/icons-react';
 
 interface AgentQuickAddButtonProps {

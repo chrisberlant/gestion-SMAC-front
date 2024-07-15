@@ -1,9 +1,9 @@
 import { Button, Tooltip } from '@mantine/core';
 import { useGetCurrentUser } from '@/hooks/authQueries';
 import { useDisclosure } from '@mantine/hooks';
-import { ModelType } from '@customTypes/model';
+import { ModelType } from '@/types/model';
 import DeviceQuickAddModal from './DeviceQuickAddModal';
-import { AgentType } from '@customTypes/agent';
+import { AgentType } from '@/types/agent';
 import { IconDeviceMobilePlus } from '@tabler/icons-react';
 
 interface DeviceQuickAddButtonProps {
