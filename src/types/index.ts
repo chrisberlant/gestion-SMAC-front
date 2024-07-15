@@ -3,6 +3,11 @@ export type AgentsAndDevicesPerServiceType = {
 	agentsAmount: string;
 	devicesAmount: string;
 };
+export type AgentsAndDevicesPerServiceWithNumberValuesType = {
+	service: string;
+	devicesAmount: number;
+	agentsAmount: number;
+};
 
 export type DevicesAmountPerModelType = {
 	brand: string;
