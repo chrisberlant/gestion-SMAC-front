@@ -1,15 +1,18 @@
 import { useGetDevicesAmountPerModel } from '@/hooks/statsQueries';
 import StatsTable from '../StatsTable/StatsTable';
 import Loading from '../../Loading/Loading';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Flex, Button, List, Text } from '@mantine/core';
 import { IconCircleFilled, IconDownload } from '@tabler/icons-react';
 import { DonutChart } from '@mantine/charts';
 // @ts-ignore
 import { useScreenshot } from 'use-react-screenshot';
+import useExportToImage from '../../../hooks/useExportToImage';
 
 export default function DevicesAmountPerModel() {
 	const { data, isLoading, isError } = useGetDevicesAmountPerModel();
+	const takeScreenshot = useExportToImage();
+	const ref = useRef<HTMLDivElement>(null);
 	const formattedDevicesAmountPerModel = data?.map((model) => ({
 		name: `${model.brand} ${model.reference}${
 			model.storage ? ` ${model.storage}` : ''
@@ -18,18 +21,6 @@ export default function DevicesAmountPerModel() {
 		color: '#' + Math.floor(Math.random() * 16777215).toString(16),
 	}));
 	const titles = ['Marque', 'Modèle', 'Stockage', "Nombre d'appareils"];
-	const ref = useRef(null);
-	const [image, takeScreenshot] = useScreenshot();
-	const downloadScreenshot = () => {
-		const link = document.createElement('a');
-		link.href = image;
-		link.download = `appareils_par_modèle_export_${Date.now()}.png`;
-		link.click();
-	};
-
-	useEffect(() => {
-		if (image) downloadScreenshot();
-	}, [image]);
 
 	return (
 		<>

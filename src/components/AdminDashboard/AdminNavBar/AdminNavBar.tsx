@@ -31,8 +31,8 @@ const dashboardSections = [
 const dashboardTabs = dashboardSections.map((item) => (
 	<NavLink to={item.path} key={item.label}>
 		{({ isActive }) => (
-			<div className={classes.link} data-active={isActive || undefined}>
-				<item.icon className={classes.linkIcon} stroke={1.5} />
+			<div className='navLink' data-active={isActive || undefined}>
+				<item.icon className='linkIcon' stroke={1.5} />
 				<span>{item.label}</span>
 			</div>
 		)}

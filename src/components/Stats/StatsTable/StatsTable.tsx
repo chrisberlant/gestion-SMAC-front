@@ -1,4 +1,4 @@
-import { ScrollArea, Table, TextInput, keys } from '@mantine/core';
+import { Box, ScrollArea, Table, TextInput, keys } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { StatsType } from '../../../types';
@@ -98,7 +98,7 @@ export default function StatsTable({ data, titles }: StatsTableProps) {
 	));
 
 	return (
-		<div className='stats-table'>
+		<Box h='fit-content' miw='30%'>
 			<ScrollArea>
 				<div className='horizontal-align-div'>
 					<TextInput
@@ -122,6 +122,6 @@ export default function StatsTable({ data, titles }: StatsTableProps) {
 					<Table.Tbody>{rows}</Table.Tbody>
 				</Table>
 			</ScrollArea>
-		</div>
+		</Box>
 	);
 }
