@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
+import { toPng } from 'html-to-image';
 import Papa from 'papaparse';
+import { RefObject } from 'react';
 
 // Envoi d'email
 export const sendEmail = ({
@@ -68,4 +70,20 @@ export const isJson = (string: string) => {
 	} catch (error) {
 		return false;
 	}
+};
+
+// Export d'images au format PNG
+export const exportToImage = (title: string, ref: RefObject<HTMLElement>) => {
+	if (ref.current === null) return;
+
+	toPng(ref.current, { cacheBust: false })
+		.then((dataUrl) => {
+			const link = document.createElement('a');
+			link.download = `${title}_${Date.now()}.png`;
+			link.href = dataUrl;
+			link.click();
+		})
+		.catch((err) => {
+			console.log(err);
+		});
 };

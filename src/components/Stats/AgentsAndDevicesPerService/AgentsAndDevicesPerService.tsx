@@ -5,16 +5,15 @@ import { BarChart } from '@mantine/charts';
 import { Button, Flex } from '@mantine/core';
 import { useRef } from 'react';
 import { IconDownload } from '@tabler/icons-react';
-// @ts-ignore
-import { useScreenshot } from 'use-react-screenshot';
 import { AgentsAndDevicesPerServiceWithNumberValuesType } from '@/types';
 import { Text } from '@mantine/core';
-import useExportToImage from '@/hooks/useExportToImage';
+import { exportToImage } from '@/utils';
 
 export default function AgentsAndDevicesPerService() {
 	const { data, isLoading, isError } = useGetAgentsAndDevicesPerService();
-	const takeScreenshot = useExportToImage();
 	const ref = useRef(null);
+	const takeScreenshot = () =>
+		exportToImage('Agents_appareils_par_service_export', ref);
 	const filteredData = data?.filter(
 		// Formatage des données, retrait des services n'ayant aucun agent ni appareil
 		(element) =>
@@ -97,7 +96,7 @@ export default function AgentsAndDevicesPerService() {
 								mt={14}
 								mb={30}
 								ml='70%'
-								onClick={() => takeScreenshot(ref.current)}
+								onClick={takeScreenshot}
 								leftSection={<IconDownload size={20} />}
 							>
 								Exporter

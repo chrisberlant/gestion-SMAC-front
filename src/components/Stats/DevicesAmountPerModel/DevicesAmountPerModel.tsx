@@ -1,25 +1,29 @@
 import { useGetDevicesAmountPerModel } from '@/hooks/statsQueries';
 import StatsTable from '../StatsTable/StatsTable';
-import Loading from '../../Loading/Loading';
+import Loading from '@/components/Loading/Loading';
 import { useRef } from 'react';
 import { Flex, Button, List, Text } from '@mantine/core';
 import { IconCircleFilled, IconDownload } from '@tabler/icons-react';
 import { DonutChart } from '@mantine/charts';
-// @ts-ignore
-import { useScreenshot } from 'use-react-screenshot';
-import useExportToImage from '../../../hooks/useExportToImage';
+import { exportToImage } from '@/utils';
 
 export default function DevicesAmountPerModel() {
 	const { data, isLoading, isError } = useGetDevicesAmountPerModel();
-	const takeScreenshot = useExportToImage();
 	const ref = useRef<HTMLDivElement>(null);
-	const formattedDevicesAmountPerModel = data?.map((model) => ({
+	const takeScreenshot = () =>
+		exportToImage('Appareils_par_modèle_export', ref);
+	const filteredData = data?.filter(
+		// Formatage des données, retrait des services n'ayant aucun agent ni appareil
+		(element) => element.devicesAmount !== '0'
+	);
+	const formattedDevicesAmountPerModel = filteredData?.map((model) => ({
 		name: `${model.brand} ${model.reference}${
 			model.storage ? ` ${model.storage}` : ''
 		}`,
 		value: Number(model.devicesAmount),
 		color: '#' + Math.floor(Math.random() * 16777215).toString(16),
 	}));
+
 	const titles = ['Marque', 'Modèle', 'Stockage', "Nombre d'appareils"];
 
 	return (
@@ -33,13 +37,13 @@ export default function DevicesAmountPerModel() {
 				</div>
 			)}
 
-			{data && formattedDevicesAmountPerModel && (
+			{data && filteredData && formattedDevicesAmountPerModel && (
 				<>
 					<Text size='xl' component='h3' mb={20}>
 						Nombre d'appareils par modèle
 					</Text>
 					<Flex justify='space-around' mb={10}>
-						<StatsTable data={data} titles={titles} />
+						<StatsTable data={filteredData} titles={titles} />
 						<Flex direction='column' align='center' w='40%'>
 							<Flex ref={ref} pr={8} pt={8}>
 								<DonutChart
@@ -73,7 +77,7 @@ export default function DevicesAmountPerModel() {
 							<Button
 								ml='auto'
 								w='30%'
-								onClick={() => takeScreenshot(ref.current)}
+								onClick={takeScreenshot}
 								leftSection={<IconDownload size={20} />}
 							>
 								Exporter
