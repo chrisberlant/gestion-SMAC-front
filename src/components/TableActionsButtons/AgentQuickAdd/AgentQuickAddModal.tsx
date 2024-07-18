@@ -166,6 +166,7 @@ export default function AgentQuickAddModal({
 					className={classes.checkbox}
 					label='VIP'
 					{...form.getInputProps('vip', { type: 'checkbox' })}
+					w={80}
 				/>
 				<Button fullWidth mt='lg' type='submit'>
 					Valider

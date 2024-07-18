@@ -159,8 +159,8 @@ export default function DeviceQuickAddModal({
 				<Checkbox
 					className={classes.checkbox}
 					label='Appareil neuf'
-					w={150}
 					{...form.getInputProps('isNew', { type: 'checkbox' })}
+					w={150}
 					mb='xs'
 				/>
 				<Select
