@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DateInput, DateValue } from '@mantine/dates';
 import { dateUsFormatting } from '@/utils';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
 
 interface DateChoiceProps {
 	defaultValue?: string;
@@ -15,12 +12,7 @@ export default function DateChoice({ defaultValue, dateRef }: DateChoiceProps) {
 	const [value, setValue] = useState<DateValue | null>(
 		defaultValue ? new Date(defaultValue) : null
 	);
-
-	useEffect(() => {
-		// Valeur utilisée au format string dans la ref du composant parent
-		if (!value) dateRef.current = null;
-		else dateRef.current = dateUsFormatting(value.toISOString());
-	}, [dateRef, value]);
+	dateRef.current = value ? dateUsFormatting(value.toISOString()) : null;
 
 	return (
 		<DateInput
@@ -28,7 +20,7 @@ export default function DateChoice({ defaultValue, dateRef }: DateChoiceProps) {
 			clearable
 			placeholder='Date'
 			value={value}
-			onChange={(e) => setValue(e)}
+			onChange={setValue}
 		/>
 	);
 }
