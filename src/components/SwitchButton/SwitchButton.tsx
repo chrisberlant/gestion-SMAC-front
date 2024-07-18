@@ -1,6 +1,6 @@
 import { Switch } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface SwitchButtonProps {
 	defaultValue: boolean;
