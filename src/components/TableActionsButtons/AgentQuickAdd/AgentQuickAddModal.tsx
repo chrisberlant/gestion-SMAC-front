@@ -7,16 +7,16 @@ import {
 	TextInput,
 	Select,
 	Flex,
-	InputLabel,
+	Checkbox,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { toast } from 'sonner';
-import { useEffect, useMemo, useRef } from 'react';
-import SwitchButton from '@/components/SwitchButton/SwitchButton';
+import { useEffect, useMemo } from 'react';
 import { ServiceType } from '@/types/service';
 import { AgentCreationType, AgentQuickCreationType } from '@/types/agent';
 import { IconAt } from '@tabler/icons-react';
+import classes from '../tableActionsButtons.module.css';
 
 interface AgentAddModalProps {
 	services?: ServiceType[];
@@ -45,7 +45,6 @@ export default function AgentQuickAddModal({
 		toggleOverlay,
 		closeModal()
 	);
-	const vipRef = useRef<boolean>(false);
 
 	const form = useForm({
 		initialValues: {
@@ -61,7 +60,7 @@ export default function AgentQuickAddModal({
 				lastName: values.lastName,
 				firstName: values.firstName,
 				serviceId: Number(values.serviceId),
-				vip: vipRef.current,
+				vip: values.vip,
 				email: values.emailDomain
 					? `${values.email}@${values.emailDomain}`
 					: values.email,
@@ -163,16 +162,11 @@ export default function AgentQuickAddModal({
 					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
-				<Flex gap={5} align='center'>
-					<InputLabel>VIP</InputLabel>
-					<SwitchButton
-						size='lg'
-						onLabel='Oui'
-						offLabel='Non'
-						defaultValue={false}
-						valueRef={vipRef}
-					/>
-				</Flex>
+				<Checkbox
+					className={classes.checkbox}
+					label='VIP'
+					{...form.getInputProps('vip', { type: 'checkbox' })}
+				/>
 				<Button fullWidth mt='lg' type='submit'>
 					Valider
 				</Button>

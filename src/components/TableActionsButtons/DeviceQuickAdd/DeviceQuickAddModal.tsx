@@ -8,17 +8,18 @@ import {
 	Select,
 	Flex,
 	InputLabel,
+	Checkbox,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import '@mantine/dates/styles.css';
 import { toast } from 'sonner';
 import { useMemo, useRef } from 'react';
-import SwitchButton from '@/components/SwitchButton/SwitchButton';
 import { ModelType } from '@/types/model';
 import { AgentType } from '@/types/agent';
 import DateChoice from '@/components/DateChoice/DateChoice';
 import { DeviceCreationType } from '@/types/device';
+import '@mantine/dates/styles.css';
+import classes from '../tableActionsButtons.module.css';
 
 interface DeviceAddModalProps {
 	agents?: AgentType[];
@@ -51,7 +52,7 @@ export default function DeviceQuickAddModal({
 				...values,
 				modelId: Number(values.modelId),
 				agentId: values.agentId ? Number(values.agentId) : null,
-				isNew: isNewRef.current,
+				isNew: values.isNew,
 				preparationDate: preparationDateRef.current,
 				attributionDate: attributionDateRef.current,
 			} as DeviceCreationType),
@@ -68,7 +69,6 @@ export default function DeviceQuickAddModal({
 	};
 	const preparationDateRef = useRef<string | null>(null);
 	const attributionDateRef = useRef<string | null>(null);
-	const isNewRef = useRef<boolean>(true);
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	const { data: devices } = useGetAllDevices();
 	const { mutate: createDevice } = useQuickCreateDevice(
@@ -156,16 +156,13 @@ export default function DeviceQuickAddModal({
 					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
-				<Flex gap={10} align='center' mb='xs'>
-					<InputLabel>État</InputLabel>
-					<SwitchButton
-						size='lg'
-						onLabel='Neuf'
-						offLabel='Occasion'
-						defaultValue={true}
-						valueRef={isNewRef}
-					/>
-				</Flex>
+				<Checkbox
+					className={classes.checkbox}
+					label='Appareil neuf'
+					w={150}
+					{...form.getInputProps('isNew', { type: 'checkbox' })}
+					mb='xs'
+				/>
 				<Select
 					label='Propriétaire'
 					placeholder='Propriétaire'

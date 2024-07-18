@@ -35,8 +35,8 @@ import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import { getModifiedValues } from '@/utils';
 import { virtualizedTableConfig } from '@/utils/tableConfig';
 import Loading from '../Loading/Loading';
-import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAddButton/AgentQuickAddButton';
-import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAddButton/DeviceQuickAddButton';
+import AgentQuickAddButton from '../TableActionsButtons/AgentQuickAdd/AgentQuickAddButton';
+import DeviceQuickAddButton from '../TableActionsButtons/DeviceQuickAdd/DeviceQuickAddButton';
 import { useSearchParams } from 'react-router-dom';
 import LinesFilter from './LinesFilter/LinesFilter';
 

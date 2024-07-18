@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { toPng } from 'html-to-image';
 import Papa from 'papaparse';
 import { RefObject } from 'react';
+import { toast } from 'sonner';
 
 // Envoi d'email
 export const sendEmail = ({
@@ -83,7 +84,5 @@ export const exportToImage = (title: string, ref: RefObject<HTMLElement>) => {
 			link.href = dataUrl;
 			link.click();
 		})
-		.catch((err) => {
-			console.log(err);
-		});
+		.catch(() => toast.error("Impossible d'effectuer l'export"));
 };
