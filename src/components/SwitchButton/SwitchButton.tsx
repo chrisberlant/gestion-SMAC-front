@@ -1,6 +1,6 @@
 import { Switch } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface SwitchButtonProps {
 	defaultValue: boolean;
@@ -20,18 +20,13 @@ export default function SwitchButton({
 }: SwitchButtonProps) {
 	// State interne au bouton permettant de changer son style
 	const [checked, setChecked] = useState(defaultValue);
-
 	// La ref du parent est initialisée et modifiée par le state interne au composant
-	useEffect(() => {
-		valueRef.current = checked;
-	}, [checked, valueRef]);
+	valueRef.current = checked;
 
 	return (
 		<Switch
 			checked={checked}
-			onChange={() => {
-				setChecked((value) => !value);
-			}}
+			onChange={() => setChecked((prev) => !prev)}
 			color='blue'
 			size={size}
 			thumbIcon={
