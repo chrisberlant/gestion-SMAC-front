@@ -115,7 +115,7 @@ export default function Agents() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				size: 100,
+				size: 130,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -313,11 +313,11 @@ export default function Agents() {
 		async ({ values, exitCreatingMode }) => {
 			const { lastName, firstName, email, serviceId } = values;
 			const creationData = {
-				lastName: lastName.trim(),
-				firstName: firstName.trim(),
-				email: email.trim().toLowerCase(),
+				lastName: lastName.trim() || undefined,
+				firstName: firstName.trim() || undefined,
+				email: email.trim().toLowerCase() || undefined,
 				vip: vipRef.current,
-				serviceId: Number(serviceId),
+				serviceId: Number(serviceId) || undefined,
 			} as AgentCreationType;
 
 			const validation = agentCreationSchema.safeParse(creationData);
@@ -370,6 +370,7 @@ export default function Agents() {
 				originalData,
 				updateData
 			) as AgentUpdateType;
+			console.log(newModifiedData);
 
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
@@ -380,6 +381,7 @@ export default function Agents() {
 
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(newModifiedData);
+			console.log(validation);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {

@@ -181,7 +181,7 @@ export default function Lines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
-				size: 70,
+				size: 80,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
 					onFocus: () =>
@@ -197,11 +197,11 @@ export default function Lines() {
 				id: 'profile',
 				accessorFn: (row) => row.profile ?? 'VD',
 				editVariant: 'select',
-				size: 50,
+				size: 70,
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
 					style: {
-						width: 70,
+						width: 120,
 					},
 					allowDeselect: false,
 					error: validationErrors?.profile,
@@ -218,7 +218,7 @@ export default function Lines() {
 				id: 'status',
 				accessorFn: (row) => row.status ?? 'Active',
 				editVariant: 'select',
-				size: 50,
+				size: 70,
 				mantineEditSelectProps: {
 					data: ['Active', 'En cours', 'Résiliée'],
 					allowDeselect: false,
@@ -362,8 +362,8 @@ export default function Lines() {
 
 			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
 			const creationData = {
-				number: number.trim(),
-				profile,
+				number: number?.trim() || undefined,
+				profile: profile,
 				status,
 				comments: comments?.trim(),
 				agentId: Number(agentId) || null,

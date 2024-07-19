@@ -41,12 +41,9 @@ export const deviceCreationSchema = z.strictObject({
 			'Volé',
 		],
 		{
-			errorMap: () => {
-				return {
-					message:
-						'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
-				};
-			},
+			errorMap: () => ({
+				message: 'Le statut doit être renseigné',
+			}),
 		}
 	),
 	isNew: z.boolean({
@@ -128,12 +125,10 @@ export const deviceUpdateSchema = z.strictObject({
 				'Volé',
 			],
 			{
-				errorMap: () => {
-					return {
-						message:
-							'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
-					};
-				},
+				errorMap: () => ({
+					message:
+						'Le statut doit être Attribué, Restitué, En attente de restitution, En prêt, En panne, ou Volé',
+				}),
 			}
 		)
 		.optional(),

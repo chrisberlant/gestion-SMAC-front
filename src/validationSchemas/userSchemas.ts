@@ -118,11 +118,9 @@ export const userCreationSchema = z.strictObject({
 		.trim()
 		.min(1, 'Le prénom doit être renseigné'),
 	role: z.enum(['Admin', 'Tech', 'Consultant'], {
-		errorMap: () => {
-			return {
-				message: 'Le rôle doit être Admin, Tech ou Consultant',
-			};
-		},
+		errorMap: () => ({
+			message: 'Le rôle doit être Admin, Tech ou Consultant',
+		}),
 	}),
 });
 
@@ -157,11 +155,9 @@ export const userUpdateSchema = z.strictObject({
 		.optional(),
 	role: z
 		.enum(['Admin', 'Tech', 'Consultant'], {
-			errorMap: () => {
-				return {
-					message: 'Le rôle doit être Admin, Tech ou Consultant',
-				};
-			},
+			errorMap: () => ({
+				message: 'Le rôle doit être Admin, Tech ou Consultant',
+			}),
 		})
 		.optional(),
 });
