@@ -196,8 +196,7 @@ export default function Devices() {
 			},
 			{
 				header: 'Statut',
-				id: 'status',
-				accessorFn: (row) => row.status ?? 'En stock',
+				accessorKey: 'status',
 				maxSize: 90,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -401,6 +400,7 @@ export default function Devices() {
 				modelId: Number(modelId) || null,
 				agentId: Number(agentId) || null,
 			} as DeviceCreationType;
+			console.log(creationData);
 
 			const validation = deviceCreationSchema.safeParse(creationData);
 			if (!validation.success) {
@@ -453,7 +453,6 @@ export default function Devices() {
 				originalData,
 				updateData
 			) as DeviceUpdateType;
-			console.log(newModifiedData);
 
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {

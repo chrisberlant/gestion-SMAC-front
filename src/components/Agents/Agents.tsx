@@ -226,7 +226,7 @@ export default function Agents() {
 			{
 				header: 'Service',
 				id: 'serviceId',
-				accessorFn: (row) => row.serviceId?.toString() ?? null,
+				accessorFn: (row) => row.serviceId.toString(),
 				minSize: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {

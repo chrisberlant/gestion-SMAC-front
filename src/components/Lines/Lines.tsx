@@ -194,8 +194,7 @@ export default function Lines() {
 			},
 			{
 				header: 'Profil',
-				id: 'profile',
-				accessorFn: (row) => row.profile ?? 'VD',
+				accessorKey: 'profile',
 				editVariant: 'select',
 				size: 70,
 				mantineEditSelectProps: {
@@ -215,8 +214,7 @@ export default function Lines() {
 			},
 			{
 				header: 'Statut',
-				id: 'status',
-				accessorFn: (row) => row.status ?? 'Active',
+				accessorKey: 'status',
 				editVariant: 'select',
 				size: 70,
 				mantineEditSelectProps: {
@@ -363,9 +361,9 @@ export default function Lines() {
 			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
 			const creationData = {
 				number: number?.trim() || undefined,
-				profile: profile,
+				profile,
 				status,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				agentId: Number(agentId) || null,
 				deviceId: Number(deviceId) || null,
 			} as LineCreationType;
@@ -456,19 +454,21 @@ export default function Lines() {
 			// Formatage des informations nécessaires pour la validation du schéma
 			const updateData = {
 				id: originalData.id,
-				number: number.trim(),
+				number: number?.trim(),
 				profile,
 				status,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				agentId: Number(agentId) || null,
 				deviceId: Number(deviceId) || null,
 			} as LineType;
+			console.log('updateData', updateData);
 
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
 				updateData
 			) as LineUpdateType;
+			console.log('newModifiedData', newModifiedData);
 
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
