@@ -400,7 +400,6 @@ export default function Devices() {
 				modelId: Number(modelId) || null,
 				agentId: Number(agentId) || null,
 			} as DeviceCreationType;
-			console.log(creationData);
 
 			const validation = deviceCreationSchema.safeParse(creationData);
 			if (!validation.success) {

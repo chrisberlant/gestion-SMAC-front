@@ -370,7 +370,6 @@ export default function Agents() {
 				originalData,
 				updateData
 			) as AgentUpdateType;
-			console.log(newModifiedData);
 
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
@@ -381,7 +380,6 @@ export default function Agents() {
 
 			// Validation du format des données via un schéma Zod
 			const validation = agentUpdateSchema.safeParse(newModifiedData);
-			console.log(validation);
 			if (!validation.success) {
 				const errors: Record<string, string> = {};
 				validation.error.issues.forEach((item) => {

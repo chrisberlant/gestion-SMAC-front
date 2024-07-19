@@ -461,14 +461,12 @@ export default function Lines() {
 				agentId: Number(agentId) || null,
 				deviceId: Number(deviceId) || null,
 			} as LineType;
-			console.log('updateData', updateData);
 
 			// Optimisation pour envoyer uniquement les données modifiées
 			const newModifiedData = getModifiedValues(
 				originalData,
 				updateData
 			) as LineUpdateType;
-			console.log('newModifiedData', newModifiedData);
 
 			// Si aucune modification des données
 			if (Object.keys(newModifiedData).length < 2) {
