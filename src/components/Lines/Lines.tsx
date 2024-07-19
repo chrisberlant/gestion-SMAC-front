@@ -181,7 +181,7 @@ export default function Lines() {
 			{
 				header: 'Numéro',
 				accessorKey: 'number',
-				size: 70,
+				size: 80,
 				mantineEditTextInputProps: {
 					error: validationErrors?.number,
 					onFocus: () =>
@@ -194,14 +194,13 @@ export default function Lines() {
 			},
 			{
 				header: 'Profil',
-				id: 'profile',
-				accessorFn: (row) => row.profile ?? 'VD',
+				accessorKey: 'profile',
 				editVariant: 'select',
-				size: 50,
+				size: 70,
 				mantineEditSelectProps: {
 					data: ['VD', 'V', 'D'], // Options disponibles dans le menu déroulant
 					style: {
-						width: 70,
+						width: 120,
 					},
 					allowDeselect: false,
 					error: validationErrors?.profile,
@@ -215,10 +214,9 @@ export default function Lines() {
 			},
 			{
 				header: 'Statut',
-				id: 'status',
-				accessorFn: (row) => row.status ?? 'Active',
+				accessorKey: 'status',
 				editVariant: 'select',
-				size: 50,
+				size: 70,
 				mantineEditSelectProps: {
 					data: ['Active', 'En cours', 'Résiliée'],
 					allowDeselect: false,
@@ -362,10 +360,10 @@ export default function Lines() {
 
 			// Formatage des informations nécessaires pour la validation du schéma et envoi à l'API
 			const creationData = {
-				number: number.trim(),
+				number: number?.trim() || undefined,
 				profile,
 				status,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				agentId: Number(agentId) || null,
 				deviceId: Number(deviceId) || null,
 			} as LineCreationType;
@@ -456,10 +454,10 @@ export default function Lines() {
 			// Formatage des informations nécessaires pour la validation du schéma
 			const updateData = {
 				id: originalData.id,
-				number: number.trim(),
+				number: number?.trim(),
 				profile,
 				status,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				agentId: Number(agentId) || null,
 				deviceId: Number(deviceId) || null,
 			} as LineType;

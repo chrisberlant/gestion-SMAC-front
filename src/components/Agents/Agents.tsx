@@ -115,7 +115,7 @@ export default function Agents() {
 			{
 				header: 'Prénom',
 				accessorKey: 'firstName',
-				size: 100,
+				size: 130,
 				mantineEditTextInputProps: {
 					error: validationErrors?.firstName,
 					onFocus: () =>
@@ -226,7 +226,7 @@ export default function Agents() {
 			{
 				header: 'Service',
 				id: 'serviceId',
-				accessorFn: (row) => row.serviceId?.toString() ?? null,
+				accessorFn: (row) => row.serviceId.toString(),
 				minSize: 80,
 				editVariant: 'select',
 				mantineEditSelectProps: {
@@ -313,11 +313,11 @@ export default function Agents() {
 		async ({ values, exitCreatingMode }) => {
 			const { lastName, firstName, email, serviceId } = values;
 			const creationData = {
-				lastName: lastName.trim(),
-				firstName: firstName.trim(),
-				email: email.trim().toLowerCase(),
+				lastName: lastName.trim() || undefined,
+				firstName: firstName.trim() || undefined,
+				email: email.trim().toLowerCase() || undefined,
 				vip: vipRef.current,
-				serviceId: Number(serviceId),
+				serviceId: Number(serviceId) || undefined,
 			} as AgentCreationType;
 
 			const validation = agentCreationSchema.safeParse(creationData);

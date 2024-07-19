@@ -9,18 +9,14 @@ export const lineCreationSchema = z.strictObject({
 		.trim()
 		.length(10, 'Le numéro doit faire 10 caractères'),
 	profile: z.enum(['V', 'D', 'VD'], {
-		errorMap: () => {
-			return {
-				message: 'Le profil doit être V, D ou VD',
-			};
-		},
+		errorMap: () => ({
+			message: 'Le profil doit être renseigné',
+		}),
 	}),
 	status: z.enum(['Active', 'En cours', 'Résiliée'], {
-		errorMap: () => {
-			return {
-				message: 'Le statut doit être Active, En cours ou Résiliée',
-			};
-		},
+		errorMap: () => ({
+			message: 'Le statut doit être renseigné',
+		}),
 	}),
 	comments: z
 		.string({
@@ -65,20 +61,16 @@ export const lineUpdateSchema = z.strictObject({
 		.optional(),
 	profile: z
 		.enum(['V', 'D', 'VD'], {
-			errorMap: () => {
-				return {
-					message: 'Le profil doit être V, D ou VD',
-				};
-			},
+			errorMap: () => ({
+				message: 'Le profil doit être V, D ou VD',
+			}),
 		})
 		.optional(),
 	status: z
 		.enum(['Active', 'En cours', 'Résiliée'], {
-			errorMap: () => {
-				return {
-					message: 'Le statut doit être Active, En cours ou Résiliée',
-				};
-			},
+			errorMap: () => ({
+				message: 'Le statut doit être Active, En cours ou Résiliée',
+			}),
 		})
 		.optional(),
 	comments: z

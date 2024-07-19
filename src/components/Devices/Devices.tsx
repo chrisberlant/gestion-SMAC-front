@@ -196,9 +196,8 @@ export default function Devices() {
 			},
 			{
 				header: 'Statut',
-				id: 'status',
-				accessorFn: (row) => row.status ?? 'En stock',
-				maxSize: 100,
+				accessorKey: 'status',
+				maxSize: 90,
 				editVariant: 'select',
 				mantineEditSelectProps: {
 					data: [
@@ -392,12 +391,12 @@ export default function Devices() {
 
 			// Formatage des informations nécessaires pour la validation du schéma
 			const creationData = {
-				imei: imei?.trim(),
+				imei: imei.trim() || undefined,
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: preparationDateRef.current,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				modelId: Number(modelId) || null,
 				agentId: Number(agentId) || null,
 			} as DeviceCreationType;
@@ -438,12 +437,12 @@ export default function Devices() {
 			// Formatage des données
 			const updateData = {
 				id: originalData.id,
-				imei: imei.trim(),
+				imei: imei?.trim(),
 				status,
 				isNew: isNewRef.current,
 				preparationDate: preparationDateRef.current,
 				attributionDate: attributionDateRef.current,
-				comments: comments?.trim(),
+				comments: comments?.trim() || null,
 				modelId: Number(modelId),
 				agentId: Number(agentId) || null,
 			} as DeviceType;
