@@ -14,13 +14,9 @@ export default function AgentsAndDevicesPerService() {
 	const ref = useRef(null);
 	const takeScreenshot = () =>
 		exportToImage('Agents_appareils_par_service_export', ref);
-	const filteredData = data?.filter(
-		// Formatage des données, retrait des services n'ayant aucun agent ni appareil
-		(element) =>
-			element.devicesAmount !== '0' || element.agentsAmount !== '0'
-	);
+
 	const formattedAgentsAndDevicesPerService =
-		filteredData?.map((element) => ({
+		data?.map((element) => ({
 			service: element.service,
 			devicesAmount: Number(element.devicesAmount),
 			agentsAmount: Number(element.agentsAmount),
@@ -49,13 +45,13 @@ export default function AgentsAndDevicesPerService() {
 				</div>
 			)}
 
-			{data && filteredData && (
+			{data && (
 				<>
 					<Text size='xl' component='h3' mb={20}>
 						Nombre d'agents et d'appareils par service
 					</Text>
 					<Flex justify='space-evenly' gap={40} ml={20}>
-						<StatsTable data={filteredData} titles={titles} />
+						<StatsTable data={data} titles={titles} />
 						<Flex wrap='wrap'>
 							<Flex
 								wrap='wrap'
