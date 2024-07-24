@@ -26,7 +26,6 @@ const queryClient = new QueryClient({
 			// Dans tous les autres cas, toast d'erreur
 			toast.error(error.message);
 		},
-		onSuccess: () => {},
 	}),
 
 	mutationCache: new MutationCache({
