@@ -115,9 +115,7 @@ export const useUpdateCurrentUser = (
 			closeModal();
 			toast.success('Informations modifiées avec succès');
 		},
-		onSettled: () => {
-			toggleOverlay();
-		},
+		onSettled: () => toggleOverlay(),
 	});
 
 // Modifier le mot de passe utilisateur actuel
