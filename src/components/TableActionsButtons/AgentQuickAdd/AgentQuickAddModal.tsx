@@ -8,6 +8,8 @@ import {
 	Select,
 	Flex,
 	Checkbox,
+	Group,
+	Text,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -33,17 +35,15 @@ export default function AgentQuickAddModal({
 	const [visible, { toggle: toggleOverlay }] = useDisclosure(false);
 	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
 	const closeModal = (cancel: 'cancel' | undefined = undefined) => {
-		return () => {
-			closeAgentAddModal();
-			if (cancel && form.isDirty())
-				toast.warning("Aucune création d'agent n'a été effectuée");
-			form.reset();
-		};
+		closeAgentAddModal();
+		if (cancel && form.isDirty())
+			toast.warning("Aucune création d'agent n'a été effectuée");
+		form.reset();
 	};
 	const { data: agents } = useGetAllAgents();
 	const { mutate: createAgent } = useQuickCreateAgent(
 		toggleOverlay,
-		closeModal()
+		closeModal
 	);
 
 	const form = useForm({
@@ -96,7 +96,7 @@ export default function AgentQuickAddModal({
 		<Modal
 			opened={openedAgentAddModal}
 			size='lg'
-			onClose={closeModal('cancel')}
+			onClose={() => closeModal('cancel')}
 			title="Ajout rapide d'un agent"
 			centered
 			overlayProps={{
@@ -162,12 +162,20 @@ export default function AgentQuickAddModal({
 					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
-				<Checkbox
-					className={classes.checkbox}
-					label='VIP'
-					{...form.getInputProps('vip', { type: 'checkbox' })}
-					w={80}
-				/>
+				<Checkbox.Card
+					className={classes.root}
+					radius='md'
+					w={90}
+					checked={form.values.vip}
+					onClick={() => form.setValues({ vip: !form.values.vip })}
+				>
+					<Group wrap='nowrap' align='flex-start'>
+						<Checkbox.Indicator />
+
+						<Text className={classes.label}>VIP</Text>
+					</Group>
+				</Checkbox.Card>
+
 				<Button fullWidth mt='lg' type='submit'>
 					Valider
 				</Button>
@@ -175,7 +183,7 @@ export default function AgentQuickAddModal({
 					fullWidth
 					mt='md'
 					color='gray'
-					onClick={closeModal('cancel')}
+					onClick={() => closeModal('cancel')}
 				>
 					Annuler
 				</Button>

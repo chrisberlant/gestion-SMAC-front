@@ -9,6 +9,8 @@ import {
 	Flex,
 	InputLabel,
 	Checkbox,
+	Group,
+	Text,
 } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -60,12 +62,10 @@ export default function DeviceQuickAddModal({
 
 	// Fermeture de la modale, cancel est utilisé en cas de fermeture volontaire de la modale par l'utilisateur
 	const closeModal = (cancel: 'cancel' | undefined = undefined) => {
-		return () => {
-			closeDeviceAddModal();
-			if (cancel && form.isDirty())
-				toast.warning("Aucune création d'appareil n'a été effectuée");
-			form.reset();
-		};
+		closeDeviceAddModal();
+		if (cancel && form.isDirty())
+			toast.warning("Aucune création d'appareil n'a été effectuée");
+		form.reset();
 	};
 	const preparationDateRef = useRef<string | null>(null);
 	const attributionDateRef = useRef<string | null>(null);
@@ -73,7 +73,7 @@ export default function DeviceQuickAddModal({
 	const { data: devices } = useGetAllDevices();
 	const { mutate: createDevice } = useQuickCreateDevice(
 		toggleOverlay,
-		closeModal()
+		closeModal
 	);
 
 	// Formatage des modèles et agents pour affichage dans la liste déroulante
@@ -108,7 +108,7 @@ export default function DeviceQuickAddModal({
 	return (
 		<Modal
 			opened={openedDeviceAddModal}
-			onClose={closeModal('cancel')}
+			onClose={() => closeModal('cancel')}
 			title="Ajout rapide d'un appareil"
 			centered
 			overlayProps={{
@@ -156,13 +156,21 @@ export default function DeviceQuickAddModal({
 					labelProps={{ mb: '4' }}
 					mb='md'
 				/>
-				<Checkbox
-					className={classes.checkbox}
-					label='Appareil neuf'
-					{...form.getInputProps('isNew', { type: 'checkbox' })}
+				<Checkbox.Card
+					className={classes.root}
+					radius='md'
 					w={150}
 					mb='xs'
-				/>
+					checked={form.values.isNew}
+					onClick={() =>
+						form.setValues({ isNew: !form.values.isNew })
+					}
+				>
+					<Group wrap='nowrap' align='flex-start'>
+						<Checkbox.Indicator />
+						<Text className={classes.label}>Appareil neuf</Text>
+					</Group>
+				</Checkbox.Card>
 				<Select
 					label='Propriétaire'
 					placeholder='Propriétaire'
@@ -195,7 +203,7 @@ export default function DeviceQuickAddModal({
 					fullWidth
 					mt='md'
 					color='gray'
-					onClick={closeModal('cancel')}
+					onClick={() => closeModal('cancel')}
 				>
 					Annuler
 				</Button>

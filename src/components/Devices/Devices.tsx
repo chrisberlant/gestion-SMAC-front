@@ -1,5 +1,4 @@
 import { Flex } from '@mantine/core';
-import 'dayjs/locale/fr';
 import {
 	MRT_ColumnDef,
 	MRT_TableOptions,
@@ -27,7 +26,6 @@ import {
 	deviceCreationSchema,
 	deviceUpdateSchema,
 } from '@/validationSchemas/deviceSchemas';
-import '@mantine/dates/styles.css';
 import { dateFrFormatting, getModifiedValues } from '@/utils';
 import SwitchButton from '../SwitchButton/SwitchButton';
 import DateChoice from '../DateChoice/DateChoice';
@@ -36,12 +34,13 @@ import CreateButton from '../TableActionsButtons/CreateButton/CreateButton';
 import displayDeviceOwnerChangeModal from '@/modals/deviceOwnerChangeModal';
 import displayDeviceDeleteModal from '@/modals/deviceDeleteModal';
 import CsvExportButton from '../CsvExportButton/CsvExportButton';
-import { toast } from 'sonner';
 import CsvImportButton from '../CsvImportButton/CsvImportButton';
 import Loading from '../Loading/Loading';
+import DevicesFilter from './DevicesFilter/DevicesFilter';
+import { toast } from 'sonner';
 import { virtualizedTableConfig } from '@/utils/tableConfig';
 import { useSearchParams } from 'react-router-dom';
-import DevicesFilter from './DevicesFilter/DevicesFilter';
+import '@mantine/dates/styles.css';
 
 export default function Devices() {
 	const {
@@ -284,7 +283,6 @@ export default function Devices() {
 				accessorFn: (row) => row.agentId?.toString(),
 				editVariant: 'select',
 				size: 120,
-				clearable: true,
 				mantineEditSelectProps: {
 					data: agentsList,
 					style: {
@@ -368,7 +366,7 @@ export default function Devices() {
 				},
 			},
 		],
-		[validationErrors, modelsList, formattedAgents, agentsList]
+		[validationErrors, modelsList, formattedAgents]
 	);
 
 	// Gestion de l'ordre des colonnes

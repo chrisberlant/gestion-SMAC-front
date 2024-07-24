@@ -12,11 +12,7 @@ export default function DevicesAmountPerModel() {
 	const ref = useRef<HTMLDivElement>(null);
 	const takeScreenshot = () =>
 		exportToImage('Appareils_par_modèle_export', ref);
-	const filteredData = data?.filter(
-		// Formatage des données, retrait des services n'ayant aucun agent ni appareil
-		(element) => element.devicesAmount !== '0'
-	);
-	const formattedDevicesAmountPerModel = filteredData?.map((model) => ({
+	const formattedDevicesAmountPerModel = data?.map((model) => ({
 		name: `${model.brand} ${model.reference}${
 			model.storage ? ` ${model.storage}` : ''
 		}`,
@@ -37,13 +33,13 @@ export default function DevicesAmountPerModel() {
 				</div>
 			)}
 
-			{data && filteredData && formattedDevicesAmountPerModel && (
+			{data && formattedDevicesAmountPerModel && (
 				<>
 					<Text size='xl' component='h3' mb={20}>
 						Nombre d'appareils par modèle
 					</Text>
 					<Flex justify='space-around' mb={10}>
-						<StatsTable data={filteredData} titles={titles} />
+						<StatsTable data={data} titles={titles} />
 						<Flex direction='column' align='center' w='40%'>
 							<Flex ref={ref} pr={8} pt={8}>
 								<DonutChart
