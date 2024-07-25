@@ -21,7 +21,7 @@ export const useGetAllDevices = () =>
 export const useCreateDevice = () =>
 	useMutation({
 		mutationFn: async (device: DeviceCreationType) =>
-			(await fetchApi('/device', 'POST', device)) as DeviceType,
+			await fetchApi('/device', 'POST', device),
 		onMutate: async (newDevice) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
 			const previousDevices = queryClient.getQueryData(['devices']);
@@ -33,7 +33,7 @@ export const useCreateDevice = () =>
 			]);
 			return previousDevices;
 		},
-		onSuccess: (newDevice) => {
+		onSuccess: (newDevice: DeviceType) => {
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
 				devices.map((device) =>
 					device.imei === newDevice.imei
@@ -55,9 +55,9 @@ export const useQuickCreateDevice = (
 	useMutation({
 		mutationFn: async (device: DeviceCreationType) => {
 			toggleOverlay();
-			return (await fetchApi('/device', 'POST', device)) as DeviceType;
+			return await fetchApi('/device', 'POST', device);
 		},
-		onSuccess: (newDevice) => {
+		onSuccess: (newDevice: DeviceType) => {
 			queryClient.setQueryData(['devices'], (devices: DeviceType[]) => [
 				{
 					...newDevice,
@@ -76,11 +76,7 @@ export const useUpdateDevice = () =>
 	useMutation({
 		mutationFn: async (data: DeviceUpdateType) => {
 			const { id, ...infos } = data;
-			return (await fetchApi(
-				`/device/${id}`,
-				'PATCH',
-				infos
-			)) as DeviceType;
+			return await fetchApi(`/device/${id}`, 'PATCH', infos);
 		},
 		onMutate: async (deviceToUpdate) => {
 			await queryClient.cancelQueries({ queryKey: ['devices'] });
@@ -94,7 +90,7 @@ export const useUpdateDevice = () =>
 			);
 			return previousDevices;
 		},
-		onSuccess: (receivedData) => {
+		onSuccess: (receivedData: DeviceType) => {
 			// Mise à jour du cache des lignes s'il existe
 			if (queryClient.getQueryData(['lines']))
 				queryClient.setQueryData(['lines'], (lines: LineType[]) =>
@@ -169,20 +165,20 @@ export const useImportMultipleDevices = (
 				values: string[];
 			}[] = [];
 
-			if (errors.usedDevices.length > 0)
+			if (errors.existingDevices.length)
 				formatedErrors.push({
 					message: 'Les appareils suivants sont déjà existants :',
-					values: errors.usedDevices,
+					values: errors.existingDevices,
 				});
 
-			if (errors.unknownModels.length > 0)
+			if (errors.unknownModels.length)
 				formatedErrors.push({
 					message:
 						"Les modèles d'appareil suivants sont introuvables :",
 					values: errors.unknownModels,
 				});
 
-			if (errors.unknownAgents.length > 0)
+			if (errors.unknownAgents.length)
 				formatedErrors.push({
 					message: 'Les agents suivants sont introuvables :',
 					values: errors.unknownAgents,

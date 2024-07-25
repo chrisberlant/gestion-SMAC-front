@@ -13,7 +13,7 @@ export const useGetAllModels = () =>
 export const useCreateModel = () =>
 	useMutation({
 		mutationFn: async (model: ModelCreationType) =>
-			(await fetchApi('/model', 'POST', model)) as ModelType,
+			await fetchApi('/model', 'POST', model),
 		onMutate: async (newModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });
 			const previousModels = queryClient.getQueryData(['models']);
@@ -25,7 +25,7 @@ export const useCreateModel = () =>
 			]);
 			return previousModels;
 		},
-		onSuccess: (newModel) => {
+		onSuccess: (newModel: ModelType) => {
 			queryClient.setQueryData(['models'], (models: ModelType[]) =>
 				models.map((model) =>
 					model.brand === newModel.brand &&
@@ -46,11 +46,7 @@ export const useUpdateModel = () =>
 	useMutation({
 		mutationFn: async (model: ModelUpdateType) => {
 			const { id, ...infos } = model;
-			return (await fetchApi(
-				`/model/${id}`,
-				'PATCH',
-				infos
-			)) as ModelType;
+			return await fetchApi(`/model/${id}`, 'PATCH', infos);
 		},
 		onMutate: async (updatedModel) => {
 			await queryClient.cancelQueries({ queryKey: ['models'] });

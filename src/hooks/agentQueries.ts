@@ -53,9 +53,9 @@ export const useQuickCreateAgent = (
 	useMutation({
 		mutationFn: async (newAgent: AgentCreationType) => {
 			toggleOverlay();
-			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
+			return await fetchApi('/agent', 'POST', newAgent);
 		},
-		onSuccess: async (newAgent) => {
+		onSuccess: async (newAgent: AgentType) => {
 			queryClient.setQueryData(['agents'], (agents: AgentType[]) => [
 				...agents,
 				{
@@ -75,11 +75,7 @@ export const useUpdateAgent = () =>
 	useMutation({
 		mutationFn: async (agent: AgentUpdateType) => {
 			const { id, ...infos } = agent;
-			return (await fetchApi(
-				`/agent/${id}`,
-				'PATCH',
-				infos
-			)) as AgentType;
+			return await fetchApi(`/agent/${id}`, 'PATCH', infos);
 		},
 		onMutate: async (updatedAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
@@ -157,21 +153,21 @@ export const useImportMultipleAgents = (
 				values: string[];
 			}[] = [];
 
-			if (errors.usedEmails.length > 0)
+			if (errors.existingEmails.length)
 				formatedErrors.push({
 					message:
 						'Les adresses mail suivantes sont déjà existantes :',
-					values: errors.usedEmails,
+					values: errors.existingEmails,
 				});
 
-			if (errors.unknownServices.length > 0)
+			if (errors.unknownServices.length)
 				formatedErrors.push({
 					message: 'Les services suivants sont introuvables :',
 					values: errors.unknownServices,
 				});
 
 			// Si conflits, affichage de la modale
-			if (formatedErrors.length > 0)
+			if (formatedErrors.length)
 				return displayErrorOnImportModal(formatedErrors);
 
 			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV
