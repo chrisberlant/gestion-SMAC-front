@@ -19,12 +19,12 @@ export const useLogin = (
 	useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			return (await fetchApi('/login', 'POST', form.values)) as {
-				loggedUser: LoggedUserType;
-				smac_token: string;
-			};
+			return await fetchApi('/login', 'POST', form.values);
 		},
-		onSuccess: (user) => {
+		onSuccess: (user: {
+			loggedUser: LoggedUserType;
+			smac_token: string;
+		}) => {
 			queryClient.setQueryData(['currentUser'], user.loggedUser);
 			localStorage.setItem('smac_token', user.smac_token);
 			toast.info(`Bienvenue, ${user!.loggedUser.firstName} !`);
@@ -64,13 +64,9 @@ export const useUpdateCurrentUser = (
 	useMutation({
 		mutationFn: async () => {
 			toggleOverlay();
-			return (await fetchApi(
-				'/me',
-				'PATCH',
-				form.values
-			)) as UserInfosWithoutRoleType;
+			return await fetchApi('/me', 'PATCH', form.values);
 		},
-		onSuccess: (updatedCurrentUser) => {
+		onSuccess: (updatedCurrentUser: UserInfosWithoutRoleType) => {
 			const { id: currentUserId, ...updatedInfos } = updatedCurrentUser;
 			queryClient.setQueryData(
 				['currentUser'],

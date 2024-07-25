@@ -18,8 +18,8 @@ export const useGetAllLines = () =>
 export const useCreateLine = () =>
 	useMutation({
 		mutationFn: async (data: LineCreationType) =>
-			(await fetchApi('/line', 'POST', data)) as LineType,
-		onMutate: async (newLine) => {
+			await fetchApi('/line', 'POST', data),
+		onMutate: async (newLine: LineCreationType) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			// Snapshot du cache actuel
 			const previousLines = queryClient.getQueryData(['lines']);
@@ -45,7 +45,7 @@ export const useCreateLine = () =>
 
 			return previousLines;
 		},
-		onSuccess: (receivedData, sentData) => {
+		onSuccess: (receivedData: LineType, sentData) => {
 			queryClient.setQueryData(['lines'], (lines: LineType[]) =>
 				lines.map((line) =>
 					line.number === receivedData.number
@@ -74,9 +74,9 @@ export const useUpdateLine = () =>
 	useMutation({
 		mutationFn: async (data: LineUpdateType) => {
 			const { id, ...infos } = data;
-			return (await fetchApi(`/line/${id}`, 'PATCH', infos)) as LineType;
+			return await fetchApi(`/line/${id}`, 'PATCH', infos);
 		},
-		onMutate: async (updatedLine) => {
+		onMutate: async (updatedLine: LineUpdateType) => {
 			await queryClient.cancelQueries({ queryKey: ['lines'] });
 			const previousLines = queryClient.getQueryData(['lines']);
 			// Mises à jour de la ligne éditée et de l'ancienne ligne pour retirer l'appareil
@@ -106,7 +106,7 @@ export const useUpdateLine = () =>
 				  );
 			return previousLines;
 		},
-		onSuccess: (receivedData, sentData) => {
+		onSuccess: (receivedData: LineType, sentData) => {
 			// Si nécessaire, mise à jour de l'appareil pour mettre à jour le propriétaire
 			if (sentData.deviceId || sentData.agentId !== undefined) {
 				queryClient.setQueryData(['devices'], (devices: DeviceType[]) =>
@@ -181,33 +181,33 @@ export const useImportMultipleLines = (
 				values: string[];
 			}[] = [];
 
-			if (errors.usedNumbers.length > 0)
+			if (errors.existingNumbers.length)
 				formatedErrors.push({
 					message:
 						'Certains numéros de ligne fournis sont déjà existants :',
-					values: errors.usedNumbers,
+					values: errors.existingNumbers,
 				});
 
-			if (errors.usedDevices.length > 0)
+			if (errors.usedDevices.length)
 				formatedErrors.push({
-					message: 'Les appareils suivants sont déjà existants :',
+					message: 'Les appareils suivants sont déjà affectés :',
 					values: errors.usedDevices,
 				});
 
-			if (errors.unknownDevices.length > 0)
+			if (errors.unknownDevices.length)
 				formatedErrors.push({
 					message: 'Les appareils suivants sont introuvables :',
 					values: errors.unknownDevices,
 				});
 
-			if (errors.unknownAgents.length > 0)
+			if (errors.unknownAgents.length)
 				formatedErrors.push({
 					message: 'Les agents suivants sont introuvables :',
 					values: errors.unknownAgents,
 				});
 
 			// Si conflits, affichage de la modale
-			if (formatedErrors.length > 0)
+			if (formatedErrors.length)
 				return displayErrorOnImportModal(formatedErrors);
 
 			// Sinon Zod renvoie un message indiquant un problème dans le format du CSV

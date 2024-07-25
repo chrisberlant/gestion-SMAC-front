@@ -16,7 +16,7 @@ export const useDeleteHistory = () =>
 	useMutation({
 		mutationFn: async (data: number[]) =>
 			await fetchApi('/history', 'DELETE', data),
-		onMutate: async (idsToDelete: number[]) => {
+		onMutate: async (idsToDelete) => {
 			await queryClient.cancelQueries({ queryKey: ['history'] });
 			const previousHistory = queryClient.getQueryData(['history']);
 			queryClient.setQueryData(['history'], (entries: HistoryType[]) =>

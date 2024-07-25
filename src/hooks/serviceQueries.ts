@@ -13,7 +13,7 @@ export const useGetAllServices = () =>
 export const useCreateService = () =>
 	useMutation({
 		mutationFn: async (service: ServiceCreationType) =>
-			(await fetchApi('/service', 'POST', service)) as ServiceType,
+			await fetchApi('/service', 'POST', service),
 		onMutate: async (newService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
 			const previousServices = queryClient.getQueryData(['services']);
@@ -28,7 +28,7 @@ export const useCreateService = () =>
 			);
 			return previousServices;
 		},
-		onSuccess: (newService) => {
+		onSuccess: (newService: ServiceType) => {
 			queryClient.setQueryData(['services'], (services: ServiceType[]) =>
 				services.map((service) =>
 					service.title === newService.title
@@ -46,11 +46,7 @@ export const useUpdateService = () =>
 	useMutation({
 		mutationFn: async (service: ServiceType) => {
 			const { id, ...title } = service;
-			return (await fetchApi(
-				`/service/${id}`,
-				'PATCH',
-				title
-			)) as ServiceType;
+			return await fetchApi(`/service/${id}`, 'PATCH', title);
 		},
 		onMutate: async (updatedService) => {
 			await queryClient.cancelQueries({ queryKey: ['services'] });
