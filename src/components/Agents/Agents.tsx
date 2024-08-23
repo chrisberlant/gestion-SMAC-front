@@ -216,7 +216,7 @@ export default function Agents() {
 				Edit: ({ cell }) => (
 					<SwitchButton
 						size='lg'
-						defaultValue={cell.getValue() ? true : false}
+						defaultValue={!!cell.getValue()}
 						onLabel='Oui'
 						offLabel='Non'
 						valueRef={vipRef}

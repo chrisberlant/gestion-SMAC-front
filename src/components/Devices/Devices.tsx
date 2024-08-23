@@ -238,9 +238,7 @@ export default function Devices() {
 					// Bouton sur "Neuf" par défaut lors de la création (donc imei vide)
 					<SwitchButton
 						size='lg'
-						defaultValue={
-							!row.original.imei || cell.getValue() ? true : false
-						}
+						defaultValue={!row.original.imei || !!cell.getValue()}
 						valueRef={isNewRef}
 						onLabel='Neuf'
 						offLabel='Occasion'

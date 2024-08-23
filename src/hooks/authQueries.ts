@@ -36,7 +36,7 @@ export const useLogin = (
 		},
 	});
 
-// Récupérer les infos utilisateur
+// Récupérer les infos utilisateur, il peut s'agit de la vérification sur la page de connexion
 export const useGetCurrentUser = ({
 	loginPage,
 }: {
