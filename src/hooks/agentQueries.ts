@@ -16,9 +16,8 @@ export const useGetAllAgents = () =>
 // Créer un agent
 export const useCreateAgent = () =>
 	useMutation({
-		mutationFn: async (newAgent: AgentCreationType) => {
-			return (await fetchApi('/agent', 'POST', newAgent)) as AgentType;
-		},
+		mutationFn: async (newAgent: AgentCreationType) =>
+			(await fetchApi('/agent', 'POST', newAgent)) as AgentType,
 		onMutate: async (newAgent) => {
 			await queryClient.cancelQueries({ queryKey: ['agents'] });
 			const previousAgents: AgentType[] | undefined =
