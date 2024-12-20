@@ -274,10 +274,12 @@ export default function Lines() {
 					},
 					clearable: true,
 					error: validationErrors?.deviceId,
+					// TODO
+					onClear: () => {},
 					onFocus: () =>
 						setValidationErrors({
 							...validationErrors,
-							status: undefined,
+							deviceId: undefined,
 						}),
 				},
 				Cell: ({ cell, row }) => {
@@ -549,7 +551,7 @@ export default function Lines() {
 			}
 
 			// Sinon affichage de la modale en fonction du contexte
-			return displayLineUpdateModal({
+			displayLineUpdateModal({
 				updateLine,
 				exitUpdatingMode: () => table.setEditingRow(null),
 				setValidationErrors,
