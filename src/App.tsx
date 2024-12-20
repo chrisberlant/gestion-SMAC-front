@@ -10,9 +10,6 @@ import {
 import { lazy } from 'react';
 import Login from '@/components/Login/Login';
 import PrivateRoutesLayout from '@/components/PrivateRoutesLayout/PrivateRoutesLayout';
-const AdminDashboard = lazy(
-	() => import('@/components/AdminDashboard/AdminDashboard')
-);
 const Agents = lazy(() => import('@/components/Agents/Agents'));
 const Devices = lazy(() => import('@/components/Devices/Devices'));
 const PageNotFound = lazy(
@@ -20,14 +17,33 @@ const PageNotFound = lazy(
 );
 const Stats = lazy(() => import('@/components/Stats/Stats'));
 const Lines = lazy(() => import('@/components/Lines/Lines'));
+const AdminDashboard = lazy(
+	() => import('@/components/AdminDashboard/AdminDashboard')
+);
 const History = lazy(() => import('@/components/History/History'));
+const UsersTable = lazy(
+	() => import('@/components/AdminDashboard/UsersTable/UsersTable')
+);
+const ModelsTable = lazy(
+	() => import('@/components/AdminDashboard/ModelsTable/ModelsTable')
+);
+const ServicesTable = lazy(
+	() => import('@/components/AdminDashboard/ServicesTable/ServicesTable')
+);
+const AdminHomePage = lazy(
+	() => import('@/components/AdminDashboard/AdminHomePage/AdminHomepage')
+);
+const DevicesAmountPerModel = lazy(
+	() =>
+		import('@/components/Stats/DevicesAmountPerModel/DevicesAmountPerModel')
+);
+const AgentsAndDevicesPerService = lazy(
+	() =>
+		import(
+			'@/components/Stats/AgentsAndDevicesPerService/AgentsAndDevicesPerService'
+		)
+);
 import './index.css';
-import UsersTable from '@/components/AdminDashboard/UsersTable/UsersTable';
-import ModelsTable from '@/components/AdminDashboard/ModelsTable/ModelsTable';
-import ServicesTable from '@/components/AdminDashboard/ServicesTable/ServicesTable';
-import AdminHomePage from '@/components/AdminDashboard/AdminHomePage/AdminHomepage';
-import DevicesAmountPerModel from '@/components/Stats/DevicesAmountPerModel/DevicesAmountPerModel';
-import AgentsAndDevicesPerService from '@/components/Stats/AgentsAndDevicesPerService/AgentsAndDevicesPerService';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
