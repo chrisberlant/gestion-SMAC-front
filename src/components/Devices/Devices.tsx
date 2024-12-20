@@ -492,23 +492,23 @@ export default function Devices() {
 					(agent) => agent.id === lineUsingDevice?.agentId
 				)?.infos ?? null;
 
-			// Si le propriétaire a changé et qu'une ligne utilise l'appareil,
-			// le cache des lignes est mis à jour
-			if (newModifiedData.agentId && lineUsingDevice) {
-				return displayDeviceOwnerChangeModal({
-					updateDevice,
-					setValidationErrors,
-					closeEditing: () => table.setEditingRow(null),
-					data: newModifiedData,
-					lineUsingDevice: lineUsingDevice.number,
-					lineOwnerFullName,
-					imei,
-				});
+			if (!newModifiedData.agentId || !lineUsingDevice) {
+				updateDevice(newModifiedData);
+				table.setEditingRow(null);
+				return setValidationErrors({});
 			}
 
-			updateDevice(newModifiedData);
-			table.setEditingRow(null);
-			return setValidationErrors({});
+			// Si le propriétaire a changé et qu'une ligne utilise l'appareil,
+			// le cache des lignes est mis à jour
+			displayDeviceOwnerChangeModal({
+				updateDevice,
+				setValidationErrors,
+				closeEditing: () => table.setEditingRow(null),
+				data: newModifiedData,
+				lineUsingDevice: lineUsingDevice.number,
+				lineOwnerFullName,
+				imei,
+			});
 		};
 
 	const table = useMantineReactTable({

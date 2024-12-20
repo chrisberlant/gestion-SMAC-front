@@ -4,9 +4,10 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
+		"plugin:react/recommended",
 		"plugin:react-hooks/recommended"
 	],
-	"ignorePatterns": ["dist", ".eslintrc.cjs"],
+	"ignorePatterns": ["dist", ".eslintrc.json"],
 	"settings": {
 		"node": {
 			"paths": ["src", "tests"],
@@ -25,8 +26,10 @@
 		}
 	},
 	"parser": "@typescript-eslint/parser",
-	"plugins": ["react-refresh", "import"],
+	"plugins": ["react", "react-hooks", "react-refresh", "import"],
 	"rules": {
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "warn",
 		"react-refresh/only-export-components": [
 			"warn",
 			{ "allowConstantExport": true }

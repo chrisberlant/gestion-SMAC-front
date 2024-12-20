@@ -68,11 +68,9 @@ export default function AccountSettings({
 	// Soumission du formulaire
 	const handleSubmit = () => {
 		setInputLocks({ email: true, lastName: true, firstName: true });
-		if (!form.isDirty()) {
-			closeAccountModal();
-			return toast.warning('Aucune modification effectuée');
-		}
-		return updateCurrentUser();
+		if (form.isDirty()) return updateCurrentUser();
+		closeAccountModal();
+		toast.warning('Aucune modification effectuée');
 	};
 
 	return (
